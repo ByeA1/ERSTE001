@@ -120,6 +120,7 @@ header {
 .profile-meta {
     font-size: 0.62rem;
     letter-spacing: 0.12em;
+    text-transform: uppercase;
     color: var(--muted);
 }
 
@@ -3348,6 +3349,106 @@ P06 & P07 ANIMATION & SINGLE-SCREEN COMPACT FIX
 #s07 .final-motto {
     margin-top: 0.3rem !important;
     margin-bottom: 0.3rem !important;
+}
+
+/* --- Language switch --- */
+.language-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.38rem;
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: inherit;
+    line-height: 1;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+}
+
+.language-option {
+    position: relative;
+    appearance: none;
+    border: 0;
+    border-radius: 0;
+    padding: 0.2rem 0 0.25rem;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+    line-height: inherit;
+    opacity: 0.42;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.language-option::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: 0;
+    transform: scaleX(0.4);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.language-option:hover,
+.language-option:focus-visible,
+.language-option.is-active {
+    opacity: 1;
+}
+
+.language-option.is-active::after {
+    opacity: 0.55;
+    transform: scaleX(1);
+}
+
+.language-option:focus-visible {
+    outline: 1px dotted currentColor;
+    outline-offset: 3px;
+}
+
+.language-divider {
+    opacity: 0.28;
+}
+
+.main-nav .language-switch {
+    margin-left: 0.45rem;
+    vertical-align: middle;
+}
+
+html[lang="zh-CN"] body {
+    word-break: normal;
+    overflow-wrap: break-word;
+}
+
+html[lang="zh-CN"] .section-heading,
+html[lang="zh-CN"] .section-intro,
+html[lang="zh-CN"] .body-text,
+html[lang="zh-CN"] .body-p,
+html[lang="zh-CN"] .main-text,
+html[lang="zh-CN"] .case-study-page p {
+    letter-spacing: 0;
+}
+
+html[lang="zh-CN"] .side-nav .label,
+html[lang="zh-CN"] .section-kicker,
+html[lang="zh-CN"] .fig-caption,
+html[lang="zh-CN"] .chapter-fig-caption {
+    letter-spacing: 0.06em;
+}
+
+@media (max-width: 640px) {
+    .top-profile-bar {
+        gap: 0.8rem;
+        padding-right: 1rem;
+        padding-left: 1rem;
+    }
+
+    .profile-meta {
+        gap: 0.45rem;
+    }
 }
 
 
