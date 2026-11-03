@@ -1,0 +1,1960 @@
+{
+ "assets/bottom-shell-cad.jpg": {
+  "source": "assets/bottom-shell-cad.jpg",
+  "width": 2551,
+  "height": 1119,
+  "sourceBytes": 253079,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 6088,
+    "path": "assets/opt/assets/bottom-shell-cad-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 6386,
+    "path": "assets/opt/assets/bottom-shell-cad-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 15819,
+    "path": "assets/opt/assets/bottom-shell-cad-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 17666,
+    "path": "assets/opt/assets/bottom-shell-cad-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 29156,
+    "path": "assets/opt/assets/bottom-shell-cad-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 32552,
+    "path": "assets/opt/assets/bottom-shell-cad-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 45704,
+    "path": "assets/opt/assets/bottom-shell-cad-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 50192,
+    "path": "assets/opt/assets/bottom-shell-cad-1920.webp"
+   }
+  ]
+ },
+ "assets/bottom-shell.png": {
+  "source": "assets/bottom-shell.png",
+  "width": 2551,
+  "height": 1119,
+  "sourceBytes": 253079,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 6088,
+    "path": "assets/opt/assets/bottom-shell-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 6386,
+    "path": "assets/opt/assets/bottom-shell-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 15819,
+    "path": "assets/opt/assets/bottom-shell-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 17666,
+    "path": "assets/opt/assets/bottom-shell-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 29156,
+    "path": "assets/opt/assets/bottom-shell-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 32552,
+    "path": "assets/opt/assets/bottom-shell-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 45704,
+    "path": "assets/opt/assets/bottom-shell-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 50192,
+    "path": "assets/opt/assets/bottom-shell-1920.webp"
+   }
+  ]
+ },
+ "assets/cad-view.jpg": {
+  "source": "assets/cad-view.jpg",
+  "width": 1987,
+  "height": 1005,
+  "sourceBytes": 303703,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 4329,
+    "path": "assets/opt/assets/cad-view-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3746,
+    "path": "assets/opt/assets/cad-view-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 12260,
+    "path": "assets/opt/assets/cad-view-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 11216,
+    "path": "assets/opt/assets/cad-view-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 22848,
+    "path": "assets/opt/assets/cad-view-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 19776,
+    "path": "assets/opt/assets/cad-view-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 36619,
+    "path": "assets/opt/assets/cad-view-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 31860,
+    "path": "assets/opt/assets/cad-view-1920.webp"
+   }
+  ]
+ },
+ "assets/final-render.jpg": {
+  "source": "assets/final-render.jpg",
+  "width": 1296,
+  "height": 866,
+  "sourceBytes": 203762,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 10762,
+    "path": "assets/opt/assets/final-render-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 10882,
+    "path": "assets/opt/assets/final-render-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 27999,
+    "path": "assets/opt/assets/final-render-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 29492,
+    "path": "assets/opt/assets/final-render-960.webp"
+   }
+  ]
+ },
+ "assets/form-iterations.jpg": {
+  "source": "assets/form-iterations.jpg",
+  "width": 1987,
+  "height": 1005,
+  "sourceBytes": 303703,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 4329,
+    "path": "assets/opt/assets/form-iterations-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3746,
+    "path": "assets/opt/assets/form-iterations-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 12260,
+    "path": "assets/opt/assets/form-iterations-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 11216,
+    "path": "assets/opt/assets/form-iterations-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 22848,
+    "path": "assets/opt/assets/form-iterations-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 19776,
+    "path": "assets/opt/assets/form-iterations-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 36619,
+    "path": "assets/opt/assets/form-iterations-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 31860,
+    "path": "assets/opt/assets/form-iterations-1920.webp"
+   }
+  ]
+ },
+ "assets/hero-render.jpg": {
+  "source": "assets/hero-render.jpg",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 1931108,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5345,
+    "path": "assets/opt/assets/hero-render-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4376,
+    "path": "assets/opt/assets/hero-render-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 11974,
+    "path": "assets/opt/assets/hero-render-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10166,
+    "path": "assets/opt/assets/hero-render-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 19613,
+    "path": "assets/opt/assets/hero-render-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 16990,
+    "path": "assets/opt/assets/hero-render-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 27995,
+    "path": "assets/opt/assets/hero-render-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 24556,
+    "path": "assets/opt/assets/hero-render-1920.webp"
+   }
+  ]
+ },
+ "assets/internal-constraints.jpg": {
+  "source": "assets/internal-constraints.jpg",
+  "width": 2551,
+  "height": 1119,
+  "sourceBytes": 253079,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 6088,
+    "path": "assets/opt/assets/internal-constraints-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 6386,
+    "path": "assets/opt/assets/internal-constraints-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 15819,
+    "path": "assets/opt/assets/internal-constraints-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 17666,
+    "path": "assets/opt/assets/internal-constraints-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 29156,
+    "path": "assets/opt/assets/internal-constraints-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 32552,
+    "path": "assets/opt/assets/internal-constraints-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 45704,
+    "path": "assets/opt/assets/internal-constraints-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 50192,
+    "path": "assets/opt/assets/internal-constraints-1920.webp"
+   }
+  ]
+ },
+ "assets/mjf-print.jpg": {
+  "source": "assets/mjf-print.jpg",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 1931108,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5345,
+    "path": "assets/opt/assets/mjf-print-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4376,
+    "path": "assets/opt/assets/mjf-print-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 11974,
+    "path": "assets/opt/assets/mjf-print-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10166,
+    "path": "assets/opt/assets/mjf-print-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 19613,
+    "path": "assets/opt/assets/mjf-print-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 16990,
+    "path": "assets/opt/assets/mjf-print-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 27995,
+    "path": "assets/opt/assets/mjf-print-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 24556,
+    "path": "assets/opt/assets/mjf-print-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/3shots.jpg": {
+  "source": "assets/mouse/3shots.jpg",
+  "width": 5077,
+  "height": 6642,
+  "sourceBytes": 5066997,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 28363,
+    "path": "assets/opt/assets/mouse/3shots-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 22910,
+    "path": "assets/opt/assets/mouse/3shots-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 101549,
+    "path": "assets/opt/assets/mouse/3shots-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 85006,
+    "path": "assets/opt/assets/mouse/3shots-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 75,
+    "bytes": 183225,
+    "path": "assets/opt/assets/mouse/3shots-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 166454,
+    "path": "assets/opt/assets/mouse/3shots-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 73,
+    "bytes": 286189,
+    "path": "assets/opt/assets/mouse/3shots-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 270278,
+    "path": "assets/opt/assets/mouse/3shots-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/bottom-shell-cad.png": {
+  "source": "assets/mouse/bottom-shell-cad.png",
+  "width": 2551,
+  "height": 1119,
+  "sourceBytes": 253079,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 6088,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 6386,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 15819,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 17666,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 29156,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 32552,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 45704,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 50192,
+    "path": "assets/opt/assets/mouse/bottom-shell-cad-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/explosive-view.png": {
+  "source": "assets/mouse/explosive-view.png",
+  "width": 1587,
+  "height": 1365,
+  "sourceBytes": 399147,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 10182,
+    "path": "assets/opt/assets/mouse/explosive-view-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 10442,
+    "path": "assets/opt/assets/mouse/explosive-view-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 29126,
+    "path": "assets/opt/assets/mouse/explosive-view-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 28714,
+    "path": "assets/opt/assets/mouse/explosive-view-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 56003,
+    "path": "assets/opt/assets/mouse/explosive-view-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 53652,
+    "path": "assets/opt/assets/mouse/explosive-view-1440.webp"
+   }
+  ]
+ },
+ "assets/mouse/form.png": {
+  "source": "assets/mouse/form.png",
+  "width": 1987,
+  "height": 1005,
+  "sourceBytes": 303703,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 4329,
+    "path": "assets/opt/assets/mouse/form-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3746,
+    "path": "assets/opt/assets/mouse/form-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 12260,
+    "path": "assets/opt/assets/mouse/form-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 11216,
+    "path": "assets/opt/assets/mouse/form-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 22848,
+    "path": "assets/opt/assets/mouse/form-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 19776,
+    "path": "assets/opt/assets/mouse/form-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 36619,
+    "path": "assets/opt/assets/mouse/form-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 31860,
+    "path": "assets/opt/assets/mouse/form-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/hero-1.png": {
+  "source": "assets/mouse/hero-1.png",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 253337,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 4317,
+    "path": "assets/opt/assets/mouse/hero-1-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4114,
+    "path": "assets/opt/assets/mouse/hero-1-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 10505,
+    "path": "assets/opt/assets/mouse/hero-1-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10056,
+    "path": "assets/opt/assets/mouse/hero-1-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 18038,
+    "path": "assets/opt/assets/mouse/hero-1-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 17742,
+    "path": "assets/opt/assets/mouse/hero-1-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 25553,
+    "path": "assets/opt/assets/mouse/hero-1-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 26478,
+    "path": "assets/opt/assets/mouse/hero-1-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/hero.png": {
+  "source": "assets/mouse/hero.png",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 1931108,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5345,
+    "path": "assets/opt/assets/mouse/hero-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4376,
+    "path": "assets/opt/assets/mouse/hero-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 11974,
+    "path": "assets/opt/assets/mouse/hero-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10166,
+    "path": "assets/opt/assets/mouse/hero-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 19613,
+    "path": "assets/opt/assets/mouse/hero-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 16990,
+    "path": "assets/opt/assets/mouse/hero-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 27995,
+    "path": "assets/opt/assets/mouse/hero-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 24556,
+    "path": "assets/opt/assets/mouse/hero-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/internal-constraint.png": {
+  "source": "assets/mouse/internal-constraint.png",
+  "width": 1689,
+  "height": 778,
+  "sourceBytes": 218964,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 4936,
+    "path": "assets/opt/assets/mouse/internal-constraint-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4764,
+    "path": "assets/opt/assets/mouse/internal-constraint-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 13112,
+    "path": "assets/opt/assets/mouse/internal-constraint-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 12372,
+    "path": "assets/opt/assets/mouse/internal-constraint-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 23925,
+    "path": "assets/opt/assets/mouse/internal-constraint-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 21222,
+    "path": "assets/opt/assets/mouse/internal-constraint-1440.webp"
+   }
+  ]
+ },
+ "assets/mouse/Prototype Hero.jpg": {
+  "source": "assets/mouse/Prototype Hero.jpg",
+  "width": 2392,
+  "height": 1673,
+  "sourceBytes": 586628,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 9433,
+    "path": "assets/opt/assets/mouse/Prototype Hero-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 5058,
+    "path": "assets/opt/assets/mouse/Prototype Hero-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 19934,
+    "path": "assets/opt/assets/mouse/Prototype Hero-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 12102,
+    "path": "assets/opt/assets/mouse/Prototype Hero-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 47695,
+    "path": "assets/opt/assets/mouse/Prototype Hero-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 24944,
+    "path": "assets/opt/assets/mouse/Prototype Hero-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 96557,
+    "path": "assets/opt/assets/mouse/Prototype Hero-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 47044,
+    "path": "assets/opt/assets/mouse/Prototype Hero-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/Prototype Internal.jpg": {
+  "source": "assets/mouse/Prototype Internal.jpg",
+  "width": 3111,
+  "height": 1884,
+  "sourceBytes": 943069,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 17575,
+    "path": "assets/opt/assets/mouse/Prototype Internal-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 13814,
+    "path": "assets/opt/assets/mouse/Prototype Internal-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 45314,
+    "path": "assets/opt/assets/mouse/Prototype Internal-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 35174,
+    "path": "assets/opt/assets/mouse/Prototype Internal-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 82762,
+    "path": "assets/opt/assets/mouse/Prototype Internal-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 62666,
+    "path": "assets/opt/assets/mouse/Prototype Internal-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 133439,
+    "path": "assets/opt/assets/mouse/Prototype Internal-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 92800,
+    "path": "assets/opt/assets/mouse/Prototype Internal-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/sensor-spine-cad.png": {
+  "source": "assets/mouse/sensor-spine-cad.png",
+  "width": 1616,
+  "height": 1288,
+  "sourceBytes": 567599,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 14497,
+    "path": "assets/opt/assets/mouse/sensor-spine-cad-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 15488,
+    "path": "assets/opt/assets/mouse/sensor-spine-cad-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 43530,
+    "path": "assets/opt/assets/mouse/sensor-spine-cad-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 47078,
+    "path": "assets/opt/assets/mouse/sensor-spine-cad-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 82820,
+    "path": "assets/opt/assets/mouse/sensor-spine-cad-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 87082,
+    "path": "assets/opt/assets/mouse/sensor-spine-cad-1440.webp"
+   }
+  ]
+ },
+ "assets/mouse/sensor-spine.png": {
+  "source": "assets/mouse/sensor-spine.png",
+  "width": 2199,
+  "height": 1010,
+  "sourceBytes": 69846,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 3519,
+    "path": "assets/opt/assets/mouse/sensor-spine-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3434,
+    "path": "assets/opt/assets/mouse/sensor-spine-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 8245,
+    "path": "assets/opt/assets/mouse/sensor-spine-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 8434,
+    "path": "assets/opt/assets/mouse/sensor-spine-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 13497,
+    "path": "assets/opt/assets/mouse/sensor-spine-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 14534,
+    "path": "assets/opt/assets/mouse/sensor-spine-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 19913,
+    "path": "assets/opt/assets/mouse/sensor-spine-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 20888,
+    "path": "assets/opt/assets/mouse/sensor-spine-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/side1.png": {
+  "source": "assets/mouse/side1.png",
+  "width": 1875,
+  "height": 825,
+  "sourceBytes": 328871,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5206,
+    "path": "assets/opt/assets/mouse/side1-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4670,
+    "path": "assets/opt/assets/mouse/side1-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 14119,
+    "path": "assets/opt/assets/mouse/side1-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 12258,
+    "path": "assets/opt/assets/mouse/side1-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 26420,
+    "path": "assets/opt/assets/mouse/side1-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 22222,
+    "path": "assets/opt/assets/mouse/side1-1440.webp"
+   }
+  ]
+ },
+ "assets/mouse/structure.png": {
+  "source": "assets/mouse/structure.png",
+  "width": 2117,
+  "height": 1321,
+  "sourceBytes": 383293,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 9974,
+    "path": "assets/opt/assets/mouse/structure-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 10358,
+    "path": "assets/opt/assets/mouse/structure-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 26637,
+    "path": "assets/opt/assets/mouse/structure-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 29242,
+    "path": "assets/opt/assets/mouse/structure-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 48677,
+    "path": "assets/opt/assets/mouse/structure-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 54538,
+    "path": "assets/opt/assets/mouse/structure-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 75012,
+    "path": "assets/opt/assets/mouse/structure-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 85448,
+    "path": "assets/opt/assets/mouse/structure-1920.webp"
+   }
+  ]
+ },
+ "assets/mouse/top-shell.png": {
+  "source": "assets/mouse/top-shell.png",
+  "width": 1296,
+  "height": 866,
+  "sourceBytes": 203762,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 10762,
+    "path": "assets/opt/assets/mouse/top-shell-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 10882,
+    "path": "assets/opt/assets/mouse/top-shell-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 27999,
+    "path": "assets/opt/assets/mouse/top-shell-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 29492,
+    "path": "assets/opt/assets/mouse/top-shell-960.webp"
+   }
+  ]
+ },
+ "assets/mouse/upper1.png": {
+  "source": "assets/mouse/upper1.png",
+  "width": 1599,
+  "height": 1020,
+  "sourceBytes": 410463,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 9369,
+    "path": "assets/opt/assets/mouse/upper1-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 7906,
+    "path": "assets/opt/assets/mouse/upper1-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 27773,
+    "path": "assets/opt/assets/mouse/upper1-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 23124,
+    "path": "assets/opt/assets/mouse/upper1-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 53003,
+    "path": "assets/opt/assets/mouse/upper1-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 42550,
+    "path": "assets/opt/assets/mouse/upper1-1440.webp"
+   }
+  ]
+ },
+ "assets/ortho-side.jpg": {
+  "source": "assets/ortho-side.jpg",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 1931108,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5345,
+    "path": "assets/opt/assets/ortho-side-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4376,
+    "path": "assets/opt/assets/ortho-side-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 11974,
+    "path": "assets/opt/assets/ortho-side-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10166,
+    "path": "assets/opt/assets/ortho-side-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 19613,
+    "path": "assets/opt/assets/ortho-side-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 16990,
+    "path": "assets/opt/assets/ortho-side-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 27995,
+    "path": "assets/opt/assets/ortho-side-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 24556,
+    "path": "assets/opt/assets/ortho-side-1920.webp"
+   }
+  ]
+ },
+ "assets/ortho-top.jpg": {
+  "source": "assets/ortho-top.jpg",
+  "width": 1987,
+  "height": 1005,
+  "sourceBytes": 303703,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 4329,
+    "path": "assets/opt/assets/ortho-top-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3746,
+    "path": "assets/opt/assets/ortho-top-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 12260,
+    "path": "assets/opt/assets/ortho-top-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 11216,
+    "path": "assets/opt/assets/ortho-top-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 22848,
+    "path": "assets/opt/assets/ortho-top-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 19776,
+    "path": "assets/opt/assets/ortho-top-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 36619,
+    "path": "assets/opt/assets/ortho-top-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 31860,
+    "path": "assets/opt/assets/ortho-top-1920.webp"
+   }
+  ]
+ },
+ "assets/pcb.png": {
+  "source": "assets/pcb.png",
+  "width": 2117,
+  "height": 1321,
+  "sourceBytes": 383293,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 9974,
+    "path": "assets/opt/assets/pcb-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 10358,
+    "path": "assets/opt/assets/pcb-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 26637,
+    "path": "assets/opt/assets/pcb-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 29242,
+    "path": "assets/opt/assets/pcb-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 48677,
+    "path": "assets/opt/assets/pcb-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 54538,
+    "path": "assets/opt/assets/pcb-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 75012,
+    "path": "assets/opt/assets/pcb-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 85448,
+    "path": "assets/opt/assets/pcb-1920.webp"
+   }
+  ]
+ },
+ "assets/sensor-spine-cad.jpg": {
+  "source": "assets/sensor-spine-cad.jpg",
+  "width": 2199,
+  "height": 1010,
+  "sourceBytes": 69846,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 3519,
+    "path": "assets/opt/assets/sensor-spine-cad-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3434,
+    "path": "assets/opt/assets/sensor-spine-cad-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 8245,
+    "path": "assets/opt/assets/sensor-spine-cad-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 8434,
+    "path": "assets/opt/assets/sensor-spine-cad-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 13497,
+    "path": "assets/opt/assets/sensor-spine-cad-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 14534,
+    "path": "assets/opt/assets/sensor-spine-cad-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 19913,
+    "path": "assets/opt/assets/sensor-spine-cad-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 20888,
+    "path": "assets/opt/assets/sensor-spine-cad-1920.webp"
+   }
+  ]
+ },
+ "assets/sensor-spine.png": {
+  "source": "assets/sensor-spine.png",
+  "width": 2199,
+  "height": 1010,
+  "sourceBytes": 69846,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 3519,
+    "path": "assets/opt/assets/sensor-spine-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 3434,
+    "path": "assets/opt/assets/sensor-spine-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 8245,
+    "path": "assets/opt/assets/sensor-spine-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 8434,
+    "path": "assets/opt/assets/sensor-spine-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 13497,
+    "path": "assets/opt/assets/sensor-spine-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 14534,
+    "path": "assets/opt/assets/sensor-spine-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 19913,
+    "path": "assets/opt/assets/sensor-spine-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 20888,
+    "path": "assets/opt/assets/sensor-spine-1920.webp"
+   }
+  ]
+ },
+ "assets/side-profile-intent.jpg": {
+  "source": "assets/side-profile-intent.jpg",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 1931108,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5345,
+    "path": "assets/opt/assets/side-profile-intent-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4376,
+    "path": "assets/opt/assets/side-profile-intent-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 11974,
+    "path": "assets/opt/assets/side-profile-intent-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10166,
+    "path": "assets/opt/assets/side-profile-intent-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 19613,
+    "path": "assets/opt/assets/side-profile-intent-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 16990,
+    "path": "assets/opt/assets/side-profile-intent-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 27995,
+    "path": "assets/opt/assets/side-profile-intent-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 24556,
+    "path": "assets/opt/assets/side-profile-intent-1920.webp"
+   }
+  ]
+ },
+ "assets/top-shell.png": {
+  "source": "assets/top-shell.png",
+  "width": 1296,
+  "height": 866,
+  "sourceBytes": 203762,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 10762,
+    "path": "assets/opt/assets/top-shell-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 10882,
+    "path": "assets/opt/assets/top-shell-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 27999,
+    "path": "assets/opt/assets/top-shell-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 29492,
+    "path": "assets/opt/assets/top-shell-960.webp"
+   }
+  ]
+ },
+ "assets/workspace-teardown.jpg": {
+  "source": "assets/workspace-teardown.jpg",
+  "width": 1920,
+  "height": 1080,
+  "sourceBytes": 1931108,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 5345,
+    "path": "assets/opt/assets/workspace-teardown-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 4376,
+    "path": "assets/opt/assets/workspace-teardown-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 11974,
+    "path": "assets/opt/assets/workspace-teardown-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 10166,
+    "path": "assets/opt/assets/workspace-teardown-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 19613,
+    "path": "assets/opt/assets/workspace-teardown-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 16990,
+    "path": "assets/opt/assets/workspace-teardown-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 27995,
+    "path": "assets/opt/assets/workspace-teardown-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 24556,
+    "path": "assets/opt/assets/workspace-teardown-1920.webp"
+   }
+  ]
+ },
+ "mouse/prototype_01_hero_4x3.jpg": {
+  "source": "mouse/prototype_01_hero_4x3.jpg",
+  "width": 2392,
+  "height": 1673,
+  "sourceBytes": 586628,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 9433,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 5058,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 19934,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 12102,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 47695,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 24944,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 96557,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 47044,
+    "path": "assets/opt/mouse/prototype_01_hero_4x3-1920.webp"
+   }
+  ]
+ },
+ "mouse/prototype_02_internal_4x3.jpg": {
+  "source": "mouse/prototype_02_internal_4x3.jpg",
+  "width": 3111,
+  "height": 1884,
+  "sourceBytes": 943069,
+  "variants": [
+   {
+    "format": "avif",
+    "width": 480,
+    "quality": 80,
+    "bytes": 17575,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-480.avif"
+   },
+   {
+    "format": "webp",
+    "width": 480,
+    "quality": 88,
+    "bytes": 13814,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-480.webp"
+   },
+   {
+    "format": "avif",
+    "width": 960,
+    "quality": 80,
+    "bytes": 45314,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-960.avif"
+   },
+   {
+    "format": "webp",
+    "width": 960,
+    "quality": 88,
+    "bytes": 35174,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-960.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1440,
+    "quality": 80,
+    "bytes": 82762,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-1440.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1440,
+    "quality": 88,
+    "bytes": 62666,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-1440.webp"
+   },
+   {
+    "format": "avif",
+    "width": 1920,
+    "quality": 80,
+    "bytes": 133439,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-1920.avif"
+   },
+   {
+    "format": "webp",
+    "width": 1920,
+    "quality": 88,
+    "bytes": 92800,
+    "path": "assets/opt/mouse/prototype_02_internal_4x3-1920.webp"
+   }
+  ]
+ }
+}
