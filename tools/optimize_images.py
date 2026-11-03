@@ -74,7 +74,8 @@ def main():
         if a.only and a.only.lower() not in str(rel).replace('\\', '/').lower():
             continue
         with Image.open(src) as im:
-            im = im.convert('RGB')
+            has_alpha = im.mode in ('RGBA', 'LA') or (im.mode == 'P' and 'transparency' in im.info)
+            im = im.convert('RGBA' if has_alpha else 'RGB')
             w, h = im.size
             entry = {'source': str(rel).replace('\\', '/'), 'width': w, 'height': h,
                      'sourceBytes': src.stat().st_size, 'variants': []}

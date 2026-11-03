@@ -735,56 +735,56 @@
     "format": "avif",
     "width": 480,
     "quality": 80,
-    "bytes": 4317,
+    "bytes": 4921,
     "path": "assets/opt/assets/mouse/hero-1-480.avif"
    },
    {
     "format": "webp",
     "width": 480,
     "quality": 88,
-    "bytes": 4114,
+    "bytes": 5186,
     "path": "assets/opt/assets/mouse/hero-1-480.webp"
    },
    {
     "format": "avif",
     "width": 960,
     "quality": 80,
-    "bytes": 10505,
+    "bytes": 10694,
     "path": "assets/opt/assets/mouse/hero-1-960.avif"
    },
    {
     "format": "webp",
     "width": 960,
     "quality": 88,
-    "bytes": 10056,
+    "bytes": 12240,
     "path": "assets/opt/assets/mouse/hero-1-960.webp"
    },
    {
     "format": "avif",
     "width": 1440,
     "quality": 80,
-    "bytes": 18038,
+    "bytes": 17046,
     "path": "assets/opt/assets/mouse/hero-1-1440.avif"
    },
    {
     "format": "webp",
     "width": 1440,
     "quality": 88,
-    "bytes": 17742,
+    "bytes": 20188,
     "path": "assets/opt/assets/mouse/hero-1-1440.webp"
    },
    {
     "format": "avif",
     "width": 1920,
     "quality": 80,
-    "bytes": 25553,
+    "bytes": 31143,
     "path": "assets/opt/assets/mouse/hero-1-1920.avif"
    },
    {
     "format": "webp",
     "width": 1920,
     "quality": 88,
-    "bytes": 26478,
+    "bytes": 24488,
     "path": "assets/opt/assets/mouse/hero-1-1920.webp"
    }
   ]
@@ -1155,42 +1155,42 @@
     "format": "avif",
     "width": 480,
     "quality": 80,
-    "bytes": 5206,
+    "bytes": 7684,
     "path": "assets/opt/assets/mouse/side1-480.avif"
    },
    {
     "format": "webp",
     "width": 480,
     "quality": 88,
-    "bytes": 4670,
+    "bytes": 8598,
     "path": "assets/opt/assets/mouse/side1-480.webp"
    },
    {
     "format": "avif",
     "width": 960,
     "quality": 80,
-    "bytes": 14119,
+    "bytes": 18656,
     "path": "assets/opt/assets/mouse/side1-960.avif"
    },
    {
     "format": "webp",
     "width": 960,
     "quality": 88,
-    "bytes": 12258,
+    "bytes": 20462,
     "path": "assets/opt/assets/mouse/side1-960.webp"
    },
    {
     "format": "avif",
     "width": 1440,
     "quality": 80,
-    "bytes": 26420,
+    "bytes": 34666,
     "path": "assets/opt/assets/mouse/side1-1440.avif"
    },
    {
     "format": "webp",
     "width": 1440,
     "quality": 88,
-    "bytes": 22222,
+    "bytes": 36756,
     "path": "assets/opt/assets/mouse/side1-1440.webp"
    }
   ]
@@ -1305,42 +1305,42 @@
     "format": "avif",
     "width": 480,
     "quality": 80,
-    "bytes": 9369,
+    "bytes": 12412,
     "path": "assets/opt/assets/mouse/upper1-480.avif"
    },
    {
     "format": "webp",
     "width": 480,
     "quality": 88,
-    "bytes": 7906,
+    "bytes": 12632,
     "path": "assets/opt/assets/mouse/upper1-480.webp"
    },
    {
     "format": "avif",
     "width": 960,
     "quality": 80,
-    "bytes": 27773,
+    "bytes": 33304,
     "path": "assets/opt/assets/mouse/upper1-960.avif"
    },
    {
     "format": "webp",
     "width": 960,
     "quality": 88,
-    "bytes": 23124,
+    "bytes": 32626,
     "path": "assets/opt/assets/mouse/upper1-960.webp"
    },
    {
     "format": "avif",
     "width": 1440,
     "quality": 80,
-    "bytes": 53003,
+    "bytes": 60564,
     "path": "assets/opt/assets/mouse/upper1-1440.avif"
    },
    {
     "format": "webp",
     "width": 1440,
     "quality": 88,
-    "bytes": 42550,
+    "bytes": 55930,
     "path": "assets/opt/assets/mouse/upper1-1440.webp"
    }
   ]
