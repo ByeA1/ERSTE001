@@ -328,6 +328,7 @@ loadBtn.addEventListener('click', start);
 if (matchMedia('(min-width: 881px)').matches) {
   const kick = () => {
     if (state !== 'idle') { removeEventListener('scroll', kick); return; }
+    if (!stageVisible || document.hidden) return;   // only when the stage is on screen
     removeEventListener('scroll', kick);
     start();
   };
