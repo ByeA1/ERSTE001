@@ -12,8 +12,8 @@ renderer.toneMappingExposure = 1.25;
 host.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
-scene.background = new THREE.Color('#0a0a0b');
-scene.fog = new THREE.FogExp2('#0a0a0b', 0.06);
+scene.background = new THREE.Color('#EDE8DE');
+scene.fog = new THREE.FogExp2('#EDE8DE', 0.06);
 
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.01, 20);
 const HOME = new THREE.Vector3(0.40, 0.24, 0.70);
@@ -44,12 +44,12 @@ scene.add(key);
 const rim = new THREE.DirectionalLight('#9fb7ff', 1.5);
 rim.position.set(0.8, 0.4, -0.9);
 scene.add(rim);
-scene.add(new THREE.HemisphereLight('#ffffff', '#101014', 0.2));
+scene.add(new THREE.HemisphereLight('#ffffff', '#8C8478', 0.55));
 
 /* ---------- scan ring (shader) ---------- */
 const ringUniforms = {
   uTime: { value: 0 }, uProgress: { value: 0 }, uOpacity: { value: 0 },
-  uColor: { value: new THREE.Color('#c4291e') },
+  uColor: { value: new THREE.Color('#BE8A34') },
 };
 const ring = new THREE.Mesh(
   new THREE.PlaneGeometry(1.15, 1.15),
@@ -79,7 +79,7 @@ scene.add(ring);
 
 const grid = new THREE.Mesh(
   new THREE.RingGeometry(0.05, 0.92, 96, 1),
-  new THREE.MeshBasicMaterial({ color: '#1e1e25', transparent: true, opacity: 0.55, side: THREE.DoubleSide }),
+  new THREE.MeshBasicMaterial({ color: '#C9BFAE', transparent: true, opacity: 0.75, side: THREE.DoubleSide }),
 );
 grid.rotation.x = -Math.PI / 2;
 grid.position.y = -0.058;
