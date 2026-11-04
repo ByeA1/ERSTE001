@@ -301,7 +301,9 @@ function animate() {
 }
 
 document.addEventListener('visibilitychange', () => { pageVisible = !document.hidden; });
-new IntersectionObserver((entries) => { stageVisible = entries[0].isIntersecting; }, { threshold: 0.05 }).observe(viewport);
+new IntersectionObserver(([entry]) => {
+  stageVisible = entry.isIntersecting && entry.intersectionRatio >= 0.1;
+}, { threshold: [0, 0.1] }).observe(viewport);
 
 /* ---------------- start / retry ---------------- */
 async function start() {
@@ -328,7 +330,7 @@ loadBtn.addEventListener('click', start);
 if (matchMedia('(min-width: 881px)').matches) {
   const kick = () => {
     if (state !== 'idle') { removeEventListener('scroll', kick); return; }
-    if (!stageVisible || document.hidden) return;   // only when the stage is on screen
+    if (!stageVisible || document.hidden) return;   // only when the stage is >=10% on screen
     removeEventListener('scroll', kick);
     start();
   };
