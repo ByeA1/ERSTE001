@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VVA · 首页方向 A2｜纸白 + 朱红</title>
+<style>
+  :root{
+    --bg:#f4f2ee; --ink:#141414; --muted:#8a857e; --line:#d9d4cc; --accent:#c4291e;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1440px;margin:0 auto;padding:28px 40px 0}
+  header{display:flex;justify-content:space-between;align-items:flex-start;
+    border-bottom:1px solid var(--line);padding-bottom:16px}
+  .brand{font-size:13px;letter-spacing:.22em;text-transform:uppercase}
+  .brand small{display:block;margin-top:6px;font-size:11px;letter-spacing:.12em;color:var(--muted)}
+  nav{display:flex;gap:26px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  nav a{color:inherit;text-decoration:none}
+  nav a.on{color:var(--ink)}
+  .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;
+    min-height:calc(100vh - 210px);padding:40px 0 0}
+  .stage{position:relative;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+  .stage img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 40px 60px rgba(0,0,0,.16))}
+  .kicker{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--accent)}
+  h1{font-size:clamp(40px,5.2vw,74px);line-height:.96;letter-spacing:-.02em;margin:18px 0 14px;font-weight:600}
+  .sub{font-size:14px;line-height:1.7;color:#4a4640;max-width:34ch}
+  .meta{display:flex;gap:22px;margin-top:26px;font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  .meta b{color:var(--ink);font-weight:500}
+  .cta{display:inline-flex;align-items:center;gap:10px;margin-top:34px;font-size:12px;letter-spacing:.18em;
+    text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:6px;color:var(--ink);text-decoration:none}
+  footer{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.14em;color:var(--muted);
+    border-top:1px solid var(--line);padding:14px 0 22px;text-transform:uppercase}
+  .tag{position:absolute;left:0;bottom:6px;font-size:10px;letter-spacing:.2em;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">Tony Zhang<small>Product Design · 2026</small></div>
+    <nav><a class="on" href="#">Work</a><a href="#">ERSTE 001</a><a href="#">ERSTE 002</a><a href="#">About</a><span style="color:var(--ink)">EN</span>/中</nav>
+  </header>
+  <section class="hero">
+    <div class="stage">
+      <img src="../assets/opt/assets/mouse/hero-1-1920.avif" alt="ERSTE002 外壳">
+      <div class="tag">FIG.00 — SHELL / UNRELEASED</div>
+    </div>
+    <div>
+      <div class="kicker">Independent Product Development</div>
+      <h1>ERSTE<br>002<span style="color:var(--accent)">.</span></h1>
+      <p class="sub">为 FPS 手感重新推倒的一张壳体：先定传感器与指尖的关系，再让结构跟着走。</p>
+      <div class="meta"><span><b>2026</b> · 进行中</span><span><b>03</b> 项结构迭代</span><span><b>2</b> 次打样</span></div>
+      <a class="cta" href="#">查看项目 →</a>
+    </div>
+  </section>
+  <footer><span>Selected Work 2024—2026</span><span>zhanglingfeng_123@163.com</span></footer>
+</div>
+</body>
+</html>
