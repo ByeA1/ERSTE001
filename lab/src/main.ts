@@ -107,6 +107,7 @@ const PART_LABEL: Record<string, string> = {
 };
 
 let loaded = false;
+let unitScale = 1;
 
 new GLTFLoader().load('../../assets/models/shell-v6.glb', (gltf) => {
   const model = gltf.scene;
@@ -114,6 +115,7 @@ new GLTFLoader().load('../../assets/models/shell-v6.glb', (gltf) => {
   const rawSize = rawBox.getSize(new THREE.Vector3());
   const scale = 0.30 / Math.max(rawSize.x, rawSize.y, rawSize.z);
   model.scale.setScalar(scale);
+  unitScale = scale;
   model.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
@@ -160,7 +162,7 @@ function playIntro() {
 }
 
 let exploded = false;
-const LIFT: Record<string, number> = { bottom_plate: -0.018, shell_top: 0.022, button_cover: 0.044 };
+const LIFT: Record<string, number> = { bottom_plate: -0.034, shell_top: 0.026, button_cover: 0.058 };
 const DELAY: Record<string, number> = { bottom_plate: 0, shell_top: 0.16, button_cover: 0.32 };
 
 const labels = document.getElementById('labels')!;
@@ -176,7 +178,7 @@ function setExplode(on: boolean) {
     const obj = parts.get(name);
     if (!obj) return;
     gsap.to(obj.position, {
-      y: on ? LIFT[name] ?? 0 : 0,
+      y: on ? (LIFT[name] ?? 0) / unitScale : 0,
       duration: on ? 0.62 : 0.5,
       delay: on ? DELAY[name] ?? 0 : 0.05,
       ease: on ? 'power3.out' : 'power3.inOut',
@@ -185,7 +187,7 @@ function setExplode(on: boolean) {
   });
 
   gsap.to(camera.position, {
-    x: on ? 0.60 : HOME.x, y: on ? 0.36 : HOME.y, z: on ? 1.04 : HOME.z,
+    x: on ? 0.56 : HOME.x, y: on ? 0.32 : HOME.y, z: on ? 0.94 : HOME.z,
     duration: 0.9, ease: 'power2.inOut',
   });
   gsap.to(ringUniforms.uOpacity, { value: on ? 0.06 : 0.18, duration: 0.5 });
