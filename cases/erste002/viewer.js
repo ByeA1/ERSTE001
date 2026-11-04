@@ -31,6 +31,7 @@ let stageVisible = false;
 let pageVisible = !document.hidden;
 let resizeBound = false;
 let raycaster = null, pointer = null;
+let grainTex = null;
 
 function showRetry() {
   poster.classList.remove('hide');
@@ -155,6 +156,7 @@ async function initScene() {
     import('three/addons/loaders/DRACOLoader.js'),
   ]);
   THREE = threeMod;
+  const envMod = await import('three/addons/environments/RoomEnvironment.js');
   GLTFLoader = gltfMod.GLTFLoader;
   OrbitControls = orbitMod.OrbitControls;
   const DRACOLoader = dracoMod.DRACOLoader;
@@ -172,6 +174,9 @@ async function initScene() {
   viewport.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new envMod.RoomEnvironment(), 0.05).texture;
+  scene.environmentIntensity = 0.5;
   scene.background = new THREE.Color('#EDE7DB');
   scene.fog = new THREE.FogExp2('#EDE7DB', 0.06);
 
@@ -197,6 +202,21 @@ async function initScene() {
   scene.add(new THREE.HemisphereLight('#FFFFFF', '#B9AE9B', 0.55));
 
 
+
+  // fine frosted micro-texture: breaks up the specular so highlights read as sheen, not blobs
+  const noiseCanvas = document.createElement('canvas');
+  noiseCanvas.width = noiseCanvas.height = 256;
+  const nctx = noiseCanvas.getContext('2d');
+  const img = nctx.createImageData(256, 256);
+  for (let i = 0; i < img.data.length; i += 4) {
+    const v = 120 + Math.random() * 90;
+    img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+    img.data[i + 3] = 255;
+  }
+  nctx.putImageData(img, 0, 0);
+  grainTex = new THREE.CanvasTexture(noiseCanvas);
+  grainTex.wrapS = grainTex.wrapT = THREE.RepeatWrapping;
+  grainTex.repeat.set(8, 8);
 
   modelRoot = new THREE.Group();
   scene.add(modelRoot);
@@ -317,8 +337,14 @@ function loadModel() {
       model.traverse((o) => {
         if (o.isMesh) {
           o.material = new THREE.MeshPhysicalMaterial({
-            color: '#2A2A2C', metalness: 0.10, roughness: 0.40,
-            clearcoat: 0.35, clearcoatRoughness: 0.24, envMapIntensity: 0.85,
+            color: '#232326',
+            metalness: 0.02,
+            roughness: 0.86,
+            roughnessMap: grainTex,
+            bumpMap: grainTex,
+            bumpScale: 0.0016,
+            clearcoat: 0.0,
+            envMapIntensity: 0.65,
           });
           parts.set(o.name, o);
         }
@@ -332,7 +358,8 @@ function loadModel() {
       playAssembly();
     },
     undefined,
-    () => {
+    (err) => {
+      console.error('gltf load failed', err);
       state = 'failed';
       setStatus('LOAD FAILED', true);
       setControlsEnabled(false);

@@ -1,6 +1,6 @@
 {
-  "version": "c981ee2e888690d0",
-  "bytes": 38718262,
+  "version": "3330fe8feba756a4",
+  "bytes": 38724318,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -58,6 +58,7 @@
     "cases/erste002/assets/shell-hi.glb",
     "cases/erste002/index.html",
     "cases/erste002/vendor/addons/controls/OrbitControls.js",
+    "cases/erste002/vendor/addons/environments/RoomEnvironment.js",
     "cases/erste002/vendor/addons/loaders/DRACOLoader.js",
     "cases/erste002/vendor/addons/loaders/GLTFLoader.js",
     "cases/erste002/vendor/addons/utils/BufferGeometryUtils.js",
