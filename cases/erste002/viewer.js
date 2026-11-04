@@ -2,6 +2,7 @@
 const viewport = document.getElementById('viewport');
 const poster = document.getElementById('poster');
 const loadBtn = document.getElementById('loadBtn');
+const loadNote = document.getElementById('loadNote');
 const statusText = document.getElementById('statusText');
 const focusName = document.getElementById('focusName');
 const partsEl = document.getElementById('parts');
@@ -30,6 +31,13 @@ let stageVisible = false;
 let pageVisible = !document.hidden;
 let resizeBound = false;
 let raycaster = null, pointer = null;
+
+function showRetry() {
+  poster.classList.remove('hide');
+  poster.innerHTML = '<button type="button" id="retryBtn">重新载入</button>';
+  const btn = document.getElementById('retryBtn');
+  btn.addEventListener('click', () => { state = 'idle'; start(); });
+}
 
 function setStatus(text, error = false) {
   statusText.textContent = text;
@@ -305,9 +313,7 @@ function loadModel() {
       setStatus('LOAD FAILED', true);
       setControlsEnabled(false);
 buildList();
-      poster.classList.remove('hide');
-      loadBtn.textContent = '重试';
-      loadBtn.disabled = false;
+      showRetry();
     },
   );
 }
@@ -375,17 +381,12 @@ async function start() {
   } catch (err) {
     state = 'failed';
     setStatus('LOAD FAILED', true);
-    poster.classList.remove('hide');
-    loadBtn.textContent = '重试';
-    loadBtn.disabled = false;
+    showRetry();
   }
 }
 
-loadBtn.addEventListener('click', start);
-
-// the terminal opened this case on purpose: start loading immediately
-loadBtn.textContent = '载入中…';
-loadBtn.disabled = true;
+// the terminal opened this case on purpose: start immediately, no prompt to click
+if (loadNote) loadNote.textContent = '载入模型…';
 start();
 
 setControlsEnabled(false);

@@ -58,9 +58,12 @@
 
   .poster{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
     background:rgba(241,236,226,.92);z-index:5}
+  .poster .loading{font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
+  .poster .loading::after{content:'';display:inline-block;width:34px;height:1px;background:var(--cyan);margin-left:10px;
+    vertical-align:middle;animation:sweep 1.2s ease-in-out infinite}
+  @keyframes sweep{0%,100%{transform:scaleX(.2);opacity:.3}50%{transform:scaleX(1);opacity:1}}
   .poster button{appearance:none;border:1px solid var(--cyan);background:transparent;color:var(--cyan);
     padding:12px 20px;font-family:var(--mono);font-size:10px;letter-spacing:.22em;text-transform:uppercase;cursor:pointer}
-  .poster button:hover{background:var(--cyan-dim)}
   .poster.hide{display:none}
 
   .panel{border-left:1px solid var(--line);background:linear-gradient(180deg,#EFE9DE,#E7E0D2);
@@ -120,7 +123,7 @@
   <div class="viewport" id="viewport">
     <div class="stage-label">FIG.02 — SHELL ASSEMBLY / <b id="focusName">ALL PARTS</b></div>
     <div class="status" id="status">STATUS <b id="statusText">IDLE</b></div>
-    <div class="poster" id="poster"><button id="loadBtn" type="button">载入三维查看器</button></div>
+    <div class="poster" id="poster"><span class="loading" id="loadNote">载入模型…</span></div>
   </div>
 
   <aside class="panel">
@@ -180,6 +183,6 @@
   document.querySelector('[data-close]').addEventListener('click', (e) => { e.preventDefault(); close(); });
   addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 </script>
-<script type="module" src="./viewer.js?v=202611041533"></script>
+<script type="module" src="./viewer.js?v=202611041550"></script>
 </body>
 </html>
