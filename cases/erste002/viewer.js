@@ -185,6 +185,25 @@ async function initScene() {
   modelRoot = new THREE.Group();
   scene.add(modelRoot);
 
+  // soft contact shadow: cheap radial texture, no shadow map cost
+  const shadowCanvas = document.createElement('canvas');
+  shadowCanvas.width = shadowCanvas.height = 128;
+  const sctx = shadowCanvas.getContext('2d');
+  const grad = sctx.createRadialGradient(64, 64, 4, 64, 64, 62);
+  grad.addColorStop(0, 'rgba(60,48,34,0.42)');
+  grad.addColorStop(0.55, 'rgba(60,48,34,0.14)');
+  grad.addColorStop(1, 'rgba(60,48,34,0)');
+  sctx.fillStyle = grad;
+  sctx.fillRect(0, 0, 128, 128);
+  const shadowTex = new THREE.CanvasTexture(shadowCanvas);
+  const contactShadow = new THREE.Mesh(
+    new THREE.PlaneGeometry(0.42, 0.42),
+    new THREE.MeshBasicMaterial({ map: shadowTex, transparent: true, depthWrite: false, opacity: 0.9 }),
+  );
+  contactShadow.rotation.x = -Math.PI / 2;
+  contactShadow.position.y = -0.062;
+  scene.add(contactShadow);
+
   renderer.domElement.addEventListener('pointerdown', onPointerDown);
   renderer.domElement.addEventListener('click', onCanvasClick);
   if (!resizeBound) { addEventListener('resize', resize); resizeBound = true; }
@@ -352,19 +371,10 @@ async function start() {
 
 loadBtn.addEventListener('click', start);
 
-// desktop: hold the engine until the first scroll (or an explicit click)
-if (matchMedia('(min-width: 881px)').matches) {
-  const kick = () => {
-    if (state !== 'idle') { removeEventListener('scroll', kick); return; }
-    if (!stageVisible || document.hidden) return;   // only when the stage is >=10% on screen
-    removeEventListener('scroll', kick);
-    start();
-  };
-  addEventListener('scroll', kick, { passive: true });
-  // a page restored mid-scroll should not pull the engine before the visitor acts
-  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
-  scrollTo(0, 0);
-}
+// the terminal opened this case on purpose: start loading immediately
+loadBtn.textContent = '载入中…';
+loadBtn.disabled = true;
+start();
 
 setControlsEnabled(false);
 buildList();
