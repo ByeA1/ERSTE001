@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERSTE002 — 结构档案（进行中）</title>
+<style>
+  :root{--bg:#0b0b0c;--ink:#f2f0ec;--dim:#77777f;--line:#22222a;--accent:#c4291e;
+        --mono:"SFMono-Regular",Consolas,Menlo,monospace;--sans:"Helvetica Neue",Arial,"PingFang SC",sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+  header{display:flex;justify-content:space-between;align-items:baseline;padding:22px 26px;
+    border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+  header a{color:var(--dim);text-decoration:none}
+  header a:hover{color:var(--ink)}
+  .wrap{max-width:1200px;margin:0 auto;padding:40px 26px 80px}
+  .kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.24em;color:var(--accent);text-transform:uppercase}
+  h1{font-size:clamp(36px,5vw,64px);letter-spacing:-.03em;line-height:1;margin:14px 0 18px}
+  .lede{font-size:14.5px;line-height:1.8;color:#b9b7b2;max-width:60ch}
+  section{margin-top:44px;border-top:1px solid var(--line);padding-top:20px}
+  h2{font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim);font-weight:500}
+  p{margin-top:12px;font-size:14px;line-height:1.8;color:#b9b7b2;max-width:66ch}
+  .viewer{margin-top:16px;border:1px solid var(--line);height:70vh;min-height:420px}
+  iframe{width:100%;height:100%;border:0;display:block}
+  .note{margin-top:14px;font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--dim);text-transform:uppercase}
+</style>
+</head>
+<body>
+<header>
+  <a href="/">← 返回终端</a>
+  <span>ERSTE002 · WIP · term v0.4</span>
+</header>
+<div class="wrap">
+  <div class="kicker">独立产品开发 / 2026</div>
+  <h1>ERSTE002</h1>
+  <p class="lede">低矮壳体内的结构重排：把传感器光心、PCB 与滚轮压缩在同一段垂直空间里。当前处于结构迭代与打样阶段，页面随进度更新。</p>
+
+  <section>
+    <h2>01 · 当前状态</h2>
+    <p>壳体已完成首轮打印，前后耳片在展示模型中被移除，底部以 1.6mm 底板封闭，并按中线偏前留出传感器开口、尾段右侧留出开关槽。</p>
+  </section>
+
+  <section>
+    <h2>02 · 三维档案</h2>
+    <div class="viewer"><iframe src="/preview/lab/index.html" title="ERSTE002 三维档案"></iframe></div>
+    <div class="note">拖拽旋转 · 滚轮缩放 · 拆解查看分件</div>
+  </section>
+
+  <section>
+    <h2>03 · 待补</h2>
+    <p>滚轮与 PCB 模型、传感器轴线图示、打样照片与装配顺序。等最终模型到手后替换当前占位件。</p>
+  </section>
+</div>
+</body>
+</html>
