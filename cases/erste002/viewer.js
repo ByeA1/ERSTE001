@@ -131,7 +131,7 @@ function selectPart(name) {
       if (o.isMesh && o.material && o.material.emissive) {
         const on = key === name;
         o.material.emissive.set(on ? '#B3271C' : '#000000');
-        o.material.emissiveIntensity = on ? 0.10 : 0;
+        o.material.emissiveIntensity = on ? 0.035 : 0;
       }
     });
   });
@@ -259,7 +259,7 @@ function loadModel() {
       model.traverse((o) => {
         if (o.isMesh) {
           o.material = new THREE.MeshPhysicalMaterial({
-            color: '#20201F', metalness: 0.10, roughness: 0.40,
+            color: '#2A2A2C', metalness: 0.10, roughness: 0.40,
             clearcoat: 0.35, clearcoatRoughness: 0.24, envMapIntensity: 0.85,
           });
           parts.set(o.name, o);
