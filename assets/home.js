@@ -135,7 +135,7 @@ function reveal() {
 // safety valve: never trap the visitor behind the overlay
 setTimeout(() => { if (!revealed) { if (lstate) lstate.textContent = 'timeout'; reveal(); } }, 12000);
 
-new GLTFLoader().load('./assets/models/shell-v6.glb', (gltf) => {
+new GLTFLoader().load('./assets/models/shell-v6-slim.glb', (gltf) => {
   const model = gltf.scene;
   const raw = new THREE.Box3().setFromObject(model);
   const rawSize = raw.getSize(new THREE.Vector3());
