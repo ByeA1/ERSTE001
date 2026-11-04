@@ -27,7 +27,7 @@
   #scene{position:fixed;inset:0}
   canvas{display:block}
 
-  .frame{position:fixed;inset:0;display:grid;
+  .frame{position:fixed;inset:0;z-index:10;display:grid;
     grid-template-columns:280px 1fr 320px;grid-template-rows:auto 1fr auto;
     padding:22px 26px;pointer-events:none;gap:0 26px}
 
@@ -76,7 +76,11 @@
     letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
 
   /* boot overlay */
-  #boot{position:fixed;inset:0;background:var(--bg);z-index:20;display:flex;flex-direction:column;
+  #poster{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0a0b;z-index:1;transition:opacity .4s}`n  #poster img{max-width:min(72vw,860px);max-height:66vh;object-fit:contain;opacity:.9;filter:brightness(.9) contrast(1.05)}`n  #poster button{position:absolute;bottom:16vh;left:50%;transform:translateX(-50%);background:transparent;border:1px solid #33333a;color:#d8d6d1;padding:11px 18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;pointer-events:auto}`n  #poster button:hover{border-color:var(--accent);color:#fff}`n  #poster{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#0a0a0b;z-index:1;transition:opacity .4s}
+  #poster img{max-width:min(72vw,860px);max-height:66vh;object-fit:contain;opacity:.9;filter:brightness(.9) contrast(1.05)}
+  #poster button{position:absolute;bottom:16vh;left:50%;transform:translateX(-50%);background:transparent;border:1px solid #33333a;color:#d8d6d1;padding:11px 18px;font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer;pointer-events:auto}
+  #poster button:hover{border-color:var(--accent);color:#fff}
+  #boot{position:fixed;inset:0;background:var(--bg);z-index:20;display:none;flex-direction:column;
     justify-content:center;padding:0 8vw;font-family:var(--mono);font-size:11px;letter-spacing:.2em;
     text-transform:uppercase;color:var(--dim)}
   #boot .line{opacity:0;margin:5px 0}
@@ -100,6 +104,7 @@
 </head>
 <body>
 <div id="scene"></div>
+<div id="poster"><img src="./assets/render/shell-001-1440.avif" alt="ERSTE002 壳体渲染"><button id="load3d">查看三维模型</button></div>
 
 <div class="frame">
   <header class="bar">
@@ -145,6 +150,29 @@
   <div class="line" id="l4">status <b>ready</b></div>
 </div>
 
-<script type="module" src="./assets/home.js"></script>
+<script type="module">
+  const clockEl = document.getElementById('clock');
+  const pad = (n) => String(n).padStart(2, '0');
+  const tickClock = () => {
+    const d = new Date();
+    clockEl.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  };
+  tickClock(); setInterval(tickClock, 1000);
+
+  const btn = document.getElementById('load3d');
+  btn.addEventListener('click', async () => {
+    btn.disabled = true;
+    btn.textContent = '加载中…';
+    try {
+      await import('./assets/home.js');
+      const poster = document.getElementById('poster');
+      poster.style.opacity = '0';
+      setTimeout(() => poster.remove(), 420);
+    } catch (e) {
+      btn.textContent = '加载失败，点击重试';
+      btn.disabled = false;
+    }
+  });
+</script>
 </body>
 </html>

@@ -158,6 +158,7 @@ function typeLine(el, delay) {
 }
 
 function boot() {
+  bootEl.style.display = 'flex';
   const lines = ['l1', 'l2', 'l3', 'l4'].map((id) => document.getElementById(id));
   lines.forEach((el, i) => {
     setTimeout(() => { el.style.transition = 'opacity .25s'; el.style.opacity = '1'; }, 120 + i * 190);
@@ -209,6 +210,8 @@ function animateTo(obj, to, duration) {
   }
   requestAnimationFrame(step);
 }
+
+boot();
 
 /* ---------- selection ---------- */
 let selected = '002';
