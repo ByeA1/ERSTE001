@@ -34,6 +34,16 @@
     transition:border-color .25s,color .25s}
   button:hover{border-color:#c4291e;color:#fff}
   button[aria-pressed="true"]{border-color:#c4291e;color:#fff}
+  @media (max-width:720px){
+    .hud{padding:18px 18px 22px}
+    .hud .top{font-size:9px;letter-spacing:.18em}
+    .title h1{font-size:46px}
+    .caption{display:none}
+    .meta{font-size:9.5px;letter-spacing:.14em;margin-top:10px}
+    .controls{margin-top:14px;gap:8px}
+    button{padding:8px 10px;font-size:9.5px;letter-spacing:.12em}
+    #labels{display:none}
+  }
 </style>
 </head>
 <body>

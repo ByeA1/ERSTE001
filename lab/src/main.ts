@@ -22,6 +22,7 @@ scene.environmentIntensity = 0.35;
 
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.01, 12);
 const HOME = new THREE.Vector3(0.52, 0.30, 0.86);
+let homeDist = HOME.clone();
 camera.position.copy(HOME);
 
 const controls = new OrbitControls(camera, renderer.domElement);
@@ -31,6 +32,15 @@ controls.minDistance = 0.35;
 controls.maxDistance = 1.6;
 controls.maxPolarAngle = Math.PI * 0.86;
 controls.target.set(0, 0.01, 0);
+
+function fitCamera() {
+  const aspect = innerWidth / innerHeight;
+  const k = aspect < 1 ? Math.min(1.9, (1 / aspect) * 0.92) : 1;
+  homeDist.set(HOME.x * k, HOME.y * k, HOME.z * k);
+  controls.minDistance = 0.35 * k;
+}
+fitCamera();
+camera.position.copy(homeDist);
 
 const key = new THREE.DirectionalLight('#ffffff', 1.6);
 key.position.set(-0.6, 0.9, 0.7);
@@ -187,7 +197,7 @@ function setExplode(on: boolean) {
   });
 
   gsap.to(camera.position, {
-    x: on ? 0.56 : HOME.x, y: on ? 0.32 : HOME.y, z: on ? 0.94 : HOME.z,
+    x: on ? homeDist.x * 1.08 : homeDist.x, y: on ? homeDist.y * 1.07 : homeDist.y, z: on ? homeDist.z * 1.09 : homeDist.z,
     duration: 0.9, ease: 'power2.inOut',
   });
   gsap.to(ringUniforms.uOpacity, { value: on ? 0.06 : 0.18, duration: 0.5 });
@@ -205,7 +215,7 @@ document.getElementById('btn-explode')!.addEventListener('click', () => setExplo
 
 document.getElementById('btn-reset')!.addEventListener('click', () => {
   setExplode(false);
-  gsap.to(camera.position, { ...HOME, duration: 0.7, ease: 'power2.inOut' });
+  gsap.to(camera.position, { ...homeDist, duration: 0.7, ease: 'power2.inOut' });
   gsap.to(controls.target, { x: 0, y: 0.01, z: 0, duration: 0.7, ease: 'power2.inOut' });
 });
 
@@ -230,5 +240,6 @@ tick();
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
+  fitCamera();
   renderer.setSize(innerWidth, innerHeight);
 });
