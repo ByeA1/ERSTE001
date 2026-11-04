@@ -4,7 +4,7 @@ ITERATION IN PROGRESS
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
-相关人物：Tony Zhang
+相关人物：zhanglingfeng_123@163.com
 访问范围：ERSTE002 / WIP
 
 ERSTE002 已进入壳体打印与结构迭代阶段，后续档案将随实体模型与装配验证进度更新。

@@ -4,7 +4,7 @@ PHYSICAL PROTOTYPE
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
-相关人物：Tony Zhang
+相关人物：zhanglingfeng_123@163.com
 访问范围：ERSTE001 / PROTOTYPE
 
 通过 3D 打印将 CAD 模型变成真实组件，再结合 PCB、传感器、微动与编码器完成实物装配。
