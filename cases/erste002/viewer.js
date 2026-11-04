@@ -180,11 +180,7 @@ async function initScene() {
   scene.add(rim);
   scene.add(new THREE.HemisphereLight('#FFFFFF', '#B9AE9B', 0.55));
 
-  const grid = new THREE.GridHelper(1.6, 16, '#C9BDA6', '#DDD4C3');
-  grid.material.opacity = 0.55;
-  grid.material.transparent = true;
-  grid.position.y = -0.075;
-  scene.add(grid);
+
 
   modelRoot = new THREE.Group();
   scene.add(modelRoot);
