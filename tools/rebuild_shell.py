@@ -152,7 +152,16 @@ def main():
 
     bpy.ops.wm.read_factory_settings(use_empty=True)
     objs = import_all()
-    shell = join(objs, 'ERSTE002_shell')
+    split = opts.get('split', '0') in ('1', 'true', 'True')
+    if split:
+        for o in objs:
+            o.name = 'shell_top' if '上盖' in o.name else 'button_cover'
+        for o in objs:
+            bpy.context.view_layer.objects.active = o
+            o.data.materials.clear()
+        shell = objs[0]
+    else:
+        shell = join(objs, 'ERSTE002_shell')
 
     bisect_clean(shell, z_cut)
 
@@ -170,11 +179,24 @@ def main():
     boolean_cut(plate, add_box(12.5, y_switch, z_cut - PLATE_T * 0.5,
                                SWITCH_W, SWITCH_H, PLATE_T * 4))
 
-    # merge plate into the shell as one object for export
-    shell.select_set(True)
-    plate.select_set(True)
-    bpy.context.view_layer.objects.active = shell
-    bpy.ops.object.join()
+    split = opts.get('split', '0') in ('1', 'true', 'True')
+    print('DEBUG parts before split:', [(o.name, o.type) for o in bpy.data.objects])
+    if split:
+        # keep three named parts so the viewer can explode them
+        import_parts = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith('上盖')
+                        or o.type == 'MESH' and o.name.startswith('按键盖')]
+        for o in import_parts:
+            o.name = 'shell_top' if o.name.startswith('上盖') else 'button_cover'
+        plate.name = 'bottom_plate'
+        bpy.ops.object.select_all(action='DESELECT')
+        for o in bpy.data.objects:
+            if o.type == 'MESH':
+                o.select_set(True)
+    else:
+        shell.select_set(True)
+        plate.select_set(True)
+        bpy.context.view_layer.objects.active = shell
+        bpy.ops.object.join()
 
     # dark graphite material for the viewer
     mat = bpy.data.materials.new('shell_graphite')
@@ -185,21 +207,24 @@ def main():
     if 'Coat Weight' in bsdf.inputs:
         bsdf.inputs['Coat Weight'].default_value = 0.3
         bsdf.inputs['Coat Roughness'].default_value = 0.18
-    shell.data.materials.clear()
-    shell.data.materials.append(mat)
+    targets = [o for o in bpy.data.objects if o.type == 'MESH'] if opts.get('split', '0') in ('1','true','True') else [shell]
+    for t in targets:
+        t.data.materials.clear()
+        t.data.materials.append(mat)
 
     # lighten the mesh for the web viewer
-    dec = shell.modifiers.new('dec', 'DECIMATE')
-    dec.ratio = float(opts.get('decimate', 0.35))
-    bpy.context.view_layer.objects.active = shell
-    bpy.ops.object.modifier_apply(modifier=dec.name)
+    for t in targets:
+        dec = t.modifiers.new('dec', 'DECIMATE')
+        dec.ratio = float(opts.get('decimate', 0.35))
+        bpy.context.view_layer.objects.active = t
+        bpy.ops.object.modifier_apply(modifier=dec.name)
 
     out.parent.mkdir(parents=True, exist_ok=True)
     if out.suffix.lower() == '.glb':
         bpy.ops.export_scene.gltf(filepath=str(out), export_format='GLB', use_selection=True)
     else:
         bpy.ops.wm.obj_export(filepath=str(out), export_selected_objects=True)
-    print('SHELL_OK', out, 'verts', len(shell.data.vertices))
+    print('SHELL_OK', out, 'objects', [(o.name, len(o.data.vertices)) for o in bpy.data.objects if o.type=='MESH'])
 
 
 main()
