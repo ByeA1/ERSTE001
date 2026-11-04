@@ -327,12 +327,14 @@ loadBtn.addEventListener('click', start);
 // desktop: hold the engine until the first scroll (or an explicit click)
 if (matchMedia('(min-width: 881px)').matches) {
   const kick = () => {
-    if (state === 'idle' && window.scrollY > 40) {
-      removeEventListener('scroll', kick);
-      start();
-    }
+    if (state !== 'idle') { removeEventListener('scroll', kick); return; }
+    removeEventListener('scroll', kick);
+    start();
   };
   addEventListener('scroll', kick, { passive: true });
+  // a page restored mid-scroll should not pull the engine before the visitor acts
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  scrollTo(0, 0);
 }
 
 setControlsEnabled(false);
