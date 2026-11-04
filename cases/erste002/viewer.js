@@ -186,7 +186,7 @@ async function initScene() {
   scene.add(modelRoot);
 
   renderer.domElement.addEventListener('pointerdown', onPointerDown);
-  renderer.domElement.addEventListener('pointerup', onPointerUp);
+  renderer.domElement.addEventListener('click', onCanvasClick);
   if (!resizeBound) { addEventListener('resize', resize); resizeBound = true; }
 
   animate();
@@ -200,20 +200,13 @@ function resize() {
 }
 
 /* ---------------- picking ---------------- */
-let pressAt = null;
-
-function onPointerDown(ev) {
+function onPointerDown() {
   if (!THREE) return;
-  pressAt = { x: ev.clientX, y: ev.clientY, t: performance.now() };
   skipIntro();
 }
 
-function onPointerUp(ev) {
-  if (!THREE || state !== 'ready' || !pressAt) return;
-  const moved = Math.hypot(ev.clientX - pressAt.x, ev.clientY - pressAt.y);
-  const held = performance.now() - pressAt.t;
-  pressAt = null;
-  if (moved > 6 || held > 500) return;   // a drag or a long press is orbiting, not picking
+function onCanvasClick(ev) {
+  if (!THREE || state !== 'ready') return;
   pick(ev);
 }
 
