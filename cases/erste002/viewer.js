@@ -285,7 +285,7 @@ function pick(ev) {
 /* ---------------- model ---------------- */
 function loadModel() {
   loader.load(
-    './assets/shell.glb',
+    './assets/shell-47k.glb',
     (gltf) => {
       const model = gltf.scene;
       const rawBox = new THREE.Box3().setFromObject(model);
