@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ERSTE002 · Lab</title>
+<style>
+  html,body{margin:0;height:100%;background:#0b0b0c;color:#f2f0ec;overflow:hidden;
+    font-family:"Helvetica Neue",Arial,"PingFang SC","Microsoft YaHei",sans-serif}
+  #app{position:fixed;inset:0}
+  canvas{display:block}
+
+  .hud{position:fixed;inset:0;pointer-events:none;padding:26px 34px;display:flex;flex-direction:column;justify-content:space-between}
+  .hud .top{display:flex;justify-content:space-between;align-items:flex-start;
+    font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:#8b8b93}
+  .hud .top b{color:#f2f0ec;font-weight:500}
+  .hud .bottom{display:flex;justify-content:space-between;align-items:flex-end}
+
+  .title{overflow:hidden}
+  .title h1{margin:0;font-size:clamp(38px,6.4vw,92px);line-height:.92;letter-spacing:-.03em;font-weight:600}
+  .title .rule{height:2px;width:0;background:#c4291e;margin-top:14px}
+  .meta{margin-top:14px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#8b8b93;opacity:0}
+
+  .caption{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#8b8b93}
+  .caption span{color:#f2f0ec}
+
+  .scan{position:fixed;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,#c4291e88,transparent);opacity:0}
+
+  .controls{pointer-events:auto;display:flex;gap:10px;margin-top:18px}
+  button{pointer-events:auto;background:transparent;border:1px solid #33333a;color:#d8d6d1;
+    padding:9px 14px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
+    transition:border-color .25s,color .25s}
+  button:hover{border-color:#c4291e;color:#fff}
+  button[aria-pressed="true"]{border-color:#c4291e;color:#fff}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="scan" id="scan"></div>
+
+<div class="hud">
+  <div class="top">
+    <span><b>ERSTE002</b> · 结构档案</span>
+    <span>preview · wip</span>
+  </div>
+
+  <div class="bottom" style="align-items:flex-start">
+    <div class="title">
+      <h1 id="title">ERSTE<span style="color:#c4291e">.</span></h1>
+      <div class="rule" id="rule"></div>
+      <div class="meta" id="meta">FPS MOUSE · SHELL REBUILD · 2026</div>
+      <div class="controls">
+        <button id="btn-explode" aria-pressed="false">拆解</button>
+        <button id="btn-reset">复位</button>
+        <button id="btn-spin" aria-pressed="true">自转</button>
+      </div>
+    </div>
+    <div class="caption">drag to orbit · scroll to zoom</div>
+  </div>
+</div>
+
+<script type="module" src="./src/main.ts"></script>
+</body>
+</html>
