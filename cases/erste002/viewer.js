@@ -372,7 +372,7 @@ new IntersectionObserver(([entry]) => {
 async function start() {
   if (state === 'loading' || state === 'ready') return;
   state = 'loading';
-  loadBtn.disabled = true;
+  if (loadBtn) loadBtn.disabled = true;
   setStatus('LOADING');
   try {
     if (!renderer) await initScene();
