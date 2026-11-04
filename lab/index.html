@@ -26,6 +26,8 @@
 
   .scan{position:fixed;left:0;right:0;top:0;height:1px;background:linear-gradient(90deg,transparent,#c4291e88,transparent);opacity:0}
 
+  #labels{display:flex;flex-direction:column;gap:4px;margin-top:16px;font-size:10px;letter-spacing:.18em;color:#8b8b93;text-transform:uppercase}
+  #labels .label{opacity:0}
   .controls{pointer-events:auto;display:flex;gap:10px;margin-top:18px}
   button{pointer-events:auto;background:transparent;border:1px solid #33333a;color:#d8d6d1;
     padding:9px 14px;font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;cursor:pointer;
@@ -55,6 +57,7 @@
         <button id="btn-spin" aria-pressed="true">自转</button>
       </div>
     </div>
+    <div id="labels"></div>
     <div class="caption">drag to orbit · scroll to zoom</div>
   </div>
 </div>

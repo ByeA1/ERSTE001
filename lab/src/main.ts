@@ -14,63 +14,102 @@ app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color('#0b0b0c');
-scene.fog = new THREE.FogExp2('#0b0b0c', 0.06);
+scene.fog = new THREE.FogExp2('#0b0b0c', 0.05);
 
 const pmrem = new THREE.PMREMGenerator(renderer);
 scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
 scene.environmentIntensity = 0.35;
 
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.01, 12);
-camera.position.set(0.52, 0.30, 0.86);
+const HOME = new THREE.Vector3(0.52, 0.30, 0.86);
+camera.position.copy(HOME);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.06;
-controls.minDistance = 0.22;
-controls.maxDistance = 0.95;
+controls.minDistance = 0.35;
+controls.maxDistance = 1.6;
 controls.maxPolarAngle = Math.PI * 0.86;
-controls.target.set(0, 0.0, 0);
+controls.target.set(0, 0.01, 0);
 
-// lights
 const key = new THREE.DirectionalLight('#ffffff', 1.6);
 key.position.set(-0.6, 0.9, 0.7);
 scene.add(key);
 const rim = new THREE.DirectionalLight('#9fb7ff', 0.9);
 rim.position.set(0.8, 0.4, -0.9);
 scene.add(rim);
-const fill = new THREE.HemisphereLight('#ffffff', '#101014', 0.18);
-scene.add(fill);
+scene.add(new THREE.HemisphereLight('#ffffff', '#101014', 0.18));
 
-// scanning ring
-const ringMat = new THREE.MeshBasicMaterial({ color: '#c4291e', transparent: true, opacity: 0 });
-const ring = new THREE.Mesh(new THREE.TorusGeometry(0.30, 0.0012, 8, 220), ringMat);
-ring.rotation.x = Math.PI / 2;
-ring.position.y = -0.062;
+const ringUniforms = {
+  uTime: { value: 0 },
+  uProgress: { value: 0 },
+  uOpacity: { value: 0 },
+  uColor: { value: new THREE.Color('#c4291e') },
+};
+
+const ringMat = new THREE.ShaderMaterial({
+  uniforms: ringUniforms,
+  transparent: true,
+  depthWrite: false,
+  side: THREE.DoubleSide,
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    precision highp float;
+    uniform float uTime;
+    uniform float uProgress;
+    uniform float uOpacity;
+    uniform vec3 uColor;
+    varying vec2 vUv;
+
+    float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+
+    void main() {
+      vec2 p = vUv - 0.5;
+      float r = length(p) * 2.0;
+      float radius = mix(0.05, 1.0, uProgress);
+      float band = smoothstep(0.035, 0.0, abs(r - radius));
+      float trail = smoothstep(0.10, 0.0, abs(r - radius + 0.06)) * 0.35;
+      float n = hash(floor(vec2(atan(p.y, p.x) * 24.0, uTime * 3.0)));
+      float gate = step(0.35, n);
+      float a = (band * gate + trail) * uOpacity;
+      if (a < 0.002) discard;
+      gl_FragColor = vec4(uColor, a);
+    }
+  `,
+});
+
+const ring = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 1.1), ringMat);
+ring.rotation.x = -Math.PI / 2;
+ring.position.y = -0.055;
 scene.add(ring);
 
-const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.0008, 8, 240), ringMat.clone());
-ring2.rotation.x = Math.PI / 2;
-ring2.position.y = -0.062;
-scene.add(ring2);
-
-// floor grid lines
-const gridGeo = new THREE.RingGeometry(0.02, 0.9, 96, 1);
-const gridMat = new THREE.MeshBasicMaterial({ color: '#2a2a30', transparent: true, opacity: 0.55, side: THREE.DoubleSide });
-const grid = new THREE.Mesh(gridGeo, gridMat);
+const gridMat = new THREE.MeshBasicMaterial({ color: '#232329', transparent: true, opacity: 0.5, side: THREE.DoubleSide });
+const grid = new THREE.Mesh(new THREE.RingGeometry(0.05, 0.95, 96, 1), gridMat);
 grid.rotation.x = -Math.PI / 2;
-grid.position.y = -0.068;
+grid.position.y = -0.062;
 scene.add(grid);
 
-// model
 const modelRoot = new THREE.Group();
 scene.add(modelRoot);
 
 const parts = new Map<string, THREE.Object3D>();
+const PART_ORDER = ['bottom_plate', 'shell_top', 'button_cover'];
+const PART_LABEL: Record<string, string> = {
+  bottom_plate: '底板 / BOTTOM PLATE',
+  shell_top: '上盖 / UPPER SHELL',
+  button_cover: '按键盖 / BUTTON COVER',
+};
+
 let loaded = false;
 
 new GLTFLoader().load('../../assets/models/shell-v6.glb', (gltf) => {
   const model = gltf.scene;
-  // normalise: STL was authored in mm at 1:1000 scale inside Blender
   const rawBox = new THREE.Box3().setFromObject(model);
   const rawSize = rawBox.getSize(new THREE.Vector3());
   const scale = 0.30 / Math.max(rawSize.x, rawSize.y, rawSize.z);
@@ -79,75 +118,107 @@ new GLTFLoader().load('../../assets/models/shell-v6.glb', (gltf) => {
   const box = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   model.position.sub(center);
-  const size = box.getSize(new THREE.Vector3());
+
   model.traverse((o) => {
     const m = o as THREE.Mesh;
     if (m.isMesh) {
-      m.castShadow = true;
-      m.receiveShadow = true;
-      const mat = m.material as THREE.MeshStandardMaterial;
-      if (mat) { mat.color.set('#191a1f'); mat.metalness = 0.08; mat.roughness = 0.42; mat.envMapIntensity = 1.15; }
-      if (mat && 'roughness' in mat) {
-
-        mat.roughness = Math.min(0.45, mat.roughness ?? 0.35);
-        mat.envMapIntensity = 0.9;
-      }
+      m.material = new THREE.MeshPhysicalMaterial({
+        color: '#17171c', metalness: 0.06, roughness: 0.36,
+        clearcoat: 0.35, clearcoatRoughness: 0.25, envMapIntensity: 0.65,
+      });
+      parts.set(m.name, m);
     }
   });
-  model.traverse((o) => { if ((o as any).isMesh) parts.set(o.name, o); });
+
   modelRoot.add(model);
   loaded = true;
-  (window as any).__lab = { model, modelRoot, camera, box: { size: size.toArray(), center: center.toArray() }, rawScale: scale };
-  console.log('LAB model size', size.toArray(), 'scale', scale);
-
-  modelRoot.scale.setScalar(0.8);
-  modelRoot.rotation.y = -0.6;
-  modelRoot.position.y = 0.015;
   playIntro();
 });
 
-// explode: any direct children with a distinct origin get pushed outward
-function buildExplodeTargets() {
-  explodeTargets = [];
-  modelRoot.children.forEach((child, i) => {
-    if (i === 0) return;
-    explodeTargets.push({ obj: child, dir: new THREE.Vector3(0, 1, 0), amount: 0.06 });
-  });
-}
-
 function playIntro() {
-  const tl = gsap.timeline();
-  const scan = document.getElementById('scan')!;
   const title = document.getElementById('title')!;
   const rule = document.getElementById('rule')!;
   const meta = document.getElementById('meta')!;
+  const hud = document.querySelectorAll<HTMLElement>('.hud .top, .hud .caption');
 
-  tl.fromTo(title, { yPercent: 108, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.9, ease: 'power3.out' }, 0.15);
-  tl.to(rule, { width: 96, duration: 0.6, ease: 'power2.out' }, 0.55);
-  tl.to(meta, { opacity: 1, duration: 0.5 }, 0.75);
+  gsap.set(modelRoot.scale, { x: 0.94, y: 0.94, z: 0.94 });
+  gsap.set(modelRoot.position, { y: 0.0 });
+  gsap.to(modelRoot.scale, { x: 1, y: 1, z: 1, duration: 1.0, ease: 'power3.out' }, 0);
+  gsap.fromTo(title, { yPercent: 40, opacity: 0 }, { yPercent: 0, opacity: 1, duration: 0.6, ease: 'power3.out' }, 0.05);
+  gsap.to(rule, { width: 96, duration: 0.5, ease: 'power2.out' }, 0.25);
+  gsap.to(meta, { opacity: 1, duration: 0.4 }, 0.3);
+  gsap.fromTo(hud, { opacity: 0 }, { opacity: 1, duration: 0.4, stagger: 0.05 }, 0.1);
 
-  tl.fromTo(scan, { opacity: 0.9, top: '12%' }, { top: '82%', duration: 1.1, ease: 'power2.inOut' }, 0.2);
-  tl.to(scan, { opacity: 0, duration: 0.35 }, 1.25);
+  gsap.to(ringUniforms.uOpacity, { value: 0.95, duration: 0.25 }, 0.3);
+  gsap.to(ringUniforms.uProgress, { value: 1, duration: 0.85, ease: 'power2.inOut' }, 0.3);
+  const scan = document.getElementById('scan')!;
+  gsap.fromTo(scan, { opacity: 0.85, top: '18%' }, { top: '78%', duration: 0.85, ease: 'power2.inOut' }, 0.3);
+  gsap.to(scan, { opacity: 0, duration: 0.3 }, 1.1);
 
-  tl.fromTo(ringMat, { opacity: 0 }, { opacity: 0.85, duration: 0.4 }, 0.9);
-  tl.fromTo(ring.scale, { x: 0.2, y: 0.2, z: 0.2 }, { x: 1, y: 1, z: 1, duration: 1.1, ease: 'power2.out' }, 0.9);
-  tl.to(ringMat, { opacity: 0.16, duration: 0.8 }, 1.9);
-
-  tl.fromTo(modelRoot.scale, { x: 0.82, y: 0.82, z: 0.82 }, { x: 1, y: 1, z: 1, duration: 1.2, ease: 'power3.out' }, 0.75);
-  tl.fromTo(modelRoot.position, { y: -0.05 }, { y: 0.06, duration: 1.2, ease: 'power3.out' }, 0.75);
-
-  tl.to(ring2.scale, { x: 1.12, y: 1.12, z: 1.12, duration: 1.6, ease: 'power1.out', repeat: -1, yoyo: true }, 2.0);
+  gsap.to(modelRoot.position, { y: 0.012, duration: 1.0, ease: 'power2.out' }, 1.2);
+  gsap.to(ringUniforms.uOpacity, { value: 0.18, duration: 0.8 }, 1.5);
 }
 
-// simple idle motion
-let spinning = true;
-const clock = new THREE.Clock();
+let exploded = false;
+const LIFT: Record<string, number> = { bottom_plate: -0.018, shell_top: 0.022, button_cover: 0.044 };
+const DELAY: Record<string, number> = { bottom_plate: 0, shell_top: 0.16, button_cover: 0.32 };
 
+const labels = document.getElementById('labels')!;
+
+function setExplode(on: boolean) {
+  exploded = on;
+  const btn = document.getElementById('btn-explode')!;
+  btn.setAttribute('aria-pressed', String(on));
+  btn.textContent = on ? '重组' : '拆解';
+
+  const order = on ? PART_ORDER : [...PART_ORDER].reverse();
+  order.forEach((name) => {
+    const obj = parts.get(name);
+    if (!obj) return;
+    gsap.to(obj.position, {
+      y: on ? LIFT[name] ?? 0 : 0,
+      duration: on ? 0.62 : 0.5,
+      delay: on ? DELAY[name] ?? 0 : 0.05,
+      ease: on ? 'power3.out' : 'power3.inOut',
+      overwrite: 'auto',
+    });
+  });
+
+  gsap.to(camera.position, {
+    x: on ? 0.60 : HOME.x, y: on ? 0.36 : HOME.y, z: on ? 1.04 : HOME.z,
+    duration: 0.9, ease: 'power2.inOut',
+  });
+  gsap.to(ringUniforms.uOpacity, { value: on ? 0.06 : 0.18, duration: 0.5 });
+
+  if (on) {
+    labels.innerHTML = PART_ORDER.map((n) => `<div class="label">${PART_LABEL[n]}</div>`).join('');
+    gsap.fromTo(labels.children, { opacity: 0, x: -8 }, { opacity: 1, x: 0, duration: 0.4, stagger: 0.1, delay: 0.35 });
+  } else {
+    gsap.to(labels.children, { opacity: 0, duration: 0.2 }, 0);
+    setTimeout(() => { labels.innerHTML = ''; }, 260);
+  }
+}
+
+document.getElementById('btn-explode')!.addEventListener('click', () => setExplode(!exploded));
+
+document.getElementById('btn-reset')!.addEventListener('click', () => {
+  setExplode(false);
+  gsap.to(camera.position, { ...HOME, duration: 0.7, ease: 'power2.inOut' });
+  gsap.to(controls.target, { x: 0, y: 0.01, z: 0, duration: 0.7, ease: 'power2.inOut' });
+});
+
+let spinning = true;
+const btnSpin = document.getElementById('btn-spin')!;
+btnSpin.addEventListener('click', () => {
+  spinning = !spinning;
+  btnSpin.setAttribute('aria-pressed', String(spinning));
+});
+
+const clock = new THREE.Clock();
 function tick() {
   const t = clock.getElapsedTime();
-  if (spinning) modelRoot.rotation.y += 0.0035;
-  ring.position.y = -0.02 + Math.sin(t * 1.1) * 0.004;
-  ring2.position.y = ring.position.y;
+  ringUniforms.uTime.value = t;
+  if (spinning && !exploded) modelRoot.rotation.y += 0.0032;
   controls.update();
   renderer.render(scene, camera);
   requestAnimationFrame(tick);
@@ -158,32 +229,4 @@ addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
-});
-
-// controls
-const btnExplode = document.getElementById('btn-explode')!;
-const btnReset = document.getElementById('btn-reset')!;
-const btnSpin = document.getElementById('btn-spin')!;
-
-let exploded = false;
-btnExplode.addEventListener('click', () => {
-  exploded = !exploded;
-  btnExplode.setAttribute('aria-pressed', String(exploded));
-  gsap.to(modelRoot.position, { y: exploded ? 0.10 : 0.06, duration: 0.6, ease: 'power2.out' });
-  gsap.to(modelRoot.rotation, { x: exploded ? -0.22 : 0, duration: 0.6, ease: 'power2.out' });
-  gsap.to(ringMat, { opacity: exploded ? 0.05 : 0.16, duration: 0.5 });
-});
-
-btnReset.addEventListener('click', () => {
-  gsap.to(camera.position, { x: 0.52, y: 0.30, z: 0.86, duration: 0.7, ease: 'power2.inOut' });
-  gsap.to(controls.target, { x: 0, y: 0.02, z: 0, duration: 0.7, ease: 'power2.inOut' });
-  exploded = false;
-  btnExplode.setAttribute('aria-pressed', 'false');
-  gsap.to(modelRoot.position, { y: 0.06, duration: 0.5 });
-  gsap.to(modelRoot.rotation, { x: 0, duration: 0.5 });
-});
-
-btnSpin.addEventListener('click', () => {
-  spinning = !spinning;
-  btnSpin.setAttribute('aria-pressed', String(spinning));
 });
