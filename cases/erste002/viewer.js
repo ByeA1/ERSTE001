@@ -147,6 +147,68 @@ function selectPart(name) {
   if (state === 'ready') setStatus(name ? 'SELECTED' : 'READY');
 }
 
+/* ---------------- leader lines ---------------- */
+const leaders = document.getElementById('leaders');
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+function ensureLeaderNodes() {
+  if (!leaders || leaders.dataset.ready === '1') return;
+  leaders.innerHTML = '';
+  leaders.innerHTML = `
+    <line x1="0" y1="0" x2="0" y2="0" />
+    <circle class="dot" cx="0" cy="0" r="2.6" />
+    <rect class="plate" x="0" y="0" width="0" height="0" rx="0" />
+    <text x="0" y="0">SELECTED</text>`;
+  leaders.dataset.ready = '1';
+}
+
+function updateLeader() {
+  if (!leaders) return;
+  ensureLeaderNodes();
+  const line = leaders.querySelector('line');
+  const dot = leaders.querySelector('.dot');
+  const plate = leaders.querySelector('.plate');
+  const text = leaders.querySelector('text');
+
+  if (!selected || !parts.has(selected) || !camera) {
+    leaders.style.display = 'none';
+    return;
+  }
+  leaders.style.display = '';
+
+  const obj = parts.get(selected);
+  const box = new THREE.Box3().setFromObject(obj);
+  const centre = box.getCenter(new THREE.Vector3());
+  centre.project(camera);
+
+  const w = viewport.clientWidth;
+  const h = viewport.clientHeight;
+  const x = (centre.x * 0.5 + 0.5) * w;
+  const y = (-centre.y * 0.5 + 0.5) * h;
+
+  // label sits on the side with more room
+  const toRight = x < w * 0.6;
+  const labelX = toRight ? Math.min(w - 132, x + 54) : Math.max(12, x - 132);
+  const labelY = Math.max(28, Math.min(h - 28, y - 42));
+
+  line.setAttribute('x1', String(x));
+  line.setAttribute('y1', String(y));
+  line.setAttribute('x2', String(toRight ? labelX : labelX + 120));
+  line.setAttribute('y2', String(labelY + 12));
+
+  dot.setAttribute('cx', String(x));
+  dot.setAttribute('cy', String(y));
+
+  const label = PART_LABEL[selected][1];
+  plate.setAttribute('x', String(labelX - 6));
+  plate.setAttribute('y', String(labelY - 12));
+  plate.setAttribute('width', String(label.length * 6.4 + 16));
+  plate.setAttribute('height', '20');
+  text.setAttribute('x', String(labelX));
+  text.setAttribute('y', String(labelY + 2));
+  text.textContent = label;
+}
+
 /* ---------------- scene ---------------- */
 async function initScene() {
   const [threeMod, gltfMod, orbitMod, dracoMod] = await Promise.all([
@@ -411,6 +473,7 @@ function animate() {
   if (!(stageVisible && pageVisible)) return;
   controls.update();
   renderer.render(scene, camera);
+  updateLeader();
 }
 
 document.addEventListener('visibilitychange', () => { pageVisible = !document.hidden; });
