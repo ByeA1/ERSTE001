@@ -200,13 +200,19 @@ function resize() {
 }
 
 /* ---------------- picking ---------------- */
-function onPointerDown() {
+let pressAt = null;
+
+function onPointerDown(ev) {
   if (!THREE) return;
+  pressAt = { x: ev.clientX, y: ev.clientY };
   skipIntro();
 }
 
 function onCanvasClick(ev) {
   if (!THREE || state !== 'ready') return;
+  const moved = pressAt ? Math.hypot(ev.clientX - pressAt.x, ev.clientY - pressAt.y) : 0;
+  pressAt = null;
+  if (moved > 6) return;   // a drag is orbiting, not selecting
   pick(ev);
 }
 
