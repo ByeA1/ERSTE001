@@ -130,9 +130,8 @@ function selectPart(name) {
     obj.traverse((o) => {
       if (o.isMesh && o.material && o.material.emissive) {
         const on = key === name;
-        o.material.color.set(on ? '#332A26' : '#20201F');
         o.material.emissive.set(on ? '#B3271C' : '#000000');
-        o.material.emissiveIntensity = on ? 0.05 : 0;
+        o.material.emissiveIntensity = on ? 0.10 : 0;
       }
     });
   });
