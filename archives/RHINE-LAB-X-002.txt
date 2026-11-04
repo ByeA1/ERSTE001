@@ -4,7 +4,7 @@ FROM GRIP TO STRUCTURE
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
-相关人物：zhanglingfeng_123@163.com
+相关人物：albert_z0413@hotmail.com
 访问范围：PROJECT NOTES
 
 形态源于握持。围绕实际操控习惯展开外形，再在低矮壳体的空间限制中重新组织内部结构。
@@ -12,7 +12,7 @@ FROM GRIP TO STRUCTURE
 研究记录
 1. 动机 → 人体工学 → 结构问题 → Sensor Spine → 原型。
 2. 在案例页查看侧视、俯视、剖面和装配图。
-3. 设计与装配过程由 zhanglingfeng_123@163.com 独立完成。
+3. 设计与装配过程由 albert_z0413@hotmail.com 独立完成。
 
 完整项目：https://www.zlf666.xyz/projects/erste001.html#s03
 Tony Zhang · 独立产品设计 / 2026

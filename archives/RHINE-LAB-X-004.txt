@@ -4,7 +4,7 @@ INTERACTIVE ASSEMBLY
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
-相关人物：zhanglingfeng_123@163.com
+相关人物：albert_z0413@hotmail.com
 访问范围：PREVIEW / WIP
 
 在线项目页提供鼠标壳体的三维展示，可以旋转、拆解与复位，观察上壳与底部结构的关系。

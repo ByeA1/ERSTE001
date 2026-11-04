@@ -4,7 +4,7 @@
     const sharedTranslations = new Map([
         ['Portfolio', '作品集'],
         ['Product Design', '产品设计'],
-        ['Email: zhanglingfeng_123@163.com', '邮箱：zhanglingfeng_123@163.com'],
+        ['Email: albert_z0413@hotmail.com', '邮箱：albert_z0413@hotmail.com'],
         ['Overview', '概览'],
         ['Process', '过程'],
         ['Prototype', '原型'],
