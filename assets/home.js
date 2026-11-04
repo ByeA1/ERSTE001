@@ -109,6 +109,32 @@ stage.add(modelGroup, plateGroup);
 let modelReady = false;
 let unitScale = 1;
 
+const bootEl = document.getElementById('boot');
+const lstate = document.getElementById('lstate');
+const lpct = document.getElementById('lpct');
+const lbar = document.getElementById('lbar');
+let ready = false;
+let revealed = false;
+
+function reveal() {
+  if (revealed) return;
+  revealed = true;
+  if (lstate) lstate.textContent = 'ready';
+  if (lpct) lpct.textContent = '100%';
+  bootEl.style.transition = 'opacity .5s';
+  bootEl.style.opacity = '0';
+  setTimeout(() => { bootEl.style.display = 'none'; }, 520);
+  ringUniforms.uOpacity.value = 0.9;
+  ringUniforms.uProgress.value = 0;
+  animateValue(ringUniforms.uProgress, 'value', 1, 1100);
+  animateValue(ringUniforms.uOpacity, 'value', 0.16, 1200, 900);
+  modelGroup.scale.setScalar(0.94);
+  animateTo(modelGroup.scale, { x: 1, y: 1, z: 1 }, 900);
+}
+
+// safety valve: never trap the visitor behind the overlay
+setTimeout(() => { if (!revealed) { if (lstate) lstate.textContent = 'timeout'; reveal(); } }, 12000);
+
 new GLTFLoader().load('./assets/models/shell-v6.glb', (gltf) => {
   const model = gltf.scene;
   const raw = new THREE.Box3().setFromObject(model);
@@ -150,7 +176,6 @@ new THREE.TextureLoader().load('./assets/render/shell-001-1440.avif', (tex) => {
 plateGroup.visible = false;
 
 /* ---------- boot ---------- */
-const bootEl = document.getElementById('boot');
 const sweep = document.getElementById('sweep');
 
 function typeLine(el, delay) {
@@ -158,7 +183,6 @@ function typeLine(el, delay) {
 }
 
 function boot() {
-  bootEl.style.display = 'flex';
   const lines = ['l1', 'l2', 'l3', 'l4'].map((id) => document.getElementById(id));
   lines.forEach((el, i) => {
     setTimeout(() => { el.style.transition = 'opacity .25s'; el.style.opacity = '1'; }, 120 + i * 190);
@@ -168,22 +192,8 @@ function boot() {
   sweep.animate([{ top: '18%' }, { top: '82%' }], { duration: 900, easing: 'ease-in-out', fill: 'forwards' });
   setTimeout(() => { sweep.style.opacity = '0'; }, 950);
 
-  ringUniforms.uOpacity.value = 0.9;
-  ringUniforms.uProgress.value = 0;
-  animateValue(ringUniforms.uProgress, 'value', 1, 1100);
 
-  modelGroup.scale.setScalar(0.94);
-  modelGroup.position.y = -0.01;
-  animateTo(modelGroup.scale, { x: 1, y: 1, z: 1 }, 900);
-  animateTo(modelGroup.position, { y: 0 }, 900);
 
-  setTimeout(() => {
-    bootEl.style.transition = 'opacity .45s';
-    bootEl.style.opacity = '0';
-    setTimeout(() => { bootEl.style.display = 'none'; }, 480);
-  }, 1250);
-
-  animateValue(ringUniforms.uOpacity, 'value', 0.16, 1200, 1400);
 }
 
 function animateValue(obj, key, to, duration, delay = 0) {

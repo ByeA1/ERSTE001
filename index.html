@@ -90,6 +90,8 @@
     text-transform:uppercase;color:var(--dim)}
   #boot .line{opacity:0;margin:5px 0}
   #boot .line b{color:#1B1813;font-weight:600}
+  #boot .bar{width:min(320px,42vw);height:1px;background:#D6CEC0;margin-top:26px;position:relative;overflow:hidden}
+  #boot .bar i{position:absolute;left:0;top:0;height:100%;width:0;background:#BE8A34;display:block}
   #boot .sweep{position:absolute;left:0;right:0;height:1px;background:var(--accent);opacity:0}
 
   @media (max-width: 900px){
@@ -106,6 +108,14 @@
     .bar{font-size:9px;letter-spacing:.12em}
     .bar .right span:not(:last-child){display:none}
   }
+  #boot{position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;justify-content:center;
+    padding:0 8vw;background:#EDE8DE;color:#6C6455;font-family:var(--mono);font-size:11px;
+    letter-spacing:.2em;text-transform:uppercase;transition:opacity .5s}
+  #boot .line{opacity:0;margin:5px 0}
+  #boot .line b{color:#1B1813;font-weight:600}
+  #boot .lbar{width:min(320px,42vw);height:1px;background:#D6CEC0;margin-top:26px;position:relative;overflow:hidden}
+  #boot .lbar i{position:absolute;left:0;top:0;height:100%;width:0;background:#BE8A34;display:block;transition:width .2s}
+  #boot .sweep{position:absolute;left:0;right:0;height:1px;background:#BE8A34;opacity:0}
 </style>
 </head>
 <body>
@@ -132,10 +142,6 @@
   </nav>
 
 
-  <div class="stage" id="stage">
-    <img id="posterImg" src="./assets/render/shell-001-1440.avif" alt="ERSTE002 壳体渲染">
-    <button id="load3d">查看三维模型</button>
-  </div>
   <aside class="dossier">
     <div class="head">Dossier</div>
     <div class="row"><span>ID</span><span id="d-id">ERSTE002</span></div>
@@ -157,31 +163,10 @@
   <div class="line" id="l1">rhine terminal · init</div>
   <div class="line" id="l2">mounting archive <b>erste-001 / erste-002</b></div>
   <div class="line" id="l3">loading geometry <b>shell_v6.glb</b></div>
-  <div class="line" id="l4">status <b>ready</b></div>
+  <div class="line" id="l4">status <b id="lstate">loading</b> <span id="lpct" style="color:#BE8A34"></span></div>
+  <div class="lbar"><i id="lbar"></i></div>
 </div>
 
-<script type="module">
-  const clockEl = document.getElementById('clock');
-  const pad = (n) => String(n).padStart(2, '0');
-  const tickClock = () => {
-    const d = new Date();
-    clockEl.textContent = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  };
-  tickClock(); setInterval(tickClock, 1000);
-
-  const btn = document.getElementById('load3d');
-  btn.addEventListener('click', async () => {
-    btn.disabled = true;
-    btn.textContent = '加载中…';
-    try {
-      await import('./assets/home.js');
-      const st = document.getElementById('stage');
-      if (st) { st.style.opacity = '0'; setTimeout(() => st.remove(), 420); }
-    } catch (e) {
-      btn.textContent = '加载失败，点击重试';
-      btn.disabled = false;
-    }
-  });
-</script>
+<script type="module" src="./assets/home.js"></script>
 </body>
 </html>
