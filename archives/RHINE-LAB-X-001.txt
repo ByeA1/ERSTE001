@@ -1,0 +1,18 @@
+﻿TONY ZHANG · DESIGN ARCHIVE
+FILE X-001 / ERSTE001
+FPS GAMING MOUSE
+
+科室：独立产品设计 / 建模 / 打样
+编目范围：2026
+相关人物：Tony Zhang
+访问范围：已发布 / PROTOTYPED
+
+从个人 FPS 握持习惯出发，探索形态、人体工学与结构之间的关系。ERSTE001 从想要使用的鼠标，逐步发展成涵盖建模、硬件装配和实体打样的独立产品开发项目。
+
+研究记录
+1. 人体工学：后背支撑、捏持轴线、按键引导槽与滚轮高度。
+2. 结构：Sensor Spine 建立上壳、PCB 与传感器的装配基准。
+3. 实现：通过 3D 打印和实物装配检查零件配合。
+
+完整项目：https://www.zlf666.xyz/projects/erste001.html
+Tony Zhang · 独立产品设计 / 2026

@@ -1,0 +1,18 @@
+﻿TONY ZHANG · DESIGN ARCHIVE
+FILE X-006 / 有限空间的重排
+VERTICAL ENVELOPE
+
+科室：独立产品设计 / 建模 / 打样
+编目范围：2026
+相关人物：Tony Zhang
+访问范围：ERSTE002 / STRUCTURE
+
+低矮外形限制了壳体内部的垂直空间。ERSTE002 继续研究 PCB、传感器和滚轮的相对位置与装配关系。
+
+研究记录
+1. 保留低矮壳体的形态目标。
+2. 结合首轮打印检查内部空间。
+3. 传感器轴线图示和装配顺序尚在完善。
+
+完整项目：https://www.zlf666.xyz/projects/erste002.html
+Tony Zhang · 独立产品设计 / 2026

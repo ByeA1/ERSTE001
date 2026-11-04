@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>项目页面接入模板</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:48px 24px;background:#faf9f5;color:#1e211f;font:16px/1.8 system-ui,sans-serif}main{max-width:900px;margin:auto}h1{font-size:clamp(32px,7vw,64px);line-height:1.15}section{margin:64px 0}button{padding:12px 18px;border:1px solid #777;background:transparent;color:inherit;cursor:pointer}img{max-width:100%;height:auto}
+  </style>
+</head>
+<body>
+  <main>
+    <p>PROJECT TEMPLATE / 接入模板</p>
+    <h1>替换为项目标题</h1>
+    <p>这是供后续开发复制的模板，不是已完成的作品案例。</p>
+    <button id="back" type="button">返回终端</button>
+    <section id="overview"><h2>项目概述</h2><p>在此加入真实的项目介绍和资源。</p></section>
+    <section id="process"><h2>设计过程</h2><p>图片、样式和脚本均使用本站相对路径。</p></section>
+  </main>
+  <script>
+    const closeCase=()=>parent.postMessage({type:'design-terminal:close-project'},location.origin);
+    document.querySelector('#back').addEventListener('click',closeCase);
+    document.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();closeCase();}});
+  </script>
+</body>
+</html>

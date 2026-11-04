@@ -1,0 +1,18 @@
+﻿TONY ZHANG · DESIGN ARCHIVE
+FILE X-004 / 三维结构档案
+INTERACTIVE ASSEMBLY
+
+科室：独立产品设计 / 建模 / 打样
+编目范围：2026
+相关人物：Tony Zhang
+访问范围：PREVIEW / WIP
+
+在线项目页提供鼠标壳体的三维展示，可以旋转、拆解与复位，观察上壳与底部结构的关系。
+
+研究记录
+1. 点击完整项目档案，进入鼠标的三维展示。
+2. 拆解用于观察分件关系，复位返回组合状态。
+3. 本终端中的玻璃档案装置仅承担导航展示。
+
+完整项目：https://www.zlf666.xyz/projects/erste002.html
+Tony Zhang · 独立产品设计 / 2026
