@@ -89,6 +89,7 @@ function faceCount(obj) {
 
 function buildList() {
   partsEl.innerHTML = '';
+  const pending = parts.size === 0;
   PART_ORDER.forEach((name, i) => {
     const label = PART_LABEL[name];
     const obj = parts.get(name);
@@ -109,6 +110,7 @@ function buildList() {
         selectPart(name === selected ? null : name);
       }
     });
+    if (pending) { row.style.opacity = '.55'; row.style.pointerEvents = 'none'; }
     partsEl.appendChild(row);
   });
 
@@ -128,8 +130,8 @@ function selectPart(name) {
     obj.traverse((o) => {
       if (o.isMesh && o.material && o.material.emissive) {
         const on = key === name;
-        o.material.emissive.set(on ? '#22D3EE' : '#000000');
-        o.material.emissiveIntensity = on ? 0.45 : 0;
+        o.material.emissive.set(on ? '#B3271C' : '#000000');
+        o.material.emissiveIntensity = on ? 0.12 : 0;
       }
     });
   });
@@ -152,12 +154,12 @@ async function initScene() {
   renderer.setPixelRatio(dpr);
   renderer.setSize(viewport.clientWidth, viewport.clientHeight);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.35;
+  renderer.toneMappingExposure = 1.05;
   viewport.appendChild(renderer.domElement);
 
   scene = new THREE.Scene();
-  scene.background = new THREE.Color('#080D17');
-  scene.fog = new THREE.FogExp2('#080D17', 0.05);
+  scene.background = new THREE.Color('#EDE7DB');
+  scene.fog = new THREE.FogExp2('#EDE7DB', 0.06);
 
   camera = new THREE.PerspectiveCamera(30, viewport.clientWidth / viewport.clientHeight, 0.01, 20);
   camera.position.set(0.30, 0.22, 0.60);
@@ -170,15 +172,17 @@ async function initScene() {
   controls.maxDistance = 1.5;
   controls.maxPolarAngle = Math.PI * 0.58;
 
-  const key = new THREE.DirectionalLight('#ffffff', 3.2);
+  const key = new THREE.DirectionalLight('#ffffff', 2.2);
   key.position.set(-0.5, 0.9, 0.6);
   scene.add(key);
-  const rim = new THREE.DirectionalLight('#22D3EE', 1.6);
+  const rim = new THREE.DirectionalLight('#FFD9C9', 0.7);
   rim.position.set(0.8, 0.3, -0.7);
   scene.add(rim);
-  scene.add(new THREE.HemisphereLight('#DCE3EC', '#05080F', 0.9));
+  scene.add(new THREE.HemisphereLight('#FFFFFF', '#B9AE9B', 0.55));
 
-  const grid = new THREE.GridHelper(1.6, 32, '#1B2C42', '#12202F');
+  const grid = new THREE.GridHelper(1.6, 16, '#C9BDA6', '#DDD4C3');
+  grid.material.opacity = 0.55;
+  grid.material.transparent = true;
   grid.position.y = -0.075;
   scene.add(grid);
 
@@ -255,8 +259,8 @@ function loadModel() {
       model.traverse((o) => {
         if (o.isMesh) {
           o.material = new THREE.MeshPhysicalMaterial({
-            color: '#2C3949', metalness: 0.22, roughness: 0.30,
-            clearcoat: 0.45, clearcoatRoughness: 0.22, envMapIntensity: 1.35,
+            color: '#20201F', metalness: 0.10, roughness: 0.40,
+            clearcoat: 0.35, clearcoatRoughness: 0.24, envMapIntensity: 0.85,
           });
           parts.set(o.name, o);
         }
@@ -274,6 +278,7 @@ function loadModel() {
       state = 'failed';
       setStatus('LOAD FAILED', true);
       setControlsEnabled(false);
+buildList();
       poster.classList.remove('hide');
       loadBtn.textContent = '重试';
       loadBtn.disabled = false;
@@ -366,3 +371,4 @@ if (matchMedia('(min-width: 881px)').matches) {
 }
 
 setControlsEnabled(false);
+buildList();
