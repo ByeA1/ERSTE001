@@ -21,7 +21,7 @@ const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let state = 'idle';            // idle | loading | ready | failed
 let THREE = null, GLTFLoader = null, OrbitControls = null;
-let renderer = null, scene = null, camera = null, controls = null, modelRoot = null;
+let renderer = null, scene = null, camera = null, controls = null, modelRoot = null, loader = null;
 let parts = new Map();
 let unitScale = 1;
 let selected = null;
@@ -148,14 +148,20 @@ function selectPart(name) {
 
 /* ---------------- scene ---------------- */
 async function initScene() {
-  const [threeMod, gltfMod, orbitMod] = await Promise.all([
+  const [threeMod, gltfMod, orbitMod, dracoMod] = await Promise.all([
     import('three'),
     import('three/addons/loaders/GLTFLoader.js'),
     import('three/addons/controls/OrbitControls.js'),
+    import('three/addons/loaders/DRACOLoader.js'),
   ]);
   THREE = threeMod;
   GLTFLoader = gltfMod.GLTFLoader;
   OrbitControls = orbitMod.OrbitControls;
+  const DRACOLoader = dracoMod.DRACOLoader;
+  const draco = new DRACOLoader();
+  draco.setDecoderPath('./vendor/draco/');
+  loader = new GLTFLoader();
+  loader.setDRACOLoader(draco);
 
   renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerPreference: 'high-performance' });
   const dpr = Math.min(devicePixelRatio, matchMedia('(max-width: 880px)').matches ? 1.5 : 2);
@@ -278,7 +284,7 @@ function pick(ev) {
 
 /* ---------------- model ---------------- */
 function loadModel() {
-  new GLTFLoader().load(
+  loader.load(
     './assets/shell.glb',
     (gltf) => {
       const model = gltf.scene;
