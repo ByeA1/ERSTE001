@@ -171,6 +171,8 @@ async function initScene() {
   controls.minDistance = 0.28;
   controls.maxDistance = 1.5;
   controls.maxPolarAngle = Math.PI * 0.58;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.55;
 
   const key = new THREE.DirectionalLight('#ffffff', 2.2);
   key.position.set(-0.5, 0.9, 0.6);
@@ -221,9 +223,18 @@ function resize() {
 /* ---------------- picking ---------------- */
 let pressAt = null;
 
+let resumeTimer = 0;
+function pauseSpin() {
+  if (!controls) return;
+  controls.autoRotate = false;
+  clearTimeout(resumeTimer);
+  resumeTimer = setTimeout(() => { if (controls && state === 'ready') controls.autoRotate = true; }, 3000);
+}
+
 function onPointerDown(ev) {
   if (!THREE) return;
   pressAt = { x: ev.clientX, y: ev.clientY };
+  pauseSpin();
   skipIntro();
 }
 
@@ -331,6 +342,7 @@ document.getElementById('btnExplode').addEventListener('click', () => {
 
 document.getElementById('btnReset').addEventListener('click', () => {
   if (state !== 'ready') return;
+  pauseSpin();
   selectPart(null);
   tweenTo(0, 600);
   camera.position.set(0.30, 0.22, 0.60);
