@@ -9,7 +9,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false, powerP
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.45;
+renderer.toneMappingExposure = 1.0;
 app.appendChild(renderer.domElement);
 
 const scene = new THREE.Scene();
@@ -17,10 +17,11 @@ scene.background = new THREE.Color('#0b0b0c');
 scene.fog = new THREE.FogExp2('#0b0b0c', 0.06);
 
 const pmrem = new THREE.PMREMGenerator(renderer);
-scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.02).texture;
+scene.environmentIntensity = 0.35;
 
 const camera = new THREE.PerspectiveCamera(30, innerWidth / innerHeight, 0.01, 12);
-camera.position.set(0.34, 0.22, 0.56);
+camera.position.set(0.52, 0.30, 0.86);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
@@ -31,13 +32,13 @@ controls.maxPolarAngle = Math.PI * 0.86;
 controls.target.set(0, 0.0, 0);
 
 // lights
-const key = new THREE.DirectionalLight('#ffffff', 4.2);
+const key = new THREE.DirectionalLight('#ffffff', 1.6);
 key.position.set(-0.6, 0.9, 0.7);
 scene.add(key);
-const rim = new THREE.DirectionalLight('#9fb7ff', 2.4);
+const rim = new THREE.DirectionalLight('#9fb7ff', 0.9);
 rim.position.set(0.8, 0.4, -0.9);
 scene.add(rim);
-const fill = new THREE.HemisphereLight('#ffffff', '#1a1a1f', 0.5);
+const fill = new THREE.HemisphereLight('#ffffff', '#101014', 0.18);
 scene.add(fill);
 
 // scanning ring
@@ -64,10 +65,10 @@ scene.add(grid);
 const modelRoot = new THREE.Group();
 scene.add(modelRoot);
 
-let explodeTargets: { obj: THREE.Object3D; dir: THREE.Vector3; amount: number }[] = [];
+const parts = new Map<string, THREE.Object3D>();
 let loaded = false;
 
-new GLTFLoader().load('../../assets/models/shell-v5.glb', (gltf) => {
+new GLTFLoader().load('../../assets/models/shell-v6.glb', (gltf) => {
   const model = gltf.scene;
   // normalise: STL was authored in mm at 1:1000 scale inside Blender
   const rawBox = new THREE.Box3().setFromObject(model);
@@ -93,12 +94,13 @@ new GLTFLoader().load('../../assets/models/shell-v5.glb', (gltf) => {
       }
     }
   });
+  model.traverse((o) => { if ((o as any).isMesh) parts.set(o.name, o); });
   modelRoot.add(model);
   loaded = true;
   (window as any).__lab = { model, modelRoot, camera, box: { size: size.toArray(), center: center.toArray() }, rawScale: scale };
   console.log('LAB model size', size.toArray(), 'scale', scale);
 
-  modelRoot.scale.setScalar(0.86);
+  modelRoot.scale.setScalar(0.8);
   modelRoot.rotation.y = -0.6;
   modelRoot.position.y = 0.015;
   playIntro();
@@ -173,7 +175,7 @@ btnExplode.addEventListener('click', () => {
 });
 
 btnReset.addEventListener('click', () => {
-  gsap.to(camera.position, { x: 0.34, y: 0.22, z: 0.56, duration: 0.7, ease: 'power2.inOut' });
+  gsap.to(camera.position, { x: 0.52, y: 0.30, z: 0.86, duration: 0.7, ease: 'power2.inOut' });
   gsap.to(controls.target, { x: 0, y: 0.02, z: 0, duration: 0.7, ease: 'power2.inOut' });
   exploded = false;
   btnExplode.setAttribute('aria-pressed', 'false');
