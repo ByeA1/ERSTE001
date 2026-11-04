@@ -1,6 +1,6 @@
 {
-  "version": "842b4ca681486555",
-  "bytes": 38581950,
+  "version": "c981ee2e888690d0",
+  "bytes": 38718262,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -55,7 +55,7 @@
     "cases/erste001/case.css",
     "cases/erste001/case.js",
     "cases/erste001/index.html",
-    "cases/erste002/assets/shell-47k.glb",
+    "cases/erste002/assets/shell-hi.glb",
     "cases/erste002/index.html",
     "cases/erste002/vendor/addons/controls/OrbitControls.js",
     "cases/erste002/vendor/addons/loaders/DRACOLoader.js",

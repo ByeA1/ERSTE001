@@ -176,7 +176,7 @@ async function initScene() {
   scene.fog = new THREE.FogExp2('#EDE7DB', 0.06);
 
   camera = new THREE.PerspectiveCamera(30, viewport.clientWidth / viewport.clientHeight, 0.01, 20);
-  camera.position.set(0.30, 0.22, 0.60);
+  fitCamera();
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
@@ -227,11 +227,29 @@ async function initScene() {
   animate();
 }
 
+const HOME = { x: 0.30, y: 0.22, z: 0.60 };
+
+function fitCamera() {
+  const w = viewport.clientWidth || 1;
+  const h = viewport.clientHeight || 1;
+  const aspect = w / h;
+  const k = aspect < 1 ? Math.min(2.2, (1 / aspect) * 0.95) : 1;
+  camera.position.set(HOME.x * k, HOME.y * k, HOME.z * k);
+  camera.lookAt(0, 0, 0);
+  if (controls) {
+    controls.minDistance = 0.28 * k;
+    controls.maxDistance = 1.5 * k;
+    controls.target.set(0, 0, 0);
+    controls.update();
+  }
+}
+
 function resize() {
   if (!renderer) return;
   camera.aspect = viewport.clientWidth / viewport.clientHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(viewport.clientWidth, viewport.clientHeight);
+  fitCamera();
 }
 
 /* ---------------- picking ---------------- */
@@ -285,7 +303,7 @@ function pick(ev) {
 /* ---------------- model ---------------- */
 function loadModel() {
   loader.load(
-    './assets/shell-47k.glb',
+    './assets/shell-hi.glb',
     (gltf) => {
       const model = gltf.scene;
       const rawBox = new THREE.Box3().setFromObject(model);
@@ -357,8 +375,7 @@ document.getElementById('btnReset').addEventListener('click', () => {
   pauseSpin();
   selectPart(null);
   tweenTo(0, 600);
-  camera.position.set(0.30, 0.22, 0.60);
-  controls.target.set(0, 0.01, 0);
+  fitCamera();
 });
 
 /* ---------------- loop / lifecycle ---------------- */
