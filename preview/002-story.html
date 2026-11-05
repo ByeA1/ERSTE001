@@ -36,7 +36,8 @@
   .caption[data-on="false"]{opacity:0;transform:translateY(10px)}
   .caption{transition:opacity .45s ease,transform .45s ease}
 
-  .sections{position:relative;z-index:1}
+  #scroller{position:fixed;inset:0;overflow-y:auto;overscroll-behavior:contain;z-index:1}
+  .sections{position:relative}
   .sections section{height:110vh}
   .sections section:last-child{height:120vh}
 
@@ -68,9 +69,9 @@
 <div class="rail" id="rail"></div>
 <div class="hint">向下滚动 · 镜头与灯光跟着走</div>
 
-<div class="sections">
+<div id="scroller"><div class="sections">
   <section></section><section></section><section></section><section></section><section></section>
-</div>
+</div></div>
 
 <script type="module">
 import * as THREE from 'three';
@@ -175,9 +176,10 @@ let camTarget = new THREE.Vector3(...chapters[0].cam.t);
 let fov = chapters[0].cam.fov;
 let activeIndex = -1;
 
+const scroller = document.getElementById('scroller');
 function progress() {
-  const max = document.body.scrollHeight - innerHeight;
-  return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0;
+  const max = scroller.scrollHeight - scroller.clientHeight;
+  return max > 0 ? Math.min(1, Math.max(0, scroller.scrollTop / max)) : 0;
 }
 
 const ease = (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
