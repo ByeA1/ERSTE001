@@ -357,27 +357,33 @@ document.addEventListener('DOMContentLoaded', function () {
     const sections = document.querySelectorAll('.case-section');
     const navItems = document.querySelectorAll('.side-nav .nav-item');
 
-    const observerOptions = {
-        root: null,
-        threshold: 0.5
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-                let id = entry.target.getAttribute('id');
-                if (id === 's05-b' || id === 's05-c') id = 's05';
-                navItems.forEach((item) => {
-                    item.classList.remove('active');
-                    if (item.getAttribute('href') === `#${id}`) {
-                        item.classList.add('active');
-                    }
-                });
-            }
+    // Tall chapters cannot reach a 50% intersection ratio on a phone.
+    // Follow the chapter at the reading line instead of its visible fraction.
+    let scheduled = false;
+    const updateChapter = () => {
+        scheduled = false;
+        const readingLine = Math.min(window.innerHeight * 0.25, 200);
+        let id = sections[0]?.id;
+        sections.forEach((section) => {
+            if (section.getBoundingClientRect().top <= readingLine) id = section.id;
         });
-    }, observerOptions);
-
-    sections.forEach((sec) => observer.observe(sec));
+        if (id === 's05-b' || id === 's05-c') id = 's05';
+        navItems.forEach((item) => {
+            const active = item.getAttribute('href') === `#${id}`;
+            item.classList.toggle('active', active);
+            if (active) item.setAttribute('aria-current', 'location');
+            else item.removeAttribute('aria-current');
+        });
+    };
+    const scheduleChapter = () => {
+        if (scheduled) return;
+        scheduled = true;
+        requestAnimationFrame(updateChapter);
+    };
+    window.addEventListener('scroll', scheduleChapter, { passive: true });
+    window.addEventListener('resize', scheduleChapter);
+    window.addEventListener('load', scheduleChapter);
+    updateChapter();
 
     navItems.forEach((item) => {
         item.addEventListener('click', function (e) {
@@ -385,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const targetId = this.getAttribute('href');
             const targetSec = document.querySelector(targetId);
             if (targetSec) {
-                targetSec.scrollIntoView({ behavior: 'smooth' });
+                targetSec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
             }
         });
     });
