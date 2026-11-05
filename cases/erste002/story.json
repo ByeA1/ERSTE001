@@ -1,0 +1,579 @@
+{
+  "version": 1,
+  "model": "./assets/shell-hi.glb",
+  "label": "ERSTE002 / editable section study",
+  "keyframes": [
+    {
+      "at": 0,
+      "camera": {
+        "position": [
+          0.36,
+          0.24,
+          0.64
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "fov": 32
+      },
+      "lights": {
+        "key": {
+          "position": [
+            -0.4,
+            0.6,
+            0.35
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 3,
+          "color": "#fff5df",
+          "angle": 48
+        },
+        "rim": {
+          "position": [
+            0.3,
+            0.2,
+            -0.4
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 2,
+          "color": "#ffffff",
+          "angle": 42
+        },
+        "focus": {
+          "position": [
+            0.05,
+            0.22,
+            0.15
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0,
+          "color": "#ffffff",
+          "angle": 24
+        }
+      },
+      "ambient": 0.6,
+      "cut": {
+        "enabled": true,
+        "position": [
+          0.16,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "target": "all",
+        "cap": true
+      },
+      "explode": 0,
+      "focus": "",
+      "cue": {
+        "enabled": false,
+        "start": 0.16,
+        "end": 0.24,
+        "strength": 1.5
+      }
+    },
+    {
+      "at": 0.16,
+      "camera": {
+        "position": [
+          0.36,
+          0.24,
+          0.64
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "fov": 32
+      },
+      "lights": {
+        "key": {
+          "position": [
+            -0.4,
+            0.6,
+            0.35
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 3,
+          "color": "#fff5df",
+          "angle": 48
+        },
+        "rim": {
+          "position": [
+            0.3,
+            0.2,
+            -0.4
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 2,
+          "color": "#ffffff",
+          "angle": 42
+        },
+        "focus": {
+          "position": [
+            0.05,
+            0.22,
+            0.15
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0,
+          "color": "#ffffff",
+          "angle": 24
+        }
+      },
+      "ambient": 0.6,
+      "cut": {
+        "enabled": true,
+        "position": [
+          0.16,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "target": "all",
+        "cap": true
+      },
+      "explode": 0,
+      "focus": "",
+      "cue": {
+        "enabled": false,
+        "start": 0.16,
+        "end": 0.24,
+        "strength": 1.5
+      }
+    },
+    {
+      "at": 0.24,
+      "camera": {
+        "position": [
+          0.36,
+          0.24,
+          0.64
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "fov": 32
+      },
+      "lights": {
+        "key": {
+          "position": [
+            -0.4,
+            0.6,
+            0.35
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 3,
+          "color": "#fff5df",
+          "angle": 48
+        },
+        "rim": {
+          "position": [
+            0.3,
+            0.2,
+            -0.4
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 2,
+          "color": "#ffffff",
+          "angle": 42
+        },
+        "focus": {
+          "position": [
+            0.05,
+            0.22,
+            0.15
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0,
+          "color": "#ffffff",
+          "angle": 24
+        }
+      },
+      "ambient": 0.6,
+      "cut": {
+        "enabled": true,
+        "position": [
+          0.16,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "target": "all",
+        "cap": true
+      },
+      "explode": 0,
+      "focus": "shell_top",
+      "cue": {
+        "enabled": true,
+        "start": 0.16,
+        "end": 0.24,
+        "strength": 1.5
+      }
+    },
+    {
+      "at": 0.58,
+      "camera": {
+        "position": [
+          0.36,
+          0.18,
+          0.46
+        ],
+        "target": [
+          -0.025,
+          -0.012,
+          -0.03
+        ],
+        "fov": 36
+      },
+      "lights": {
+        "key": {
+          "position": [
+            -0.4,
+            0.6,
+            0.35
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0.6,
+          "color": "#fff5df",
+          "angle": 48
+        },
+        "rim": {
+          "position": [
+            0.3,
+            0.2,
+            -0.4
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0.35,
+          "color": "#ffffff",
+          "angle": 42
+        },
+        "focus": {
+          "position": [
+            0.14,
+            0.14,
+            0.03
+          ],
+          "target": [
+            0,
+            -0.005,
+            -0.055
+          ],
+          "intensity": 6,
+          "color": "#fff5e5",
+          "angle": 23
+        }
+      },
+      "ambient": 0.15,
+      "cut": {
+        "enabled": true,
+        "position": [
+          0,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "target": "all",
+        "cap": true
+      },
+      "explode": 0,
+      "focus": "shell_top",
+      "cue": {
+        "enabled": false,
+        "start": 0.16,
+        "end": 0.24,
+        "strength": 1.5
+      }
+    },
+    {
+      "at": 0.8,
+      "camera": {
+        "position": [
+          0.035,
+          -0.012,
+          -0.025
+        ],
+        "target": [
+          -0.025,
+          -0.012,
+          -0.075
+        ],
+        "fov": 65
+      },
+      "lights": {
+        "key": {
+          "position": [
+            -0.4,
+            0.6,
+            0.35
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0.6,
+          "color": "#fff5df",
+          "angle": 48
+        },
+        "rim": {
+          "position": [
+            0.3,
+            0.2,
+            -0.4
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0.35,
+          "color": "#ffffff",
+          "angle": 42
+        },
+        "focus": {
+          "position": [
+            0.03,
+            0.012,
+            -0.02
+          ],
+          "target": [
+            -0.025,
+            -0.012,
+            -0.075
+          ],
+          "intensity": 1.8,
+          "color": "#fff5e5",
+          "angle": 44
+        }
+      },
+      "ambient": 0.12,
+      "cut": {
+        "enabled": true,
+        "position": [
+          0.005,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -105,
+          8
+        ],
+        "target": "all",
+        "cap": true
+      },
+      "explode": 0,
+      "focus": "shell_top",
+      "cue": {
+        "enabled": false,
+        "start": 0.16,
+        "end": 0.24,
+        "strength": 1.5
+      }
+    },
+    {
+      "at": 1,
+      "camera": {
+        "position": [
+          0.36,
+          0.24,
+          0.64
+        ],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "fov": 32
+      },
+      "lights": {
+        "key": {
+          "position": [
+            -0.4,
+            0.6,
+            0.35
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 3,
+          "color": "#fff5df",
+          "angle": 48
+        },
+        "rim": {
+          "position": [
+            0.3,
+            0.2,
+            -0.4
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 2,
+          "color": "#ffffff",
+          "angle": 42
+        },
+        "focus": {
+          "position": [
+            0.05,
+            0.22,
+            0.15
+          ],
+          "target": [
+            0,
+            0,
+            0
+          ],
+          "intensity": 0,
+          "color": "#ffffff",
+          "angle": 24
+        }
+      },
+      "ambient": 0.6,
+      "cut": {
+        "enabled": true,
+        "position": [
+          0.16,
+          0,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ],
+        "target": "all",
+        "cap": true
+      },
+      "explode": 0,
+      "focus": "",
+      "cue": {
+        "enabled": false,
+        "start": 0.16,
+        "end": 0.24,
+        "strength": 1.5
+      }
+    }
+  ],
+  "captions": [
+    {
+      "start": 0,
+      "end": 0.22,
+      "title": [
+        "低矮外壳，向内观察。",
+        "A low shell. A closer look."
+      ],
+      "body": [
+        "滚动推进镜头与剖切，向上滚动即可复原。",
+        "Scroll to move through the section. Scroll back to restore it."
+      ]
+    },
+    {
+      "start": 0.28,
+      "end": 0.64,
+      "title": [
+        "剖开表面，观察结构。",
+        "Beyond the surface."
+      ],
+      "body": [
+        "灯光照向切开的上盖；外壳与内部结构保留原本材质。",
+        "A real spotlight reveals the section. The original surface material stays unchanged."
+      ]
+    },
+    {
+      "start": 0.66,
+      "end": 0.88,
+      "title": [
+        "进入壳体内部。",
+        "Inside the shell."
+      ],
+      "body": [
+        "切面旋转后，镜头与灯光继续进入内部。",
+        "The section rotates as the camera and light move inside."
+      ]
+    },
+    {
+      "start": 0.9,
+      "end": 1,
+      "title": [
+        "一条轨道，可进可退。",
+        "One track. Both directions."
+      ],
+      "body": [
+        "剖切与装配可以复原，继续向上滚动回看细节。",
+        "Scroll upward to revisit the cut and restore the assembly."
+      ]
+    }
+  ]
+}
