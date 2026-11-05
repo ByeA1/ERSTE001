@@ -1,0 +1,77 @@
+{
+  "asset": "shell-hi.glb",
+  "parts": [
+    {
+      "name": "bottom_plate",
+      "primitives": 1,
+      "triangles": 2548,
+      "vertices": 3970,
+      "weldedVertices": 1272,
+      "boundaryEdges": 0,
+      "nonManifoldEdges": 0,
+      "bounds": {
+        "type": "VEC3",
+        "componentType": 5126,
+        "count": 3970,
+        "max": [
+          30.070796966552734,
+          0.30000001192092896,
+          59.1561393737793
+        ],
+        "min": [
+          -30.06624984741211,
+          -1.2999999523162842,
+          -58.297611236572266
+        ]
+      }
+    },
+    {
+      "name": "button_cover",
+      "primitives": 1,
+      "triangles": 25991,
+      "vertices": 72879,
+      "weldedVertices": 13004,
+      "boundaryEdges": 49,
+      "nonManifoldEdges": 11,
+      "bounds": {
+        "type": "VEC3",
+        "componentType": 5126,
+        "count": 72879,
+        "max": [
+          26.940343856811523,
+          36.78438186645508,
+          59.84638214111328
+        ],
+        "min": [
+          -26.366012573242188,
+          7.398792266845703,
+          -7.900000095367432
+        ]
+      }
+    },
+    {
+      "name": "shell_top",
+      "primitives": 1,
+      "triangles": 66168,
+      "vertices": 191266,
+      "weldedVertices": 33297,
+      "boundaryEdges": 599,
+      "nonManifoldEdges": 3,
+      "bounds": {
+        "type": "VEC3",
+        "componentType": 5126,
+        "count": 191266,
+        "max": [
+          30.99506187438965,
+          38.157325744628906,
+          59.580936431884766
+        ],
+        "min": [
+          -30.99774169921875,
+          0.2992372214794159,
+          -60.6604118347168
+        ]
+      }
+    }
+  ]
+}

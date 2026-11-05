@@ -1,0 +1,21 @@
+/* Keep Rhine's own detail-content, metadata, tabs and object-caption layout. */
+.cassette-showcase #detail-ui{visibility:visible;}
+.case-approaching #detail-ui{opacity:0;transition:opacity 500ms ease;pointer-events:none;}
+.case-approaching #detail-ui button{pointer-events:none;}
+.case-open #detail-ui{pointer-events:none;}
+.case-open #detail-ui button{pointer-events:none;}
+.case-open .terminal-language-site{visibility:hidden;}
+.case-approaching #stage :is(.scene-atmosphere,.brand,.system-nav,.powered,.system-footer,#archive-ui,#detail-ui,#inspection-marks,#inspection-text){visibility:hidden!important;}
+.project-detail-heading{overflow-wrap:normal;}
+.project-detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:30px 0 13px;}
+.detail-content .project-detail-title-row>h2{margin:0;min-width:0;}
+.detail-project-navigation{display:flex;gap:8px;flex:none;}
+html .detail-project-navigation .detail-project-step{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:8px 14px;font-size:10px;white-space:nowrap;}
+.detail-project-step>span:first-child{font-size:18px;line-height:1;}
+.detail-project-step:disabled{opacity:.35;}
+#stage:is([data-layout=compact],[data-layout=portrait]) .project-detail-title-row{margin:14px 0 8px;gap:10px;}
+#stage:is([data-layout=compact],[data-layout=portrait]) .detail-project-step-label{display:none;}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .detail-project-step{width:44px;padding:8px;}
+.project-detail-status{font-size:inherit;}
+.detail-actions .export-button{background:none;border:0;color:inherit;font:inherit;min-height:44px;cursor:pointer;}
+@media(prefers-reduced-motion:reduce){.case-approaching #detail-ui{transition:none;}}

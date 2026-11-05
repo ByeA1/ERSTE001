@@ -1,0 +1,16 @@
+
+.system-nav .project-shortcut { color: inherit; text-decoration: none; font-size: 12px; letter-spacing: .08em; border:0; border-bottom: 1px solid currentColor; background:transparent; padding: 9px 0; opacity:.75; cursor:pointer; }
+.system-nav .project-shortcut:hover { opacity:1; }
+.system-nav .project-shortcut:focus-visible { outline:2px solid #e88328; outline-offset:5px; }
+.detail-footnote a { font-size:15px; text-decoration:underline; text-underline-offset:5px; }
+@media(max-width:700px){.system-nav .project-shortcut{display:none;}}
+
+/* The email is a longer personal wordmark than the original short name. */
+.brand h1 { font-size:23px!important; line-height:36px!important; height:38px!important; letter-spacing:-.35px!important; white-space:nowrap; text-transform:none; }
+.welcome-company strong { font-size:28px!important; letter-spacing:-.02em!important; text-transform:none!important; }
+@media(max-width:700px){.brand h1{font-size:28px!important;}.welcome-company strong{font-size:28px!important;}}
+
+/* Keep the opening navigation consistent with the two-project terminal. */
+.system-nav > button:not(.project-shortcut){display:none;}
+@media(max-width:700px){#stage[data-mode="archive"] .system-nav .project-shortcut{display:inline-flex!important;}}
+@media(max-width:700px){.cassette-showcase .brand{max-width:none;width:340px;}.brand-analysis{flex-shrink:0;}}

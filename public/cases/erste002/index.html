@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <title>ERSTE002 · 结构研究</title>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "./vendor/three.module.min.js",
+          "three/addons/": "./vendor/addons/"
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="./story.css" />
+  </head>
+  <body>
+    <main id="story" aria-label="ERSTE002 三维结构研究">
+      <div id="scene-root"></div>
+      <div id="scroller" tabindex="0" aria-label="滚动查看三维结构">
+        <div id="scroll-track"></div>
+      </div>
+      <header class="topbar">
+        <a class="identity" href="/" aria-label="返回终端"
+          ><span>DESIGN ARCHIVE / 002</span><b>ERSTE002</b></a
+        >
+        <div class="tools">
+          <button id="lang" type="button">EN</button
+          ><button id="mode" type="button">自由查看</button
+          ><button id="editor-toggle" type="button" hidden>演出编辑器</button>
+        </div>
+      </header>
+      <aside class="caption" id="caption">
+        <span>STRUCTURE STUDY / 002</span>
+        <h1 id="cap-title">低矮外壳，向内观察。</h1>
+        <p id="cap-body">滚动探索结构；向上滚动可复原。</p>
+      </aside>
+      <div id="loading" role="status">正在载入三维结构…</div>
+      <div class="free-controls" id="free-controls" hidden>
+        <label
+          ><span id="part-label">部件</span>
+          <select id="part">
+            <option value="">整体</option>
+            <option value="shell_top">上盖</option>
+            <option value="button_cover">按键盖</option>
+            <option value="bottom_plate">底板</option>
+          </select></label
+        >
+        <label
+          ><span id="assembly-label">装配</span>
+          <input
+            id="assembly"
+            type="range"
+            min="0"
+            max="1"
+            step=".001"
+            value="0"
+        /></label>
+        <button id="explode" type="button">展开</button
+        ><button id="reset" type="button">复位</button>
+      </div>
+      <footer>
+        <span id="hint">向下滚动 · 镜头 / 灯光 / 剖切</span
+        ><output id="progress">000%</output>
+      </footer>
+      <aside id="editor" hidden aria-label="演出编辑器"></aside>
+    </main>
+    <script type="module" src="./story-app.js"></script>
+  </body>
+</html>

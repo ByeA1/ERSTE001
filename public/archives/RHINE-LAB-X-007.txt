@@ -1,0 +1,18 @@
+﻿albert_z0413@hotmail.com · DESIGN ARCHIVE
+FILE X-007 / 从 CAD 到实物
+PHYSICAL PROTOTYPE
+
+科室：独立产品设计 / 建模 / 打样
+编目范围：2026
+相关人物：albert_z0413@hotmail.com
+访问范围：ERSTE001 / PROTOTYPE
+
+通过 3D 打印将 CAD 模型变成真实组件，再结合 PCB、传感器、微动与编码器完成实物装配。
+
+研究记录
+1. 检查外壳、接口和零件配合。
+2. 验证螺丝位置及结构连接。
+3. 用实际装配检查组装和维护顺序。
+
+完整项目：https://www.zlf666.xyz/projects/erste001.html#s06
+albert_z0413@hotmail.com · 独立产品设计 / 2026

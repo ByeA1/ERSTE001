@@ -1,0 +1,28 @@
+{
+  "projects": [
+    {
+      "id": "erste001",
+      "number": "001",
+      "title": "ERSTE001",
+      "page": "/cases/erste001/index.html",
+      "shortcut": true,
+      "externalUrl": "https://www.zlf666.xyz/projects/erste001.html",
+      "cover": "/cases/erste001/assets/opt/assets/mouse/hero-1-1440.avif",
+      "subtitle": "FPS GAMING MOUSE / SENSOR SPINE",
+      "status": "PROTOTYPED / 2026",
+      "summary": "从握持体验到内部架构，完成设计、建模与实体打样。"
+    },
+    {
+      "id": "erste002",
+      "number": "002",
+      "title": "ERSTE002",
+      "page": "/cases/erste002/index.html",
+      "shortcut": true,
+      "externalUrl": "https://www.zlf666.xyz/projects/erste002.html",
+      "subtitle": "LOW PROFILE / SHELL REBUILD",
+      "status": "IN PROGRESS / 2026",
+      "summary": "在低矮壳体内重排传感器、PCB 与滚轮，持续推进结构迭代。",
+      "cover": "/assets/render/002-cover.avif"
+    }
+  ]
+}

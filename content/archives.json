@@ -1,0 +1,201 @@
+{
+  "categories": [
+    "结构研究",
+    "原型验证",
+    "ERSTE001",
+    "ERSTE002",
+    "关于我"
+  ],
+  "columns": [
+    "结构研究",
+    "原型验证",
+    "ERSTE001",
+    "ERSTE002",
+    "关于我"
+  ],
+  "records": [
+    {
+      "id": "X-001",
+      "title": "ERSTE001",
+      "en": "FPS GAMING MOUSE",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "ERSTE001",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "已发布 / PROTOTYPED",
+      "abstract": "从个人 FPS 握持习惯出发，探索形态、人体工学与结构之间的关系。ERSTE001 从想要使用的鼠标，逐步发展成涵盖建模、硬件装配和实体打样的独立产品开发项目。",
+      "findings": [
+        "人体工学：后背支撑、捏持轴线、按键引导槽与滚轮高度。",
+        "结构：Sensor Spine 建立上壳、PCB 与传感器的装配基准。",
+        "实现：通过 3D 打印和实物装配检查零件配合。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste001.html",
+      "projectId": "erste001"
+    },
+    {
+      "id": "X-002",
+      "title": "设计路径",
+      "en": "FROM GRIP TO STRUCTURE",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "ERSTE001",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "PROJECT NOTES",
+      "abstract": "形态源于握持。围绕实际操控习惯展开外形，再在低矮壳体的空间限制中重新组织内部结构。",
+      "findings": [
+        "动机 → 人体工学 → 结构问题 → Sensor Spine → 原型。",
+        "在案例页查看侧视、俯视、剖面和装配图。",
+        "设计与装配过程由 albert_z0413@hotmail.com 独立完成。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste001.html#s03",
+      "projectId": "erste001",
+      "section": "s03"
+    },
+    {
+      "id": "X-003",
+      "title": "ERSTE002",
+      "en": "SHELL REBUILD",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "ERSTE002",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "结构迭代中 / WIP",
+      "abstract": "低矮壳体内的结构重排：把传感器光心、PCB 与滚轮放进同一段有限的垂直空间。当前处于结构迭代和打样阶段。",
+      "findings": [
+        "壳体已完成首轮打印。",
+        "当前展示模型移除了前后耳片，并以 1.6 mm 底板封闭。",
+        "PCB、滚轮模型及装配照片仍待补充。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste002.html",
+      "projectId": "erste002"
+    },
+    {
+      "id": "X-004",
+      "title": "三维结构档案",
+      "en": "INTERACTIVE ASSEMBLY",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "ERSTE002",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "PREVIEW / WIP",
+      "abstract": "在线项目页提供鼠标壳体的三维展示，可以旋转、拆解与复位，观察上壳与底部结构的关系。",
+      "findings": [
+        "点击完整项目档案，进入鼠标的三维展示。",
+        "拆解用于观察分件关系，复位返回组合状态。",
+        "本终端中的玻璃档案装置仅承担导航展示。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste002.html",
+      "projectId": "erste002"
+    },
+    {
+      "id": "X-005",
+      "title": "Sensor Spine",
+      "en": "SENSOR SPINE",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "结构研究",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "ERSTE001 / STRUCTURE",
+      "abstract": "以内部脊柱为结构基准，连接上壳、PCB 和传感器系统。将关键支撑集中在核心装配区域，为底壳减重留下空间。",
+      "findings": [
+        "PCB 与上壳建立直接装配关系。",
+        "核心区域进行局部加强。",
+        "底壳保留关键固定点与必要的支撑路径。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste001.html#s05",
+      "projectId": "erste001",
+      "section": "s05"
+    },
+    {
+      "id": "X-006",
+      "title": "有限空间的重排",
+      "en": "VERTICAL ENVELOPE",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "结构研究",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "ERSTE002 / STRUCTURE",
+      "abstract": "低矮外形限制了壳体内部的垂直空间。ERSTE002 继续研究 PCB、传感器和滚轮的相对位置与装配关系。",
+      "findings": [
+        "保留低矮壳体的形态目标。",
+        "结合首轮打印检查内部空间。",
+        "传感器轴线图示和装配顺序尚在完善。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste002.html",
+      "projectId": "erste002"
+    },
+    {
+      "id": "X-007",
+      "title": "从 CAD 到实物",
+      "en": "PHYSICAL PROTOTYPE",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "原型验证",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "ERSTE001 / PROTOTYPE",
+      "abstract": "通过 3D 打印将 CAD 模型变成真实组件，再结合 PCB、传感器、微动与编码器完成实物装配。",
+      "findings": [
+        "检查外壳、接口和零件配合。",
+        "验证螺丝位置及结构连接。",
+        "用实际装配检查组装和维护顺序。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste001.html#s06",
+      "projectId": "erste001",
+      "section": "s06"
+    },
+    {
+      "id": "X-008",
+      "title": "下一轮迭代",
+      "en": "ITERATION IN PROGRESS",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "原型验证",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "ERSTE002 / WIP",
+      "abstract": "ERSTE002 已进入壳体打印与结构迭代阶段，后续档案将随实体模型与装配验证进度更新。",
+      "findings": [
+        "首轮壳体打印已完成。",
+        "当前三维档案用于展示结构状态。",
+        "后续补充打样照片、PCB、滚轮与装配顺序。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste002.html",
+      "projectId": "erste002"
+    },
+    {
+      "id": "X-009",
+      "title": "albert_z0413@hotmail.com",
+      "en": "INDEPENDENT PRODUCT DESIGN",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "关于我",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "DESIGN / MODEL / PROTOTYPE",
+      "abstract": "独立产品设计、建模与打样。通过 ERSTE 系列鼠标，研究握持体验、结构组织与实体实现之间的联系。",
+      "findings": [
+        "设计从个人使用需求出发。",
+        "关注形态、结构、硬件和制造的整合。",
+        "浏览完整案例，了解从概念到实体的过程。"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste001.html",
+      "projectId": "erste001"
+    },
+    {
+      "id": "X-010",
+      "title": "联系与项目索引",
+      "en": "CONTACT & ARCHIVE",
+      "department": "独立产品设计 / 建模 / 打样",
+      "category": "关于我",
+      "date": "2026",
+      "lead": "albert_z0413@hotmail.com",
+      "clearance": "OPEN PORTFOLIO",
+      "abstract": "欢迎浏览我的产品设计档案。ERSTE001 展示已完成的设计与原型过程，ERSTE002 记录正在推进的结构迭代。",
+      "findings": [
+        "ERSTE001：FPS 游戏鼠标设计与实体原型。",
+        "ERSTE002：低矮壳体内的结构重排。",
+        "联系邮箱：albert_z0413@hotmail.com"
+      ],
+      "source": "https://www.zlf666.xyz/projects/erste002.html",
+      "projectId": "erste002"
+    }
+  ]
+}

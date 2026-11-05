@@ -1,0 +1,101 @@
+.terminal-language-site{position:absolute;z-index:25;right:var(--edge,59px);top:60px;}
+/* The stage clips artwork; only the document pane should scroll on focus. */
+html #viewport,html #stage{overflow:clip;}
+.terminal-language{display:flex;align-items:center;gap:8px;color:var(--theme-ink,#252b20);font:11px MiSans,Arial,sans-serif;letter-spacing:.04em;}
+.terminal-language button{min-height:36px;min-width:32px;cursor:pointer;opacity:.45;border:0;border-bottom:1px solid transparent;background:none;color:inherit;font:inherit;}
+.terminal-language button[aria-pressed=true]{opacity:1;border-bottom-color:currentColor;}
+.terminal-language>span{opacity:.3;}
+button:not(:disabled){cursor:pointer;transition:scale 180ms ease,filter 180ms ease;}
+@media(hover:hover){button:not(:disabled):hover{scale:1.06;filter:brightness(.92);}}
+button:not(:disabled):active{scale:.96;}
+button:focus-visible{outline:2px solid var(--theme-accent,#947444);outline-offset:4px;}
+button:disabled{cursor:default;}
+.terminal-clicked{animation:terminal-confirm 380ms ease-out;}
+@keyframes terminal-confirm{0%{scale:.95;box-shadow:0 0 0 0 #8f805c55}55%{scale:1.04;box-shadow:0 0 0 7px #8f805c00}100%{box-shadow:0 0 0 10px #8f805c00}}
+.project-title-row{display:flex;align-items:center;gap:14px;}
+.read-file>.read-file-label{font-size:inherit;}
+.eyebrow>.collection-kicker{margin-left:0;}
+.project-title-row>.project-step{flex:none;width:44px;min-height:44px;font-size:26px;border:1px solid #aaa59a66;}
+.project-title-row>.project-step:disabled{opacity:.22;}
+.catalogue-project-title{display:none;}
+[data-mode=archive] .file-title{font-size:36px;min-width:210px;justify-content:center;}
+[data-mode=archive] .file-title>.legacy-file-prefix,[data-mode=archive] .file-title>#selected-id,[data-mode=archive] .file-title>.file-open{display:none;}
+[data-mode=archive] .catalogue-project-title{display:block;}
+[data-mode=boot] .project-step{visibility:hidden;}
+[data-mode=archive] .file-title:disabled{opacity:.5;}
+.archive-callout[data-reserved=true] .callout-rule{opacity:.4;}
+.archive-callout .read-file:disabled{opacity:.45;}
+.case-approaching .project-showcase{opacity:0;transition:opacity 500ms ease;pointer-events:none;}
+.case-approaching .project-showcase button{pointer-events:none;}
+@media(max-width:700px){[data-mode=archive] .file-title{font-size:29px;min-width:0;flex:1;}.project-title-row{gap:10px;}.project-title-row>.project-step{width:40px;min-height:44px;}}
+@media(max-width:700px){#stage[data-mode=detail] .system-nav .project-shortcut{display:inline-flex!important;}}
+/* Quiet diagonal brackets distinguish the main routes through the terminal. */
+html :is(.back-button,.read-file,.showcase-open,.project-case-close,.detail-project-step,.terminal-settings-open){
+  --action-frame:var(--theme-paper,#e8e5e1);
+  min-height:48px;padding:12px 20px;isolation:isolate;
+  background-color:var(--theme-ink,#252b20);color:var(--theme-paper,#e8e5e1);
+  background-image:linear-gradient(var(--action-frame),var(--action-frame)),linear-gradient(var(--action-frame),var(--action-frame)),linear-gradient(var(--action-frame),var(--action-frame)),linear-gradient(var(--action-frame),var(--action-frame));
+  background-size:22px 1px,1px 14px,22px 1px,1px 14px;
+  background-position:6px 6px,6px 6px,calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) calc(100% - 6px);
+  background-repeat:no-repeat;border:0;
+}
+html .back-button{gap:14px;}
+html .read-file{position:relative;gap:32px;}
+html .back-button small{color:inherit;border-color:currentColor;opacity:.65;}
+@media(hover:hover){html :is(.back-button,.read-file,.showcase-open,.project-case-close,.detail-project-step,.terminal-settings-open):not(:disabled):hover{color:var(--theme-paper,#e8e5e1);background-color:color-mix(in srgb,var(--theme-ink,#252b20) 88%,var(--theme-paper,#e8e5e1));}}
+.mobile-terminal-tools{display:none;}
+.terminal-modal-open .terminal-language-site{visibility:hidden;}
+html .terminal-settings-open{display:flex;align-items:center;gap:12px;min-height:44px;padding:10px 18px;font-size:11px;letter-spacing:.05em;white-space:nowrap;}
+.terminal-settings-open svg{width:18px;height:18px;flex:none;}
+#stage:is([data-layout=compact],[data-layout=portrait]) #archive-ui[data-portfolio=true] .archive-navigation{display:none;}
+#stage:is([data-layout=compact],[data-layout=portrait]) .mobile-terminal-tools{display:flex;position:absolute;left:26.25%;bottom:62px;transform:translateX(-50%);pointer-events:auto;}
+#stage[data-layout=portrait] .mobile-terminal-tools{left:50%;bottom:124px;}
+.mobile-personal-use{display:none;}
+/* Phone: collection above project selection; settings becomes a quiet icon. */
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .column-navigation{left:var(--edge);right:var(--edge);bottom:330px;gap:12px;justify-content:space-between;}
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .column-navigation>div{min-width:0;flex:1;text-align:center;justify-items:center;}
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .column-navigation>button{width:44px;min-height:44px;flex:none;}
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .archive-callout{bottom:124px;}
+/* Use the selected layout, not the window's 700px media breakpoint. This also
+   covers a phone rendering a wider page and production stylesheet ordering. */
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .project-title-row{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;gap:10px;width:100%;align-items:center;}
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .project-title-row>.project-step{width:44px;min-width:0;min-height:44px;}
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .project-title-row>.file-title{display:flex;justify-content:center;align-items:center;width:100%;min-width:0;margin:0;font-size:29px;line-height:1.2;}
+html #stage[data-layout=portrait] #archive-ui[data-portfolio=true] .catalogue-project-title{max-width:100%;text-align:center;}
+html #stage[data-layout=portrait] #archive-ui .archive-callout[data-reserved=true] .project-title-row>.file-title{font-size:21px;}
+html #stage[data-layout=portrait] .brand h1{font-size:28px!important;}
+html #stage[data-layout=portrait] .mobile-terminal-tools{left:calc(var(--edge) + 104px);bottom:58px;transform:none;}
+html #stage[data-layout=portrait] .terminal-settings-open{width:44px;height:44px;min-height:44px;padding:12px;justify-content:center;}
+#stage[data-layout=portrait] .terminal-settings-open>span{display:none;}
+#stage[data-layout=portrait] .mobile-personal-use{display:flex;position:absolute;right:var(--edge);bottom:58px;max-width:calc(100% - 200px);height:44px;margin:0;flex-direction:column;justify-content:center;gap:5px;color:#79776c;font-size:8px;line-height:1.4;letter-spacing:.08em;text-align:right;}
+.mobile-personal-use small{font-size:7px;letter-spacing:.03em;}
+/* Stack navigation explicitly; neither row depends on a screen-fixed offset. */
+html #stage:is([data-layout=compact],[data-layout=portrait]) .terminal-language-site{top:var(--top-edge);right:var(--edge);}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .terminal-language button{min-height:40px;min-width:32px;}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-nav{top:calc(var(--top-edge) + 48px);gap:18px;}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .back-button{top:calc(var(--top-edge) + 100px);padding:10px 16px;min-height:44px;gap:10px;}
+html #stage[data-layout=compact] .detail-content{top:calc(var(--top-edge) + 108px);}
+@media(prefers-reduced-motion:reduce){button{transition:none!important;}.terminal-clicked{animation:none;}.case-approaching .project-showcase{transition:none;}}
+/* Vertical project wheel. One selected row remains in the middle slot. */
+html #stage .system-nav:has(.project-directory){width:184px;display:block;}
+.project-directory{--directory-index:0;touch-action:none;user-select:none;}
+.directory-label,.directory-hint{display:block;font-size:9px;letter-spacing:.12em;opacity:.55;text-align:right;}
+.directory-window{height:132px;overflow:hidden;mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);}
+.directory-track{display:flex;flex-direction:column;transform:translateY(calc(44px - var(--directory-index)*44px));transition:transform 320ms cubic-bezier(.2,.7,.2,1);}
+html #stage .system-nav .directory-project{display:flex!important;width:100%;height:44px;min-height:44px;flex:none;align-items:center;justify-content:flex-start;gap:12px;padding:0 8px;border:0;border-left:1px solid #89887955;opacity:.4;font-size:13px;white-space:nowrap;}
+.directory-project small{font-size:9px;opacity:.55;}.directory-project i{font-style:normal;margin-left:auto;opacity:0;}
+html #stage .system-nav .directory-project.directory-current{opacity:1;border-left:3px solid currentColor;background:#e8e5de65;font-weight:700;}
+.directory-current i{opacity:1;}.directory-hint{font-size:8px;letter-spacing:.07em;}
+html .opening-skip{position:absolute;top:auto;right:59px;bottom:26px;z-index:100;min-height:44px;padding:8px 0;background:none;border:0;border-bottom:1px solid currentColor;color:var(--theme-ink,#252b20);font-size:12px;letter-spacing:.08em;opacity:.8;cursor:pointer;}
+html .opening-skip[hidden]{display:none!important;}
+html.opening-flow #skip.opening-skip:not([hidden]){display:block!important;}
+html #viewport > #skip.opening-skip:not([hidden]){display:block!important;}
+html #stage[data-layout=portrait] .system-nav:has(.project-directory){width:146px;}
+html #stage[data-layout=compact] .system-nav:has(.project-directory){width:160px;}
+html #stage:is([data-layout=portrait],[data-layout=compact]) .directory-label{font-size:8px;}
+html #stage[data-layout=portrait] .directory-hint{font-size:7px;}
+html #stage:is([data-layout=portrait],[data-layout=compact]) .directory-project{font-size:12px;gap:8px;padding:0 6px;}
+html #stage[data-layout=portrait] .back-button{top:calc(var(--top-edge) + 100px);width:calc(100% - 192px);max-width:220px;gap:8px;padding:10px 12px;}
+html #stage[data-layout=portrait] .back-button>span{white-space:normal;font-size:9px;line-height:1.5;}
+@media(max-width:900px){html .opening-skip{right:20px;bottom:max(16px,env(safe-area-inset-bottom));font-size:11px;}}
+@media(prefers-reduced-motion:reduce){.directory-track{transition:none;}}

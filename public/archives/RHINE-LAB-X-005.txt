@@ -1,0 +1,18 @@
+﻿albert_z0413@hotmail.com · DESIGN ARCHIVE
+FILE X-005 / Sensor Spine
+SENSOR SPINE
+
+科室：独立产品设计 / 建模 / 打样
+编目范围：2026
+相关人物：albert_z0413@hotmail.com
+访问范围：ERSTE001 / STRUCTURE
+
+以内部脊柱为结构基准，连接上壳、PCB 和传感器系统。将关键支撑集中在核心装配区域，为底壳减重留下空间。
+
+研究记录
+1. PCB 与上壳建立直接装配关系。
+2. 核心区域进行局部加强。
+3. 底壳保留关键固定点与必要的支撑路径。
+
+完整项目：https://www.zlf666.xyz/projects/erste001.html#s05
+albert_z0413@hotmail.com · 独立产品设计 / 2026
