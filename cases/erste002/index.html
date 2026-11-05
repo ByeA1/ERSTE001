@@ -18,7 +18,7 @@
          --sans:"Helvetica Neue",Arial,"PingFang SC",sans-serif; }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:#0B0B0C;color:var(--ink);font-family:var(--sans)}
-  #stage{position:fixed;inset:0;z-index:0}
+  #scene-root{position:fixed;inset:0;z-index:0}
   canvas{display:block}
 
   .chrome{position:fixed;inset:0;z-index:2;pointer-events:none;padding:26px 30px;
@@ -51,7 +51,7 @@
 </style>
 </head>
 <body>
-<div id="stage"></div>
+<div id="scene-root"></div>
 
 <div class="chrome">
   <div class="top">
@@ -78,7 +78,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 
-const host = document.getElementById('stage');
+const host = document.getElementById('scene-root');
 const renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.setSize(innerWidth, innerHeight);
