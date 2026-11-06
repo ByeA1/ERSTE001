@@ -77,25 +77,23 @@ html #stage:is([data-layout=compact],[data-layout=portrait]) .back-button{top:ca
 html #stage[data-layout=compact] .detail-content{top:calc(var(--top-edge) + 108px);}
 @media(prefers-reduced-motion:reduce){button{transition:none!important;}.terminal-clicked{animation:none;}.case-approaching .project-showcase{transition:none;}}
 /* Vertical project wheel. One selected row remains in the middle slot. */
-html #stage .system-nav:has(.project-directory){width:184px;display:block;}
-.project-directory{--directory-index:0;touch-action:none;user-select:none;}
-.directory-label,.directory-hint{display:block;font-size:9px;letter-spacing:.12em;opacity:.55;text-align:right;}
+html #stage .system-nav:has(.project-directory){width:168px;right:max(12px,calc(var(--edge,59px) - 8px));display:block;}
+.project-directory{touch-action:none;user-select:none;}
+.project-directory[hidden],html #stage .system-nav .directory-project[hidden]{display:none!important;}
 .directory-window{height:132px;overflow:hidden;mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent);}
-.directory-track{display:flex;flex-direction:column;transform:translateY(calc(44px - var(--directory-index)*44px));transition:transform 320ms cubic-bezier(.2,.7,.2,1);}
+.directory-track{display:flex;flex-direction:column;}
+.directory-slot{height:44px;flex:none;}
 html #stage .system-nav .directory-project{display:flex!important;width:100%;height:44px;min-height:44px;flex:none;align-items:center;justify-content:flex-start;gap:12px;padding:0 8px;border:0;border-left:1px solid #89887955;opacity:.4;font-size:13px;white-space:nowrap;}
 .directory-project small{font-size:9px;opacity:.55;}.directory-project i{font-style:normal;margin-left:auto;opacity:0;}
 html #stage .system-nav .directory-project.directory-current{opacity:1;border-left:3px solid currentColor;background:#e8e5de65;font-weight:700;}
-.directory-current i{opacity:1;}.directory-hint{font-size:8px;letter-spacing:.07em;}
+.directory-current i{opacity:1;}
 html .opening-skip{position:absolute;top:auto;right:59px;bottom:26px;z-index:100;min-height:44px;padding:8px 0;background:none;border:0;border-bottom:1px solid currentColor;color:var(--theme-ink,#252b20);font-size:12px;letter-spacing:.08em;opacity:.8;cursor:pointer;}
 html .opening-skip[hidden]{display:none!important;}
 html.opening-flow #skip.opening-skip:not([hidden]){display:block!important;}
 html #viewport > #skip.opening-skip:not([hidden]){display:block!important;}
-html #stage[data-layout=portrait] .system-nav:has(.project-directory){width:146px;}
-html #stage[data-layout=compact] .system-nav:has(.project-directory){width:160px;}
-html #stage:is([data-layout=portrait],[data-layout=compact]) .directory-label{font-size:8px;}
-html #stage[data-layout=portrait] .directory-hint{font-size:7px;}
+html #stage[data-layout=portrait] .system-nav:has(.project-directory){width:128px;}
+html #stage[data-layout=compact] .system-nav:has(.project-directory){width:144px;}
 html #stage:is([data-layout=portrait],[data-layout=compact]) .directory-project{font-size:12px;gap:8px;padding:0 6px;}
 html #stage[data-layout=portrait] .back-button{top:calc(var(--top-edge) + 100px);width:calc(100% - 192px);max-width:220px;gap:8px;padding:10px 12px;}
 html #stage[data-layout=portrait] .back-button>span{white-space:normal;font-size:9px;line-height:1.5;}
 @media(max-width:900px){html .opening-skip{right:20px;bottom:max(16px,env(safe-area-inset-bottom));font-size:11px;}}
-@media(prefers-reduced-motion:reduce){.directory-track{transition:none;}}

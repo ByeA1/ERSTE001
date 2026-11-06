@@ -95,7 +95,7 @@ $("#stage").innerHTML = `
   <div class="scene-atmosphere archive-atmosphere"></div>
   <div id="boot-background" class="boot-background"><svg viewBox="0 0 1920 1080" preserveAspectRatio="none"><g fill="none" stroke="#fff" stroke-width="3"><path d="M-210 705C-45 705 182 704 247 567C337 377 99 306 4 435S27 680 169 631C309 584 227 314 279 111S568-113 568-113"/><path d="M1560-80C1374 114 1671 168 1601 323S1371 367 1431 480S1692 666 1559 787S1329 886 1498 1130"/><circle cx="1450" cy="648" r="346"/><circle cx="1450" cy="648" r="348"/></g></svg></div>
   <header class="brand">${brandHeading}</header>
-  <nav class="system-nav" aria-label="系统导航">${!isWallpaper ? `<div class="project-directory"><span class="directory-label" data-zh="项目目录" data-en="PROJECT INDEX">项目目录</span><div class="directory-window"><div class="directory-track">${projects.filter(p=>p.shortcut && p.page).map((p,i)=>`<button type="button" class="project-shortcut directory-project" data-showcase-project="${escapeHtml(p.id)}" aria-label="${escapeHtml(p.title)}"><small>0${i+1}</small><span>${escapeHtml(p.title)}</span><i aria-hidden="true">↗</i></button>`).join('')}</div></div></div>` : projects.filter(project => project.shortcut).map(project => project.page ? `<button class="project-shortcut" data-showcase-project="${escapeHtml(project.id)}">${escapeHtml(project.title)}</button>` : project.externalUrl ? `<a class="project-shortcut" href="${escapeHtml(project.externalUrl)}">${escapeHtml(project.title)} ↗</a>` : '').join('')}
+  <nav class="system-nav" aria-label="系统导航">${!isWallpaper ? `<div class="project-directory"><div class="directory-window"><div class="directory-track"></div></div></div>` : projects.filter(project => project.shortcut).map(project => project.page ? `<button class="project-shortcut" data-showcase-project="${escapeHtml(project.id)}">${escapeHtml(project.title)}</button>` : project.externalUrl ? `<a class="project-shortcut" href="${escapeHtml(project.externalUrl)}">${escapeHtml(project.title)} ↗</a>` : '').join('')}
     <button data-action="search"><span class="nav-glyph">⌕</span> ARCHIVE INDEX <span class="key">/</span></button>
     <button data-action="saved" aria-label="查看收藏档案" title="收藏档案">＋ SAVED <span id="saved-count">00</span></button>
     <button class="settings-button" data-action="settings" aria-label="系统设置" title="系统设置"><span class="settings-glyph" aria-hidden="true">◷</span><span class="settings-label">设置</span></button>
@@ -693,11 +693,11 @@ const projectDirectory = !isWallpaper ? createProjectDirectory($('.project-direc
   if(!ready || mode==='boot' || modal || caseIsOpen())return;
   const index=records.findIndex(r=>r.projectId===id && !r.section && r.title===getProject(id)?.title);
   if(index<0)return;const detail=mode==='detail';select(index);if(detail)setMode('detail');
-}) : undefined;
+}, textOptions) : undefined;
 function updateSelection(navigation?: ArchiveNavigation) {
-  projectDirectory?.sync(records[selected].projectId);
   const r = records[selected];
   const lane = isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length);
+  projectDirectory?.sync(r.projectId, collectionAtLane(lane).projectIds, motionActive("rollingText") && mode !== "boot");
   const files = columnFiles(lane);
   selectionTitle.update({
     text: isWallpaper ? r.title : r.placeholder ? t('项目集待补充','COLLECTION RESERVED') : getProject(r.projectId)?.subtitle ?? r.title,
