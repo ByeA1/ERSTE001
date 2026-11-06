@@ -36,6 +36,7 @@ import {
 import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
 import { ContentTransition, SurfaceTransition } from "./ui-transitions";
+import { AdaptiveQuality, adaptiveRenderQuality } from "./adaptive-quality";
 import { BootSequence } from "./boot";
 import { OpeningStatus } from "./opening-status";
 import { loadBootWebfonts } from "./boot-lettering";
@@ -1518,9 +1519,17 @@ let lastTime = 0,
   frameCount = 0,
   frameStart = performance.now(),
   fps = 0;
+const adaptiveQuality = new AdaptiveQuality((tier) => {
+  const host = document.getElementById("three-scene");
+  if (host) host.dataset.adaptiveTier = tier;
+  if (!scene || isWallpaper) return;
+  scene.setQuality(adaptiveRenderQuality(prefs.rendering, tier));
+});
+
 function frame(ms: number) {
   if (caseIsOpen() && !caseIsApproaching()) {
     lastTime = ms / 1000;
+    adaptiveQuality.observe(ms, 0, false);
     requestAnimationFrame(frame);
     return;
   }
@@ -1560,6 +1569,7 @@ function frame(ms: number) {
     openingTrace.push({phase:opening.phase, time:Number(opening.time.toFixed(3)), label});
     $("#stage").dataset.openingTrace = JSON.stringify(openingTrace);
   }
+  const frameCostStart = performance.now();
   wallpaperEffects?.update(
     time,
     motionIsReduced(),
@@ -1625,10 +1635,13 @@ function frame(ms: number) {
     frameStart = ms;
     frameCount = 0;
     $("#three-scene").dataset.fps = String(Math.round(fps));
+    $("#three-scene").dataset.adaptiveTier = adaptiveQuality.tier;
     $("#three-scene").dataset.renderStats = JSON.stringify(
       scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 },
     );
   }
+  const cpuMs = performance.now() - frameCostStart;
+  adaptiveQuality.observe(ms, cpuMs, Boolean(scene) && !caseIsOpen() && !document.hidden);
   requestAnimationFrame(frame);
 }
 function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {

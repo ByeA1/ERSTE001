@@ -14,11 +14,18 @@ const languageDocuments = new WeakSet<Document>();
 export const caseIsOpen = () => panel?.open === true;
 export const caseIsApproaching = () => caseIsOpen() && (panel?.dataset.casePhase === 'approach'||panel?.dataset.casePhase==='returning');
 let returnFrame=0;
+/** Cached case iframes keep their own RAF; tell them to stop when hidden. */
+function tellCase(type: 'pause' | 'resume') {
+  const frame = activeFrame;
+  if (!frame?.contentWindow) return;
+  try { frame.contentWindow.postMessage({ type: `design-terminal:${type}` }, location.origin); } catch {}
+}
 export function closeProject() {
   if(!panel?.open || panel.dataset.casePhase==='returning')return;
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
   if(reduced || !document.querySelector('#three-scene canvas')){panel.close();return;}
   loading.cancel();
+  tellCase('pause');
   window.dispatchEvent(new CustomEvent('design-terminal:case-showcase',{detail:{projectId:activeFrame?.dataset.projectId}}));
   panel.dataset.casePhase='returning';
   panel.setAttribute('aria-busy','true');
@@ -115,6 +122,7 @@ export function openProject(projectId: string, section = ''): boolean {
   frame.inert = true;
   frame.dataset.section = validSection;
   activeFrame = frame;
+  tellCase('resume');
   const approach=!caseIsOpen() && !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.contains('cassette-showcase') && Boolean(document.querySelector('#three-scene canvas'));
   activeSignal = loading.begin(project,approach);
   document.documentElement.classList.add('case-open');

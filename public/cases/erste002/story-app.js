@@ -83,6 +83,9 @@ addEventListener("message", (e) => {
   if (e.origin !== location.origin || e.source !== parent) return;
   if (e.data?.type === "design-terminal:case-language")
     setLanguage(e.data.language);
+  // The terminal keeps the case iframe cached; stop drawing while it is closed.
+  if (e.data?.type === "design-terminal:pause") pause();
+  if (e.data?.type === "design-terminal:resume") startLoop();
 });
 $(".identity").onclick = (e) => {
   if (parent !== window) {
@@ -204,6 +207,21 @@ function pause() {
 document.addEventListener("visibilitychange", () =>
   document.hidden ? pause() : startLoop(),
 );
+addEventListener("pagehide", () => {
+  pause();
+  try {
+    renderer?.dispose();
+    scene?.traverse?.((o) => {
+      if (o.isMesh) {
+        o.geometry?.dispose?.();
+        const m = o.material;
+        if (Array.isArray(m)) m.forEach((x) => x.dispose?.());
+        else m?.dispose?.();
+      }
+    });
+    controls?.dispose?.();
+  } catch {}
+});
 new IntersectionObserver((entries) => {
   visible = entries[0].isIntersecting;
   if (visible) startLoop();
