@@ -23,6 +23,12 @@
 - `content/projects.json`、`content/archives.json` 内容注册表
 - `docs/` 设计记录与待办（先读 `docs/PENDING.md` 与 `docs/002-scroll-story-plan.md`）
 
+## 唯一基线（2026-11-06 起）
+
+- 本仓库 `source` 分支 = `D:\RhineTerminal` 工作树，是**唯一开发基线**。
+- `C:\Users\Saki\.openclaw\workspace\sites\rhine-terminal` 是历史工作区，只作性能方案参考，不要再在上面改站点代码。
+- 线上 = `main` 分支（构建产物），由 `D:\Portfolio-TheFinal` 推送，禁止直接改。
+
 ## 硬性约束
 
 1. **不要改 `main` 分支**：那是线上构建产物，GitHub Pages 直接托管。
