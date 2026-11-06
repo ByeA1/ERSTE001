@@ -87,7 +87,8 @@ let wallpaperEffects: WallpaperEffects | undefined;
 
 const $ = <T extends HTMLElement = HTMLElement>(selector: string) =>
   document.querySelector<T>(selector)!;
-import { logo, labelMarkSvg, brandHeading } from "./brand";
+import { brandHeading } from "./brand";
+import { loopingMarkSvg, loopingLogoSvg, RhineLogoPlayer, setRhineLogoPolicy, setRhineLogoSuspended } from "./rhine-logo";
 
 $("#stage").innerHTML = `
   <div id="three-scene" class="three-scene"></div>
@@ -102,10 +103,10 @@ $("#stage").innerHTML = `
   <button id="skip" class="${isWallpaper?'skip':'opening-skip'}" data-action="skip" ${!isWallpaper?'hidden':''}><span data-zh="跳过开场" data-en="SKIP OPENING">跳过开场</span> ↗</button>
   <section id="boot" class="boot" aria-label="系统启动">
     <div class="access-text">ACCESS</div>
-    <div class="boot-logo">${logo}</div>
+    <div class="boot-logo">${loopingLogoSvg}</div>
     <div class="auth-status"><span>▪</span> <span id="auth-message"></span><i></i></div>
     <div class="scan"><svg viewBox="0 0 1920 1080" aria-hidden="true"><g fill="none" stroke="#080a08" stroke-width="2" stroke-linecap="round"><path/><path stroke="#fff"/><path/><path/><path/><path/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="orbit-dot" r="8" fill="#ed821b" stroke="none"/><circle class="scan-core" cx="960" cy="540" r="5" fill="#080a08" stroke="none"/></g></svg><span>PERMISSION AUTHORIZED</span></div>
-    <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>albert_z0413@hotmail.com</strong><strong class="welcome-highlight" aria-hidden="true">albert_z0413@hotmail.com</strong></div><div class="welcome-database">DESIGN ARCHIVE</div><div class="welcome-logo">${isWallpaper?logo:labelMarkSvg}${!isWallpaper?'<p class="welcome-attribution" data-zh="终端界面设计源自&#10;《明日方舟》莱茵生命" data-en="TERMINAL DESIGN FROM&#10;ARKNIGHTS · RHINE LAB">终端界面设计源自<br>《明日方舟》莱茵生命</p>':''}</div></div>
+    <div class="welcome"><div class="welcome-panel"></div><div class="welcome-heading">WELCOME TO</div><div class="welcome-company"><strong>albert_z0413@hotmail.com</strong><strong class="welcome-highlight" aria-hidden="true">albert_z0413@hotmail.com</strong></div><div class="welcome-database">DESIGN ARCHIVE</div><div class="welcome-logo">${isWallpaper?loopingLogoSvg:loopingMarkSvg}${!isWallpaper?'<p class="welcome-attribution" data-zh="终端界面设计源自&#10;《明日方舟》莱茵生命" data-en="TERMINAL DESIGN FROM&#10;ARKNIGHTS · RHINE LAB">终端界面设计源自<br>《明日方舟》莱茵生命</p>':''}</div></div>
   </section>
   <svg id="inspection-marks" viewBox="0 0 1920 1080" aria-hidden="true"><path id="inspection-lines"/><g id="inspection-corners"></g><circle id="inspection-point" r="1.8"/></svg>
   <div id="inspection-text" aria-hidden="true">CONFIDENTIALITY:<strong>GENERAL BUSINESS USE</strong></div>
@@ -128,7 +129,7 @@ $("#stage").innerHTML = `
   <footer class="system-footer"><span><i class="status-light"></i> SESSION AUTHORIZED${isWallpaper ? '<button type="button" class="three-toggle" data-action="toggle-three" aria-pressed="true" title="卸载三维模型，保留 2D 界面">3D 开启</button>' : ""}</span><span>albert_z0413@hotmail.com <i>／</i> <span id="clock">00:00:00</span></span><button data-action="replay" title="重播启动流程">REINITIALIZE ↗</button></footer>
   <div id="pwa-update-notice" class="pwa-update-notice" role="status" hidden><span>新版本已就绪</span><button data-pwa-action="update">更新并重启 ↻</button></div>
   <div id="modal-root"></div><div id="toast" class="toast" role="status"></div>
-  <div id="loading" class="loading"><div class="loading-mark">${logo}</div><span>CONNECTING TO DESIGN ARCHIVE</span><i></i></div>
+  <div id="loading" class="loading"><div class="loading-mark">${loopingLogoSvg}</div><span>CONNECTING TO DESIGN ARCHIVE</span><i></i></div>
 `;
 
 // Language and project navigation share the scaled terminal coordinate system.
@@ -141,6 +142,8 @@ $("#boot-background").insertAdjacentHTML(
   '<div class="boot-white"></div>',
 );
 const bootSequence = new BootSequence($("#stage"));
+const loadingLogo = new RhineLogoPlayer(document.querySelector<SVGSVGElement>(".loading-mark svg")!);
+loadingLogo.setActive(isWallpaper);
 const openingStatus = new OpeningStatus($("#loading"));
 const openingTimeline = new OpeningTimeline();
 const cachedOpeningGroups = new Map<OpeningGroup, "loaded" | "failed">();
@@ -363,6 +366,7 @@ function effectiveRenderQuality() {
   return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering;
 }
 function savePrefs() {
+  setRhineLogoPolicy(superPerformanceEnabled(), motionIsReduced());
   saveAudioPrefs();
   if (!motionActive("rollingText"))
     rollingTitles.forEach((title) => title.finish());
@@ -506,6 +510,7 @@ let fileTicks = [
 ];
 
 function fadeOpeningOverlay() {
+  loadingLogo.setActive(false);
   if (loading.classList.contains("loaded")) return;
   loading.classList.add("loaded");
   loading.inert = true;
@@ -579,7 +584,7 @@ function setMode(next: Mode) {
   mode = next;
   if (next !== "boot") {
     fadeOpeningOverlay();
-    if (!pwaStarted && !lightweight) {
+    if (!pwaStarted && !lightweight && import.meta.env.MODE !== "model-review") {
       pwaStarted = true;
       setTimeout(() => void initPwa(notify), 1500);
     }
@@ -1527,6 +1532,7 @@ const adaptiveQuality = new AdaptiveQuality((tier) => {
 });
 
 function frame(ms: number) {
+  if (isWallpaper) setRhineLogoSuspended(Boolean(wallpaperHost()?.paused));
   if (caseIsOpen() && !caseIsApproaching()) {
     lastTime = ms / 1000;
     adaptiveQuality.observe(ms, 0, false);
@@ -1787,7 +1793,9 @@ async function start() {
         scene = candidate;
         candidate.setTheme(prefs.colorTheme === "dark", true);
         candidate.setArchiveCoverage(wallpaperHost()?.properties.archivecoverage?.value === "extra");
-        await candidate.load();
+        if ((import.meta.env.DEV || import.meta.env.MODE === "model-review") && reviewParams.has("cassetteReview"))
+          await (await import("./cassette-review")).loadReviewedCassette(candidate, reviewParams.get("cassetteReview"));
+        else await candidate.load();
         if (!lightweight) {
           bindScene(candidate);
           candidate.setMode(mode === "boot" ? "hidden" : mode);
@@ -2032,4 +2040,4 @@ Object.assign(window, {
     }),
   },
 });
-if (import.meta.hot) import.meta.hot.dispose(() => audio.dispose());
+if (import.meta.hot) import.meta.hot.dispose(() => { audio.dispose(); bootSequence.destroy(); loadingLogo.destroy(); });

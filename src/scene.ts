@@ -12,6 +12,7 @@ import { ThemeWave } from "./theme-motion";
 import { themeMaterial, themeEnvironment } from "./theme-material";
 import { RhythmMotion, rhythmDisplacement, quietBands, type MusicBands, type RhythmStyle } from "./archive-play-motion";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { createArchiveLighting, type LightingLook } from "./archive-lighting";
 import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
@@ -61,6 +62,12 @@ const ease = (t: number) => {
   t = THREE.MathUtils.clamp(t, 0, 1);
   return t * t * t * (t * (t * 6 - 15) + 10);
 };
+/** The cassette ships Draco-compressed; the decoder is the copy already used by the 002 case. */
+function dracoLoader(): GLTFLoader {
+  const draco = new DRACOLoader().setDecoderPath(publicAsset("cases/erste002/vendor/draco/")).setWorkerLimit(2);
+  return new GLTFLoader().setDRACOLoader(draco);
+}
+
 export class ArchiveScene {
   private inputEvents = new AbortController();
   private presence = 1;
@@ -385,10 +392,10 @@ export class ArchiveScene {
     this.composer.addPass(new OutputPass());
     this.bindPointer();
   }
-  async load(assetUrl = publicAsset("assets/archive-cassette.glb")) {
+  async load(assetUrl = publicAsset("assets/archive-cassette.glb"), loader: Pick<GLTFLoader, "loadAsync"> = dracoLoader()) {
     this.labelMark.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(labelMarkSvg)}`;
     await this.labelMark.decode();
-    const gltf = await new GLTFLoader().loadAsync(
+    const gltf = await loader.loadAsync(
       assetUrl,
     );
     gltf.scene.updateMatrixWorld(true);
@@ -562,7 +569,7 @@ export class ArchiveScene {
     finally { if(panel)panel.visible=Boolean(visible); }
   }
   async createAssemblyModel() {
-    this.assemblyTemplate ??= new GLTFLoader()
+    this.assemblyTemplate ??= dracoLoader()
       .loadAsync(publicAsset("assets/archive-assembly.glb"))
       .then((gltf) => {
         gltf.scene.updateMatrixWorld(true);

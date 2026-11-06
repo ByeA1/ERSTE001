@@ -1,6 +1,7 @@
 import './project-case.css';
 import { getProject } from './projects';
 import { ProjectLoading } from './project-loading';
+import { ProjectInterface, waitForProjectReady } from './project-interface';
 import {PROJECT_RETURN_DURATION,projectReturnAt} from './project-entry-motion';
 import {t,languageControls,localize,currentLanguage,setTerminalLanguage} from './terminal-language';
 
@@ -10,15 +11,36 @@ let activeFrame: HTMLIFrameElement | undefined;
 let loading: ProjectLoading;
 let activeSignal: AbortSignal;
 const frames = new Map<string, HTMLIFrameElement>();
-const languageDocuments = new WeakSet<Document>();
+const interfaces = new Map<HTMLIFrameElement, ProjectInterface>();
 export const caseIsOpen = () => panel?.open === true;
 export const caseIsApproaching = () => caseIsOpen() && (panel?.dataset.casePhase === 'approach'||panel?.dataset.casePhase==='returning');
 let returnFrame=0;
+let closeCleaned = true;
+function finishProjectClose() {
+  // dialog.close() queues its event. A fast reopen must finish old cleanup
+  // before starting the next load, rather than cancel that next load later.
+  if (!panel || panel.open || closeCleaned) return;
+  closeCleaned = true;
+  tellCase('pause');
+  cancelAnimationFrame(returnFrame);
+  document.documentElement.classList.remove('case-returning');
+  document.documentElement.style.removeProperty('--case-return-ui');
+  panel.style.removeProperty('--return-scan-y');
+  panel.removeAttribute('aria-busy');
+  loading.cancel();
+  document.documentElement.classList.remove('case-open', 'case-approaching');
+  window.dispatchEvent(new Event('design-terminal:case-return'));
+  opener?.focus({ preventScroll: true });
+  window.dispatchEvent(new Event('resize'));
+  window.dispatchEvent(new CustomEvent('design-terminal:case-showcase', { detail: { projectId: activeFrame?.dataset.projectId } }));
+}
 /** Cached case iframes keep their own RAF; tell them to stop when hidden. */
 function tellCase(type: 'pause' | 'resume') {
   const frame = activeFrame;
   if (!frame?.contentWindow) return;
-  try { frame.contentWindow.postMessage({ type: `design-terminal:${type}` }, location.origin); } catch {}
+  const active = type === 'resume' && !document.hidden && caseIsOpen();
+  interfaces.get(frame)?.setActive(active);
+  try { frame.contentWindow.postMessage({ type: `design-terminal:${active ? 'resume' : 'pause'}` }, location.origin); } catch {}
 }
 export function closeProject() {
   if(!panel?.open || panel.dataset.casePhase==='returning')return;
@@ -56,6 +78,7 @@ function createPanel() {
     const id = activeFrame.dataset.projectId!;
     const section = activeFrame.dataset.section ?? '';
     frames.delete(id);
+    interfaces.get(activeFrame)?.destroy(); interfaces.delete(activeFrame);
     activeFrame.remove();
     openProject(id, section);
   }, () => {
@@ -67,20 +90,7 @@ function createPanel() {
   });
   panel.querySelector('.project-case-close')!.addEventListener('click', closeProject);
   panel.addEventListener('cancel',event=>{event.preventDefault();closeProject();});
-  panel.addEventListener('close', () => {
-    cancelAnimationFrame(returnFrame);
-    document.documentElement.classList.remove('case-returning');
-    document.documentElement.style.removeProperty('--case-return-ui');
-    panel!.style.removeProperty('--return-scan-y');
-    panel!.removeAttribute('aria-busy');
-    loading.cancel();
-    document.documentElement.classList.remove('case-open');
-    document.documentElement.classList.remove('case-approaching');
-    window.dispatchEvent(new Event('design-terminal:case-return'));
-    opener?.focus({ preventScroll: true });
-    window.dispatchEvent(new Event('resize'));
-    window.dispatchEvent(new CustomEvent('design-terminal:case-showcase',{detail:{projectId:activeFrame?.dataset.projectId}}));
-  });
+  panel.addEventListener('close', finishProjectClose);
   window.addEventListener('message', event => {
     if (!caseIsOpen() || event.origin !== location.origin || event.source !== activeFrame?.contentWindow) return;
     if (event.data?.type === 'design-terminal:close-project') closeProject();
@@ -94,6 +104,7 @@ function createPanel() {
 
 /** Open a registered same-site case without changing the terminal URL. */
 export function openProject(projectId: string, section = ''): boolean {
+  finishProjectClose();
   if(panel?.dataset.casePhase==='returning' && panel.open)return false;
   const project = getProject(projectId);
   if (!project?.page || !project.page.startsWith('/') || project.page.startsWith('//')) return false;
@@ -102,6 +113,7 @@ export function openProject(projectId: string, section = ''): boolean {
   panel!.setAttribute('aria-label', `${project.title} 完整设计案例`);
   panel!.querySelector('.project-case-number')!.textContent = `DESIGN ARCHIVE / ${project.number}`;
   panel!.querySelector('.project-case-title')!.textContent = project.title;
+  tellCase('pause');
   for (const frame of frames.values()) frame.hidden = true;
   const sectionId = section.replace(/^#/, '');
   const validSection = /^[A-Za-z][\w:.-]{0,79}$/.test(sectionId) ? sectionId : '';
@@ -114,6 +126,9 @@ export function openProject(projectId: string, section = ''): boolean {
     frame.src = project.page;
     frame.addEventListener('load', () => {
       frame!.dataset.loaded = 'true';
+      if (interfaces.get(frame!)?.document !== frame!.contentDocument) {
+        interfaces.get(frame!)?.destroy(); interfaces.delete(frame!);
+      }
     });
     frames.set(projectId, frame);
     panel!.append(frame);
@@ -122,11 +137,11 @@ export function openProject(projectId: string, section = ''): boolean {
   frame.inert = true;
   frame.dataset.section = validSection;
   activeFrame = frame;
-  tellCase('resume');
   const approach=!caseIsOpen() && !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.contains('cassette-showcase') && Boolean(document.querySelector('#three-scene canvas'));
   activeSignal = loading.begin(project,approach);
   document.documentElement.classList.add('case-open');
-  if (!panel!.open) panel!.showModal();
+  if (!panel!.open) { closeCleaned = false; panel!.showModal(); }
+  tellCase('resume');
   localize(panel!);
   void prepareProject(frame, activeSignal);
   panel!.querySelector<HTMLButtonElement>('.project-case-close')!.focus();
@@ -144,6 +159,8 @@ async function prepareProject(frame: HTMLIFrameElement, signal: AbortSignal) {
     const doc = frame.contentDocument;
     if (!doc?.body || doc.getElementById('stage')) throw new Error('项目页面暂时无法打开，请重试。');
     pageReady = true;
+    if (!interfaces.has(frame)) interfaces.set(frame, new ProjectInterface(frame, closeProject));
+    interfaces.get(frame)!.setActive(frame === activeFrame && caseIsOpen() && !document.hidden);
     syncCaseLanguage();
     loading.preparing();
     scrollToSection(frame);
@@ -155,6 +172,7 @@ async function prepareProject(frame: HTMLIFrameElement, signal: AbortSignal) {
       doc.fonts.ready,
       ...images.map(image => image.decode().catch(() => undefined)),
       waitForModel(doc, work.signal),
+      waitForProjectReady(doc, work.signal),
     ]), work.signal);
     if (signal.aborted || frame !== activeFrame) return;
     await loading.reveal(signal);
@@ -171,25 +189,10 @@ function syncCaseLanguage() {
   if(activeFrame && panel) {
     panel.setAttribute('aria-label',t(`${panel.querySelector('.project-case-title')!.textContent} 完整设计案例`,`${panel.querySelector('.project-case-title')!.textContent} complete design case`));
   }
-  if(activeFrame?.dataset.projectId==='erste002') {
-    activeFrame.contentWindow?.postMessage({type:'design-terminal:case-language',language:currentLanguage()},location.origin);
-    return;
-  }
-  // 001 already supplies its own complete bilingual content. Reuse its controls.
-  if(activeFrame?.dataset.projectId!=='erste001')return;
-  const doc=activeFrame.contentDocument;
-  if(doc && !languageDocuments.has(doc)) {
-    languageDocuments.add(doc);
-    doc.addEventListener('click',event=>{
-      const language=(event.target as Element).closest<HTMLElement>('[data-language]')?.dataset.language;
-      if((language==='zh'||language==='en') && language!==currentLanguage())setTerminalLanguage(language);
-    });
-  }
-  const language=currentLanguage();
-  const button=doc?.querySelector<HTMLButtonElement>(`[data-language="${language}"]`);
-  if(button?.getAttribute('aria-pressed')!=='true')button?.click();
+  if (activeFrame) interfaces.get(activeFrame)?.localize();
 }
 window.addEventListener('design-terminal:language',syncCaseLanguage);
+document.addEventListener('visibilitychange', () => tellCase(document.hidden ? 'pause' : 'resume'));
 
 function waitForDocument(frame: HTMLIFrameElement, signal: AbortSignal) {
   if (frame.dataset.loaded === 'true') return Promise.resolve();

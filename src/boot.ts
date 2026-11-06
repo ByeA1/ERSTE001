@@ -1,6 +1,6 @@
 import { bootMotion } from "./boot-motion";
 import { OPENING, type OpeningPhase } from "./opening-timeline";
-import { bootMarkContour } from "./brand";
+import { RhineLogoPlayer } from "./rhine-logo";
 import { themeAmount } from "./theme-ui";
 import { BootLettering } from "./boot-lettering";
 import {authorizationCue} from './opening-cues';
@@ -15,10 +15,9 @@ const arc = (r: number, start: number, sweep: number, x = 960, y = 540) => {
 
 export class BootSequence {
   private nodes: Map<string, HTMLElement> = new Map();
-  private contour: SVGPathElement;
   private letters: SVGTextElement;
-  private plus: SVGPathElement;
-  private minus: SVGPathElement;
+  private logoPlayer: RhineLogoPlayer;
+  private welcomeLogoPlayer: RhineLogoPlayer;
   private brandLines: HTMLElement[];
   private scanPaths: SVGPathElement[];
   private orbitDots: SVGCircleElement[];
@@ -53,21 +52,8 @@ export class BootSequence {
       ".boot-white",
     ].forEach((s) => this.nodes.set(s, stage.querySelector<HTMLElement>(s)!));
     const mark = stage.querySelector<SVGSVGElement>(".boot-logo svg")!;
-    const original = mark.querySelector("path")!;
-    this.contour = original;
-    this.contour.setAttribute("d", bootMarkContour);
-    this.contour.setAttribute("pathLength", "1");
-    const symbols = mark.querySelector("path:not([pathLength])")!;
-    this.plus = document.createElementNS(ns, "path");
-    this.plus.setAttribute("d", "M44 70h50M69 45v50");
-    this.minus = document.createElementNS(ns, "path");
-    this.minus.setAttribute("d", "M219 70h44");
-    [this.plus, this.minus].forEach((p) => {
-      p.setAttribute("stroke", "currentColor");
-      p.setAttribute("stroke-width", "15");
-      mark.insertBefore(p, symbols);
-    });
-    symbols.remove();
+    this.logoPlayer = new RhineLogoPlayer(mark);
+    this.welcomeLogoPlayer = new RhineLogoPlayer(stage.querySelector<SVGSVGElement>('.welcome-logo svg')!);
     this.letters = mark.querySelector("text")!;
     this.letters.setAttribute("text-anchor", "start");
     this.letters.setAttribute("x", "20");
@@ -171,27 +157,12 @@ export class BootSequence {
     this.opacity(".boot-logo", s.logoOpacity);
     this.el(".boot-logo").style.transform =
       `translate(${s.logo.offsetX}px, 1px)`;
-    this.contour.style.strokeDasharray = `${s.logo.length} ${1 - s.logo.length}`;
-    this.contour.style.strokeDashoffset = String(-s.logo.start);
-    this.contour.setAttribute("stroke-width", String(s.logo.strokeWidth));
+    this.logoPlayer.setActive(!opening && s.logoOpacity > 0);
+    this.welcomeLogoPlayer.setActive(s.welcomeVisible && s.welcomeOpacity > 0 && s.welcomeLogo);
     // Preserve the SVG text node once each revealed letter is in place. Replacing
     // it every frame invalidates glyph rasterization under the moving HUD.
     if (this.letters.textContent !== s.logoLetters)
       this.letters.textContent = s.logoLetters;
-    this.plus.style.opacity = this.minus.style.opacity =
-      s.logo.symbolScale > 0 ? "1" : "0";
-    this.plus.setAttribute(
-      "transform",
-      `translate(${s.logo.plusX} 70) rotate(${s.logo.plusAngle}) scale(${s.logo.symbolScale}) translate(-69 -70)`,
-    );
-    this.minus.setAttribute(
-      "d",
-      `M${-s.logo.minusWidth / 2} 0h${s.logo.minusWidth}`,
-    );
-    this.minus.setAttribute(
-      "transform",
-      `translate(${s.logo.minusX} 70) scale(${s.logo.symbolScale})`,
-    );
     this.opacity(".auth-status", s.authOpacity);
     this.authLettering.setText(s.auth);
     this.opacity(".brand", 1);
@@ -308,6 +279,8 @@ export class BootSequence {
     this.el(".scan > span").style.fontSize = `${s.scanFont}px`;
   }
   reset() {
+    this.logoPlayer.setActive(false);
+    this.welcomeLogoPlayer.setActive(false);
     delete this.stage.dataset.authorizationExit;
     for(const selector of ['.scan','.welcome','#boot-background']) {
       this.el(selector).style.visibility='hidden';
@@ -321,4 +294,5 @@ export class BootSequence {
     this.el(".powered").innerHTML = this.poweredHTML;
     this.opacity("#boot-background", 0);
   }
+  destroy() { this.logoPlayer.destroy(); this.welcomeLogoPlayer.destroy(); }
 }

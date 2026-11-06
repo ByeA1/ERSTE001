@@ -1,4 +1,4 @@
-import { logo } from './brand';
+import { loopingLogoSvg, RhineLogoPlayer } from './rhine-logo';
 import type { ProjectDefinition } from './projects';
 import './project-loading.css';
 import {t,translatedText,localize} from './terminal-language';
@@ -10,14 +10,16 @@ export class ProjectLoading {
   private slowTimer = 0;
   private entryFrame = 0;
   private run = new AbortController();
+  private logoPlayer: RhineLogoPlayer;
   constructor(private panel: HTMLDialogElement, retry: () => void, proceed: () => void) {
     this.root.className = 'case-loading';
     this.root.hidden = true;
     this.root.setAttribute('aria-label', '项目档案加载');
-    this.root.innerHTML = `<div class="case-loading-grid" aria-hidden="true"></div><div class="case-loading-scanlines" aria-hidden="true"></div><div class="case-loading-content"><div class="case-loading-kicker">ANALYSIS OS / ARCHIVE ACCESS</div><div class="case-loading-optics" aria-hidden="true"><i></i><i></i><i></i><b>+</b><b>+</b><div>${logo}</div></div><div class="case-loading-file"></div><h2>正在读取项目档案</h2><p class="case-loading-status" role="status" aria-live="polite"></p><div class="case-loading-track" aria-hidden="true"><i></i></div><ol class="case-loading-steps" aria-label="加载步骤"><li data-zh="01 / 档案读取" data-en="01 / CONNECT">01 / 档案读取</li><li data-zh="02 / 首屏准备" data-en="02 / PREPARE">02 / 首屏准备</li><li data-zh="03 / 确认访问" data-en="03 / ACCESS">03 / 确认访问</li></ol><div class="case-loading-actions"><button type="button" data-retry data-zh="重新载入 ↻" data-en="RETRY ↻" hidden>重新载入 ↻</button><button type="button" data-proceed data-zh="先查看页面 →" data-en="OPEN PAGE →" hidden>先查看页面 →</button></div></div><div class="case-loading-foot"><span>SESSION AUTHORIZED</span><span>DESIGN ARCHIVE / READ ONLY</span></div>`;
+    this.root.innerHTML = `<div class="case-loading-grid" aria-hidden="true"></div><div class="case-loading-scanlines" aria-hidden="true"></div><div class="case-loading-content"><div class="case-loading-kicker">ANALYSIS OS / ARCHIVE ACCESS</div><div class="case-loading-optics" aria-hidden="true"><i></i><i></i><i></i><b>+</b><b>+</b><div>${loopingLogoSvg}</div></div><div class="case-loading-file"></div><h2>正在读取项目档案</h2><p class="case-loading-status" role="status" aria-live="polite"></p><div class="case-loading-track" aria-hidden="true"><i></i></div><ol class="case-loading-steps" aria-label="加载步骤"><li data-zh="01 / 档案读取" data-en="01 / CONNECT">01 / 档案读取</li><li data-zh="02 / 首屏准备" data-en="02 / PREPARE">02 / 首屏准备</li><li data-zh="03 / 确认访问" data-en="03 / ACCESS">03 / 确认访问</li></ol><div class="case-loading-actions"><button type="button" data-retry data-zh="重新载入 ↻" data-en="RETRY ↻" hidden>重新载入 ↻</button><button type="button" data-proceed data-zh="先查看页面 →" data-en="OPEN PAGE →" hidden>先查看页面 →</button></div></div><div class="case-loading-foot"><span>SESSION AUTHORIZED</span><span>DESIGN ARCHIVE / READ ONLY</span></div>`;
     this.root.querySelector('[data-retry]')!.addEventListener('click', retry);
     this.root.querySelector('[data-proceed]')!.addEventListener('click', proceed);
     panel.append(this.root);
+    this.logoPlayer = new RhineLogoPlayer(this.root.querySelector<SVGSVGElement>('svg.rhine-logo')!);
     const scan=document.createElement('div');
     scan.className='case-entry-scan';scan.setAttribute('aria-hidden','true');
     scan.innerHTML='<i></i><span>ARCHIVE SCAN / ACCESS REQUEST</span>';
@@ -29,6 +31,7 @@ export class ProjectLoading {
     this.run = new AbortController();
     this.started = performance.now();
     this.root.hidden = false;
+    this.logoPlayer.setActive(!approach);
     this.root.style.removeProperty('opacity');
     if(approach)this.root.style.opacity='0';
     this.panel.dataset.casePhase = approach ? 'approach' : 'loading';
@@ -45,6 +48,7 @@ export class ProjectLoading {
         if(signal.aborted)return;
         const elapsed=(performance.now()-this.started)/1000;
         const cue=projectEntryAt(elapsed);
+        this.logoPlayer.setActive(cue.loaderOpacity > 0);
         this.panel.style.setProperty('--entry-scan-y',`${cue.scan*100}%`);
         this.panel.dataset.entryScanning=String(cue.scan>0&&cue.scan<1);
         this.root.style.opacity=String(cue.loaderOpacity);
@@ -75,13 +79,16 @@ export class ProjectLoading {
     await pause(matchMedia('(prefers-reduced-motion: reduce)').matches ? 120 : PROJECT_ENTRY.confirm*1000, signal);
     if (signal.aborted) return;
     this.panel.dataset.casePhase = 'revealing';
+    this.logoPlayer.setActive(false);
     this.panel.setAttribute('aria-busy', 'false');
     await pause(matchMedia('(prefers-reduced-motion: reduce)').matches ? 80 : PROJECT_ENTRY.fade*1000, signal);
     if (signal.aborted) return;
     this.panel.dataset.casePhase = 'open';
     this.root.hidden = true;
+    this.logoPlayer.setActive(false);
   }
   fail(message: string, canProceed: boolean) {
+    this.logoPlayer.setActive(true);
     clearTimeout(this.slowTimer);
     cancelAnimationFrame(this.entryFrame);
     this.root.style.removeProperty('opacity');
@@ -93,6 +100,7 @@ export class ProjectLoading {
     this.root.querySelector<HTMLButtonElement>('[data-proceed]')!.hidden = !canProceed;
   }
   cancel() {
+    this.logoPlayer.setActive(false);
     this.run.abort();
     clearTimeout(this.slowTimer);
     cancelAnimationFrame(this.entryFrame);

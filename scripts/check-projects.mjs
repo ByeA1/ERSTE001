@@ -22,3 +22,4 @@ for (const record of archives.records) {
   if (record.section && !/^[A-Za-z][\w:.-]{0,79}$/.test(record.section)) throw Error(`章节 ID 无效：${record.id}`);
 }
 console.log(`Project integration checked: ${ids.size} projects, ${archives.records.length} archive links.`);
+await import('./check-logo-usage.mjs');

@@ -40,6 +40,15 @@
 5. 002 滚动讲解：以 `docs/002-scroll-story-plan.md` 顶部决定为准，旧五章分镜已取消，不要直接实施。
 6. 字体是 MiSans 全量分片，改动 PWA 预缓存清单时要留意体积（当前把 753 个分片全缓存了，是已知问题）。
 
+## 新项目默认继承公共能力
+
+- 新项目按现有注册表/档案内容接入，使用 `public/cases/_template/index.html` 的声明式内容结构；不要再逐页复制加载、语言、返回、Logo 或暂停恢复脚本。
+- 所有项目由 `project-viewer.ts` 默认装配 `ProjectLoading` 和 `ProjectInterface`，不按 001/002 等项目名硬编码公共能力。新公共优化应改共享层，并验证未列举过的项目也生效。
+- 页面内需要莱茵图形 Logo 时使用模板已有的 `[data-rhine-logo]` 容器，宿主自动装配 `rhine-logo.ts` 中已确认的 SVG / 6.4 秒轨迹。不要复制静态 UI SVG 或另做动画。实体印刷、图标和产品照片保持静态。
+- 双语正文用 `data-zh` / `data-en`；返回控件用 `data-project-close`。模板已包含这些默认能力，无需项目初始化 JS。
+- 自定义异步引擎仍负责自己的内容：声明 `body[data-project-ready="loading"]`，就绪/失败时设为 `ready` / `failed`；沿用统一 `design-terminal:pause/resume`、`case-policy` 协议。不得通过修改全局 RAF 或强制改所有 Three 材质来伪造通用暂停/降级。
+- 必须运行 `node scripts/check-logo-usage.mjs`、`node --test scripts/check-project-defaults.mjs`、`node scripts/audit-logo-unification.mjs`；不要为了新增项目再去补共享层项目 ID 白名单。细节见 [公共能力交付说明](docs/2026-11-06-logo-public-services.md)。
+
 ## 交付习惯
 
 - 改完跑三套校验 + `npm run build`，都通过再交。

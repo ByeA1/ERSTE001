@@ -1,0 +1,5 @@
+.rhine-logo { overflow: visible; color: inherit; }
+.rhine-logo__wire { stroke-dasharray: 780 22; stroke-dashoffset: -170; }
+.rhine-logo__plus { transform: translate(69px,70px); }
+.rhine-logo__minus { transform: translate(241px,70px); }
+@media (prefers-reduced-motion: reduce) { .rhine-logo { opacity: 1 !important; } }

@@ -1,5 +1,7 @@
+import { projects } from './projects.ts';
+
 export const projectCollections = [
-  { id: 'gamingmouse', title: 'GAMING MOUSE', zh: '游戏鼠标', projectIds: ['erste001', 'erste002'] },
+  { id: 'gamingmouse', title: 'GAMING MOUSE', zh: '游戏鼠标', projectIds: projects.map(project => project.id) },
   { id: 'reserved-02', title: 'COMING SOON / 02', zh: '待补充 / 02', projectIds: [] },
   { id: 'reserved-03', title: 'COMING SOON / 03', zh: '待补充 / 03', projectIds: [] },
   { id: 'reserved-04', title: 'COMING SOON / 04', zh: '待补充 / 04', projectIds: [] },

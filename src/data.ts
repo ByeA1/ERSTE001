@@ -1,5 +1,6 @@
 import content from "../content/archives.json" with { type: "json" };
 import {projects} from './projects.ts';
+import {fillMissingProjectOverviews} from './project-records.mjs';
 import {projectCollections, collectionAtLane, collectionLane} from './project-collections.ts';
 
 export interface ArchiveRecord {
@@ -23,9 +24,9 @@ export interface ArchiveRecord {
 const portfolio = import.meta.env?.MODE !== 'wallpaper';
 // Keep the original five-column physical sea, with only project overviews in
 // its public catalogue. Case chapters stay inside their own project pages.
+const completeRecords = fillMissingProjectOverviews(content.records, projects);
 const projectRecords: ArchiveRecord[] = projects.map(project=>{
-  const overview=content.records.find(record=>record.projectId===project.id && record.title===project.title && !record.section);
-  if(!overview)throw new Error(`Missing overview for ${project.id}`);
+  const overview=completeRecords.find(record=>record.projectId===project.id && record.title===project.title && !record.section)!;
   return {...overview,id:`X-${project.number}`,title:project.title,category:'GAMING MOUSE',collectionId:'gamingmouse',section:undefined};
 });
 const reserved: ArchiveRecord[] = projectCollections.filter(c=>!c.projectIds.length).map((collection,index)=>({

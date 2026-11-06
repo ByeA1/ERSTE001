@@ -10,7 +10,6 @@
 .case-loading-optics>i:nth-child(3){inset:-1px;border-color:currentColor transparent transparent;animation:case-orbit 2.4s linear infinite;}
 .case-loading-optics>div{width:100px;}
 .case-loading-optics svg{width:100%;display:block;}
-.case-loading-optics svg>path{stroke-width:16;}
 .case-loading-optics svg>text{display:none;}
 .case-loading-file{margin-bottom:12px;color:var(--theme-muted,#77756d);}
 .case-loading h2{font-size:clamp(22px,3vw,32px);font-weight:500;line-height:1.4;letter-spacing:.08em;margin:0 0 12px;}
