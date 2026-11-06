@@ -3,6 +3,9 @@ const VERSION = __CACHE_VERSION__;
 const FILES = __PRECACHE_FILES__;
 const PREFIX = `rhine-lab:${new URL(self.registration.scope).pathname}:`;
 const CACHE = PREFIX + VERSION;
+// MiSans ships 753 unicode-range shards (23 MB). They are cached the first time
+// a page actually asks for one, never during install.
+const FONT_CACHE = PREFIX + "fonts";
 const urls = FILES.map(path => new URL(path, self.registration.scope).href);
 const allowed = new Set(urls);
 const index = new URL("index.html", self.registration.scope).href;
@@ -42,7 +45,8 @@ self.addEventListener("install", event => {
 self.addEventListener("activate", event => {
   event.waitUntil((async () => {
     for (const key of await caches.keys())
-      if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
+      if (key.startsWith(PREFIX) && key !== CACHE && key !== FONT_CACHE)
+        await caches.delete(key);
     await self.clients.claim();
   })());
 });
@@ -53,6 +57,17 @@ self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
+  if (/\/fonts\/.*\.woff2$/.test(url.pathname)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(FONT_CACHE);
+      const hit = await cache.match(event.request);
+      if (hit) return hit;
+      const response = await fetch(event.request);
+      if (response.ok) cache.put(event.request, response.clone());
+      return response;
+    })());
+    return;
+  }
   url.search = "";
   url.hash = "";
   const navigation = event.request.mode === "navigate" &&
