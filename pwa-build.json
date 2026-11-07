@@ -1,6 +1,6 @@
 {
-  "version": "e2498df8270538e5",
-  "bytes": 11368125,
+  "version": "12e29d6a34d39cdf",
+  "bytes": 11372284,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -16,7 +16,7 @@
     "assets/archive-cassette.94fc471418156825.glb",
     "assets/boot-lettering-notice.txt",
     "assets/index-By_akzvJ.css",
-    "assets/index-Czr9Jjsy.js",
+    "assets/index-DeK42ukr.js",
     "audio/atmosphere.ogg",
     "audio/motif.ogg",
     "audio/pulse.ogg",
@@ -73,6 +73,7 @@
     "cases/erste002/vendor/three.core.min.js",
     "cases/erste002/vendor/three.module.min.js",
     "cases/erste002/viewer.js",
+    "cases/shared/render-frame.js",
     "favicon.svg",
     "fonts/MiSans-license.pdf",
     "fonts/NOTICE.txt",
