@@ -92,6 +92,17 @@ test('hidden frames reset the sampler instead of counting as slow', () => {
   assert.equal(q.tier, 'high', 'paused rendering must not be treated as slow');
 });
 
+test('deliberately skipped render slots do not mask a fast callback cadence', () => {
+  const q = new AdaptiveQuality();
+  let now = simulate(q, { interval: 45, cpu: 20, frames: 1200 });
+  assert.equal(q.tier, 'low');
+  for (let i = 0; i < 4000; i++) {
+    now += 22;
+    q.observe(now, 3, true, 11);
+  }
+  assert.equal(q.tier, 'high');
+});
+
 test('quality mapping caps resolution and effects without touching geometry', () => {
   const medium = adaptiveRenderQuality(baseQuality, 'medium');
   const low = adaptiveRenderQuality(baseQuality, 'low');

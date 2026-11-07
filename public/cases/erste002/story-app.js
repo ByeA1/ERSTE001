@@ -13,6 +13,8 @@ import {
 } from "./story-timeline.js";
 import { SectionCut } from "./story-section.js";
 import { createEditor } from "./story-editor.js";
+import { RenderFrameLimiter } from "../shared/render-frame.js";
+const renderLimit = new RenderFrameLimiter();
 const $ = (s) => document.querySelector(s),
   host = $("#scene-root"),
   scroller = $("#scroller"),
@@ -29,6 +31,7 @@ let story = clone(DEFAULT_STORY),
   scale = 1;
 let lang = 0,
   visible = true,
+  parentPaused = false,
   raf = 0,
   lastTime = 0,
   triangles = 0;
@@ -84,8 +87,14 @@ addEventListener("message", (e) => {
   if (e.data?.type === "design-terminal:case-language")
     setLanguage(e.data.language);
   // The terminal keeps the case iframe cached; stop drawing while it is closed.
-  if (e.data?.type === "design-terminal:pause") pause();
-  if (e.data?.type === "design-terminal:resume") startLoop();
+  if (e.data?.type === "design-terminal:pause") {
+    parentPaused = true;
+    pause();
+  }
+  if (e.data?.type === "design-terminal:resume") {
+    parentPaused = false;
+    startLoop();
+  }
 });
 $(".identity").onclick = (e) => {
   if (parent !== window) {
@@ -195,8 +204,9 @@ function resize() {
 }
 addEventListener("resize", resize);
 function startLoop() {
-  if (ready && !raf && visible && !document.hidden) {
+  if (ready && !raf && visible && !parentPaused && !document.hidden) {
     lastTime = performance.now();
+    renderLimit.reset();
     raf = requestAnimationFrame(tick);
   }
 }
@@ -294,7 +304,11 @@ function apply(value) {
 }
 function tick(now) {
   raf = 0;
-  if (document.hidden || !visible) return;
+  if (document.hidden || !visible || parentPaused) return;
+  raf = requestAnimationFrame(tick);
+  const tier = document.documentElement.dataset.terminalQuality ?? "high";
+  if (!renderLimit.admit(now, tier === "high")) return;
+  const renderStart = performance.now();
   const dt = Math.min(0.1, (now - lastTime) / 1000);
   lastTime = now;
   if (!draft && !free) {
@@ -304,7 +318,9 @@ function tick(now) {
   }
   apply(draft || sampleStory(story, p));
   renderer.render(scene, camera);
-  raf = requestAnimationFrame(tick);
+  renderLimit.recordFrame(performance.now() - renderStart);
+  const limit = String(renderLimit.fpsLimit);
+  if (host.dataset.fpsLimit !== limit) host.dataset.fpsLimit = limit;
 }
 async function start() {
   try {

@@ -75,7 +75,7 @@ export class AdaptiveQuality {
     this.resetTiming(now);
     this.onChange(this.tier);
   }
-  observe(now: number, cpuMs: number, rendered: boolean) {
+  observe(now: number, cpuMs: number, rendered: boolean, callbackIntervalMs?: number) {
     if (this.mode !== 'auto') return;
     if (!rendered) {
       this.last=undefined;this.windowStart=undefined;this.intervals=[];this.costs=[];this.slow=this.fast=0;
@@ -84,8 +84,10 @@ export class AdaptiveQuality {
     const previous = this.last; this.last = now;
     this.warmUntil ??= now + adaptivePolicy.warmupMs;
     if (previous === undefined || now < this.warmUntil) return;
-    const interval = now - previous;
-    if (!Number.isFinite(interval) || interval <= 0 || interval > 1000 || !Number.isFinite(cpuMs)) {
+    // Use the browser's callback cadence when the renderer intentionally skips slots.
+    const gap = now - previous;
+    const interval = callbackIntervalMs ?? gap;
+    if (gap > 1000 || !Number.isFinite(interval) || interval <= 0 || interval > 1000 || !Number.isFinite(cpuMs)) {
       this.resetTiming(now); return;
     }
     this.windowStart ??= previous;

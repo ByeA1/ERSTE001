@@ -687,5 +687,6 @@ export class ModelViewer {
         meshes: group.children.length,
       })),
     });
+    return true;
   }
 }

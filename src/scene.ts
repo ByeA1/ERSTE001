@@ -1956,6 +1956,7 @@ export class ArchiveScene {
     this.renderer.shadowMap.needsUpdate = shadow.end() || this.light.shadow.needsUpdate;
     if (this.superPerformance) this.renderer.render(this.scene, this.camera);
     else this.composer.render();
+    return true;
   }
   projectCard(x: number, y: number) {
     this.model.updateMatrixWorld(true);

@@ -47,6 +47,7 @@
 - 页面内需要莱茵图形 Logo 时使用模板已有的 `[data-rhine-logo]` 容器，宿主自动装配 `rhine-logo.ts` 中已确认的 SVG / 6.4 秒轨迹。不要复制静态 UI SVG 或另做动画。实体印刷、图标和产品照片保持静态。
 - 双语正文用 `data-zh` / `data-en`；返回控件用 `data-project-close`。模板已包含这些默认能力，无需项目初始化 JS。
 - 自定义异步引擎仍负责自己的内容：声明 `body[data-project-ready="loading"]`，就绪/失败时设为 `ready` / `failed`；沿用统一 `design-terminal:pause/resume`、`case-policy` 协议。不得通过修改全局 RAF 或强制改所有 Three 材质来伪造通用暂停/降级。
+- 网页 WebGL 循环使用 `public/cases/shared/render-frame.js` 的公共限帧器。默认上限 60 FPS，高刷且有持续余量时可升至 120 FPS。自带 WebGL 循环的项目在每次浏览器帧回调中调用 `admit`，提交后用 `recordFrame` 提供耗时，恢复循环时调用 `reset`。
 - 必须运行 `node scripts/check-logo-usage.mjs`、`node --test scripts/check-project-defaults.mjs`、`node scripts/audit-logo-unification.mjs`；不要为了新增项目再去补共享层项目 ID 白名单。细节见 [公共能力交付说明](docs/2026-11-06-logo-public-services.md)。
 
 ## 交付习惯

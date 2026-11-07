@@ -37,6 +37,7 @@ import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
 import { ContentTransition, SurfaceTransition } from "./ui-transitions";
 import { AdaptiveQuality, adaptiveRenderQuality } from "./adaptive-quality";
+import { RenderFrameLimiter } from "../public/cases/shared/render-frame.js";
 import { BootSequence } from "./boot";
 import { OpeningStatus } from "./opening-status";
 import { loadBootWebfonts } from "./boot-lettering";
@@ -1514,6 +1515,9 @@ function bootFrame(t: number, opening?: { phase: OpeningPhase; time: number; com
 
 const inspectionOverlay = new InspectionOverlay();
 const documentDecryption = new DocumentDecryption();
+const webRenderLimit = new RenderFrameLimiter();
+let previousCallback: number | undefined;
+let renderingViewer = false;
 // A newly opened archive can introduce another font shard. Re-measure its
 // redaction lines after font swap while retaining the current reveal progress.
 document.fonts.addEventListener("loadingdone", () =>
@@ -1532,18 +1536,20 @@ const adaptiveQuality = new AdaptiveQuality((tier) => {
 });
 
 function frame(ms: number) {
+  const callbackInterval = previousCallback === undefined ? undefined : ms - previousCallback;
+  previousCallback = ms;
   if (isWallpaper) setRhineLogoSuspended(Boolean(wallpaperHost()?.paused));
-  if (caseIsOpen() && !caseIsApproaching()) {
+  if (document.hidden || (caseIsOpen() && !caseIsApproaching())) {
     lastTime = ms / 1000;
+    webRenderLimit.reset();
     adaptiveQuality.observe(ms, 0, false);
+    fps = frameCount = 0;
+    frameStart = ms;
+    if ($("#three-scene").dataset.fps !== "0") $("#three-scene").dataset.fps = "0";
     requestAnimationFrame(frame);
     return;
   }
   if (!wallpaperFrame(ms)) {
-    requestAnimationFrame(frame);
-    return;
-  }
-  if (document.hidden) {
     requestAnimationFrame(frame);
     return;
   }
@@ -1582,9 +1588,22 @@ function frame(ms: number) {
     motionActive("pointerParallax"),
   );
   // The calibrated 2D opening fully covers the scene until array entry.
-  if (!viewer?.isOpen && (!cinema || cinema.time >= 21.9))
-    scene?.update(time, cinema);
-  viewer?.update(time);
+  const viewerOpen = Boolean(viewer?.isOpen);
+  if (viewerOpen !== renderingViewer) {
+    renderingViewer = viewerOpen;
+    webRenderLimit.reset();
+  }
+  const hasSceneFrame = viewerOpen || Boolean(scene && (!cinema || cinema.time >= 21.9));
+  const allowHighRefresh = adaptiveQuality.tier === "high" && !superPerformanceEnabled();
+  const renderFrame = hasSceneFrame && (isWallpaper || webRenderLimit.admit(ms, allowHighRefresh));
+  let drew = false;
+  if (renderFrame) {
+    const renderStart = performance.now();
+    drew = (viewerOpen ? viewer?.update(time) : scene?.update(time, cinema)) === true;
+    if (drew && !isWallpaper) webRenderLimit.recordFrame(performance.now() - renderStart);
+  } else if (!hasSceneFrame) {
+    webRenderLimit.reset();
+  }
   const handoffVisibility=scene?.openingHandoffVisibility;
   const handoffStage=$('#stage');
   if(handoffVisibility!==undefined){
@@ -1635,7 +1654,7 @@ function frame(ms: number) {
     lastTime = Math.floor(time);
     updateFooterClock(new Date(), motionActive("rollingNumbers"));
   }
-  frameCount++;
+  if (drew) frameCount++;
   if (ms - frameStart > 1000) {
     fps = (frameCount * 1000) / (ms - frameStart);
     frameStart = ms;
@@ -1647,7 +1666,9 @@ function frame(ms: number) {
     );
   }
   const cpuMs = performance.now() - frameCostStart;
-  adaptiveQuality.observe(ms, cpuMs, Boolean(scene) && !caseIsOpen() && !document.hidden);
+  if (!hasSceneFrame || renderFrame) {
+    adaptiveQuality.observe(ms, cpuMs, drew && !viewer?.isOpen && !caseIsOpen() && !isWallpaper, callbackInterval);
+  }
   requestAnimationFrame(frame);
 }
 function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
@@ -2026,6 +2047,7 @@ Object.assign(window, {
       ...scene?.getStats(),
       threeState,
       fps: Math.round(fps),
+      fpsLimit: isWallpaper ? wallpaperHost()?.fps ?? 30 : webRenderLimit.fpsLimit,
       mode,
       ready,
       startup: started ? "started" : "loading",
