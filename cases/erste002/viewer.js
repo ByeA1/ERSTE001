@@ -9,13 +9,20 @@ const partsEl = document.getElementById('parts');
 const assembly = document.getElementById('assembly');
 const assemblyPct = document.getElementById('assemblyPct');
 
-const PART_ORDER = ['bottom_plate', 'shell_top', 'button_cover'];
+const PART_ORDER = ['bottom_plate', 'shell_top', 'button_cover', 'pcb', 'sensor', 'wheel', 'battery'];
 const PART_LABEL = {
   shell_top: ['上盖', 'UPPER SHELL'],
   button_cover: ['按键盖', 'BUTTON COVER'],
   bottom_plate: ['底板', 'BOTTOM PLATE'],
+  pcb: ['主板', 'MAIN BOARD'],
+  sensor: ['传感器', 'SENSOR'],
+  wheel: ['滚轮', 'SCROLL WHEEL'],
+  battery: ['电池', 'BATTERY'],
 };
-const LIFT = { bottom_plate: -0.034, shell_top: 0.026, button_cover: 0.058 };
+const LIFT = {
+  bottom_plate: -0.034, shell_top: 0.026, button_cover: 0.058,
+  pcb: -0.006, sensor: -0.010, wheel: 0.004, battery: -0.012,
+};
 
 const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -462,7 +469,7 @@ function pick(ev) {
 /* ---------------- model ---------------- */
 function loadModel() {
   loader.load(
-    './assets/shell-hi.glb',
+    './assets/shell-full.glb',
     (gltf) => {
       const model = gltf.scene;
       const rawBox = new THREE.Box3().setFromObject(model);

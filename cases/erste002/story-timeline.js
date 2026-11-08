@@ -1,5 +1,5 @@
 // Pure, deterministic timeline. No dependence on playback direction or earlier samples.
-export const PARTS = ["", "shell_top", "button_cover", "bottom_plate"];
+export const PARTS = ["", "shell_top", "button_cover", "bottom_plate", "pcb", "sensor", "wheel", "battery"];
 export const clone = (v) => JSON.parse(JSON.stringify(v));
 export const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 export const smooth = (x) => {
@@ -49,7 +49,7 @@ focused.focus = light(
 // Only a technical section demonstration, NOT the cancelled five-chapter storyboard.
 export const DEFAULT_STORY = {
   version: 1,
-  model: "./assets/shell-hi.glb",
+  model: "./assets/shell-full.glb",
   label: "ERSTE002 / editable section study",
   keyframes: [
     frame(0),

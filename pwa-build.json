@@ -1,6 +1,6 @@
 {
-  "version": "12e29d6a34d39cdf",
-  "bytes": 11372284,
+  "version": "315deaa84a3462df",
+  "bytes": 19311778,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -54,7 +54,9 @@
     "cases/erste001/case.css",
     "cases/erste001/case.js",
     "cases/erste001/index.html",
+    "cases/erste002/assets/shell-full.glb",
     "cases/erste002/assets/shell-hi.glb",
+    "cases/erste002/assets/shell-hi.three-part.backup.glb",
     "cases/erste002/index.html",
     "cases/erste002/story-app.js",
     "cases/erste002/story-editor.js",
