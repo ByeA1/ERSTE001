@@ -1,5 +1,5 @@
 // Pure, deterministic timeline. No dependence on playback direction or earlier samples.
-export const PARTS = ["", "shell_top", "button_cover", "bottom_plate", "pcb", "sensor", "wheel", "battery"];
+export const PARTS = ["", "shell_top", "button_cover", "wheel", "pcb", "battery"];
 export const clone = (v) => JSON.parse(JSON.stringify(v));
 export const clamp = (x, a = 0, b = 1) => Math.max(a, Math.min(b, x));
 export const smooth = (x) => {
