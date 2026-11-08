@@ -56,8 +56,8 @@ function setLanguage(value, notify = false) {
   $("#explode").textContent = lang ? "Explode" : "展开";
   $("#reset").textContent = lang ? "Reset" : "复位";
   const labels = lang
-    ? ["All parts", "Upper shell", "Button cover", "Bottom plate"]
-    : ["整体", "上盖", "按键盖", "底板"];
+    ? ["All parts", "Upper shell", "Button cover", "Bottom plate", "Main board", "Sensor", "Scroll wheel", "Battery"]
+    : ["整体", "上盖", "按键盖", "底板", "主板", "传感器", "滚轮", "电池"];
   [...$("#part").options].forEach(
     (option, i) => (option.textContent = labels[i]),
   );
@@ -264,9 +264,10 @@ function apply(value) {
   for (const mesh of meshes) {
     mesh.position.copy(origins.get(mesh));
     const lift =
-      { bottom_plate: -0.034, shell_top: 0.026, button_cover: 0.058 }[
-        mesh.name
-      ] || 0;
+      {
+        bottom_plate: -0.034, shell_top: 0.026, button_cover: 0.058,
+        pcb: -0.006, sensor: -0.010, wheel: 0.004, battery: -0.012,
+      }[mesh.name] || 0;
     mesh.position.y += (lift / scale) * v.explode;
     const emissive = reduce
       ? 0
