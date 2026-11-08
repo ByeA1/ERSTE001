@@ -1,3 +1,10 @@
+const NAME_MAP = {
+  Mesh_Shell: 'shell_top',
+  Mesh_Buttons: 'button_cover',
+  Mesh_Wheel: 'wheel',
+  PCB_plate: 'pcb',
+  LiPo_300mAh_envelope: 'battery',
+};
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
@@ -382,6 +389,9 @@ async function start() {
       draco.dispose();
     }
     model = gltf.scene;
+    // CAD export is Z-up in metres; the story track was authored for Y-up.
+    model.rotation.x = -Math.PI / 2;
+    model.updateMatrixWorld(true);
     const bounds = new THREE.Box3().setFromObject(model),
       size = bounds.getSize(new THREE.Vector3());
     scale = 0.3 / Math.max(size.x, size.y, size.z);
@@ -392,6 +402,7 @@ async function start() {
     );
     model.traverse((o) => {
       if (!o.isMesh) return;
+      o.name = NAME_MAP[o.name] || o.name;
       o.material = o.material.clone();
       o.material.emissive.set(0);
       o.material.emissiveIntensity = 0;
