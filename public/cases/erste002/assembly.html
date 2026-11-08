@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ERSTE002 — Exploded Assembly</title>
+<script type="importmap">
+{"imports":{"three":"./vendor/three.module.min.js","three/addons/":"./vendor/addons/"}}
+</script>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,"Microsoft Yahei",sans-serif;color:#e9edf1;background:#0c1219}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden}
+canvas{display:block}.frame{position:fixed;inset:0;pointer-events:none}
+.top{position:absolute;left:clamp(20px,4vw,72px);top:clamp(18px,4vw,55px)}
+.kicker{font-size:11px;letter-spacing:.29em;color:#88a5b4;font-weight:700}
+h1{font-size:clamp(35px,5vw,78px);line-height:1;letter-spacing:-.06em;margin:11px 0 8px;font-weight:650}
+.sub{font-size:12px;letter-spacing:.06em;color:#8698a5}
+.right{position:absolute;right:clamp(16px,3vw,40px);top:clamp(18px,4vw,42px);text-align:right;font-size:11px;line-height:1.8;color:#6f8492}
+.panel{pointer-events:auto;position:absolute;bottom:clamp(18px,4vw,44px);left:50%;transform:translateX(-50%);width:min(790px,calc(100vw - 32px));background:rgba(17,26,35,.88);border:1px solid #34424d;border-radius:18px;padding:22px 24px;backdrop-filter:blur(14px);box-shadow:0 12px 45px rgba(0,0,0,.22)}
+.controls{display:flex;align-items:center;justify-content:space-between;gap:18px}
+.title{font-size:11px;color:#9eaeb9;letter-spacing:.12em}.value{font-size:13px;color:#d2e2ec;font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;margin:18px 0;accent-color:#9ed6c8;cursor:pointer}
+button{border:1px solid #4a5b65;border-radius:9px;padding:9px 15px;background:transparent;color:#d9e5ea;cursor:pointer;font-size:12px;transition:background .15s ease}
+button:hover{background:#293845}.primary{background:#c1dfd4;color:#10232a;border:1px solid #c1dfd4;font-weight:600}.primary:hover{background:#ddf1eb}
+.footer{border-top:1px solid #2e3e49;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:15px;padding-top:15px;flex-wrap:wrap}
+.tag{display:inline-flex;gap:6px;align-items:center;color:#8da7b4;font-size:11px;margin-right:18px}
+.dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#68b3a0}.muted{color:#6d8591;font-size:11px}
+#status{pointer-events:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:13px;text-align:center;color:#a8bcc4}
+@media(max-width:680px){.right{display:none}.panel{padding:16px}.top{top:18px}.tag{margin-right:7px}}
+</style>
+</head>
+<body>
+<div id="viewer" style="width:100vw;height:100vh"></div>
+<div class="frame">
+  <div class="top"><div class="kicker">ERSTE / PRODUCT 002</div><h1>ERSTE002</h1><div class="sub">EXPLODED ASSEMBLY / ENGINEERING REFERENCE</div></div>
+  <div class="right">3D INTERACTIVE VIEW<br />19 SEPARATE COMPONENT MESHES<br />REFERENCE ELECTRONICS, NOT PRODUCTION CAD</div>
+  <div id="status">载入装配模型中…</div>
+  <div class="panel">
+    <div class="controls"><div class="title">ASSEMBLY EXPLOSION</div><div class="value" id="percent">0%</div></div>
+    <input id="explosion" aria-label="爆炸程度" type="range" min="0" max="100" step="1" value="0" />
+    <div class="controls"><div style="display:flex;gap:10px"><button id="restore">复位装配</button><button class="primary" id="explode">展开爆炸</button></div><button id="shell">隐藏外壳</button></div>
+    <div class="footer"><div><span class="tag"><i class="dot"></i> PCB &amp; ELECTRONICS</span><span class="tag"><i class="dot" style="background:#bf7bbf"></i> BATTERY</span><span class="tag"><i class="dot" style="background:#d9dfe6"></i> SHELL / BUTTONS</span></div><div class="muted">拖拽旋转 · 滚轮缩放</div></div>
+  </div>
+</div>
+<script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+const viewer=document.getElementById('viewer');
+const scene=new THREE.Scene();scene.background=new THREE.Color(0x0c1219);
+const camera=new THREE.PerspectiveCamera(42,1,.004,10);
+camera.up.set(0,0,1);camera.position.set(.17,-.21,.16);camera.lookAt(0,0,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.45;
+viewer.appendChild(renderer.domElement);
+const orbit=new OrbitControls(camera,renderer.domElement);
+orbit.target.set(0,0,0);orbit.enableDamping=true;orbit.dampingFactor=.08;
+orbit.minDistance=.08;orbit.maxDistance=.55;orbit.update();
+scene.add(new THREE.HemisphereLight(0xe6f1ff,0x253b4a,2.1));
+const key=new THREE.DirectionalLight(0xffffff,2.6);key.position.set(.1,-.15,.3);scene.add(key);
+const rim=new THREE.DirectionalLight(0x9fd6d3,3);rim.position.set(-.15,.19,.16);scene.add(rim);
+const fill=new THREE.DirectionalLight(0x7095cf,1.5);fill.position.set(.13,.12,-.12);scene.add(fill);
+const groups={};
+// Millimetres in NX converted to metres in GLB; these are web-only explosion offsets.
+const offsets={
+  Shell:[0,0,-.025],Buttons:[0,-.006,.074],Wheel:[0,-.021,.052],
+  PCB_Assembly:[0,.003,.020],Battery_300mAh:[0,.017,.047]
+};
+const slider=document.getElementById('explosion'),pct=document.getElementById('percent');
+const shellButton=document.getElementById('shell');
+let current=0,target=0,enabled=false,shellVisible=true,root=null;
+function clamp(n){return Math.max(0,Math.min(1,Number(n)||0))}
+function setExplosion(level){target=clamp(level);slider.value=String(Math.round(target*100));pct.textContent=Math.round(target*100)+'%'}
+function showPart(name,visible){if(groups[name]){groups[name].visible=Boolean(visible);if(name==='Shell'){shellVisible=Boolean(visible);shellButton.textContent=shellVisible?'隐藏外壳':'显示外壳'}}}
+function focusPart(name){const g=groups[name];if(!g)return false;const p=new THREE.Vector3();g.getWorldPosition(p);orbit.target.copy(p);return true}
+// Native hooks for later site/AI prompt controls:
+window.ERSTE002={explode:()=>setExplosion(1),assemble:()=>setExplosion(0),setExplosion,showPart,focusPart,
+    getGroups:()=>Object.keys(groups),getLevel:()=>target};
+document.getElementById('explode').onclick=()=>setExplosion(1);
+document.getElementById('restore').onclick=()=>setExplosion(0);
+document.getElementById('shell').onclick=()=>showPart('Shell',!shellVisible);
+slider.addEventListener('input',()=>setExplosion(Number(slider.value)/100));
+function resize(){const w=viewer.clientWidth,h=viewer.clientHeight;camera.aspect=w/h;camera.updateProjectionMatrix();renderer.setSize(w,h,false)}
+window.addEventListener('resize',resize);resize();
+new GLTFLoader().load('./assets/shell-full.glb',gltf=>{
+   root=gltf.scene;scene.add(root);
+   for(const name of Object.keys(offsets)){
+      const g=root.getObjectByName(name);if(!g)console.warn('Missing group:',name);else groups[name]=g;
+   }
+   const status=document.getElementById('status');status.remove();enabled=true;
+   console.info('ERSTE002 ready; embedded glTF animation clips:',gltf.animations.map(x=>x.name));
+}, undefined, err=>{document.getElementById('status').textContent='无法载入 GLB：请用本地 HTTP 服务器打开网页。详见 README。';console.error(err)});
+let last=performance.now();
+function loop(now){requestAnimationFrame(loop);const dt=Math.min(.05,(now-last)/1000);last=now;
+   // Smooth interpolation makes slider and high-level prompt calls produce a clean explosion.
+   current+=(target-current)*(1-Math.exp(-dt*6));
+   if(enabled)for(const [name,v] of Object.entries(offsets)){
+      if(groups[name])groups[name].position.set(v[0]*current,v[1]*current,v[2]*current);
+   }
+   orbit.update();renderer.render(scene,camera);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
