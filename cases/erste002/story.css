@@ -20,7 +20,11 @@ button,
 select {
   cursor: pointer;
 }
-button {
+button,
+a.tool {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
   border: 1px solid #252720;
   background: #252720;
   color: #f7f5ef;
@@ -30,11 +34,13 @@ button {
     transform 0.15s,
     background 0.15s;
 }
-button:hover {
+button:hover,
+a.tool:hover {
   transform: scale(1.035);
   background: #45483c;
 }
-button:active {
+button:active,
+a.tool:active {
   transform: scale(0.96);
 }
 button:focus-visible,
