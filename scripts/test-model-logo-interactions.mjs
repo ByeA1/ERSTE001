@@ -42,7 +42,11 @@ for(const[browserName,executablePath]of[['Chrome','C:/Program Files/Google/Chrom
     const caseFrame=page.frames().find(f=>f.url().includes('/cases/erste002/'));assert.ok(caseFrame);await caseFrame.waitForFunction(()=>document.body.dataset.ready==='true',{},{timeout:60000});
     await page.waitForFunction(()=>!document.querySelector('iframe[data-project-id="erste002"]').inert,{},{timeout:30000});
     await caseFrame.locator('#mode').click();await caseFrame.waitForFunction(()=>document.body.dataset.mode==='free');await caseFrame.locator('#part').selectOption('shell_top');await caseFrame.locator('#explode').click();await caseFrame.waitForTimeout(400);await caseFrame.locator('#reset').click();await caseFrame.locator('#mode').click();
-    await caseFrame.locator('#scroller').evaluate(el=>el.scrollTop=(el.scrollHeight-el.clientHeight)*.55);await caseFrame.waitForTimeout(600);const caseState=await caseFrame.evaluate(()=>({ready:document.body.dataset.ready,mode:document.body.dataset.mode,progress:document.body.dataset.progress,cut:document.body.dataset.cut,emissive:document.body.dataset.emissive}));assert.ok(Number(caseState.progress)>.4);
+    await caseFrame.locator('#next-chapter').click();
+    await caseFrame.waitForFunction(()=>document.body.dataset.segment==='right-hand-ergonomics'&&document.body.dataset.playing==='false');
+    await caseFrame.locator('#next-chapter').click();
+    await caseFrame.waitForFunction(()=>document.body.dataset.cut==='true'&&document.body.dataset.playing==='false');
+    const caseState=await caseFrame.evaluate(()=>({ready:document.body.dataset.ready,mode:document.body.dataset.mode,progress:document.body.dataset.progress,cut:document.body.dataset.cut,emissive:document.body.dataset.emissive}));assert.ok(Number(caseState.progress)>.4);
     await page.screenshot({path:path.join(out,`${key}-002.png`)});
     await page.locator('.project-case-close').click();await page.waitForFunction(()=>!document.querySelector('.project-case').open,{},{timeout:15000});
     await page.locator('.showcase-open[data-project="erste002"]').click();await page.waitForFunction(()=>document.querySelector('.project-case').open);assert.equal(page.frames().filter(f=>f.url().includes('/cases/erste002/')).length,1);await page.locator('.project-case-close').click();await page.waitForFunction(()=>!document.querySelector('.project-case').open,{},{timeout:15000});
