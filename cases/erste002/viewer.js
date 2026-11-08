@@ -9,6 +9,14 @@ const partsEl = document.getElementById('parts');
 const assembly = document.getElementById('assembly');
 const assemblyPct = document.getElementById('assemblyPct');
 
+const NAME_MAP = {
+  Mesh_Shell: 'shell_top',
+  Mesh_Buttons: 'button_cover',
+  Mesh_Wheel: 'wheel',
+  PCB_plate: 'pcb',
+  LiPo_300mAh_envelope: 'battery',
+};
+
 const PART_ORDER = ['shell_top', 'button_cover', 'wheel', 'pcb', 'battery'];
 const PART_LABEL = {
   shell_top: ['上盖', 'UPPER SHELL'],
@@ -469,6 +477,8 @@ function loadModel() {
     './assets/shell-full.glb',
     (gltf) => {
       const model = gltf.scene;
+      // Z-up (CAD) -> Y-up (three): rotate -90 deg about X
+      model.rotation.x = -Math.PI / 2;
       const rawBox = new THREE.Box3().setFromObject(model);
       const rawSize = rawBox.getSize(new THREE.Vector3());
       unitScale = 0.30 / Math.max(rawSize.x, rawSize.y, rawSize.z);
@@ -479,6 +489,7 @@ function loadModel() {
 
       model.traverse((o) => {
         if (o.isMesh) {
+          o.name = NAME_MAP[o.name] || o.name;
           o.material = new THREE.MeshPhysicalMaterial({
             color: '#232326',
             metalness: 0.02,

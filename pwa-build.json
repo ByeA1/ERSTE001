@@ -1,6 +1,6 @@
 {
-  "version": "937b5571fd47d165",
-  "bytes": 12961991,
+  "version": "b8738e9982ef25d4",
+  "bytes": 14206353,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -55,6 +55,7 @@
     "cases/erste001/case.js",
     "cases/erste001/index.html",
     "cases/erste002/assets/shell-full.glb",
+    "cases/erste002/assets/shell-full.vva-backup.glb",
     "cases/erste002/assets/shell-hi.glb",
     "cases/erste002/assets/shell-hi.three-part.backup.glb",
     "cases/erste002/index.html",
