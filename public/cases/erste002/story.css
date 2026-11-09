@@ -211,20 +211,31 @@ body[data-mode="free"] #scene-root {
 }
 .caption .eyebrow {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   align-items: center;
   color: var(--red);
 }
-.caption .eyebrow::before {
-  content: "";
-  width: 19px;
-  height: 2px;
-  background: currentColor;
+#cap-index {
+  display: grid;
+  place-items: center;
+  min-width: 29px;
+  min-height: 23px;
+  padding-inline: 4px;
+  background: var(--red);
+  color: #150b0b;
+  font-weight: 750;
+}
+#cap-content {
+  transform: translateY(calc(var(--caption-motion, 0) * 21px));
+}
+#cap-body {
+  transform: translateY(calc(var(--caption-motion, 0) * 9px));
 }
 .caption h1 {
   margin: 15px 0 17px;
   font-size: clamp(30px, 4.7vw, 75px);
   line-height: 1.03;
+  font-weight: 800;
   letter-spacing: -0.055em;
   text-wrap: balance;
 }
@@ -639,16 +650,23 @@ select {
   #scene-root {
     inset: 64px 0 59px;
   }
-  .caption {
-    inset: auto auto 64px var(--gutter);
+  .caption,
+  body[data-caption-layout="right"] .caption,
+  body[data-caption-layout="bottom"] .caption {
+    inset-block: auto calc(var(--bottom) + 58px);
     width: 39%;
     min-height: 0;
+    transform: none;
+  }
+  body[data-caption-layout="bottom"] .caption {
+    width: min(76%, 550px);
   }
   .caption p {
     font-size: 12px;
   }
   html[lang="zh-CN"] .caption h1,
-  .caption h1 {
+  .caption h1,
+  body[data-segment="exterior"] .caption h1 {
     font-size: clamp(22px, 4vw, 34px);
     margin: 8px 0;
   }
@@ -668,15 +686,15 @@ select {
   }
 
   body[data-look="hero"] .caption {
-    inset: auto auto calc(var(--bottom) + 83px) var(--gutter);
-    width: min(56%, 780px);
+    inset: auto auto calc(var(--bottom) + 78px) var(--gutter);
+    width: min(61%, 850px);
     transform: none;
   }
   html body[data-look="hero"] .caption h1 {
-    font-size: clamp(66px, 9.2vw, 154px);
-    font-weight: 750;
+    font-size: clamp(66px, 10.4vw, 172px);
+    font-weight: 800;
     line-height: 0.89;
-    letter-spacing: -0.078em;
+    letter-spacing: -0.05em;
     margin: 11px 0 13px;
   }
   body[data-look="hero"] .caption p {
@@ -692,15 +710,15 @@ select {
     background: none;
   }
   body[data-look="specimen"] .caption {
-    inset-inline: max(var(--gutter), calc((100% - 930px) / 2));
+    inset-inline: max(var(--gutter), calc((100% - 1120px) / 2));
   }
   body:is([data-look="diagram"], [data-look="specimen"]) #cap-content {
     display: grid;
-    grid-template-columns: 1fr minmax(270px, 34%);
+    grid-template-columns: minmax(0, 1fr) minmax(245px, 29%);
     align-items: end;
     column-gap: 32px;
     padding-top: 14px;
-    border-top: 1px solid var(--edge);
+    border-top: 2px solid var(--red);
   }
   body:is([data-look="diagram"], [data-look="specimen"]) .caption .eyebrow {
     justify-content: start;
@@ -709,7 +727,8 @@ select {
   html body:is([data-look="diagram"], [data-look="specimen"]) .caption h1 {
     grid-column: 1;
     margin: 8px 0 0;
-    font-size: clamp(30px, 3.5vw, 58px);
+    font-size: clamp(32px, 4.65vw, 76px);
+    line-height: 0.98;
   }
   body:is([data-look="diagram"], [data-look="specimen"]) .caption p {
     grid-column: 2;
@@ -720,11 +739,16 @@ select {
 
   body[data-look="section"] .caption {
     top: calc(var(--top) + clamp(100px, 14vh, 160px));
-    width: min(34%, 435px);
+    width: min(32%, 445px);
     transform: none;
   }
   html body[data-look="section"] .caption h1 {
-    font-size: clamp(31px, 3.9vw, 64px);
+    font-size: clamp(36px, 4.6vw, 75px);
+    line-height: 0.96;
+  }
+  body[data-look="surface"] #cap-content {
+    border-inline-start: 2px solid var(--red);
+    padding-inline-start: clamp(12px, 1.45vw, 24px);
   }
   body[data-look="assembly"] .caption {
     inset: auto auto calc(var(--bottom) + 102px) var(--gutter);
@@ -746,6 +770,11 @@ select {
   body:is([data-look="diagram"], [data-look="section"], [data-look="specimen"])
     #cap-content {
     padding-top: 10px;
-    border-top: 1px solid var(--edge);
+    border-top: 2px solid var(--red);
+  }
+  html body:is([data-look="diagram"], [data-look="section"], [data-look="specimen"])
+    .caption h1 {
+    font-size: clamp(28px, 8.8vw, 58px);
+    line-height: 1;
   }
 }

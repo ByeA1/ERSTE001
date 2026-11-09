@@ -195,6 +195,7 @@ export function compileStory(input) {
         layout: beat.layout,
         annotation: beat.annotation,
         ...(beat.arrive !== undefined ? { arrive: map(beat.arrive) } : {}),
+        ...(beat.reveal !== undefined ? { reveal: map(beat.reveal) } : {}),
         ...(beat.leave !== undefined ? { leave: map(beat.leave) } : {}),
       });
     }

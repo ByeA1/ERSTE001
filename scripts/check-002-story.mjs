@@ -125,11 +125,13 @@ test("lights interpolate across named rigs, and both authored cues have two isol
   }
 });
 
-test("captions wait for completed poses and reduced motion samples the same held views", () => {
+test("captions enter during the shot while reduced motion samples the held view", () => {
   assert.equal(story.captions.length, 11);
   for (const beat of story.captions) {
     assert.ok(beat.arrive > beat.start);
-    assert.equal(captionAt(story, (beat.start + beat.arrive) / 2), null);
+    assert.ok(beat.reveal > beat.start && beat.reveal < beat.arrive);
+    assert.equal(captionAt(story, (beat.start + beat.reveal) / 2), null);
+    assert.ok(captionAt(story, (beat.reveal + beat.arrive) / 2).opacity > 0);
     const p = (beat.arrive + beat.end) / 2;
     const visible = captionAt(story, p);
     assert.equal(visible.title[0], beat.title[0]);
@@ -163,7 +165,7 @@ test("opening, section reveal and assembly return stage their motion and lightin
   assert.deepEqual(cutSweepStart.camera, cutSweepEnd.camera);
   assert.deepEqual(cutSweepStart.cut, cutSweepEnd.cut);
   assert.notDeepEqual(cutSweepStart.lights.focus.position, cutSweepEnd.lights.focus.position);
-  assert.equal(captionAt(story, progress(3, 0.364)), null);
+  assert.equal(captionAt(story, progress(3, 0.364)).annotation, "section-rib");
 
   const shellSeated = sample(3, 0.945);
   const wheelSeated = sample(3, 0.955);

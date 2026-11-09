@@ -34,6 +34,7 @@ const restart = $("#restart-story");
 const chapterNav = $("#chapter-nav");
 const caption = $("#caption");
 const capContent = $("#cap-content");
+const capIndex = $("#cap-index");
 const progress = $("#progress");
 const chapterNumber = $("#chapter-number");
 const chapterTitle = $("#chapter-title");
@@ -137,6 +138,8 @@ const initialReadout = ["外观", "Form"];
 const looks = {
   "01 / PRODUCT FORM": "hero",
   "02 / INDEX & MIDDLE": "diagram",
+  "02 / ASYMMETRIC SURFACE": "surface",
+  "02 / PALM & WRIST": "surface",
   "03 / ASSEMBLY RELATIONSHIP": "assembly",
   "03 / FULL EXPLODED VIEW": "assembly",
   "04 / LATERAL SOLID SECTION": "section",
@@ -351,14 +354,12 @@ function playToShot(index) {
   shotIndex = index;
   const to = shot.hold;
   const duration = clamp(Math.abs(to - p) * (story.duration ?? 16), 0.45, 5.4);
-  const departure = captionAt(story, p)?.opacity > 0 ? 0.18 : 0;
   playback = {
     from: p,
     to,
     duration,
-    departure,
+    outgoing: captionAt(story, p)?.start,
     elapsed: 0,
-    captionOpacity: 1,
   };
   updateNavigation();
   invalidate();
@@ -622,17 +623,16 @@ addEventListener("pagehide", (event) => {
   renderer?.dispose();
 });
 function updateCaption() {
-  const envelope = playback && !free ? playback.captionOpacity : 1;
   const cap =
-    envelope > 0 && body.dataset.projectReady !== "loading"
-      ? captionAt(story, p)
-      : null;
+    body.dataset.projectReady !== "loading" ? captionAt(story, p) : null;
   const key = cap ? cap.start : null;
   if (
     cap &&
     (lastCaption !== key || capTitle.textContent !== cap.title[lang])
   ) {
-    capTag.textContent = cap.tag;
+    const frame = shots.findIndex((shot) => shot.start === key) + 1;
+    capIndex.textContent = frame ? String(frame).padStart(2, "0") : "";
+    capTag.textContent = cap.tag.replace(/^\d+ \/ /, "");
     capTitle.textContent = cap.title[lang];
     capBody.textContent = cap.body[lang];
     body.dataset.segment =
@@ -642,17 +642,23 @@ function updateCaption() {
     lastCaption = key;
   }
   if (cap) body.dataset.captionLayout = cap.layout ?? "left";
+  const envelope =
+    playback && key === playback.outgoing
+      ? 1 - smooth(playback.elapsed / Math.min(0.28, playback.duration))
+      : 1;
   const opacity = !cap ? 0 : reducedMotion() ? 1 : cap.opacity * envelope;
-  activeMarkers = ready && !free ? (markerSets[cap?.annotation] ?? []) : [];
+  const annotation = cap && p >= (cap.arrive ?? cap.start) ? cap.annotation : "";
+  activeMarkers = ready && !free ? (markerSets[annotation] ?? []) : [];
   heightMarkers.hidden = activeMarkers.length === 0;
   heightGuide.toggleAttribute("hidden", activeMarkers !== heightLandmarks);
   for (const [name, landmarks] of Object.entries(markerSets))
-    for (const { node } of landmarks) node.hidden = cap?.annotation !== name;
+    for (const { node } of landmarks) node.hidden = annotation !== name;
   if (!heightMarkers.hidden) heightMarkers.style.opacity = opacity;
   capContent.style.opacity = opacity;
-  capContent.style.transform = reducedMotion()
-    ? ""
-    : "translateY(" + (1 - opacity) * 7 + "px)";
+  capContent.style.setProperty(
+    "--caption-motion",
+    reducedMotion() ? 0 : 1 - opacity,
+  );
   caption.hidden = free;
   progress.textContent = String(Math.round(p * 100)).padStart(3, "0") + "%";
   progress.parentElement.style.setProperty("--progress", p);
@@ -773,16 +779,9 @@ function tick(now) {
   dirty = false;
   if (playback && !free) {
     playback.elapsed += dt;
-    const arrival = 0.24;
-    const movement = playback.elapsed - playback.departure;
-    const fraction = clamp(movement / playback.duration);
+    const fraction = clamp(playback.elapsed / playback.duration);
     p = playback.from + (playback.to - playback.from) * fraction;
-    // Clear the old copy before moving, then reveal the new copy at the held pose.
-    playback.captionOpacity =
-      movement < 0
-        ? smooth(-movement / playback.departure)
-        : smooth((movement - playback.duration) / arrival);
-    if (!ready || reducedMotion() || movement >= playback.duration + arrival) {
+    if (!ready || reducedMotion() || fraction === 1) {
       p = playback.to;
       playback = null;
       updateNavigation();

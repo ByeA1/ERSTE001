@@ -143,14 +143,16 @@ export function captionAt(story, p) {
   const c = story.captions.find((c) => p >= c.start && p <= c.end);
   if (!c) return null;
   const arrive = c.arrive ?? c.start;
+  const reveal = c.reveal ?? arrive;
   const leave = c.leave ?? c.end;
-  const edge = Math.min(0.008, (leave - arrive) / 4);
-  if (p < arrive || p > leave) return null;
+  const fadeIn = Math.min(0.008, (leave - reveal) / 4);
+  const fadeOut = Math.min(0.008, (leave - arrive) / 4);
+  if (p < reveal || p > leave) return null;
   return {
     ...c,
     opacity:
-      (arrive === 0 ? 1 : smooth((p - arrive) / edge)) *
-      (leave === 1 ? 1 : smooth((leave - p) / edge)),
+      (reveal === 0 ? 1 : smooth((p - reveal) / fadeIn)) *
+      (leave === 1 ? 1 : smooth((leave - p) / fadeOut)),
   };
 }
 export function validateStory(input) {
@@ -243,6 +245,7 @@ export function validateStory(input) {
     const arrive = c.arrive ?? c.start,
       leave = c.leave ?? c.end;
     range(arrive, c.start, c.end, "文字出现机位");
+    range(c.reveal ?? arrive, c.start, arrive, "文案入场起点");
     range(leave, arrive, c.end, "文字离开机位");
     if (arrive === leave) fail("文字停留区间");
     for (const k of ["title", "body"])
@@ -297,6 +300,7 @@ export function validateStory(input) {
         ? c.annotation
         : "",
       ...(c.arrive !== undefined ? { arrive: c.arrive } : {}),
+      ...(c.reveal !== undefined ? { reveal: c.reveal } : {}),
       ...(c.leave !== undefined ? { leave: c.leave } : {}),
       start: c.start,
       end: c.end,

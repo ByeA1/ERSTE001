@@ -987,6 +987,7 @@
           "start": 0,
           "end": 1,
           "arrive": 0.79,
+          "reveal": 0.53,
           "tag": "01 / PRODUCT FORM",
           "title": [
             "ERSTE002",
@@ -1469,6 +1470,7 @@
           "start": 0,
           "end": 0.33,
           "arrive": 0.235,
+          "reveal": 0.14,
           "tag": "02 / INDEX & MIDDLE",
           "title": [
             "食指高，中指低",
@@ -1485,6 +1487,7 @@
           "start": 0.33,
           "end": 0.62,
           "arrive": 0.54,
+          "reveal": 0.43,
           "tag": "02 / ASYMMETRIC SURFACE",
           "title": [
             "倾斜延伸到上盖",
@@ -1501,6 +1504,7 @@
           "start": 0.62,
           "end": 1,
           "arrive": 0.875,
+          "reveal": 0.76,
           "tag": "02 / PALM & WRIST",
           "title": [
             "掌心支撑与手腕方向",
@@ -2262,6 +2266,7 @@
           "start": 0,
           "end": 0.42,
           "arrive": 0.29,
+          "reveal": 0.19,
           "tag": "03 / ASSEMBLY RELATIONSHIP",
           "title": [
             "开放式底部",
@@ -2276,6 +2281,7 @@
           "start": 0.42,
           "end": 1,
           "arrive": 0.82,
+          "reveal": 0.65,
           "tag": "03 / FULL EXPLODED VIEW",
           "title": [
             "五组部件的装配关系",
@@ -3026,6 +3032,7 @@
           "start": 0,
           "end": 0.261,
           "arrive": 0.242,
+          "reveal": 0.177,
           "tag": "04 / LATERAL SOLID SECTION",
           "title": [
             "侧切上盖",
@@ -3040,6 +3047,7 @@
           "start": 0.261,
           "end": 0.405,
           "arrive": 0.371,
+          "reveal": 0.295,
           "tag": "04 / RIB CROSS-SECTION",
           "title": [
             "类工字形截面",
@@ -3055,6 +3063,7 @@
           "start": 0.405,
           "end": 0.602,
           "arrive": 0.551,
+          "reveal": 0.473,
           "tag": "04 / UPPER SHELL JUNCTION",
           "title": [
             "加强筋、侧壁与横撑",
@@ -3069,6 +3078,7 @@
           "start": 0.602,
           "end": 0.869,
           "arrive": 0.831,
+          "reveal": 0.727,
           "tag": "04 / BUTTON COVER UNDERSIDE",
           "title": [
             "按键盖内侧加强筋",
@@ -3084,6 +3094,7 @@
           "start": 0.869,
           "end": 1,
           "arrive": 0.995,
+          "reveal": 0.978,
           "tag": "04 / REASSEMBLED",
           "title": [
             "ERSTE002",
