@@ -145,14 +145,15 @@ export function captionAt(story, p) {
   const arrive = c.arrive ?? c.start;
   const reveal = c.reveal ?? arrive;
   const leave = c.leave ?? c.end;
-  const fadeIn = Math.min(0.008, (leave - reveal) / 4);
-  const fadeOut = Math.min(0.008, (leave - arrive) / 4);
   if (p < reveal || p > leave) return null;
+  const fadeIn = Math.min(0.011, (leave - reveal) / 2);
+  const fadeOut = Math.min(0.008, (leave - arrive) / 4);
+  const entrance = reveal === 0 ? 1 : clamp((p - reveal) / fadeIn);
+  const exit = leave === 1 ? 1 : clamp((leave - p) / fadeOut);
   return {
     ...c,
-    opacity:
-      (reveal === 0 ? 1 : smooth((p - reveal) / fadeIn)) *
-      (leave === 1 ? 1 : smooth((leave - p) / fadeOut)),
+    revealProgress: Math.min(entrance, exit),
+    opacity: smooth(entrance) * smooth(exit),
   };
 }
 export function validateStory(input) {

@@ -224,12 +224,42 @@ body[data-mode="free"] #scene-root {
   background: var(--red);
   color: #150b0b;
   font-weight: 750;
+  transform: scaleX(var(--label-in, 1));
+  transform-origin: left;
 }
 #cap-content {
-  transform: translateY(calc(var(--caption-motion, 0) * 21px));
+  position: relative;
+}
+#cap-content::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: var(--rule-width, 0px);
+  height: var(--rule-height, 2px);
+  background: var(--rule-color, var(--red));
+  transform: scaleX(var(--label-in, 1));
+  transform-origin: top left;
+}
+#cap-tag {
+  opacity: var(--label-in, 1);
+  transform: translateX(calc((1 - var(--label-in, 1)) * -9px));
+}
+#cap-title {
+  opacity: var(--title-in, 1);
+  transform: translateY(calc((1 - var(--title-in, 1)) * 0.35em));
+  clip-path: inset(
+    -0.14em -0.15em calc((1 - var(--title-in, 1)) * 104% - 0.14em)
+  );
+}
+body[data-look="hero"] #cap-title {
+  transform: translateX(calc((1 - var(--title-in, 1)) * -0.16em));
+  clip-path: inset(
+    -0.15em calc((1 - var(--title-in, 1)) * 104% - 0.15em) -0.15em -0.15em
+  );
 }
 #cap-body {
-  transform: translateY(calc(var(--caption-motion, 0) * 9px));
+  opacity: var(--copy-in, 1);
+  transform: translateY(calc((1 - var(--copy-in, 1)) * 10px));
 }
 .caption h1 {
   margin: 15px 0 17px;
@@ -713,12 +743,15 @@ select {
     inset-inline: max(var(--gutter), calc((100% - 1120px) / 2));
   }
   body:is([data-look="diagram"], [data-look="specimen"]) #cap-content {
+    --rule-width: 100%;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(245px, 29%);
     align-items: end;
     column-gap: 32px;
     padding-top: 14px;
-    border-top: 2px solid var(--red);
+  }
+  body[data-look="specimen"] #cap-content {
+    --rule-width: min(22%, 210px);
   }
   body:is([data-look="diagram"], [data-look="specimen"]) .caption .eyebrow {
     justify-content: start;
@@ -746,9 +779,13 @@ select {
     font-size: clamp(36px, 4.6vw, 75px);
     line-height: 0.96;
   }
-  body[data-look="surface"] #cap-content {
-    border-inline-start: 2px solid var(--red);
-    padding-inline-start: clamp(12px, 1.45vw, 24px);
+  body:is([data-look="surface"], [data-look="section"]) #cap-content {
+    --rule-width: 2px;
+    --rule-height: 100%;
+    padding-inline-start: clamp(14px, 1.3vw, 24px);
+  }
+  body:is([data-look="surface"], [data-look="section"]) #cap-content::before {
+    transform: scaleY(var(--label-in, 1));
   }
   body[data-look="assembly"] .caption {
     inset: auto auto calc(var(--bottom) + 102px) var(--gutter);
@@ -756,8 +793,10 @@ select {
     width: min(35%, 455px);
   }
   body[data-look="assembly"] #cap-content {
+    --rule-width: 100%;
+    --rule-height: 1px;
+    --rule-color: var(--edge);
     padding-top: 16px;
-    border-top: 1px solid var(--edge);
   }
 }
 
@@ -769,8 +808,11 @@ select {
   }
   body:is([data-look="diagram"], [data-look="section"], [data-look="specimen"])
     #cap-content {
+    --rule-width: 100%;
     padding-top: 10px;
-    border-top: 2px solid var(--red);
+  }
+  body[data-look="specimen"] #cap-content {
+    --rule-width: 35%;
   }
   html body:is([data-look="diagram"], [data-look="section"], [data-look="specimen"])
     .caption h1 {

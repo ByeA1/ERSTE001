@@ -646,19 +646,20 @@ function updateCaption() {
     playback && key === playback.outgoing
       ? 1 - smooth(playback.elapsed / Math.min(0.28, playback.duration))
       : 1;
-  const opacity = !cap ? 0 : reducedMotion() ? 1 : cap.opacity * envelope;
+  const still = reducedMotion();
   const annotation = cap && p >= (cap.arrive ?? cap.start) ? cap.annotation : "";
   activeMarkers = ready && !free ? (markerSets[annotation] ?? []) : [];
   heightMarkers.hidden = activeMarkers.length === 0;
   heightGuide.toggleAttribute("hidden", activeMarkers !== heightLandmarks);
   for (const [name, landmarks] of Object.entries(markerSets))
     for (const { node } of landmarks) node.hidden = annotation !== name;
-  if (!heightMarkers.hidden) heightMarkers.style.opacity = opacity;
-  capContent.style.opacity = opacity;
-  capContent.style.setProperty(
-    "--caption-motion",
-    reducedMotion() ? 0 : 1 - opacity,
-  );
+  if (!heightMarkers.hidden)
+    heightMarkers.style.opacity = still ? 1 : cap.opacity * envelope;
+  capContent.style.opacity = cap ? (still ? 1 : envelope) : 0;
+  const reveal = still ? 1 : (cap?.revealProgress ?? 0);
+  capContent.style.setProperty("--label-in", smooth(reveal / 0.42));
+  capContent.style.setProperty("--title-in", smooth((reveal - 0.16) / 0.65));
+  capContent.style.setProperty("--copy-in", smooth((reveal - 0.45) / 0.55));
   caption.hidden = free;
   progress.textContent = String(Math.round(p * 100)).padStart(3, "0") + "%";
   progress.parentElement.style.setProperty("--progress", p);
