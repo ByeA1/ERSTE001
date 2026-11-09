@@ -13,6 +13,7 @@ const channels = [
   "camera",
   "lights",
   "ambient",
+  "reflection",
   "cut",
   "explode",
   "assembly",
@@ -164,7 +165,8 @@ export function compileStory(input) {
       assert(segment.lightingTrack[0].at === 0 && last === 1, id + " 灯光轨道须覆盖首尾");
       for (const frame of segment.lightingTrack) {
         const pose = makePose(frame.pose ?? from, frame);
-        const entry = { at: map(frame.at), lights: pose.lights, ambient: pose.ambient };
+        const { lights, ambient, reflection } = pose;
+        const entry = { at: map(frame.at), lights, ambient, reflection };
         const prior = lightingTrack.at(-1);
         if (prior?.at === entry.at) {
           assert(JSON.stringify(prior) === JSON.stringify(entry), id + " 灯光入口须衔接前段出口");
@@ -246,7 +248,12 @@ export function editFrame(document, flat, progress, frame, lightingOnly = false)
     assert(track, "当前文件没有独立灯光轨道");
     const index = track.findIndex((key) => Math.abs(key.at - at) < 0.001);
     if (frame) {
-      const entry = { at, lights: clone(frame.lights), ambient: frame.ambient };
+      const entry = {
+        at,
+        lights: clone(frame.lights),
+        ambient: frame.ambient,
+        reflection: clone(frame.reflection),
+      };
       if (index < 0) track.push(entry);
       else track[index] = entry;
       track.sort((a, b) => a.at - b.at);
@@ -277,7 +284,8 @@ export function editFrame(document, flat, progress, frame, lightingOnly = false)
     const track = next.segments.find((item) => item.id === segment.id).lightingTrack;
     if (track) {
       const lightIndex = track.findIndex((key) => Math.abs(key.at - at) < 0.001);
-      const lightFrame = { at, lights: value.lights, ambient: value.ambient };
+      const { lights, ambient, reflection } = value;
+      const lightFrame = { at, lights, ambient, reflection };
       if (lightIndex < 0) track.push(lightFrame);
       else track[lightIndex] = lightFrame;
       track.sort((a, b) => a.at - b.at);

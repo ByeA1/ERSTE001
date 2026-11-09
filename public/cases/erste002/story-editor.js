@@ -144,6 +144,16 @@ export function createEditor(api) {
   }
   d = section("环境与剖切");
   field(d, "环境光强度", ["ambient"], "number", { min: 0, max: 5, step: 0.05 });
+  field(d, "灯棚反射强度", ["reflection", "intensity"], "number", {
+    min: 0,
+    max: 3,
+    step: 0.05,
+  });
+  field(d, "灯棚水平角度", ["reflection", "yaw"], "number", {
+    min: -360,
+    max: 360,
+    step: 1,
+  });
   field(d, "启用剖切", ["cut", "enabled"], "checkbox");
   field(d, "实体截面封口", ["cut", "cap"], "checkbox");
   field(d, "剖切目标", ["cut", "target"], "select", {

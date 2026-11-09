@@ -37,6 +37,7 @@ const base = {
     focus: light([0.05, 0.22, 0.15], [0, 0, 0], 0, "#ffffff", 24),
   },
   ambient: 0.6,
+  reflection: { intensity: 0.48, yaw: 0 },
   cut: {
     enabled: false,
     position: [0.16, 0, 0],
@@ -116,6 +117,7 @@ export function sampleStory(story, progress) {
     const lighting = sampleStory({ keyframes: story.lightingTrack }, p);
     value.lights = lighting.lights;
     value.ambient = lighting.ambient;
+    value.reflection = lighting.reflection;
   }
   return value;
 }
@@ -206,6 +208,10 @@ export function validateStory(input) {
       fail("提示目标");
     if (!PARTS.includes(f.isolate ?? "")) fail("单独显示部件");
     range(f.ambient, 0, 5, "环境光");
+    if (f.reflection !== undefined) {
+      range(f.reflection?.intensity, 0, 3, "环境反射强度");
+      range(f.reflection?.yaw, -360, 360, "环境反射角度");
+    }
     range(f.explode, 0, 1, "装配");
     if (f.assembly !== undefined) {
       if (
@@ -260,7 +266,7 @@ export function validateStory(input) {
       lightingTrack: validateStory({
         ...DEFAULT_STORY,
         keyframes: input.lightingTrack.map((frame) => ({ ...clone(base), ...frame })),
-      }).keyframes.map(({ at, lights, ambient }) => ({ at, lights, ambient })),
+      }).keyframes.map(({ at, lights, ambient, reflection }) => ({ at, lights, ambient, reflection })),
     } : {}),
     label: String(input.label || "ERSTE002").slice(0, 160),
     keyframes: input.keyframes.map((f) =>
@@ -268,6 +274,7 @@ export function validateStory(input) {
         {
           electronics: 0,
           isolate: "",
+          reflection: base.reflection,
           ...f,
           assembly: { ...base.assembly, ...f.assembly },
           lights: { fill: base.lights.fill, ...f.lights },

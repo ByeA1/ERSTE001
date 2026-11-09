@@ -722,9 +722,8 @@ function apply(value) {
     light.angle = THREE.MathUtils.degToRad(definition.angle);
   }
   ambient.intensity = value.ambient;
-  // Match the reflection floor to the existing light level during the reveal.
-  scene.environmentIntensity =
-    0.64 * smooth((value.lights.key.intensity - 0.1) / 3.4);
+  scene.environmentIntensity = value.reflection.intensity;
+  scene.environmentRotation.y = THREE.MathUtils.degToRad(value.reflection.yaw);
   assembly.value = value.explode;
   partSelect.value = value.focus;
   assemblyRig.apply(value, free ? isolated : value.isolate);
@@ -864,7 +863,7 @@ async function start() {
     });
     renderer.localClippingEnabled = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.12;
+    renderer.toneMappingExposure = 1.08;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     host.append(renderer.domElement);
@@ -888,7 +887,7 @@ async function start() {
         light.shadow.camera.far = 1.2;
         light.shadow.bias = -0.0003;
         light.shadow.normalBias = 0.0006;
-        light.shadow.radius = 4.5;
+        light.shadow.radius = name === "focus" ? 3.4 : 4.5;
         light.shadow.intensity = 0.74;
       }
       lights[name] = light;

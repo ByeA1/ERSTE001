@@ -61,7 +61,9 @@ Three.js 本地裁切与实际的截面三角网格一起工作。运行时从�
 
 视觉升级以 `7ca8195` 为回滚基线。第 01 镜使用独立产品主视觉，第 02 镜以模型表面点投影绘制高低参照线，第 08 镜用斜向剖面构图与红白分光，第 10 镜用掠射光及浅红边光呈现内侧筋位。四章沿用同一黑红基底，分别通过产品标题、工程图注、装配铭牌与剖面版式区分。对照图位于 `.audit/002-visual/comparison-desktop.png`。
 
-工作室白色反光板在载入时烘成一张 PMREM 环境贴图，运行时按现有主光强度控制反射量。模型保持原始底色和几何，固定粗糙度按零件区分。场景使用 ACES 映射和单张软阴影图，仍由按需渲染驱动。帧时间、双语文案和两次提示闪烁定义沿用基线。
+工作室环境在载入时烘成一张 PMREM 贴图。`lightingTrack[].reflection` 存储 `intensity` 和 `yaw`，分别控制灯棚反射量和水平方向。编辑器「环境与剖切」中的灯棚参数可随灯光帧独立保存。直接聚光、半球补光和环境反射各自控制。模型保持原始底色和几何，塑料使用零金属度和固定粗糙度。场景使用 ACES 映射、单张软阴影图和按需渲染。帧时间、双语文案和两次提示闪烁定义沿用基线。
+
+摄影棚版本以 `85376db` 为同机位对照基线。浏览器转动参考演示时可见亮带沿耳罩移动，织物保持暗哑。案例说明描述了非对称灯棚，公开代码确认了 PMREM、ORM、清漆材质和独立直射灯。ERSTE002 采用带渐变边缘的非对称条形反光板，每次加载只生成一次 128 像素面长的 PMREM。当前 GLB 缺少 UV 和 AO 贴图，本轮通过遮挡阴影、低强度补光和掠射聚光呈现局部厚度。对照图位于 `.audit/002-studio/comparison-desktop.png`。[案例说明](https://www.dopaminestudio.io/project/3d-product-visualization) · [在线演示](https://alessandrocofone.github.io/aripods-picker/airpods/index_finale.html) · [公开代码](https://github.com/alessandrocofone/aripods-picker/blob/main/airpods/index_finale.html)
 
 ## 独立灯光轨道框架
 

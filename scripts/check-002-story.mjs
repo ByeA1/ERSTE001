@@ -140,7 +140,9 @@ test("captions wait for completed poses and reduced motion samples the same held
     );
     const arrival = sampleStory(story, beat.arrive);
     const hold = sampleStory(story, p);
-    for (const channel of ["assembly", "explode", "cut", "isolate", "lights"])
+    for (const channel of [
+      "assembly", "explode", "cut", "isolate", "lights", "reflection",
+    ])
       assert.deepEqual(hold[channel], arrival[channel], `${beat.title[0]} ${channel}`);
   }
 });
@@ -176,6 +178,22 @@ test("opening, section reveal and assembly return stage their motion and lightin
   assert.notDeepEqual(pulledBack.camera, complete.camera);
   assert.deepEqual(pulledBack.lights, complete.lights);
   assert.notDeepEqual(sample(3, 1).lights, pulledBack.lights);
+});
+
+test("the studio reflection moves at a held camera and edits independently of direct lighting", () => {
+  const start = sample(1, 0.17);
+  const end = sample(1, 0.22);
+  assert.deepEqual(start.camera, end.camera);
+  assert.notEqual(start.reflection.yaw, end.reflection.yaw);
+
+  const next = structuredClone(data);
+  const key = next.segments[1].lightingTrack.find((frame) => frame.at === 0.22);
+  key.reflection.yaw = 92;
+  const edited = sampleStory(compileStory(next), progress(1, 0.22));
+  assert.equal(edited.reflection.yaw, 92);
+  assert.deepEqual(edited.lights, end.lights);
+  key.reflection.intensity = -1;
+  assert.throws(() => compileStory(next), /环境反射强度/);
 });
 
 test("the authored shell cut generates a real cap, and extraction round-trips Rev 3 group transforms", async () => {
