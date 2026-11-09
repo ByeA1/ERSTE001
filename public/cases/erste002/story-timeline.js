@@ -281,9 +281,12 @@ export function validateStory(input) {
       layout: ["left", "right", "bottom"].includes(c.layout)
         ? c.layout
         : "left",
-      annotation: ["button-height", "palm-support", "section-rib"].includes(
-        c.annotation,
-      )
+      annotation: [
+        "button-height",
+        "shell-shoulders",
+        "palm-support",
+        "section-rib",
+      ].includes(c.annotation)
         ? c.annotation
         : "",
       ...(c.arrive !== undefined ? { arrive: c.arrive } : {}),

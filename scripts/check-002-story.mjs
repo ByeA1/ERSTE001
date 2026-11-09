@@ -126,6 +126,7 @@ test("lights interpolate across named rigs, and both authored cues have two isol
 });
 
 test("captions wait for completed poses and reduced motion samples the same held views", () => {
+  assert.equal(story.captions.length, 11);
   for (const beat of story.captions) {
     assert.ok(beat.arrive > beat.start);
     assert.equal(captionAt(story, (beat.start + beat.arrive) / 2), null);
@@ -137,7 +138,44 @@ test("captions wait for completed poses and reduced motion samples the same held
       sampleStory(story, p).camera,
       sampleStill(story, p).camera,
     );
+    const arrival = sampleStory(story, beat.arrive);
+    const hold = sampleStory(story, p);
+    for (const channel of ["assembly", "explode", "cut", "isolate", "lights"])
+      assert.deepEqual(hold[channel], arrival[channel], `${beat.title[0]} ${channel}`);
   }
+});
+
+test("opening, section reveal and assembly return stage their motion and lighting separately", () => {
+  const silhouette = sample(0, 0.2);
+  const sweep = sample(0, 0.46);
+  assert.deepEqual(silhouette.camera, sample(0, 0).camera);
+  assert.ok(silhouette.lights.key.intensity < 0.2);
+  assert.ok(sweep.lights.key.intensity > 4);
+  assert.ok(silhouette.lights.rim.intensity > sweep.lights.rim.intensity * 0.5);
+  assert.deepEqual(sample(2, 0.53).camera, sample(2, 0.73).camera);
+  assert.equal(sample(2, 0.53).explode, 0);
+  assert.equal(sample(2, 0.73).explode, 1);
+
+  const cutSweepStart = sample(3, 0.315);
+  const cutSweepEnd = sample(3, 0.364);
+  assert.deepEqual(cutSweepStart.camera, cutSweepEnd.camera);
+  assert.deepEqual(cutSweepStart.cut, cutSweepEnd.cut);
+  assert.notDeepEqual(cutSweepStart.lights.focus.position, cutSweepEnd.lights.focus.position);
+  assert.equal(captionAt(story, progress(3, 0.364)), null);
+
+  const shellSeated = sample(3, 0.945);
+  const wheelSeated = sample(3, 0.955);
+  const complete = sample(3, 0.965);
+  const pulledBack = sample(3, 0.983);
+  assert.equal(shellSeated.explode, 0);
+  assert.ok(shellSeated.assembly.wheel.offset[1] > 0);
+  assert.equal(wheelSeated.assembly.wheel.offset[1], 0);
+  assert.ok(wheelSeated.assembly.button_cover.offset[1] > 0);
+  assert.equal(complete.assembly.button_cover.offset[1], 0);
+  assert.deepEqual(complete.camera, shellSeated.camera);
+  assert.notDeepEqual(pulledBack.camera, complete.camera);
+  assert.deepEqual(pulledBack.lights, complete.lights);
+  assert.notDeepEqual(sample(3, 1).lights, pulledBack.lights);
 });
 
 test("the authored shell cut generates a real cap, and extraction round-trips Rev 3 group transforms", async () => {

@@ -79,6 +79,18 @@ const palmLandmarks = [
     text: ["右侧下落", "RIGHT FALLAWAY"],
   },
 ];
+const shellLandmarks = [
+  {
+    node: $("#high-shell-shoulder"),
+    point: new THREE.Vector3(0.048, 0.042317, -0.015),
+    text: ["高侧延续", "HIGH SIDE"],
+  },
+  {
+    node: $("#low-shell-shoulder"),
+    point: new THREE.Vector3(-0.048, 0.037686, -0.015),
+    text: ["低侧收拢", "LOW SIDE"],
+  },
+];
 const sectionLandmarks = [
   {
     node: $("#rib-section-marker"),
@@ -88,6 +100,7 @@ const sectionLandmarks = [
 ];
 const markerSets = {
   "button-height": heightLandmarks,
+  "shell-shoulders": shellLandmarks,
   "palm-support": palmLandmarks,
   "section-rib": sectionLandmarks,
 };
@@ -320,8 +333,16 @@ function playToShot(index) {
   draft = null;
   shotIndex = index;
   const to = shot.hold;
-  const duration = clamp(Math.abs(to - p) * (story.duration ?? 16), 0.45, 3.6);
-  playback = { from: p, to, duration, elapsed: 0 };
+  const duration = clamp(Math.abs(to - p) * (story.duration ?? 16), 0.45, 5.4);
+  const departure = captionAt(story, p)?.opacity > 0 ? 0.18 : 0;
+  playback = {
+    from: p,
+    to,
+    duration,
+    departure,
+    elapsed: 0,
+    captionOpacity: 1,
+  };
   updateNavigation();
   invalidate();
 }
@@ -583,7 +604,11 @@ addEventListener("pagehide", (event) => {
   renderer?.dispose();
 });
 function updateCaption() {
-  const cap = captionAt(story, p);
+  const envelope = playback && !free ? playback.captionOpacity : 1;
+  const cap =
+    envelope > 0 && body.dataset.projectReady !== "loading"
+      ? captionAt(story, p)
+      : null;
   const key = cap ? cap.start : null;
   if (
     cap &&
@@ -598,7 +623,7 @@ function updateCaption() {
     lastCaption = key;
   }
   if (cap) body.dataset.captionLayout = cap.layout ?? "left";
-  const opacity = !cap ? 0 : reducedMotion() ? 1 : cap.opacity;
+  const opacity = !cap ? 0 : reducedMotion() ? 1 : cap.opacity * envelope;
   activeMarkers = ready && !free ? (markerSets[cap?.annotation] ?? []) : [];
   heightMarkers.hidden = activeMarkers.length === 0;
   for (const [name, landmarks] of Object.entries(markerSets))
@@ -709,12 +734,16 @@ function tick(now) {
   dirty = false;
   if (playback && !free) {
     playback.elapsed += dt;
-    const fraction =
-      !ready || reducedMotion()
-        ? 1
-        : clamp(playback.elapsed / playback.duration);
+    const arrival = 0.24;
+    const movement = playback.elapsed - playback.departure;
+    const fraction = clamp(movement / playback.duration);
     p = playback.from + (playback.to - playback.from) * fraction;
-    if (fraction === 1) {
+    // Clear the old copy before moving, then reveal the new copy at the held pose.
+    playback.captionOpacity =
+      movement < 0
+        ? smooth(-movement / playback.departure)
+        : smooth((movement - playback.duration) / arrival);
+    if (!ready || reducedMotion() || movement >= playback.duration + arrival) {
       p = playback.to;
       playback = null;
       updateNavigation();
