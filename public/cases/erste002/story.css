@@ -67,12 +67,34 @@ button:disabled {
 [hidden] {
   display: none !important;
 }
+@property --studio-halo {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: #202025;
+}
 #story {
   position: fixed;
   inset: 0;
   overflow: hidden;
-  background:
-    radial-gradient(ellipse at 72% 46%, #29282b, transparent 56%), #101012;
+  --studio-halo: #202025;
+  background: radial-gradient(
+    ellipse at 60% 39%,
+    var(--studio-halo),
+    #0b0c0f 75%
+  );
+  transition: --studio-halo 0.48s ease;
+}
+body[data-look="hero"] #story {
+  --studio-halo: #35272e;
+}
+body[data-segment="right-hand-ergonomics"] #story {
+  --studio-halo: #252930;
+}
+body[data-segment="structure-and-assembly"] #story {
+  --studio-halo: #28272f;
+}
+body[data-segment="structural-reinforcement"]:not([data-look="hero"]) #story {
+  --studio-halo: #20242a;
 }
 #scene-root {
   position: absolute;
@@ -88,13 +110,29 @@ button:disabled {
   inset: 0;
   pointer-events: none;
 }
+#button-height-guide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke-width: 1;
+}
+#button-height-guide .datum {
+  stroke: #f4f0efb3;
+  stroke-dasharray: 3 4;
+}
+#button-height-guide .difference {
+  stroke: #ff716b;
+  stroke-width: 1.5;
+}
 .height-marker {
   position: absolute;
   z-index: 1;
   transform: translate(-50%, calc(-100% - 24px));
-  border: 1px solid #ff5d5780;
+  border: 1px solid #ffffff3b;
   padding: 5px 8px;
-  background: #141416f5;
+  background: #121216f2;
   color: var(--ink);
   font: 10px var(--mono);
   white-space: nowrap;
@@ -289,7 +327,7 @@ body[data-segment="exterior"] .caption h1 {
   justify-content: flex-start;
   gap: 10px;
   padding-inline: 10px;
-  background: #141416e8;
+  background: #1010148f;
   border-color: transparent;
 }
 .chapter-nav button span:first-child {
@@ -297,7 +335,8 @@ body[data-segment="exterior"] .caption h1 {
   font: 11px var(--mono);
 }
 .chapter-nav button[aria-current] {
-  border-color: var(--red);
+  border-inline-start-color: var(--red);
+  background: #1c171aeb;
 }
 .chapter-nav button[aria-current] span:first-child {
   color: var(--red);
@@ -484,8 +523,11 @@ select {
     --top: max(9px, env(safe-area-inset-top));
   }
   #story {
-    background:
-      radial-gradient(ellipse at 50% 35%, #272629, transparent 50%), #101012;
+    background: radial-gradient(
+      ellipse at 50% 34%,
+      var(--studio-halo),
+      #0b0c0f 72%
+    );
   }
   .topbar {
     padding-bottom: 8px;
@@ -615,5 +657,95 @@ select {
   *,
   *::before {
     transition: none !important;
+  }
+}
+
+@media (min-width: 741px) and (min-height: 561px) and (orientation: landscape) {
+  .chapter-nav {
+    top: calc(var(--top) + 96px);
+    right: max(16px, env(safe-area-inset-right));
+    transform: none;
+  }
+
+  body[data-look="hero"] .caption {
+    inset: auto auto calc(var(--bottom) + 83px) var(--gutter);
+    width: min(56%, 780px);
+    transform: none;
+  }
+  html body[data-look="hero"] .caption h1 {
+    font-size: clamp(66px, 9.2vw, 154px);
+    font-weight: 750;
+    line-height: 0.89;
+    letter-spacing: -0.078em;
+    margin: 11px 0 13px;
+  }
+  body[data-look="hero"] .caption p {
+    max-width: 43ch;
+  }
+
+  body[data-look="diagram"] .caption,
+  body[data-look="specimen"] .caption {
+    inset: auto var(--gutter) calc(var(--bottom) + 72px);
+    width: auto;
+    transform: none;
+    text-align: left;
+    background: none;
+  }
+  body[data-look="specimen"] .caption {
+    inset-inline: max(var(--gutter), calc((100% - 930px) / 2));
+  }
+  body:is([data-look="diagram"], [data-look="specimen"]) #cap-content {
+    display: grid;
+    grid-template-columns: 1fr minmax(270px, 34%);
+    align-items: end;
+    column-gap: 32px;
+    padding-top: 14px;
+    border-top: 1px solid var(--edge);
+  }
+  body:is([data-look="diagram"], [data-look="specimen"]) .caption .eyebrow {
+    justify-content: start;
+    grid-column: 1;
+  }
+  html body:is([data-look="diagram"], [data-look="specimen"]) .caption h1 {
+    grid-column: 1;
+    margin: 8px 0 0;
+    font-size: clamp(30px, 3.5vw, 58px);
+  }
+  body:is([data-look="diagram"], [data-look="specimen"]) .caption p {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    max-width: 46ch;
+    margin: 0;
+  }
+
+  body[data-look="section"] .caption {
+    top: calc(var(--top) + clamp(100px, 14vh, 160px));
+    width: min(34%, 435px);
+    transform: none;
+  }
+  html body[data-look="section"] .caption h1 {
+    font-size: clamp(31px, 3.9vw, 64px);
+  }
+  body[data-look="assembly"] .caption {
+    inset: auto auto calc(var(--bottom) + 102px) var(--gutter);
+    transform: none;
+    width: min(35%, 455px);
+  }
+  body[data-look="assembly"] #cap-content {
+    padding-top: 16px;
+    border-top: 1px solid var(--edge);
+  }
+}
+
+@media (max-width: 740px), (orientation: portrait) {
+  html body[data-look="hero"] .caption h1 {
+    font-size: clamp(44px, 13vw, 68px);
+    line-height: 0.94;
+    letter-spacing: -0.07em;
+  }
+  body:is([data-look="diagram"], [data-look="section"], [data-look="specimen"])
+    #cap-content {
+    padding-top: 10px;
+    border-top: 1px solid var(--edge);
   }
 }

@@ -16,6 +16,7 @@ import { applyAssemblyFinish } from "./assembly-finish.js";
 import { StoryAssembly } from "./story-assembly.js";
 import { LIGHT_NAMES, LIGHT_PRESETS } from "./story-lighting.js";
 import { SectionCut } from "./story-section.js";
+import { createStudioEnvironment } from "./studio-environment.js";
 import { createSurfaceGeometry } from "./surface-normals.js";
 import { createEditor } from "./story-editor.js";
 import { RenderFrameLimiter } from "../shared/render-frame.js";
@@ -55,6 +56,10 @@ const partNames = {
   LiPo_300mAh_envelope: "battery",
 };
 const heightMarkers = $("#button-height-markers");
+const heightGuide = $("#button-height-guide");
+const heightDatum = heightGuide.querySelector(".datum");
+const heightDifference = heightGuide.querySelector(".difference");
+const heightScreen = [new THREE.Vector2(), new THREE.Vector2()];
 const heightLandmarks = [
   {
     node: $("#left-button-height"),
@@ -129,6 +134,17 @@ const capTitle = $("#cap-title"),
   capBody = $("#cap-body"),
   capTag = $("#cap-tag");
 const initialReadout = ["外观", "Form"];
+const looks = {
+  "01 / PRODUCT FORM": "hero",
+  "02 / INDEX & MIDDLE": "diagram",
+  "03 / ASSEMBLY RELATIONSHIP": "assembly",
+  "03 / FULL EXPLODED VIEW": "assembly",
+  "04 / LATERAL SOLID SECTION": "section",
+  "04 / RIB CROSS-SECTION": "section",
+  "04 / UPPER SHELL JUNCTION": "section",
+  "04 / BUTTON COVER UNDERSIDE": "specimen",
+  "04 / REASSEMBLED": "hero",
+};
 let story = DEFAULT_STORY,
   source = DEFAULT_STORY,
   chapters = [],
@@ -140,6 +156,7 @@ let p = 0,
   free = false,
   helper = false;
 let renderer, scene, camera, controls, ambient, lights, section, model;
+let studioEnvironment;
 let originalFov = 32,
   lang = 0,
   lastCaption = null,
@@ -601,6 +618,7 @@ addEventListener("pagehide", (event) => {
     object.material?.dispose();
   });
   controls?.dispose();
+  studioEnvironment?.dispose();
   renderer?.dispose();
 });
 function updateCaption() {
@@ -620,12 +638,14 @@ function updateCaption() {
     body.dataset.segment =
       chapters.findLast((item) => cap.start >= item.start - 1e-7)?.id ??
       "exterior";
+    body.dataset.look = looks[cap.tag] ?? "";
     lastCaption = key;
   }
   if (cap) body.dataset.captionLayout = cap.layout ?? "left";
   const opacity = !cap ? 0 : reducedMotion() ? 1 : cap.opacity * envelope;
   activeMarkers = ready && !free ? (markerSets[cap?.annotation] ?? []) : [];
   heightMarkers.hidden = activeMarkers.length === 0;
+  heightGuide.toggleAttribute("hidden", activeMarkers !== heightLandmarks);
   for (const [name, landmarks] of Object.entries(markerSets))
     for (const { node } of landmarks) node.hidden = cap?.annotation !== name;
   if (!heightMarkers.hidden) heightMarkers.style.opacity = opacity;
@@ -667,10 +687,27 @@ function apply(value) {
   camera.updateProjectionMatrix();
   if (!heightMarkers.hidden) {
     camera.updateMatrixWorld();
-    for (const { node, point } of activeMarkers) {
+    for (const [index, { node, point }] of activeMarkers.entries()) {
       projected.copy(point).project(camera);
-      node.style.left = 50 + projected.x * 50 + "%";
-      node.style.top = 50 - projected.y * 50 + "%";
+      const x = 0.5 + projected.x * 0.5;
+      const y = 0.5 - projected.y * 0.5;
+      node.style.left = x * 100 + "%";
+      node.style.top = y * 100 + "%";
+      if (activeMarkers === heightLandmarks)
+        heightScreen[index].set(x * renderWidth, y * renderHeight);
+    }
+    if (activeMarkers === heightLandmarks) {
+      const [high, low] = heightScreen;
+      const bracket = Math.min(renderWidth - 22, high.x + renderWidth * 0.13);
+      const gap = 7;
+      heightDatum.setAttribute(
+        "d",
+        `M ${low.x} ${low.y} H ${bracket - gap} M ${high.x} ${high.y} H ${bracket - gap}`,
+      );
+      heightDifference.setAttribute(
+        "d",
+        `M ${bracket} ${high.y} V ${low.y} M ${bracket - gap} ${high.y} h ${gap * 2} M ${bracket - gap} ${low.y} h ${gap * 2}`,
+      );
     }
   }
   for (const [name, light] of Object.entries(lights)) {
@@ -685,6 +722,9 @@ function apply(value) {
     light.angle = THREE.MathUtils.degToRad(definition.angle);
   }
   ambient.intensity = value.ambient;
+  // Match the reflection floor to the existing light level during the reveal.
+  scene.environmentIntensity =
+    0.64 * smooth((value.lights.key.intensity - 0.1) / 3.4);
   assembly.value = value.explode;
   partSelect.value = value.focus;
   assemblyRig.apply(value, free ? isolated : value.isolate);
@@ -824,7 +864,7 @@ async function start() {
     });
     renderer.localClippingEnabled = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.28;
+    renderer.toneMappingExposure = 1.12;
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFShadowMap;
     host.append(renderer.domElement);
@@ -848,7 +888,8 @@ async function start() {
         light.shadow.camera.far = 1.2;
         light.shadow.bias = -0.0003;
         light.shadow.normalBias = 0.0006;
-        light.shadow.radius = 3;
+        light.shadow.radius = 4.5;
+        light.shadow.intensity = 0.74;
       }
       lights[name] = light;
       scene.add(light, light.target);
@@ -859,11 +900,18 @@ async function start() {
       setReady(false);
     });
     renderer.domElement.addEventListener("webglcontextrestored", () => {
-      if (section) setReady(true);
+      if (section) {
+        studioEnvironment?.dispose();
+        studioEnvironment = createStudioEnvironment(renderer);
+        scene.environment = studioEnvironment.texture;
+        setReady(true);
+      }
     });
 
     const loader = new GLTFLoader();
     const [gltf] = await Promise.all([loader.loadAsync(MODEL), data]);
+    studioEnvironment = createStudioEnvironment(renderer);
+    scene.environment = studioEnvironment.texture;
     model = gltf.scene;
     model.rotation.x = -Math.PI / 2; // NX exports Z-up in metres.
     const size = new THREE.Box3()
@@ -880,7 +928,7 @@ async function start() {
     model.traverse((object) => {
       if (!object.isMesh) return;
       object.name = partNames[object.name] || object.name;
-      applyAssemblyFinish(object);
+      applyAssemblyFinish(object, true);
       object.castShadow = true;
       object.receiveShadow = true;
       object.material.clipShadows = true;

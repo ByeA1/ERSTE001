@@ -23,10 +23,14 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="./story.css" />
   </head>
-  <body data-project-ready="loading">
+  <body data-project-ready="loading" data-look="hero">
     <main id="story" aria-label="ERSTE002">
       <div id="scene-root" aria-hidden="true">
         <div id="button-height-markers" hidden>
+          <svg id="button-height-guide" aria-hidden="true" hidden>
+            <path class="datum"></path>
+            <path class="difference"></path>
+          </svg>
           <span class="height-marker" id="left-button-height"></span>
           <span class="height-marker" id="right-button-height"></span>
           <span class="height-marker" id="high-shell-shoulder" hidden></span>
