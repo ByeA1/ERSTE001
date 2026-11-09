@@ -6,7 +6,6 @@ import {
   clone,
   clamp,
   sampleStory,
-  sampleStill,
   cueStrength,
   captionAt,
   smooth,
@@ -17,6 +16,7 @@ import { applyAssemblyFinish } from "./assembly-finish.js";
 import { StoryAssembly } from "./story-assembly.js";
 import { LIGHT_NAMES, LIGHT_PRESETS } from "./story-lighting.js";
 import { SectionCut } from "./story-section.js";
+import { createSurfaceGeometry } from "./surface-normals.js";
 import { createEditor } from "./story-editor.js";
 import { RenderFrameLimiter } from "../shared/render-frame.js";
 
@@ -29,6 +29,8 @@ const retry = $("#retry");
 const modeButton = $("#mode");
 const previous = $("#prev-chapter");
 const next = $("#next-chapter");
+const restart = $("#restart-story");
+const chapterNav = $("#chapter-nav");
 const caption = $("#caption");
 const capContent = $("#cap-content");
 const progress = $("#progress");
@@ -117,7 +119,8 @@ const initialReadout = ["外观", "Form"];
 let story = DEFAULT_STORY,
   source = DEFAULT_STORY,
   chapters = [],
-  chapterIndex = 0;
+  shots = [],
+  shotIndex = 0;
 let p = 0,
   playback = null,
   draft = null,
@@ -140,21 +143,32 @@ let raf = 0,
   renderHeight = 0;
 let editor = { update() {} };
 
-function editorOpen() {
-  return !$("#editor").hidden;
-}
 function reducedMotion() {
   return motion.matches || parentReduced;
 }
-function updateChapters() {
-  const selected = chapters[chapterIndex];
+function updateNavigation() {
+  const selected = shots[shotIndex]?.chapter;
   const number = (value) => String(value).padStart(2, "0");
   chapterNumber.textContent =
-    number(chapterIndex + 1) + " / " + number(chapters.length || 1);
+    number(shotIndex + 1) + " / " + number(shots.length || 1);
   chapterTitle.textContent = selected?.title[lang] ?? initialReadout[lang];
-  const loading = body.dataset.projectReady === "loading";
-  previous.disabled = loading || chapterIndex === 0;
-  next.disabled = loading || chapterIndex >= chapters.length - 1;
+  const busy =
+    body.dataset.projectReady === "loading" || Boolean(playback && !free);
+  const last = shots.length > 1 && shotIndex === shots.length - 1;
+  previous.disabled = busy || shotIndex === 0;
+  next.disabled = busy || shotIndex >= shots.length - 1;
+  next.hidden = last && !busy;
+  restart.hidden = !last || busy;
+  for (const [index, button] of Array.from(chapterNav.children).entries()) {
+    const chapter = chapters[index];
+    const label = chapter.title[lang];
+    button.setAttribute("aria-label", `${number(index + 1)} ${label}`);
+    button.title = label;
+    button.lastElementChild.textContent = label;
+    if (chapter === selected) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+    button.disabled = body.dataset.projectReady === "loading";
+  }
 }
 function setLanguage(value, notify = false) {
   lang = value === "en" ? 1 : 0;
@@ -166,10 +180,12 @@ function setLanguage(value, notify = false) {
   );
   $(".chapter-controls").setAttribute(
     "aria-label",
-    lang ? "Story chapters" : "演出章节",
+    lang ? "Story shots" : "演出镜头",
   );
-  previous.lastElementChild.textContent = lang ? "Previous" : "上一章";
-  next.firstElementChild.textContent = lang ? "Next" : "下一章";
+  chapterNav.setAttribute("aria-label", lang ? "Chapters" : "章节导航");
+  previous.lastElementChild.textContent = lang ? "Previous" : "上一镜";
+  next.firstElementChild.textContent = lang ? "Next" : "下一镜";
+  restart.lastElementChild.textContent = lang ? "Back to start" : "回到开头";
   $("#part-label").textContent = lang ? "Part" : "部件";
   $("#assembly-label").textContent = lang ? "Assembly" : "装配";
   $("#explode").textContent = lang ? "Explode" : "展开";
@@ -198,7 +214,7 @@ function setLanguage(value, notify = false) {
     for (const { node, text } of landmarks) node.textContent = text[lang];
   updatePartControls();
   lastCaption = null;
-  updateChapters();
+  updateNavigation();
   updateCaption();
   invalidate();
   if (notify && parent !== window)
@@ -242,44 +258,80 @@ function configureStory(value) {
   story = compiled;
   chapters =
     compiled.ranges ??
-    compiled.captions.map((item, i, all) => ({
+    compiled.captions.map((item, i) => ({
       id: "legacy-" + (i + 1),
       title: item.title,
       start: item.start,
       end: item.end,
-      hold: i === 0 ? 0 : (item.start + item.end) / 2,
     }));
-  chapterAtProgress();
+  shots = compiled.captions.map((item, index) => ({
+    start: item.start,
+    chapter: chapters.findLast((chapter) => item.start >= chapter.start - 1e-7),
+    hold:
+      index === compiled.captions.length - 1 && (item.leave ?? item.end) === 1
+        ? 1
+        : ((item.arrive ?? item.start) + (item.leave ?? item.end)) / 2,
+  }));
+  chapterNav.replaceChildren(
+    ...chapters.map((chapter, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      const number = document.createElement("span");
+      number.textContent = String(index + 1).padStart(2, "0");
+      button.append(number, document.createElement("span"));
+      button.onclick = () => {
+        const first = shots.find((shot) => shot.chapter === chapter);
+        if (first) seek(first.hold);
+      };
+      return button;
+    }),
+  );
+  shotAtProgress();
   lastCaption = null;
-  updateChapters();
+  updateNavigation();
   updateCaption();
   invalidate();
 }
-function chapterAtProgress() {
-  chapterIndex = Math.max(
+function shotAtProgress() {
+  shotIndex = Math.max(
     0,
-    chapters.findLastIndex((item) => p >= item.start - 1e-7),
+    shots.findLastIndex((item) => p >= item.start - 1e-7),
   );
 }
 function navigate(offset) {
-  const index = chapterIndex + offset;
+  const index = shotIndex + offset;
   if (
     body.dataset.projectReady === "loading" ||
     index < 0 ||
-    index >= chapters.length
+    index >= shots.length ||
+    (playback && !free)
   )
     return;
+  playToShot(index);
+}
+function playToShot(index) {
+  const shot = shots[index];
+  if (!shot) return;
+  if (!ready || reducedMotion()) {
+    seek(shot.hold);
+    return;
+  }
   setFree(false);
   draft = null;
-  chapterIndex = index;
-  const to = chapters[index].hold;
-  const duration = Math.max(0.45, Math.abs(to - p) * (story.duration ?? 16));
+  shotIndex = index;
+  const to = shot.hold;
+  const duration = clamp(Math.abs(to - p) * (story.duration ?? 16), 0.45, 3.6);
   playback = { from: p, to, duration, elapsed: 0 };
-  updateChapters();
+  updateNavigation();
   invalidate();
 }
 previous.onclick = () => navigate(-1);
 next.onclick = () => navigate(1);
+restart.onclick = () => {
+  seek(0);
+  playToShot(0);
+  chapterNav.firstElementChild?.focus();
+};
 addEventListener("keydown", (event) => {
   if (
     event.altKey ||
@@ -599,7 +651,8 @@ function apply(value) {
   for (const [name, light] of Object.entries(lights)) {
     const definition = value.lights[name];
     // One shadow map follows the light responsible for the current reveal.
-    light.castShadow = name === (value.lights.focus.intensity > 0 ? "focus" : "key");
+    light.castShadow =
+      name === (value.lights.focus.intensity > 0 ? "focus" : "key");
     light.position.fromArray(definition.position);
     light.target.position.fromArray(definition.target);
     light.intensity = definition.intensity;
@@ -654,18 +707,17 @@ function tick(now) {
       : 0;
   lastTime = now;
   dirty = false;
-  const staticPlayback =
-    reducedMotion() && story.captions.some((item) => item.arrive !== undefined);
   if (playback && !free) {
     playback.elapsed += dt;
     const fraction =
-      !ready || (reducedMotion() && !staticPlayback)
+      !ready || reducedMotion()
         ? 1
         : clamp(playback.elapsed / playback.duration);
     p = playback.from + (playback.to - playback.from) * fraction;
     if (fraction === 1) {
       p = playback.to;
       playback = null;
+      updateNavigation();
     }
   }
   if (free && assemblyMove) {
@@ -679,12 +731,7 @@ function tick(now) {
   }
   updateCaption();
   if (ready) {
-    apply(
-      draft ||
-        (staticPlayback && playback && !editorOpen()
-          ? sampleStill(story, p)
-          : sampleStory(story, p)),
-    );
+    apply(draft || sampleStory(story, p));
     renderer.render(scene, camera);
     renderLimit.recordFrame(performance.now() - renderStart);
     host.dataset.fpsLimit = renderLimit.fpsLimit;
@@ -733,8 +780,8 @@ function seek(progress) {
   draft = null;
   setFree(false);
   p = clamp(progress);
-  chapterAtProgress();
-  updateChapters();
+  shotAtProgress();
+  updateNavigation();
   if (ready) apply(sampleStory(story, p));
   invalidate();
 }
@@ -800,6 +847,7 @@ async function start() {
     );
     assemblyRig = new StoryAssembly(model);
     for (const [part, { group }] of assemblyRig.actors) parts.set(part, group);
+    const sectionSources = new Map();
     model.traverse((object) => {
       if (!object.isMesh) return;
       object.name = partNames[object.name] || object.name;
@@ -808,7 +856,13 @@ async function start() {
       object.receiveShadow = true;
       object.material.clipShadows = true;
       if (!object.geometry.hasAttribute("normal")) {
-        object.geometry.computeVertexNormals();
+        if (
+          object.geometry.index &&
+          ["shell_top", "button_cover"].includes(object.name)
+        ) {
+          sectionSources.set(object, object.geometry);
+          object.geometry = createSurfaceGeometry(object.geometry);
+        } else object.geometry.computeVertexNormals();
         object.material.flatShading = false;
       }
       object.geometry.computeBoundingSphere();
@@ -820,7 +874,7 @@ async function start() {
           object.geometry.attributes.position.count) / 3;
     });
     scene.add(model);
-    section = new SectionCut(scene, meshes);
+    section = new SectionCut(scene, meshes, sectionSources);
     // Warm the geometric section and its material before the first transition.
     const cutFrame = story.keyframes.find(
       (frame) =>
@@ -845,6 +899,7 @@ async function start() {
         playback = null;
         draft = clone(value);
         setFree(false);
+        updateNavigation();
         apply(draft);
         invalidate();
       },
@@ -865,24 +920,13 @@ async function start() {
       saveFrame: (at, frame, lightingOnly) =>
         configureStory(editFrame(source, story, at, frame, lightingOnly)),
     });
-    if (
-      chapters[0]?.hold &&
-      !new URLSearchParams(location.search).has("editor")
-    ) {
-      if (reducedMotion()) p = chapters[0].hold;
-      else
-        playback = {
-          from: 0,
-          to: chapters[0].hold,
-          elapsed: 0,
-          duration: chapters[0].hold * (story.duration ?? 16),
-        };
-    }
     setReady(true);
+    if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
   } catch (error) {
     console.error("ERSTE002 model", error);
     await data;
     setReady(false);
+    if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
   }
 }
 body.dataset.mode = "chapter";

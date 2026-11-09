@@ -45,8 +45,9 @@ for(const[browserName,executablePath]of[['Chrome','C:/Program Files/Google/Chrom
     await caseFrame.locator('#next-chapter').click();
     await caseFrame.waitForFunction(()=>document.body.dataset.segment==='right-hand-ergonomics'&&document.body.dataset.playing==='false');
     await caseFrame.locator('#next-chapter').click();
-    await caseFrame.waitForFunction(()=>document.body.dataset.segment==='structure-and-assembly'&&document.body.dataset.playing==='false');
-    await caseFrame.locator('#next-chapter').click();
+    await caseFrame.waitForFunction(()=>document.querySelector('#chapter-number').textContent==='03 / 11'&&document.body.dataset.playing==='false');
+    assert.equal(await caseFrame.locator('#cap-title').textContent(),'倾斜延伸到上盖');
+    await caseFrame.locator('#chapter-nav button').nth(3).click();
     await caseFrame.waitForFunction(()=>Number(document.querySelector('#scene-root').dataset.sectionFaces)>0);
     const caseState=await caseFrame.evaluate(()=>({ready:document.body.dataset.ready,mode:document.body.dataset.mode,progress:document.body.dataset.progress,cut:document.body.dataset.cut,emissive:document.body.dataset.emissive}));assert.ok(Number(caseState.progress)>.4);
     await page.screenshot({path:path.join(out,`${key}-002.png`)});

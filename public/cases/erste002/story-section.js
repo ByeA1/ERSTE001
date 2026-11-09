@@ -42,7 +42,7 @@ function updateFace(cap, points, faces, normal) {
 }
 
 export class SectionCut {
-  constructor(scene, meshes) {
+  constructor(scene, meshes, sources = new Map()) {
     this.plane = new THREE.Plane(new THREE.Vector3(1, 0, 0), -0.2);
     this.records = meshes.map((mesh) => {
       const material = mesh.material.clone();
@@ -63,6 +63,7 @@ export class SectionCut {
       scene.add(cap);
       return {
         mesh,
+        source: sources.get(mesh) ?? mesh.geometry,
         cap,
         clipped: false,
         lastPlane: new THREE.Plane(),
@@ -87,7 +88,7 @@ export class SectionCut {
     this.helper.visible = cut.enabled && showHelper;
     let triangleCount = 0;
     for (const record of this.records) {
-      const { mesh, cap } = record;
+      const { mesh, cap, source } = record;
       const enabled =
         cut.enabled && (cut.target === "all" || mesh.name === cut.target);
       if (enabled !== record.clipped) {
@@ -96,19 +97,19 @@ export class SectionCut {
         record.clipped = enabled;
       }
       cap.visible = false;
-      if (!enabled || !cut.cap || !mesh.geometry.index) continue;
+      if (!enabled || !cut.cap || !source.index) continue;
       let ancestor = mesh;
       while (ancestor?.visible) ancestor = ancestor.parent;
       if (ancestor) continue;
-      if (!mesh.geometry.boundingSphere) mesh.geometry.computeBoundingSphere();
+      if (!source.boundingSphere) source.computeBoundingSphere();
       this.sphere
-        .copy(mesh.geometry.boundingSphere)
+        .copy(source.boundingSphere)
         .applyMatrix4(mesh.matrixWorld);
       if (!this.plane.intersectsSphere(this.sphere)) continue;
       this.inverse.copy(mesh.matrixWorld).invert();
       this.local.copy(this.plane).applyMatrix4(this.inverse);
       if (!record.readContour || !record.lastPlane.equals(this.local)) {
-        record.readContour ??= createContourReader(mesh.geometry);
+        record.readContour ??= createContourReader(source);
         const { points, faces } = record.readContour(this.local);
         updateFace(cap, points, faces, this.local.normal);
         record.lastPlane.copy(this.local);

@@ -98,20 +98,24 @@
           >装配图 ↗</a
         >
       </div>
+      <nav id="chapter-nav" class="chapter-nav" aria-label="章节导航"></nav>
       <footer class="story-footer">
         <div class="chapter-readout">
-          <span id="chapter-number">01 / 04</span><b id="chapter-title">外观</b>
+          <span id="chapter-number">01 / 11</span><b id="chapter-title">外观</b>
         </div>
         <div class="progress-meter">
           <span class="meter-track" aria-hidden="true"><span></span></span>
           <output id="progress" aria-live="off">000%</output>
         </div>
-        <nav class="chapter-controls" aria-label="演出章节">
+        <nav class="chapter-controls" aria-label="演出镜头">
           <button id="prev-chapter" type="button" disabled>
-            <span aria-hidden="true">←</span><span>上一章</span>
+            <span aria-hidden="true">←</span><span>上一镜</span>
           </button>
           <button id="next-chapter" type="button" disabled>
-            <span>下一章</span><span aria-hidden="true">→</span>
+            <span>下一镜</span><span aria-hidden="true">→</span>
+          </button>
+          <button id="restart-story" type="button" hidden>
+            <span aria-hidden="true">↺</span><span>回到开头</span>
           </button>
         </nav>
       </footer>

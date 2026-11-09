@@ -1662,8 +1662,8 @@
                 0,
                 -0.035
               ],
-              "intensity": 5.1,
-              "color": "#ffffff",
+              "intensity": 4.3,
+              "color": "#ff777a",
               "angle": 42
             },
             "focus": {
@@ -1728,8 +1728,8 @@
                 0,
                 -0.035
               ],
-              "intensity": 5.1,
-              "color": "#ffffff",
+              "intensity": 4.6,
+              "color": "#ff6a70",
               "angle": 42
             },
             "focus": {
@@ -1794,8 +1794,8 @@
                 0,
                 -0.035
               ],
-              "intensity": 5.1,
-              "color": "#ffffff",
+              "intensity": 4.6,
+              "color": "#ff6a70",
               "angle": 42
             },
             "focus": {
@@ -1861,7 +1861,7 @@
                 -0.03
               ],
               "intensity": 3.7,
-              "color": "#fff4eb",
+              "color": "#ff696f",
               "angle": 40
             },
             "focus": {
@@ -1927,7 +1927,7 @@
                 -0.03
               ],
               "intensity": 4.4,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {
@@ -1993,7 +1993,7 @@
                 -0.03
               ],
               "intensity": 4.4,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {
@@ -2126,7 +2126,7 @@
                 -0.03
               ],
               "intensity": 4.4,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {
@@ -2324,7 +2324,7 @@
                 0
               ],
               "intensity": 5.4,
-              "color": "#fff4eb",
+              "color": "#ff777b",
               "angle": 38
             },
             "focus": {
@@ -2390,7 +2390,7 @@
                 0
               ],
               "intensity": 5.9,
-              "color": "#fff4eb",
+              "color": "#ff7378",
               "angle": 40
             },
             "focus": {
@@ -2456,7 +2456,7 @@
                 0
               ],
               "intensity": 6,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {
@@ -2522,7 +2522,7 @@
                 0
               ],
               "intensity": 6,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {
@@ -2775,7 +2775,7 @@
                 0
               ],
               "intensity": 6,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {
@@ -4095,7 +4095,7 @@
                 0
               ],
               "intensity": 6,
-              "color": "#fff4eb",
+              "color": "#ff8587",
               "angle": 40
             },
             "focus": {

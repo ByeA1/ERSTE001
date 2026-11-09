@@ -11,6 +11,7 @@ import {
 import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
 import { createContourReader } from "../public/cases/erste002/section-contours.js";
 import { SectionCut } from "../public/cases/erste002/story-section.js";
+import { createSurfaceGeometry } from "../public/cases/erste002/surface-normals.js";
 import {
   checkLocks,
   compileStory,
@@ -180,7 +181,14 @@ test("the authored shell cut generates a real cap, and extraction round-trips Re
   const frame = sample(3, 0.36);
   rig.apply(frame);
   model.updateMatrixWorld(true);
-  assert.ok(section.update(frame.cut) > 1000);
+  const capFaces = section.update(frame.cut);
+  assert.ok(capFaces > 1000);
+  const source = shell.geometry;
+  shell.geometry = createSurfaceGeometry(source);
+  assert.equal(shell.geometry.index.count, source.index.count);
+  assert.ok(shell.geometry.attributes.position.count > source.attributes.position.count);
+  const smoothSection = new SectionCut(new THREE.Scene(), [shell], new Map([[shell, source]]));
+  assert.equal(smoothSection.update(frame.cut), capFaces);
   rig.apply(frame, "button_cover");
   assert.equal(section.update(frame.cut), 0);
   rig.apply(sampleStory(story, 1));
