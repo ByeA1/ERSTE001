@@ -4,1620 +4,1336 @@
   "label": "ERSTE002 / Right-hand ergonomics & structural reinforcement",
   "poses": {
     "cover": {
+      "lighting": "Studio",
       "camera": {
         "position": [
-          0.34,
-          0.26,
-          0.39
-        ],
-        "target": [
-          0,
-          -0.005,
-          0
-        ],
-        "fov": 32,
-        "frame": [
-          0.3,
-          0
-        ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.35,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.149999999999999,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.13,
-            0.13,
-            0.11
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "angle": 23,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 1.3650000000000002,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
-      }
-    },
-    "grip-entry": {
-      "camera": {
-        "position": [
-          0.32,
-          0.27,
-          0.18
+          0.355,
+          0.245,
+          0.464
         ],
         "target": [
           0,
           0,
-          0
+          0.007
         ],
-        "fov": 32,
+        "fov": 31,
         "frame": [
-          0.17,
+          0.31,
           0
         ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.35,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.149999999999999,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.13,
-            0.13,
-            0.11
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "angle": 23,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 1.3650000000000002,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
       }
     },
-    "thumb-side": {
+    "cover-hold": {
+      "lighting": "Studio",
       "camera": {
         "position": [
-          0.4,
-          0.115,
-          0.056
+          0.33,
+          0.235,
+          0.423
         ],
         "target": [
-          0.01,
-          -0.005,
-          0.005
+          0,
+          0,
+          0.007
         ],
-        "fov": 36,
+        "fov": 31,
         "frame": [
-          -0.29,
-          0.02
-        ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2.75,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2.2874999999999996,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.16,
-            0.085,
-            0.045
-          ],
-          "target": [
-            0.064,
-            -0.007,
-            0.015
-          ],
-          "intensity": 11.78,
-          "angle": 29,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.756,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
+          0.31,
           0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
+        ]
       }
     },
-    "palm-view": {
+    "index-middle-front": {
+      "lighting": "Ergonomics",
       "camera": {
         "position": [
-          0.12,
-          0.4,
-          -0.23
+          0.002,
+          0.083,
+          0.413
         ],
         "target": [
           0,
           0.004,
-          -0.01
+          0.033
         ],
-        "fov": 33,
+        "fov": 30,
         "frame": [
-          -0.29,
-          0.02
+          -0.3,
+          0.01
         ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 3.3,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2.135,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.04,
-            0.24,
-            -0.16
-          ],
-          "target": [
-            0,
-            0.045,
-            -0.047
-          ],
-          "intensity": 10.85,
-          "angle": 36,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.903,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
       }
     },
-    "outer-side": {
+    "asymmetric-top": {
+      "lighting": "Ergonomics",
       "camera": {
         "position": [
-          -0.33,
-          0.11,
-          -0.12
+          0.208,
+          0.277,
+          0.299
         ],
         "target": [
           0,
-          -0.002,
-          -0.01
+          0.014,
+          0.019
         ],
-        "fov": 37,
+        "fov": 31,
         "frame": [
-          -0.29,
-          0.02
+          -0.31,
+          0.035
         ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2.75,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2.2874999999999996,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            -0.16,
-            0.085,
-            -0.05
-          ],
-          "target": [
-            -0.06,
-            -0.003,
-            -0.017
-          ],
-          "intensity": 11.47,
-          "angle": 29,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.798,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
       }
     },
-    "section-entry": {
+    "front-to-palm": {
+      "lighting": "Ergonomics",
       "camera": {
         "position": [
-          0.27,
-          0.08,
-          0.28
+          0.246,
+          0.234,
+          -0.178
         ],
         "target": [
           0,
-          -0.005,
-          0
+          0.012,
+          -0.022
         ],
-        "fov": 35,
+        "fov": 31,
         "frame": [
-          0.03,
-          0
+          -0.31,
+          0.015
         ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.35,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.149999999999999,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.13,
-            0.13,
-            0.11
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "angle": 23,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 1.3650000000000002,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": true,
-        "target": "all",
-        "cap": true
       }
     },
-    "cross-section": {
+    "wrist-side-rear": {
+      "lighting": "Ergonomics",
       "camera": {
         "position": [
-          0.19,
-          0.028,
-          0.24
-        ],
-        "target": [
-          0,
-          -0.012,
-          -0.026
-        ],
-        "fov": 38,
-        "frame": [
-          0.28,
-          0
-        ]
-      },
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.021
-        ],
-        "rotation": [
-          0,
-          165,
-          0
-        ],
-        "enabled": true,
-        "target": "all",
-        "cap": true
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.9249999999999998,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.6775,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.04,
-            -0.025,
-            0.14
-          ],
-          "target": [
-            0,
-            0.012,
-            -0.027
-          ],
-          "intensity": 14.879999999999999,
-          "angle": 33,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.7140000000000001
-    },
-    "rib-interior": {
-      "camera": {
-        "position": [
-          0.065,
-          -0.162,
-          0.124
+          0.047,
+          0.185,
+          -0.455
         ],
         "target": [
           0,
           0.006,
-          -0.037
+          -0.022
         ],
-        "fov": 47,
-        "frame": [
-          0.26,
-          0.035
-        ]
-      },
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.028
-        ],
-        "rotation": [
-          0,
-          158,
-          0
-        ],
-        "enabled": true,
-        "target": "all",
-        "cap": true
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.5125000000000002,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.22,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.035,
-            -0.106,
-            0.078
-          ],
-          "target": [
-            0,
-            0.017,
-            -0.047
-          ],
-          "intensity": 11.16,
-          "angle": 34,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.8400000000000001,
-      "electronics": 0.82
-    },
-    "rib-span": {
-      "camera": {
-        "position": [
-          0.065,
-          -0.37,
-          0.072
-        ],
-        "target": [
-          0,
-          0.004,
-          -0.03
-        ],
-        "fov": 38,
-        "frame": [
-          0.26,
-          0.025
-        ]
-      },
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.055
-        ],
-        "rotation": [
-          0,
-          168,
-          0
-        ],
-        "enabled": true,
-        "target": "all",
-        "cap": true
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.65,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.6775,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.07,
-            -0.13,
-            0.042
-          ],
-          "target": [
-            0,
-            0.018,
-            -0.048
-          ],
-          "intensity": 11.78,
-          "angle": 38,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.882,
-      "electronics": 1
-    },
-    "section-exit": {
-      "camera": {
-        "position": [
-          0.26,
-          -0.095,
-          0.29
-        ],
-        "target": [
-          0,
-          -0.007,
-          0
-        ],
-        "fov": 37,
-        "frame": [
-          0.18,
-          0.12
-        ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.35,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.149999999999999,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.13,
-            0.13,
-            0.11
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "angle": 23,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 1.3650000000000002,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": true,
-        "target": "all",
-        "cap": true
-      }
-    },
-    "final": {
-      "camera": {
-        "position": [
-          -0.31,
-          0.24,
-          0.47
-        ],
-        "target": [
-          0,
-          -0.007,
-          0
-        ],
-        "fov": 32,
-        "frame": [
-          0,
-          0.2
-        ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.35,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.149999999999999,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.13,
-            0.13,
-            0.11
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "angle": 23,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 1.3650000000000002,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
-      }
-    },
-    "button-height": {
-      "camera": {
-        "position": [
-          0.01,
-          0.096,
-          0.412
-        ],
-        "target": [
-          0,
-          0.019,
-          0.075
-        ],
-        "fov": 32,
+        "fov": 31,
         "frame": [
           -0.3,
-          0.04
-        ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 4.2,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2.2874999999999996,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.02,
-            0.18,
-            0.27
-          ],
-          "target": [
-            0,
-            0.016,
-            0.086
-          ],
-          "intensity": 12.8,
-          "angle": 31,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 0.91,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
           0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
+        ]
       }
     },
-    "assembly-display": {
+    "assembly-ready": {
+      "lighting": "Assembly",
       "camera": {
         "position": [
-          0.31,
-          0.177,
-          0.487
+          0.34,
+          0.208,
+          0.457
+        ],
+        "target": [
+          0,
+          0.036,
+          0.012
+        ],
+        "fov": 32,
+        "frame": [
+          0.25,
+          0.01
+        ]
+      }
+    },
+    "assembly-full": {
+      "lighting": "Assembly",
+      "camera": {
+        "position": [
+          0.36,
+          0.22,
+          0.526
         ],
         "target": [
           0,
           0.045,
-          0
+          0.014
         ],
-        "fov": 36,
+        "fov": 34,
         "frame": [
-          0,
-          0.24
+          0.23,
+          0.02
         ]
-      },
-      "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.35,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 9.149999999999999,
-          "angle": 52,
-          "color": "#ffffff"
-        },
-        "focus": {
-          "position": [
-            0.13,
-            0.13,
-            0.11
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "angle": 23,
-          "color": "#ffffff"
-        }
-      },
-      "ambient": 1.3650000000000002,
-      "cut": {
-        "position": [
-          0,
-          0,
-          0.18
-        ],
-        "rotation": [
-          0,
-          180,
-          0
-        ],
-        "enabled": false,
-        "target": "all",
-        "cap": true
       },
       "explode": 1
     },
-    "solid-section": {
+    "upper-shell-intro": {
+      "lighting": "Structural",
       "camera": {
         "position": [
-          0.105,
-          0.035,
-          0.256
+          0.278,
+          -0.125,
+          0.261
         ],
         "target": [
-          0.004,
-          -0.004,
-          -0.034
+          0,
+          0.054,
+          -0.016
         ],
-        "fov": 42,
+        "fov": 36,
         "frame": [
-          0.28,
-          0
+          0.23,
+          0.025
         ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "lights": {
+        "focus": {
+          "intensity": 0
+        }
+      },
+      "focus": "shell_top"
+    },
+    "side-cut-start": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.344,
+          0.07,
+          -0.172
+        ],
+        "target": [
+          0.011,
+          0.051,
+          -0.015
+        ],
+        "fov": 37,
+        "frame": [
+          0.29,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "cut": {
         "enabled": true,
         "cap": true,
-        "target": "all",
+        "target": "shell_top",
         "position": [
-          0,
-          0,
-          0.008
+          0.092,
+          0.049,
+          0
         ],
         "rotation": [
           0,
-          172,
+          -90,
           0
         ]
       },
+      "focus": "shell_top",
       "lights": {
-        "key": {
-          "position": [
-            0.15,
-            0.36,
-            0.28
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 3.2,
-          "angle": 53,
-          "color": "#ffffff"
-        },
-        "rim": {
-          "position": [
-            -0.3,
-            0.15,
-            -0.25
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 1.6775,
-          "angle": 52,
-          "color": "#ffffff"
-        },
         "focus": {
           "position": [
-            0.06,
-            0.048,
-            0.185
+            0.242,
+            0.075,
+            -0.072
           ],
           "target": [
-            0.013,
-            -0.007,
-            0.002
+            0.026,
+            0.055,
+            -0.039
           ],
-          "intensity": 23,
-          "angle": 32,
+          "intensity": 6,
+          "angle": 24,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "side-cut-solid": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.344,
+          0.056,
+          -0.14
+        ],
+        "target": [
+          0.014,
+          0.052,
+          -0.015
+        ],
+        "fov": 35,
+        "frame": [
+          0.29,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "cut": {
+        "enabled": true,
+        "cap": true,
+        "target": "shell_top",
+        "position": [
+          0.026,
+          0.049,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.248,
+            0.082,
+            -0.052
+          ],
+          "target": [
+            0.024,
+            0.065,
+            -0.047
+          ],
+          "intensity": 19,
+          "angle": 29,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "side-cut-exit": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.344,
+          0.056,
+          -0.14
+        ],
+        "target": [
+          0.014,
+          0.052,
+          -0.015
+        ],
+        "fov": 35,
+        "frame": [
+          0.29,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "cut": {
+        "enabled": true,
+        "cap": true,
+        "target": "shell_top",
+        "position": [
+          0.092,
+          0.049,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.248,
+            0.082,
+            -0.052
+          ],
+          "target": [
+            0.024,
+            0.065,
+            -0.047
+          ],
+          "intensity": 19,
+          "angle": 29,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "upper-shell-junction": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.112,
+          -0.248,
+          0.275
+        ],
+        "target": [
+          0,
+          0.052,
+          -0.028
+        ],
+        "fov": 36,
+        "frame": [
+          0.3,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.065,
+            -0.17,
+            0.1
+          ],
+          "target": [
+            0,
+            0.051,
+            -0.048
+          ],
+          "intensity": 17,
+          "angle": 31,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "button-covers-forward": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.058,
+          0.265,
+          0.271
+        ],
+        "target": [
+          0,
+          0.07,
+          0.024
+        ],
+        "fov": 30,
+        "frame": [
+          0.29,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.13,
+            0.23,
+            0.2
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shell_top": {
+          "offset": [
+            -0.25,
+            -0.31,
+            -0.39
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.12,
+            -0.17,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.11,
+            -0.18,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            0,
+            -0.059,
+            -0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "focus": "button_cover",
+      "lights": {
+        "focus": {
+          "intensity": 0
+        }
+      }
+    },
+    "button-cover-inner-ribs": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.039,
+          0.283,
+          0.261
+        ],
+        "target": [
+          0,
+          0.071,
+          0.024
+        ],
+        "fov": 34,
+        "frame": [
+          0,
+          0.26
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.13,
+            0.23,
+            0.2
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shell_top": {
+          "offset": [
+            -0.25,
+            -0.31,
+            -0.39
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.12,
+            -0.17,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.11,
+            -0.18,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            0,
+            -0.059,
+            -0.04
+          ],
+          "rotation": [
+            175,
+            -7,
+            5
+          ]
+        }
+      },
+      "focus": "button_cover",
+      "lights": {
+        "focus": {
+          "position": [
+            0.043,
+            0.213,
+            0.165
+          ],
+          "target": [
+            0,
+            0.07,
+            0.024
+          ],
+          "intensity": 19,
+          "angle": 29,
           "color": "#ffffff"
         }
       },
-      "ambient": 1,
-      "electronics": 0.54
+      "isolate": "button_cover"
+    },
+    "hero-reassembled": {
+      "lighting": "Studio",
+      "camera": {
+        "position": [
+          0.325,
+          0.21,
+          0.445
+        ],
+        "target": [
+          0,
+          -0.003,
+          0.009
+        ],
+        "fov": 31,
+        "frame": [
+          0.21,
+          0.01
+        ]
+      }
+    },
+    "side-cut-macro": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.139,
+          0.097,
+          -0.069
+        ],
+        "target": [
+          0.015,
+          0.086,
+          -0.041
+        ],
+        "fov": 30,
+        "frame": [
+          0.29,
+          0.06
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "cut": {
+        "enabled": true,
+        "cap": true,
+        "target": "shell_top",
+        "position": [
+          0.015,
+          0.049,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.137,
+            0.109,
+            -0.064
+          ],
+          "target": [
+            0.015,
+            0.087,
+            -0.043
+          ],
+          "intensity": 24,
+          "angle": 21,
+          "color": "#ffffff"
+        }
+      }
     }
   },
   "segments": [
     {
       "id": "exterior",
-      "locked": false,
-      "duration": 2.7,
-      "hold": 0.55,
       "title": [
         "外观",
         "Form"
       ],
+      "duration": 4.8,
+      "hold": 0.89,
+      "locked": false,
       "from": "cover",
-      "to": "grip-entry",
+      "to": "cover-hold",
       "shots": [
         {
           "id": "opening-orbit",
-          "at": 0.55,
-          "pose": "cover",
-          "camera": {
-            "position": [
-              0.3,
-              0.27,
-              0.33
-            ],
-            "target": [
-              0,
-              -0.004,
-              0
-            ],
-            "fov": 32
-          }
+          "at": 0.46,
+          "pose": "cover-hold"
         }
       ],
       "beats": [
         {
           "start": 0,
           "end": 1,
-          "tag": "FORM / 001",
+          "arrive": 0.46,
+          "tag": "01 / PRODUCT FORM",
           "title": [
             "ERSTE002",
             "ERSTE002"
           ],
           "body": [
-            "为右手设计的超轻量游戏鼠标。非对称曲面从分离式按键延伸到掌心隆起，形成连贯轮廓。",
-            "An ultralight gaming mouse shaped for the right hand. Its asymmetric profile runs from the split buttons to the raised palm surface."
+            "为右手设计的超轻量游戏鼠标。按键、上盖与开放式底部构成一条连续的轮廓。",
+            "An ultralight gaming mouse designed for the right hand. Its buttons, shell and open underside form a continuous profile."
           ]
         }
       ]
     },
     {
       "id": "right-hand-ergonomics",
-      "locked": false,
-      "duration": 12,
-      "hold": 0.89,
       "title": [
-        "右手工学",
-        "Ergonomics"
+        "右手人体工学",
+        "Right-hand ergonomics"
       ],
-      "from": "grip-entry",
-      "to": "section-entry",
+      "duration": 17.5,
+      "hold": 0.95,
+      "locked": false,
+      "from": "cover-hold",
+      "to": "wrist-side-rear",
       "shots": [
         {
-          "id": "thumb-contact",
-          "at": 0.19,
-          "pose": "thumb-side"
+          "id": "front-finger-support",
+          "at": 0.17,
+          "pose": "index-middle-front"
         },
         {
-          "id": "palm-contact",
-          "at": 0.39,
-          "pose": "palm-view"
+          "id": "hold-finger-support",
+          "at": 0.33,
+          "pose": "index-middle-front"
         },
         {
-          "id": "outer-wall",
-          "at": 0.6,
-          "pose": "outer-side"
+          "id": "oblique-surface",
+          "at": 0.47,
+          "pose": "asymmetric-top"
         },
         {
-          "id": "front-bridge",
-          "at": 0.73,
-          "pose": "outer-side",
-          "camera": {
-            "position": [
-              -0.23,
-              0.13,
-              0.3
-            ],
-            "target": [
-              0,
-              0.008,
-              0.036
-            ],
-            "fov": 35
-          }
+          "id": "hold-oblique-surface",
+          "at": 0.62,
+          "pose": "asymmetric-top"
         },
         {
-          "id": "button-height",
-          "at": 0.87,
-          "pose": "button-height"
+          "id": "track-from-front-to-palm",
+          "at": 0.7,
+          "pose": "front-to-palm"
         },
         {
-          "id": "button-hold",
-          "at": 0.92,
-          "pose": "button-height",
-          "camera": {
-            "position": [
-              0.016,
-              0.1,
-              0.415
-            ]
-          }
+          "id": "rear-wrist-line",
+          "at": 0.8,
+          "pose": "wrist-side-rear"
         }
       ],
       "beats": [
         {
           "start": 0,
-          "end": 0.29,
-          "tag": "ERGONOMICS / THUMB",
+          "end": 0.33,
+          "arrive": 0.17,
+          "tag": "02 / INDEX & MIDDLE",
           "title": [
-            "右手人体工学",
-            "Right-hand ergonomics"
+            "食指高，中指低",
+            "Index higher, middle lower"
           ],
           "body": [
-            "拇指侧在中段向内收，给拇指留出侧握位置。镜头贴近这一侧，展示侧壁如何接入上盖曲面。",
-            "The thumb side narrows through the waist, defining a lateral grip area. A low angle traces where the sidewall meets the upper shell."
+            "按右手握持方向看，左键承接食指，右键承接中指。正面标记取自两片键盖在同一前后位置的表面。",
+            "In the right-hand grip, the left button supports the index finger and the right supports the middle finger. The front-view markers sample both covers at the same depth."
           ],
-          "layout": "right"
-        },
-        {
-          "start": 0.29,
-          "end": 0.5,
-          "tag": "ERGONOMICS / PALM",
-          "title": [
-            "掌心与指尖",
-            "Palm to fingertips"
-          ],
-          "body": [
-            "从斜上方看，掌心隆起向前过渡到分离式按键。左右不同的曲面轮廓，为右手接触区域提供不同支撑。",
-            "From above, the raised palm surface slopes forward into the split buttons. The two sides follow different profiles for the right hand’s contact areas."
-          ],
-          "layout": "right"
-        },
-        {
-          "start": 0.5,
-          "end": 0.73,
-          "tag": "ERGONOMICS / OUTER WALL",
-          "title": [
-            "外侧握持边",
-            "Outer grip edge"
-          ],
-          "body": [
-            "另一侧保留连续的边缘曲面，为无名指与小指提供侧面接触区。",
-            "A continuous outer wall gives the ring and little fingers a separate contact surface."
-          ],
-          "layout": "right"
-        },
-        {
-          "start": 0.73,
-          "end": 1,
           "layout": "right",
-          "annotation": "button-height",
-          "tag": "ERGONOMICS / BUTTON HEIGHT",
+          "annotation": "button-height"
+        },
+        {
+          "start": 0.33,
+          "end": 0.62,
+          "arrive": 0.47,
+          "tag": "02 / ASYMMETRIC SURFACE",
           "title": [
-            "左高右低",
-            "Left high, right low"
+            "倾斜延伸到上盖",
+            "The slope continues"
           ],
           "body": [
-            "以右手握持方向为准，左键盖高、右键盖低。两片按键分别承接食指与中指，前视镜头标出同一横截位置的高低差。",
-            "From the right-hand grip, the left button sits higher than the right. The front view marks corresponding points under the index and middle fingers."
+            "从斜上方看，较高的食指侧和较低的中指侧顺着按键盖延伸到上盖，两侧曲面各自收向侧壁。",
+            "From above, the higher index side and lower middle side continue into the upper shell before turning into their respective sidewalls."
+          ],
+          "layout": "right"
+        },
+        {
+          "start": 0.62,
+          "end": 1,
+          "arrive": 0.8,
+          "tag": "02 / PALM & WRIST",
+          "title": [
+            "顺着右手的自然倾斜",
+            "Following the right-hand tilt"
+          ],
+          "body": [
+            "镜头从前端绕向后部，左高右低延续至掌心支撑。整机的非对称曲面，意在顺应右手与手腕握持时的自然倾斜。",
+            "The view moves from nose to tail, following the slope into the palm support. The asymmetric body is designed to accommodate the natural tilt of the right hand and wrist."
+          ],
+          "layout": "right",
+          "annotation": "palm-support"
+        }
+      ]
+    },
+    {
+      "id": "structure-and-assembly",
+      "title": [
+        "结构与装配",
+        "Structure & assembly"
+      ],
+      "duration": 14,
+      "hold": 0.95,
+      "locked": false,
+      "from": "wrist-side-rear",
+      "to": "assembly-full",
+      "shots": [
+        {
+          "id": "assembled-reference",
+          "at": 0.24,
+          "pose": "assembly-ready"
+        },
+        {
+          "id": "hold-assembled-reference",
+          "at": 0.42,
+          "pose": "assembly-ready"
+        },
+        {
+          "id": "open-stack",
+          "at": 0.58,
+          "pose": "assembly-full",
+          "explode": 0.48
+        },
+        {
+          "id": "full-exploded-view",
+          "at": 0.73,
+          "pose": "assembly-full"
+        }
+      ],
+      "beats": [
+        {
+          "start": 0,
+          "end": 0.42,
+          "arrive": 0.24,
+          "tag": "03 / ASSEMBLY RELATIONSHIP",
+          "title": [
+            "从整机看装配",
+            "From product to parts"
+          ],
+          "body": [
+            "开放式底部省去传统底壳。上盖、按键盖、滚轮、主板和电池是这次装配检视的五组部件。",
+            "The open underside dispenses with a conventional base shell. Five groups make up the assembly view: shell, buttons, wheel, reference board and battery."
+          ]
+        },
+        {
+          "start": 0.42,
+          "end": 1,
+          "arrive": 0.73,
+          "tag": "03 / FULL EXPLODED VIEW",
+          "title": [
+            "完整爆炸",
+            "Full exploded view"
+          ],
+          "body": [
+            "五组部件沿装配轴分离。主板和电池为装配示意，便于看清它们与上盖的相对位置。",
+            "The five groups separate along the assembly axis. The board and battery are references that show their positions relative to the shell."
           ]
         }
       ]
     },
     {
       "id": "structural-reinforcement",
-      "locked": false,
-      "duration": 13.5,
-      "hold": 0.88,
       "title": [
         "结构强化",
-        "Reinforcement"
+        "Structural reinforcement"
       ],
-      "from": "section-entry",
-      "to": "section-exit",
-      "shots": [
-        {
-          "id": "section-reveal",
-          "at": 0.24,
-          "pose": "cross-section"
-        },
-        {
-          "id": "rib-junction",
-          "at": 0.51,
-          "pose": "rib-interior"
-        },
-        {
-          "id": "inside-the-wall",
-          "at": 0.6,
-          "pose": "rib-interior",
-          "camera": {
-            "position": [
-              0.014,
-              -0.038,
-              0.061
-            ],
-            "target": [
-              0.023,
-              0.019,
-              -0.045
-            ],
-            "fov": 66
-          },
-          "lights": {
-            "key": {
-              "position": [
-                -0.086,
-                -0.083,
-                0.042
-              ],
-              "target": [
-                0.006,
-                0.01,
-                -0.052
-              ],
-              "intensity": 3.2,
-              "angle": 53
-            },
-            "rim": {
-              "position": [
-                0.11,
-                -0.095,
-                0.015
-              ],
-              "target": [
-                0.027,
-                0.016,
-                -0.059
-              ],
-              "intensity": 2.7,
-              "angle": 39
-            },
-            "focus": {
-              "position": [
-                0.056,
-                -0.112,
-                0.021
-              ],
-              "target": [
-                0.022,
-                0.017,
-                -0.048
-              ],
-              "intensity": 24,
-              "angle": 37
-            }
-          },
-          "ambient": 1.12
-        },
-        {
-          "id": "transverse-span",
-          "at": 0.73,
-          "pose": "rib-span"
-        },
-        {
-          "id": "solid-cut-face",
-          "at": 0.84,
-          "pose": "solid-section"
-        },
-        {
-          "id": "hold-solid-section",
-          "at": 0.9,
-          "pose": "solid-section",
-          "camera": {
-            "position": [
-              0.109,
-              0.042,
-              0.25
-            ]
-          }
-        },
-        {
-          "id": "close-section",
-          "at": 0.97,
-          "pose": "section-exit",
-          "camera": {
-            "position": [
-              0.21,
-              -0.15,
-              0.24
-            ],
-            "target": [
-              0,
-              -0.01,
-              -0.013
-            ],
-            "fov": 38
-          },
-          "cut": {
-            "position": [
-              0,
-              0,
-              0.145
-            ]
-          },
-          "electronics": 0
-        }
-      ],
-      "beats": [
-        {
-          "start": 0,
-          "end": 0.36,
-          "tag": "STRUCTURE / SECTION",
-          "title": [
-            "结构强化",
-            "Structural reinforcement"
-          ],
-          "body": [
-            "沿前端推进剖面，露出外壳的厚度与内侧加强筋。加强几何随上盖一体成形，给薄壁提供局部支撑。",
-            "The section advances from the nose to expose the shell wall and its internal ribs. The reinforcement is integrated into the printed upper shell to support the thin wall locally."
-          ]
-        },
-        {
-          "start": 0.36,
-          "end": 0.64,
-          "tag": "STRUCTURE / RIB JUNCTION",
-          "title": [
-            "加强筋如何接入壳体",
-            "Where the ribs meet the shell"
-          ],
-          "body": [
-            "从开放底部看进壳体。弧形加强筋贴着内表面，与侧壁连接，设计上用于缩短薄壁的无支撑跨距。",
-            "Seen from the open underside, curved ribs follow the inner surface and meet the sidewall. They are intended to shorten unsupported spans in the thin shell."
-          ]
-        },
-        {
-          "start": 0.64,
-          "end": 0.8,
-          "tag": "STRUCTURE / OPEN UNDERSIDE",
-          "title": [
-            "横向支撑与开放底部",
-            "Cross-bracing and an open underside"
-          ],
-          "body": [
-            "横向撑杆接入侧壁与螺柱附近，形成跨壳体的支撑路径。方案省去传统底壳和独立中央龙骨。电子件为装配示意，暂移以露出结构。",
-            "Cross-braces meet the sidewalls near the mounting posts, creating load paths across the shell. The base and separate central spine are omitted. Reference electronics slide aside for this view."
-          ]
-        },
-        {
-          "start": 0.8,
-          "end": 1,
-          "tag": "STRUCTURE / SOLID SECTION",
-          "title": [
-            "实体切面",
-            "Solid section"
-          ],
-          "body": [
-            "切断面显示壳壁和加强筋实际截出的厚度，内部空腔与孔洞保留。可以沿切面观察加强筋怎样接进薄壳。",
-            "The section shows the thickness of the shell wall and intersected ribs, with cavities and openings preserved. Follow the cut to see how the ribs meet the shell."
-          ]
-        }
-      ]
-    },
-    {
-      "id": "return-to-form",
-      "locked": false,
-      "duration": 10,
+      "duration": 37.5,
       "hold": 1,
-      "title": [
-        "装配与全貌",
-        "Assembly & form"
-      ],
-      "from": "section-exit",
-      "to": "final",
+      "locked": false,
+      "from": "assembly-full",
+      "to": "hero-reassembled",
       "shots": [
         {
-          "id": "restore-before-explode",
-          "at": 0.19,
-          "pose": "final",
-          "camera": {
-            "position": [
-              0.31,
-              0.19,
-              0.49
-            ],
-            "target": [
-              0,
-              0.008,
-              0
-            ],
-            "fov": 33,
-            "frame": [
-              0,
-              0.22
-            ]
+          "id": "isolate-upper-shell",
+          "at": 0.065,
+          "pose": "upper-shell-intro"
+        },
+        {
+          "id": "shell-two-pulse-cue",
+          "at": 0.105,
+          "pose": "upper-shell-intro",
+          "cue": {
+            "enabled": true,
+            "start": 0.067,
+            "end": 0.105,
+            "strength": 0.34
           }
         },
         {
-          "id": "explode-assembly",
-          "at": 0.43,
-          "pose": "assembly-display"
+          "id": "approach-side-plane",
+          "at": 0.145,
+          "pose": "side-cut-start"
         },
         {
-          "id": "hold-exploded",
-          "at": 0.55,
-          "pose": "assembly-display",
-          "camera": {
-            "position": [
-              0.27,
-              0.183,
-              0.515
-            ]
+          "id": "sweep-side-plane",
+          "at": 0.221,
+          "pose": "side-cut-solid"
+        },
+        {
+          "id": "hold-solid-side-section",
+          "at": 0.261,
+          "pose": "side-cut-solid"
+        },
+        {
+          "id": "close-on-rib-section",
+          "at": 0.315,
+          "pose": "side-cut-macro"
+        },
+        {
+          "id": "hold-rib-section",
+          "at": 0.405,
+          "pose": "side-cut-macro"
+        },
+        {
+          "id": "withdraw-side-plane",
+          "at": 0.437,
+          "pose": "side-cut-exit"
+        },
+        {
+          "id": "rib-to-wall-junction",
+          "at": 0.502,
+          "pose": "upper-shell-junction"
+        },
+        {
+          "id": "hold-wall-junction",
+          "at": 0.602,
+          "pose": "upper-shell-junction"
+        },
+        {
+          "id": "extract-button-covers",
+          "at": 0.659,
+          "pose": "button-covers-forward"
+        },
+        {
+          "id": "button-two-pulse-cue",
+          "at": 0.697,
+          "pose": "button-covers-forward",
+          "cue": {
+            "enabled": true,
+            "start": 0.661,
+            "end": 0.697,
+            "strength": 0.34
           }
         },
         {
-          "id": "reassembled",
-          "at": 0.83,
-          "pose": "final",
-          "camera": {
-            "position": [
-              -0.16,
-              0.23,
-              0.49
-            ],
-            "target": [
-              0,
-              -0.007,
-              0
-            ],
-            "fov": 31,
-            "frame": [
-              0,
-              0.2
-            ]
-          }
+          "id": "flip-to-inner-ribs",
+          "at": 0.759,
+          "pose": "button-cover-inner-ribs"
+        },
+        {
+          "id": "hold-button-ribs",
+          "at": 0.869,
+          "pose": "button-cover-inner-ribs"
+        },
+        {
+          "id": "align-button-covers",
+          "at": 0.913,
+          "pose": "button-covers-forward"
+        },
+        {
+          "id": "restore-exploded-positions",
+          "at": 0.951,
+          "pose": "assembly-full"
+        },
+        {
+          "id": "reassemble",
+          "at": 0.981,
+          "pose": "hero-reassembled"
         }
       ],
       "beats": [
         {
           "start": 0,
-          "end": 0.65,
-          "layout": "bottom",
-          "tag": "ASSEMBLY / OPEN BASE",
+          "end": 0.261,
+          "arrive": 0.221,
+          "tag": "04 / LATERAL SOLID SECTION",
           "title": [
-            "看清五组装配",
-            "Five assemblies, separated"
+            "侧切上盖",
+            "Cutting into the shell"
           ],
           "body": [
-            "滚轮、按键盖、上盖、参考主板和电池沿装配轴分开，露出上盖与内部件的相对位置。",
-            "The wheel, buttons, shell, reference board and battery separate along the assembly axis to reveal their relationship."
+            "切面从侧壁向内推进。实体封口随切面移动，保留模型的真实壁厚与内部空腔。",
+            "The section moves inward from the sidewall. Its solid cut face preserves the model’s actual wall thickness and cavities."
           ]
         },
         {
-          "start": 0.65,
-          "end": 1,
-          "tag": "ERSTE002 / DESIGN TARGET",
+          "start": 0.261,
+          "end": 0.405,
+          "arrive": 0.315,
+          "tag": "04 / RIB CROSS-SECTION",
           "title": [
-            "约 33 g",
-            "Approx. 33 g"
+            "类工字形截面",
+            "I-like rib section"
           ],
           "body": [
-            "约 33 g 是设计目标。右手非对称曲面与上盖一体式加强结构，共同定义这款无底壳鼠标。",
-            "Approx. 33 g is the design target. An asymmetric right-hand profile and reinforcement integrated into the upper shell define this open-base mouse."
+            "镜头靠近侧切面。上盖截边、肋腹和下缘在这里形成类工字形轮廓。",
+            "In close-up, the shell edge, rib web and lower flange form an I-like profile."
+          ],
+          "annotation": "section-rib"
+        },
+        {
+          "start": 0.405,
+          "end": 0.602,
+          "arrive": 0.502,
+          "tag": "04 / UPPER SHELL JUNCTION",
+          "title": [
+            "加强筋如何接进薄壳",
+            "How the ribs meet the shell"
+          ],
+          "body": [
+            "从下方看，弧形加强筋贴着上盖并接入侧壁。横向撑杆连接两侧，让支撑关系跨过开放底部。",
+            "From below, curved ribs follow the upper shell and tie into the sidewall. Transverse braces connect the two sides across the open underside."
+          ]
+        },
+        {
+          "start": 0.602,
+          "end": 0.869,
+          "arrive": 0.759,
+          "tag": "04 / BUTTON COVER UNDERSIDE",
+          "title": [
+            "按键盖内侧加强筋",
+            "Ribs under the button covers"
+          ],
+          "body": [
+            "按键盖移到画面中央并翻转，独立展示两片键盖内侧的加强筋和它们与键盖薄壁的连接。",
+            "The button covers move into view and turn over, isolating the inner ribs and their connections to the thin cover walls."
           ],
           "layout": "bottom"
+        },
+        {
+          "start": 0.869,
+          "end": 1,
+          "arrive": 0.981,
+          "tag": "04 / REASSEMBLED",
+          "title": [
+            "ERSTE002",
+            "ERSTE002"
+          ],
+          "body": [
+            "五组部件回到原装配位置。整机采用无底壳方案，约 33 g 为设计目标。",
+            "The five groups return to their assembled positions. The open-base design targets a weight of approximately 33 g."
+          ]
         }
       ]
     }

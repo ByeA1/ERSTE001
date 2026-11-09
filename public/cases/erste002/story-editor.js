@@ -1,6 +1,7 @@
 import { clone, validateStory, PARTS } from "./story-timeline.js";
 const KEY = "erste002-director-v1";
-const names = { key: "主光", rim: "轮廓光", focus: "聚焦光" };
+import { LIGHT_PRESETS } from "./story-lighting.js";
+const names = { key: "主光", fill: "补光", rim: "轮廓光", focus: "聚焦光" };
 const parts = PARTS.slice(1).map((id, i) => [
   id,
   ["上盖", "按键盖", "滚轮", "主板", "电池"][i],
@@ -110,6 +111,20 @@ export function createEditor(api) {
     max: 110,
     step: 1,
   });
+  d = section("灯光预设");
+  for (const [name, preset] of Object.entries(LIGHT_PRESETS)) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = name;
+    button.onclick = () => {
+      draft = { ...api.capture(), ...clone(preset) };
+      editing = true;
+      api.setDraft(draft);
+      sync();
+      message("灯光已应用到预览。");
+    };
+    d.append(button);
+  }
   for (const name of Object.keys(names)) {
     d = section(names[name]);
     vec(d, names[name] + "位置", ["lights", name, "position"]);
@@ -178,6 +193,19 @@ export function createEditor(api) {
     max: 5,
     step: 0.1,
   });
+  d = section("零件变换");
+  field(d, "仅显示", ["isolate"], "select", {
+    choices: [["", "全部"], ...parts],
+  });
+  for (const [part, label] of parts) {
+    const details = document.createElement("details");
+    const summary = document.createElement("summary");
+    summary.textContent = label;
+    details.append(summary);
+    vec(details, "位移", ["assembly", part, "offset"]);
+    vec(details, "旋转", ["assembly", part, "rotation"], true);
+    d.append(details);
+  }
   d = section("双语文字轨道");
   d.insertAdjacentHTML(
     "beforeend",

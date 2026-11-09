@@ -6,12 +6,16 @@ import {
   clone,
   clamp,
   sampleStory,
+  sampleStill,
   cueStrength,
   captionAt,
   smooth,
+  blendPose,
 } from "./story-timeline.js";
 import { compileStory, editFrame, MODEL } from "./story-segments.js";
 import { applyAssemblyFinish } from "./assembly-finish.js";
+import { StoryAssembly } from "./story-assembly.js";
+import { LIGHT_NAMES, LIGHT_PRESETS } from "./story-lighting.js";
 import { SectionCut } from "./story-section.js";
 import { createEditor } from "./story-editor.js";
 import { RenderFrameLimiter } from "../shared/render-frame.js";
@@ -32,6 +36,9 @@ const chapterNumber = $("#chapter-number");
 const chapterTitle = $("#chapter-title");
 const partSelect = $("#part");
 const assembly = $("#assembly");
+const extractButton = $("#extract-part"),
+  isolateButton = $("#isolate-part"),
+  turnButton = $("#turn-part");
 const status = document.createElement("span");
 status.id = "statusText";
 status.hidden = true;
@@ -50,14 +57,39 @@ const heightLandmarks = [
   {
     node: $("#left-button-height"),
     point: new THREE.Vector3(0.03434, 0.01199, 0.09105),
-    text: ["左键 · 高", "LEFT · HIGH"],
+    text: ["食指 · 高", "INDEX · HIGH"],
   },
   {
     node: $("#right-button-height"),
     point: new THREE.Vector3(-0.03458, 0.00536, 0.09099),
-    text: ["右键 · 低", "RIGHT · LOW"],
+    text: ["中指 · 低", "MIDDLE · LOW"],
   },
 ];
+const palmLandmarks = [
+  {
+    node: $("#left-palm-height"),
+    point: new THREE.Vector3(0.05, 0.03158268, -0.06),
+    text: ["左侧支撑", "LEFT SUPPORT"],
+  },
+  {
+    node: $("#right-palm-height"),
+    point: new THREE.Vector3(-0.05, 0.02921289, -0.06),
+    text: ["右侧下落", "RIGHT FALLAWAY"],
+  },
+];
+const sectionLandmarks = [
+  {
+    node: $("#rib-section-marker"),
+    point: new THREE.Vector3(0.015, 0.088, -0.041),
+    text: ["肋腹与下缘", "WEB & LOWER FLANGE"],
+  },
+];
+const markerSets = {
+  "button-height": heightLandmarks,
+  "palm-support": palmLandmarks,
+  "section-rib": sectionLandmarks,
+};
+let activeMarkers = [];
 const projected = new THREE.Vector3();
 const portrait = matchMedia("(max-width: 740px), (orientation: portrait)");
 const partLabels = [
@@ -68,18 +100,15 @@ const partLabels = [
   ["主板", "Main board"],
   ["电池", "Battery"],
 ];
-const assemblyTravel = {
-  Wheel: 0.155,
-  Buttons: 0.105,
-  Shell: 0.049,
-  PCB_Assembly: 0.002,
-  Battery_300mAh: -0.047,
-};
 const renderLimit = new RenderFrameLimiter();
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
 const meshes = [],
-  parts = new Map(),
-  actors = [];
+  parts = new Map();
+let assemblyRig,
+  isolated = "",
+  assemblyMove = null,
+  freeRest;
+const extractedParts = new Set();
 const target = new THREE.Vector3();
 const capTitle = $("#cap-title"),
   capBody = $("#cap-body"),
@@ -94,7 +123,7 @@ let p = 0,
   draft = null,
   free = false,
   helper = false;
-let renderer, scene, camera, controls, ambient, lights, section, model, scale;
+let renderer, scene, camera, controls, ambient, lights, section, model;
 let originalFov = 32,
   lang = 0,
   lastCaption = null,
@@ -111,6 +140,9 @@ let raf = 0,
   renderHeight = 0;
 let editor = { update() {} };
 
+function editorOpen() {
+  return !$("#editor").hidden;
+}
 function reducedMotion() {
   return motion.matches || parentReduced;
 }
@@ -162,7 +194,9 @@ function setLanguage(value, notify = false) {
       : lang
         ? "Loading 3D model…"
         : "正在载入三维模型…";
-  for (const { node, text } of heightLandmarks) node.textContent = text[lang];
+  for (const landmarks of Object.values(markerSets))
+    for (const { node, text } of landmarks) node.textContent = text[lang];
+  updatePartControls();
   lastCaption = null;
   updateChapters();
   updateCaption();
@@ -262,6 +296,11 @@ addEventListener("keydown", (event) => {
 function setFree(value) {
   if (free === value) return;
   free = value;
+  if (!free) {
+    isolated = "";
+    assemblyMove = null;
+    extractedParts.clear();
+  } else freeRest = clone(draft.assembly);
   body.dataset.mode = free ? "free" : "chapter";
   $("#free-controls").hidden = !free;
   modeButton.setAttribute("aria-pressed", String(free));
@@ -279,7 +318,8 @@ modeButton.onclick = () => {
   if (!ready) return;
   if (!free) {
     const current = capture();
-    draft = current.cut.enabled ? clone(story.keyframes[0]) : current;
+    draft = current;
+    draft.cut.enabled = false;
     setFree(true);
   } else {
     draft = null;
@@ -312,11 +352,81 @@ function aim(name) {
   light.intensity = 4;
   draft.lights.key.intensity = 0.85;
   draft.lights.rim.intensity = 0.65;
+  draft.lights.fill.intensity = 0.8;
   draft.ambient = 0.4;
   draft.focus = name;
   invalidate();
 }
+function partTransformed(part) {
+  return extractedParts.has(part);
+}
+function updatePartControls() {
+  const part = partSelect.value;
+  const extracted = partTransformed(part);
+  extractButton.disabled = turnButton.disabled = isolateButton.disabled = !part;
+  extractButton.textContent = extracted
+    ? lang
+      ? "Return part"
+      : "归位部件"
+    : lang
+      ? "Extract"
+      : "提取部件";
+  turnButton.textContent = lang ? "Flip part" : "翻转部件";
+  isolateButton.textContent = isolated
+    ? lang
+      ? "Show all"
+      : "显示全部"
+    : lang
+      ? "Isolate"
+      : "仅看此件";
+  isolateButton.setAttribute("aria-pressed", String(Boolean(isolated)));
+}
+function moveAssembly(change) {
+  draft = capture();
+  const from = { explode: draft.explode, assembly: draft.assembly };
+  const to = clone(from);
+  change(to);
+  assemblyMove = { from, to, elapsed: 0 };
+  invalidate();
+}
+extractButton.onclick = () => {
+  const part = partSelect.value;
+  const extracted = partTransformed(part);
+  const towardCamera = camera.position.clone().sub(controls.target).normalize();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  if (extracted) extractedParts.delete(part);
+  else extractedParts.add(part);
+  moveAssembly((value) => {
+    value.assembly[part] = extracted
+      ? clone(freeRest[part])
+      : {
+          ...value.assembly[part],
+          offset: towardCamera
+            .multiplyScalar(0.065)
+            .addScaledVector(right, 0.06)
+            .add(new THREE.Vector3().fromArray(freeRest[part].offset))
+            .toArray(),
+        };
+  });
+};
+turnButton.onclick = () => {
+  const part = partSelect.value;
+  moveAssembly((value) => {
+    const transform = value.assembly[part];
+    const rest = freeRest[part].rotation[0];
+    transform.rotation[0] =
+      Math.abs(transform.rotation[0] - rest) > 1
+        ? rest
+        : rest + (rest > 180 ? -165 : 165);
+  });
+};
+isolateButton.onclick = () => {
+  isolated = isolated ? "" : partSelect.value;
+  updatePartControls();
+  invalidate();
+};
 partSelect.onchange = () => {
+  if (isolated) isolated = partSelect.value;
   if (partSelect.value) aim(partSelect.value);
   else {
     draft = capture();
@@ -327,19 +437,35 @@ partSelect.onchange = () => {
   }
 };
 assembly.oninput = () => {
+  assemblyMove = null;
   draft = capture();
   draft.explode = Number(assembly.value);
   invalidate();
 };
 $("#explode").onclick = () => {
-  draft = capture();
-  draft.explode = 1;
-  invalidate();
+  const preset = clone(LIGHT_PRESETS.Assembly);
+  moveAssembly((value) => {
+    value.explode = 1;
+  });
+  draft.lights = preset.lights;
+  draft.ambient = preset.ambient;
+  draft.focus = "";
 };
 $("#reset").onclick = () => {
-  draft = clone(story.keyframes[0]);
-  camera.position.fromArray(draft.camera.position);
-  controls.target.fromArray(draft.camera.target);
+  const home = clone(story.keyframes[0]);
+  freeRest = clone(home.assembly);
+  extractedParts.clear();
+  moveAssembly((value) => {
+    value.explode = 0;
+    value.assembly = home.assembly;
+  });
+  isolated = "";
+  draft.lights = home.lights;
+  draft.ambient = home.ambient;
+  draft.electronics = 0;
+  draft.focus = "";
+  camera.position.fromArray(home.camera.position);
+  controls.target.fromArray(home.camera.target);
   controls.update();
   invalidate();
 };
@@ -421,7 +547,10 @@ function updateCaption() {
   }
   if (cap) body.dataset.captionLayout = cap.layout ?? "left";
   const opacity = !cap ? 0 : reducedMotion() ? 1 : cap.opacity;
-  heightMarkers.hidden = !ready || free || cap?.annotation !== "button-height";
+  activeMarkers = ready && !free ? (markerSets[cap?.annotation] ?? []) : [];
+  heightMarkers.hidden = activeMarkers.length === 0;
+  for (const [name, landmarks] of Object.entries(markerSets))
+    for (const { node } of landmarks) node.hidden = cap?.annotation !== name;
   if (!heightMarkers.hidden) heightMarkers.style.opacity = opacity;
   capContent.style.opacity = opacity;
   capContent.style.transform = reducedMotion()
@@ -461,7 +590,7 @@ function apply(value) {
   camera.updateProjectionMatrix();
   if (!heightMarkers.hidden) {
     camera.updateMatrixWorld();
-    for (const { node, point } of heightLandmarks) {
+    for (const { node, point } of activeMarkers) {
       projected.copy(point).project(camera);
       node.style.left = 50 + projected.x * 50 + "%";
       node.style.top = 50 - projected.y * 50 + "%";
@@ -478,15 +607,10 @@ function apply(value) {
   ambient.intensity = value.ambient;
   assembly.value = value.explode;
   partSelect.value = value.focus;
-  for (const { group, origin } of actors) {
-    group.position.copy(origin);
-    group.position.z += (assemblyTravel[group.name] * value.explode) / scale;
-    if (group.userData.referenceAssembly) {
-      // Slide the reference components toward the removed front half of the cut.
-      group.position.y -= (0.28 * value.electronics) / scale;
-      group.position.z -= (0.045 * value.electronics) / scale;
-    }
-  }
+  assemblyRig.apply(value, free ? isolated : value.isolate);
+  host.dataset.isolated = free ? isolated : value.isolate;
+  host.dataset.explode = value.explode.toFixed(3);
+  if (free) updatePartControls();
   let energy = 0;
   for (const mesh of meshes) {
     const emissive =
@@ -528,26 +652,42 @@ function tick(now) {
       : 0;
   lastTime = now;
   dirty = false;
+  const staticPlayback =
+    reducedMotion() && story.captions.some((item) => item.arrive !== undefined);
   if (playback && !free) {
     playback.elapsed += dt;
     const fraction =
-      !ready || reducedMotion()
+      !ready || (reducedMotion() && !staticPlayback)
         ? 1
         : clamp(playback.elapsed / playback.duration);
-    p = playback.from + (playback.to - playback.from) * smooth(fraction);
+    p = playback.from + (playback.to - playback.from) * fraction;
     if (fraction === 1) {
       p = playback.to;
       playback = null;
     }
   }
+  if (free && assemblyMove) {
+    assemblyMove.elapsed += dt;
+    const fraction = reducedMotion() ? 1 : clamp(assemblyMove.elapsed / 0.75);
+    Object.assign(
+      draft,
+      blendPose(assemblyMove.from, assemblyMove.to, smooth(fraction)),
+    );
+    if (fraction === 1) assemblyMove = null;
+  }
   updateCaption();
   if (ready) {
-    apply(draft || sampleStory(story, p));
+    apply(
+      draft ||
+        (staticPlayback && playback && !editorOpen()
+          ? sampleStill(story, p)
+          : sampleStory(story, p)),
+    );
     renderer.render(scene, camera);
     renderLimit.recordFrame(performance.now() - renderStart);
     host.dataset.fpsLimit = renderLimit.fpsLimit;
   }
-  if (playback && !free) invalidate();
+  if ((playback && !free) || (free && assemblyMove)) invalidate();
 }
 function setReady(value) {
   ready = value;
@@ -619,7 +759,7 @@ async function start() {
     ambient = new THREE.HemisphereLight("#ffffff", "#9c9ca5", 0.65);
     scene.add(ambient);
     lights = {};
-    for (const name of ["key", "rim", "focus"]) {
+    for (const name of LIGHT_NAMES) {
       const light = new THREE.SpotLight("#ffffff", 0, 0, 0.6, 0.65, 0);
       lights[name] = light;
       scene.add(light, light.target);
@@ -640,18 +780,13 @@ async function start() {
     const size = new THREE.Box3()
       .setFromObject(model)
       .getSize(new THREE.Vector3());
-    scale = 0.3 / Math.max(size.x, size.y, size.z);
+    const scale = 0.3 / Math.max(size.x, size.y, size.z);
     model.scale.setScalar(scale);
     model.position.sub(
       new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3()),
     );
-    for (const name of Object.keys(assemblyTravel)) {
-      const group = model.getObjectByName(name);
-      if (!group) throw new Error("Missing Rev 3 assembly group " + name);
-      group.userData.referenceAssembly =
-        name === "PCB_Assembly" || name === "Battery_300mAh";
-      actors.push({ group, origin: group.position.clone() });
-    }
+    assemblyRig = new StoryAssembly(model);
+    for (const [part, { group }] of assemblyRig.actors) parts.set(part, group);
     model.traverse((object) => {
       if (!object.isMesh) return;
       object.name = partNames[object.name] || object.name;
@@ -664,7 +799,6 @@ async function start() {
       object.material.emissive.set(0);
       object.material.emissiveIntensity = 0;
       meshes.push(object);
-      parts.set(object.name, object);
       triangles +=
         (object.geometry.index?.count ||
           object.geometry.attributes.position.count) / 3;
@@ -673,7 +807,10 @@ async function start() {
     section = new SectionCut(scene, meshes);
     // Warm the geometric section and its material before the first transition.
     const cutFrame = story.keyframes.find(
-      (frame) => frame.cut.enabled && frame.cut.position[2] < 0.12,
+      (frame) =>
+        frame.cut.enabled &&
+        frame.cut.target === "shell_top" &&
+        Math.abs(frame.cut.position[0]) < 0.065,
     );
     if (cutFrame) {
       apply(cutFrame);
@@ -714,10 +851,16 @@ async function start() {
     });
     if (
       chapters[0]?.hold &&
-      !reducedMotion() &&
       !new URLSearchParams(location.search).has("editor")
     ) {
-      playback = { from: 0, to: chapters[0].hold, elapsed: 0, duration: 1.45 };
+      if (reducedMotion()) p = chapters[0].hold;
+      else
+        playback = {
+          from: 0,
+          to: chapters[0].hold,
+          elapsed: 0,
+          duration: chapters[0].hold * (story.duration ?? 16),
+        };
     }
     setReady(true);
   } catch (error) {

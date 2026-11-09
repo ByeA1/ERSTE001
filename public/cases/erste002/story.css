@@ -198,9 +198,7 @@ body[data-segment="exterior"] .caption h1 {
   font-size: clamp(39px, 6.2vw, 96px);
   letter-spacing: -0.071em;
 }
-body[data-segment="return-to-form"] .caption h1 {
-  color: var(--red);
-}
+
 @media (min-width: 741px) and (orientation: landscape) {
   body[data-caption-layout="right"] .caption {
     left: auto;

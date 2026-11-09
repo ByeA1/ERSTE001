@@ -29,6 +29,9 @@
         <div id="button-height-markers" hidden>
           <span class="height-marker" id="left-button-height"></span>
           <span class="height-marker" id="right-button-height"></span>
+          <span class="height-marker" id="left-palm-height" hidden></span>
+          <span class="height-marker" id="right-palm-height" hidden></span>
+          <span class="height-marker" id="rib-section-marker" hidden></span>
         </div>
       </div>
       <header class="topbar">
@@ -80,6 +83,11 @@
             disabled
         /></label>
         <button id="explode" type="button">展开</button>
+        <button id="extract-part" type="button" disabled>提取部件</button>
+        <button id="turn-part" type="button" disabled>翻转部件</button>
+        <button id="isolate-part" type="button" aria-pressed="false" disabled>
+          仅看此件
+        </button>
         <button id="reset" type="button">复位</button>
         <a
           class="tool"

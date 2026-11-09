@@ -5,6 +5,8 @@ import {
   clamp,
 } from "./story-timeline.js";
 
+import { LIGHT_PRESETS } from "./story-lighting.js";
+
 export const MODEL = DEFAULT_STORY.model;
 const idPattern = /^[a-z][a-z0-9-]{0,48}$/;
 const channels = [
@@ -13,8 +15,10 @@ const channels = [
   "ambient",
   "cut",
   "explode",
+  "assembly",
   "electronics",
   "focus",
+  "isolate",
   "cue",
 ];
 const defaults = DEFAULT_STORY.keyframes[0];
@@ -26,7 +30,8 @@ function assert(condition, message) {
 function mergePose(base, patch) {
   const result = clone(base);
   for (const [key, value] of Object.entries(patch)) {
-    if (key === "id" || key === "at" || key === "pose") continue;
+    if (key === "id" || key === "at" || key === "pose" || key === "lighting")
+      continue;
     assert(
       Object.hasOwn(base, key) &&
         (channels.includes(key) || !Object.hasOwn(base, "at")),
@@ -67,7 +72,13 @@ export function compileStory(input) {
       idPattern.test(name) && Object.hasOwn(poses, name),
       "未知机位 " + name,
     );
-    const pose = mergePose(defaults, poses[name]);
+    const preset = overrides.lighting ?? poses[name].lighting;
+    assert(
+      preset === undefined || Object.hasOwn(LIGHT_PRESETS, preset),
+      "未知灯光预设 " + preset,
+    );
+    const base = preset ? mergePose(defaults, LIGHT_PRESETS[preset]) : defaults;
+    const pose = mergePose(base, poses[name]);
     assert(!pose.cue.enabled, "提示闪烁应设在片段内镜头：" + name);
     return mergePose(pose, overrides);
   };
@@ -85,7 +96,7 @@ export function compileStory(input) {
     assert(
       Number.isFinite(segment.duration) &&
         segment.duration >= 1 &&
-        segment.duration <= 30,
+        segment.duration <= 45,
       segment.id + " 演出秒数",
     );
   }
@@ -160,6 +171,8 @@ export function compileStory(input) {
         tag: beat.tag,
         layout: beat.layout,
         annotation: beat.annotation,
+        ...(beat.arrive !== undefined ? { arrive: map(beat.arrive) } : {}),
+        ...(beat.leave !== undefined ? { leave: map(beat.leave) } : {}),
       });
     }
     assert(previous === 1, id + " 文字须覆盖至片段末尾");

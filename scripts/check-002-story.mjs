@@ -2,6 +2,12 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import { StoryAssembly } from "../public/cases/erste002/story-assembly.js";
+import {
+  LIGHT_NAMES,
+  LIGHT_PRESETS,
+} from "../public/cases/erste002/story-lighting.js";
 import { mergeVertices } from "three/addons/utils/BufferGeometryUtils.js";
 import { createContourReader } from "../public/cases/erste002/section-contours.js";
 import { SectionCut } from "../public/cases/erste002/story-section.js";
@@ -15,6 +21,7 @@ import {
   clone,
   validateStory,
   sampleStory,
+  sampleStill,
   cueStrength,
   captionAt,
 } from "../public/cases/erste002/story-timeline.js";
@@ -32,8 +39,8 @@ test("all authored chapters hold at a readable shot and are reversible", () => {
     [
       "exterior",
       "right-hand-ergonomics",
+      "structure-and-assembly",
       "structural-reinforcement",
-      "return-to-form",
     ],
   );
   const forward = Array.from({ length: 1001 }, (_, i) =>
@@ -49,24 +56,136 @@ test("all authored chapters hold at a readable shot and are reversible", () => {
     assert.deepEqual(sampleStory(story, frame.at), frame);
 });
 
-test("spotlight focuses the cut shell, the final shot restores all components", () => {
+const progress = (index, local) => {
+  const { start, end } = story.ranges[index];
+  return start + local * (end - start);
+};
+const sample = (index, local) => sampleStory(story, progress(index, local));
+
+test("assembly hands off at full explosion and the last hero restores all five groups", () => {
   const opening = sampleStory(story, 0);
-  const reinforcement = story.ranges.find(
-    (r) => r.id === "structural-reinforcement",
-  );
-  const section = sampleStory(story, reinforcement.hold);
+  const exploded = sampleStory(story, story.ranges[2].hold);
+  const reinforcement = sample(3, 0);
+  const cut = sample(3, 0.36);
   const final = sampleStory(story, 1);
-  assert.equal(section.cut.enabled && section.cut.cap, true);
-  assert.ok(section.lights.focus.intensity > 0);
-  assert.ok(section.lights.key.intensity < opening.lights.key.intensity);
-  assert.ok(section.lights.rim.intensity < opening.lights.rim.intensity);
-  assert.ok(section.electronics > 0 && section.electronics < 1);
-  assert.ok(story.keyframes.some((frame) => frame.electronics === 1));
+  assert.equal(exploded.explode, 1);
+  assert.deepEqual(reinforcement.assembly, exploded.assembly);
+  assert.deepEqual(reinforcement.camera, exploded.camera);
+  assert.equal(reinforcement.explode, exploded.explode);
+  assert.equal(cut.cut.target, "shell_top");
+  assert.equal(cut.cut.enabled && cut.cut.cap, true);
+  assert.deepEqual(cut.cut.rotation, [0, -90, 0]);
+  assert.ok(cut.lights.focus.intensity > 0);
+  assert.ok(cut.lights.key.intensity < opening.lights.key.intensity);
+  assert.ok(cut.lights.fill.intensity < opening.lights.fill.intensity);
+  assert.ok(cut.lights.rim.intensity < opening.lights.rim.intensity);
+  const buttons = sample(3, 0.81);
+  assert.equal(buttons.isolate, "button_cover");
+  assert.equal(buttons.explode, 1);
+  assert.ok(buttons.assembly.button_cover.rotation[0] > 150);
+  assert.deepEqual(final.assembly, opening.assembly);
   assert.deepEqual(final.cut, opening.cut);
+  assert.equal(final.isolate, "");
   assert.equal(final.electronics, 0);
   assert.equal(final.explode, 0);
-  assert.ok(story.keyframes.some((frame) => frame.explode === 1));
   assert.equal(final.lights.focus.intensity, 0);
+});
+
+test("lights interpolate across named rigs, and both authored cues have two isolated pulses", () => {
+  assert.deepEqual(Object.keys(LIGHT_PRESETS), [
+    "Studio",
+    "Ergonomics",
+    "Assembly",
+    "Structural",
+  ]);
+  assert.ok(
+    LIGHT_NAMES.every((name) => Object.hasOwn(sample(2, 0.86).lights, name)),
+  );
+  const a = sample(2, 0).lights.fill.intensity;
+  const b = sample(2, 0.24).lights.fill.intensity;
+  assert.ok(b > a);
+  assert.ok(
+    Math.abs(sample(2, 0.12).lights.fill.intensity - (a + b) / 2) < 1e-8,
+  );
+  const pulses = story.keyframes.filter((frame) => frame.cue.enabled);
+  assert.deepEqual(
+    pulses.map((frame) => frame.focus),
+    ["shell_top", "button_cover"],
+  );
+  for (const frame of pulses) {
+    const { start, end, strength } = frame.cue;
+    for (const t of [0.25, 0.75]) {
+      const p = start + t * (end - start);
+      assert.ok(Math.abs(cueStrength(story, p, frame.focus) - strength) < 1e-9);
+      assert.equal(sampleStory(story, p).lights.focus.intensity, 0);
+    }
+    assert.ok(cueStrength(story, (start + end) / 2, frame.focus) < 1e-9);
+    assert.equal(cueStrength(story, end, frame.focus), 0);
+  }
+});
+
+test("captions wait for completed poses and reduced motion samples the same held views", () => {
+  for (const beat of story.captions) {
+    assert.ok(beat.arrive > beat.start);
+    assert.equal(captionAt(story, (beat.start + beat.arrive) / 2), null);
+    const p = (beat.arrive + beat.end) / 2;
+    const visible = captionAt(story, p);
+    assert.equal(visible.title[0], beat.title[0]);
+    assert.ok(visible.opacity > 0.7);
+    assert.deepEqual(
+      sampleStory(story, p).camera,
+      sampleStill(story, p).camera,
+    );
+  }
+});
+
+test("the authored shell cut generates a real cap, and extraction round-trips Rev 3 group transforms", async () => {
+  const bytes = fs.readFileSync(
+    new URL("../public/cases/erste002/assets/shell-full.glb", import.meta.url),
+  );
+  const { scene: model } = await new GLTFLoader().parseAsync(
+    bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),
+    "",
+  );
+  model.rotation.x = -Math.PI / 2;
+  const size = new THREE.Box3()
+    .setFromObject(model)
+    .getSize(new THREE.Vector3());
+  model.scale.setScalar(0.3 / Math.max(size.x, size.y, size.z));
+  model.position.sub(
+    new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3()),
+  );
+  const rig = new StoryAssembly(model);
+  const state = () =>
+    [...rig.actors.values()].map(({ group }) => ({
+      position: group.position.toArray(),
+      rotation: group.quaternion.toArray(),
+      visible: group.visible,
+    }));
+  const rest = state();
+  rig.apply(sample(2, 0.9));
+  const exploded = state();
+  rig.apply(sample(3, 0.82), "button_cover");
+  const buttons = rig.actors.get("button_cover").group;
+  assert.ok(buttons.quaternion.angleTo(new THREE.Quaternion()) > 2.5);
+  assert.equal(
+    [...rig.actors.values()].filter(({ group }) => group.visible).length,
+    1,
+  );
+  rig.apply(sample(2, 0.9));
+  assert.deepEqual(state(), exploded);
+  const shell = model.getObjectByName("Mesh_Shell");
+  shell.name = "shell_top";
+  const section = new SectionCut(new THREE.Scene(), [shell]);
+  const frame = sample(3, 0.36);
+  rig.apply(frame);
+  model.updateMatrixWorld(true);
+  assert.ok(section.update(frame.cut) > 1000);
+  rig.apply(frame, "button_cover");
+  assert.equal(section.update(frame.cut), 0);
+  rig.apply(sampleStory(story, 1));
+  assert.deepEqual(state(), rest);
+  assert.equal(section.update(sampleStory(story, 1).cut), 0);
 });
 
 test("legacy manual tracks still import and optional cues have precisely two pulses", () => {
@@ -137,11 +256,12 @@ test("invalid captions, section boundaries and keyframes cannot enter the render
     (s) => (s.segments[0].shots[0].at = 1),
     (s) => (s.segments[1].beats[1].start = 0.4),
     (s) => (s.poses.cover.camera.fov = NaN),
-    (s) => (s.poses.cover.cut.rotation = [0]),
-    (s) => (s.poses.cover.lights.key.intensity = -1),
+    (s) => (s.poses["side-cut-solid"].cut.rotation = [0]),
+    (s) => (s.poses.cover.lights = { key: { intensity: -1 } }),
     (s) => (s.model = "https://elsewhere.invalid/model.glb"),
     (s) => (s.poses.cover.focus = "ribs"),
-    (s) => (s.poses.cover.cut.enabled = "true"),
+    (s) => (s.poses.cover.lighting = "unknown"),
+    (s) => (s.poses["side-cut-solid"].cut.enabled = "true"),
   ]) {
     const input = clone(data);
     mutate(input);

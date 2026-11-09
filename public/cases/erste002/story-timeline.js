@@ -1,3 +1,5 @@
+import { LIGHT_NAMES, LIGHT_PRESETS } from "./story-lighting.js";
+
 // Pure, deterministic timeline. No dependence on playback direction or earlier samples.
 export const PARTS = [
   "",
@@ -29,6 +31,7 @@ const base = {
     frame: [0.31, 0],
   },
   lights: {
+    fill: { ...LIGHT_PRESETS.Studio.lights.fill, intensity: 0 },
     key: light([-0.4, 0.6, 0.35], [0, 0, 0], 3, "#fff5df", 48),
     rim: light([0.3, 0.2, -0.4], [0, 0, 0], 2, "#ffffff", 42),
     focus: light([0.05, 0.22, 0.15], [0, 0, 0], 0, "#ffffff", 24),
@@ -42,8 +45,15 @@ const base = {
     cap: true,
   },
   explode: 0,
+  assembly: Object.fromEntries(
+    PARTS.slice(1).map((part) => [
+      part,
+      { offset: [0, 0, 0], rotation: [0, 0, 0] },
+    ]),
+  ),
   electronics: 0,
   focus: "",
+  isolate: "",
   cue: { enabled: false, start: 0.16, end: 0.24, strength: 1.5 },
 };
 function frame(at, changes = {}) {
@@ -68,14 +78,14 @@ export const DEFAULT_STORY = {
     },
   ],
 };
-function mix(a, b, t, key = "") {
+export function blendPose(a, b, t, key = "") {
   if (t === 0) return clone(a);
   if (t === 1) return clone(b);
   if (typeof a === "number") return a + (b - a) * t;
-  if (Array.isArray(a)) return a.map((v, i) => mix(v, b[i], t));
+  if (Array.isArray(a)) return a.map((v, i) => blendPose(v, b[i], t));
   if (typeof a === "object" && a !== null)
     return Object.fromEntries(
-      Object.keys(a).map((k) => [k, mix(a[k], b[k], t, k)]),
+      Object.keys(a).map((k) => [k, blendPose(a[k], b[k], t, k)]),
     );
   if (key === "color")
     return (
@@ -100,9 +110,17 @@ export function sampleStory(story, progress) {
   while (i < f.length - 2 && p > f[i + 1].at) i++;
   const a = f[i],
     b = f[i + 1],
-    value = mix(a, b, smooth((p - a.at) / (b.at - a.at)));
+    value = blendPose(a, b, smooth((p - a.at) / (b.at - a.at)));
   value.at = p;
   return value;
+}
+// Reduced motion shows the completed poses as stills, so technical views
+// inside a chapter remain available without animated camera or part motion.
+export function sampleStill(story, progress) {
+  const caption = story.captions.findLast(
+    (item) => item.arrive !== undefined && progress >= item.arrive,
+  );
+  return sampleStory(story, caption?.arrive ?? 0);
 }
 export function cueStrength(story, p, part) {
   let result = 0;
@@ -117,12 +135,15 @@ export function cueStrength(story, p, part) {
 export function captionAt(story, p) {
   const c = story.captions.find((c) => p >= c.start && p <= c.end);
   if (!c) return null;
-  const edge = Math.min(0.012, (c.end - c.start) / 5);
+  const arrive = c.arrive ?? c.start;
+  const leave = c.leave ?? c.end;
+  const edge = Math.min(0.008, (leave - arrive) / 4);
+  if (p < arrive || p > leave) return null;
   return {
     ...c,
     opacity:
-      (c.start === 0 ? 1 : smooth((p - c.start) / edge)) *
-      (c.end === 1 ? 1 : smooth((c.end - p) / edge)),
+      (arrive === 0 ? 1 : smooth((p - arrive) / edge)) *
+      (leave === 1 ? 1 : smooth((leave - p) / edge)),
   };
 }
 export function validateStory(input) {
@@ -158,8 +179,9 @@ export function validateStory(input) {
         fail("构图偏移");
       f.camera.frame.forEach((n) => range(n, -0.75, 0.75, "构图偏移"));
     }
-    for (const name of ["key", "rim", "focus"]) {
-      const l = f.lights[name];
+    for (const name of LIGHT_NAMES) {
+      const l =
+        f.lights[name] ?? (name === "fill" ? base.lights.fill : undefined);
       if (!l) fail("灯光");
       vec(l.position, "灯光位置");
       vec(l.target, "灯光方向");
@@ -177,8 +199,23 @@ export function validateStory(input) {
       fail("剖切目标/开关");
     if (!PARTS.includes(f.focus) || typeof f.cue.enabled !== "boolean")
       fail("提示目标");
+    if (!PARTS.includes(f.isolate ?? "")) fail("单独显示部件");
     range(f.ambient, 0, 5, "环境光");
     range(f.explode, 0, 1, "装配");
+    if (f.assembly !== undefined) {
+      if (
+        !f.assembly ||
+        typeof f.assembly !== "object" ||
+        Array.isArray(f.assembly)
+      )
+        fail("装配部件");
+      for (const [part, transform] of Object.entries(f.assembly)) {
+        if (!Object.hasOwn(base.assembly, part) || !transform) fail("装配部件");
+        vec(transform.offset, "部件位移");
+        transform.offset.forEach((n) => range(n, -1, 1, "部件位移"));
+        vec(transform.rotation, "部件旋转");
+      }
+    }
     range(f.electronics ?? 0, 0, 1, "电子件退让");
     range(f.cue.start, 0, 1, "闪烁开始");
     range(f.cue.end, 0, 1, "闪烁结束");
@@ -192,6 +229,11 @@ export function validateStory(input) {
     range(c.start, 0, 1, "文字开始");
     range(c.end, 0, 1, "文字结束");
     if (c.end <= c.start) fail("文字区间");
+    const arrive = c.arrive ?? c.start,
+      leave = c.leave ?? c.end;
+    range(arrive, c.start, c.end, "文字出现机位");
+    range(leave, arrive, c.end, "文字离开机位");
+    if (arrive === leave) fail("文字停留区间");
     for (const k of ["title", "body"])
       if (
         !Array.isArray(c[k]) ||
@@ -214,7 +256,10 @@ export function validateStory(input) {
       clean(
         {
           electronics: 0,
+          isolate: "",
           ...f,
+          assembly: { ...base.assembly, ...f.assembly },
+          lights: { fill: base.lights.fill, ...f.lights },
           camera: { frame: base.camera.frame, ...f.camera },
         },
         base,
@@ -225,7 +270,13 @@ export function validateStory(input) {
       layout: ["left", "right", "bottom"].includes(c.layout)
         ? c.layout
         : "left",
-      annotation: c.annotation === "button-height" ? c.annotation : "",
+      annotation: ["button-height", "palm-support", "section-rib"].includes(
+        c.annotation,
+      )
+        ? c.annotation
+        : "",
+      ...(c.arrive !== undefined ? { arrive: c.arrive } : {}),
+      ...(c.leave !== undefined ? { leave: c.leave } : {}),
       start: c.start,
       end: c.end,
       title: [...c.title],

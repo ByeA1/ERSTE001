@@ -95,6 +95,9 @@ export class SectionCut {
       }
       cap.visible = false;
       if (!enabled || !cut.cap || !mesh.geometry.index) continue;
+      let ancestor = mesh;
+      while (ancestor?.visible) ancestor = ancestor.parent;
+      if (ancestor) continue;
       if (!mesh.geometry.boundingSphere) mesh.geometry.computeBoundingSphere();
       this.sphere
         .copy(mesh.geometry.boundingSphere)

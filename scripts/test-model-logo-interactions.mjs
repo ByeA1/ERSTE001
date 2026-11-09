@@ -45,7 +45,9 @@ for(const[browserName,executablePath]of[['Chrome','C:/Program Files/Google/Chrom
     await caseFrame.locator('#next-chapter').click();
     await caseFrame.waitForFunction(()=>document.body.dataset.segment==='right-hand-ergonomics'&&document.body.dataset.playing==='false');
     await caseFrame.locator('#next-chapter').click();
-    await caseFrame.waitForFunction(()=>document.body.dataset.cut==='true'&&document.body.dataset.playing==='false');
+    await caseFrame.waitForFunction(()=>document.body.dataset.segment==='structure-and-assembly'&&document.body.dataset.playing==='false');
+    await caseFrame.locator('#next-chapter').click();
+    await caseFrame.waitForFunction(()=>Number(document.querySelector('#scene-root').dataset.sectionFaces)>0);
     const caseState=await caseFrame.evaluate(()=>({ready:document.body.dataset.ready,mode:document.body.dataset.mode,progress:document.body.dataset.progress,cut:document.body.dataset.cut,emissive:document.body.dataset.emissive}));assert.ok(Number(caseState.progress)>.4);
     await page.screenshot({path:path.join(out,`${key}-002.png`)});
     await page.locator('.project-case-close').click();await page.waitForFunction(()=>!document.querySelector('.project-case').open,{},{timeout:15000});
