@@ -598,6 +598,8 @@ function apply(value) {
   }
   for (const [name, light] of Object.entries(lights)) {
     const definition = value.lights[name];
+    // One shadow map follows the light responsible for the current reveal.
+    light.castShadow = name === (value.lights.focus.intensity > 0 ? "focus" : "key");
     light.position.fromArray(definition.position);
     light.target.position.fromArray(definition.target);
     light.intensity = definition.intensity;
@@ -747,6 +749,8 @@ async function start() {
     renderer.localClippingEnabled = true;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.toneMappingExposure = 1.28;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
     host.append(renderer.domElement);
     scene = new THREE.Scene();
     camera = new THREE.PerspectiveCamera(32, 1, 0.0006, 5);
@@ -761,6 +765,15 @@ async function start() {
     lights = {};
     for (const name of LIGHT_NAMES) {
       const light = new THREE.SpotLight("#ffffff", 0, 0, 0.6, 0.65, 0);
+      if (name === "key" || name === "focus") {
+        light.castShadow = name === "key";
+        light.shadow.mapSize.set(1024, 1024);
+        light.shadow.camera.near = 0.01;
+        light.shadow.camera.far = 1.2;
+        light.shadow.bias = -0.0003;
+        light.shadow.normalBias = 0.0006;
+        light.shadow.radius = 3;
+      }
       lights[name] = light;
       scene.add(light, light.target);
     }
@@ -791,6 +804,9 @@ async function start() {
       if (!object.isMesh) return;
       object.name = partNames[object.name] || object.name;
       applyAssemblyFinish(object);
+      object.castShadow = true;
+      object.receiveShadow = true;
+      object.material.clipShadows = true;
       if (!object.geometry.hasAttribute("normal")) {
         object.geometry.computeVertexNormals();
         object.material.flatShading = false;
@@ -846,8 +862,8 @@ async function start() {
         playback = null;
         configureStory(value);
       },
-      saveFrame: (at, frame) =>
-        configureStory(editFrame(source, story, at, frame)),
+      saveFrame: (at, frame, lightingOnly) =>
+        configureStory(editFrame(source, story, at, frame, lightingOnly)),
     });
     if (
       chapters[0]?.hold &&

@@ -112,6 +112,11 @@ export function sampleStory(story, progress) {
     b = f[i + 1],
     value = blendPose(a, b, smooth((p - a.at) / (b.at - a.at)));
   value.at = p;
+  if (story.lightingTrack) {
+    const lighting = sampleStory({ keyframes: story.lightingTrack }, p);
+    value.lights = lighting.lights;
+    value.ambient = lighting.ambient;
+  }
   return value;
 }
 // Reduced motion shows the completed poses as stills, so technical views
@@ -251,6 +256,12 @@ export function validateStory(input) {
   return {
     version: 1,
     model: DEFAULT_STORY.model,
+    ...(input.lightingTrack ? {
+      lightingTrack: validateStory({
+        ...DEFAULT_STORY,
+        keyframes: input.lightingTrack.map((frame) => ({ ...clone(base), ...frame })),
+      }).keyframes.map(({ at, lights, ambient }) => ({ at, lights, ambient })),
+    } : {}),
     label: String(input.label || "ERSTE002").slice(0, 160),
     keyframes: input.keyframes.map((f) =>
       clean(

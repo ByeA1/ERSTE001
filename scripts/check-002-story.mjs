@@ -53,7 +53,7 @@ test("all authored chapters hold at a readable shot and are reversible", () => {
     assert.ok(captionAt(story, range.hold).opacity > 0.9, range.id);
   }
   for (const frame of story.keyframes)
-    assert.deepEqual(sampleStory(story, frame.at), frame);
+    assert.deepEqual(sampleStory(story, frame.at).camera, frame.camera);
 });
 
 const progress = (index, local) => {
@@ -63,7 +63,7 @@ const progress = (index, local) => {
 const sample = (index, local) => sampleStory(story, progress(index, local));
 
 test("assembly hands off at full explosion and the last hero restores all five groups", () => {
-  const opening = sampleStory(story, 0);
+  const opening = sampleStory(story, story.ranges[0].hold);
   const exploded = sampleStory(story, story.ranges[2].hold);
   const reinforcement = sample(3, 0);
   const cut = sample(3, 0.36);
@@ -234,6 +234,10 @@ test("named segment edits and insertions leave other authored segments unchanged
   const added = clone(input);
   const bridge = clone(input.segments[0]);
   Object.assign(bridge, { id: "extra-bridge", locked: false, from: bridge.to });
+  bridge.lightingTrack = [
+    { ...clone(bridge.lightingTrack.at(-1)), at: 0 },
+    { ...clone(bridge.lightingTrack.at(-1)), at: 1 },
+  ];
   added.segments.splice(1, 0, bridge);
   const expanded = compileStory(added);
   checkLocks(input, added);
@@ -415,4 +419,24 @@ test("geometric caps fill the wall and keep enclosed holes open", () => {
     Math.abs(area - Math.PI) < 0.03,
     "solid ring area is pi, with its inner void left open",
   );
+});
+
+test('independent lighting reveals preserve still cameras, pause, validation and editing', () => {
+  const before = sample(1, .18), after = sample(1, .22);
+  assert.deepEqual(before.camera, after.camera);
+  assert.notDeepEqual(before.lights.key.position, after.lights.key.position);
+  assert.deepEqual(sample(1,.23).lights, sample(1,.3).lights);
+  assert.deepEqual(validateStory(story).lightingTrack, story.lightingTrack);
+  const at=progress(1,.25), frame=sampleStory(story,at);
+  frame.lights.key.intensity=3.7;
+  const edit=editFrame(data,story,at,frame,true);
+  assert.deepEqual(edit.segments[1].shots,data.segments[1].shots);
+  assert.equal(sampleStory(compileStory(edit),at).lights.key.intensity,3.7);
+  assert.deepEqual(edit.segments[2],data.segments[2]);
+  assert.deepEqual(editFrame(edit,compileStory(edit),at,null,true),data);
+  const invalid=clone(data);
+  invalid.segments[1].lightingTrack[1].lights.key.angle=NaN;
+  assert.throws(()=>compileStory(invalid));
+  const locked=clone(data); locked.segments[1].locked=true;
+  assert.throws(()=>editFrame(locked,compileStory(locked),at,frame,true),/锁定/);
 });

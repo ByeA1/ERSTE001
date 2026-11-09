@@ -55,6 +55,8 @@ export class SectionCut {
       material.vertexColors = false;
       material.side = THREE.DoubleSide;
       const cap = new THREE.Mesh(new THREE.BufferGeometry(), material);
+      cap.castShadow = true;
+      cap.receiveShadow = true;
       cap.matrixAutoUpdate = false;
       cap.frustumCulled = false;
       cap.visible = false;

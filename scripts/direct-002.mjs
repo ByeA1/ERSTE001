@@ -106,10 +106,10 @@ try {
         keys.length === 0 ||
         keys.some(
           (key) =>
-            !["title", "duration", "hold", "beats", "shots"].includes(key),
+            !["title", "duration", "hold", "beats", "shots", "lightingTrack"].includes(key),
         )
       )
-        throw new Error("set 只接受 title、duration、hold、beats、shots。");
+        throw new Error("set 只接受 title、duration、hold、beats、shots、lightingTrack。");
       Object.assign(target, patch.set);
     } else {
       if (!patch.insert || typeof patch.after !== "string")

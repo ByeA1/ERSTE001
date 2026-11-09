@@ -14,7 +14,7 @@ export function applyAssemblyFinish(object) {
     object.material.color.setHex(finishes[group.name]);
     object.material.vertexColors = false;
     object.material.metalness = 0.04;
-    object.material.roughness = 0.88;
+    object.material.roughness = 0.62;
     return;
   }
 }

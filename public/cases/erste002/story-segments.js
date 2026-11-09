@@ -64,6 +64,7 @@ export function compileStory(input) {
     "片段须为 1–24 个",
   );
   const frames = [],
+    lightingTrack = [],
     captions = [],
     ranges = [],
     ids = new Set();
@@ -152,6 +153,26 @@ export function compileStory(input) {
       frames.push({ ...pose, at: map(shot.at) });
     }
     frames.push({ ...makePose(to), at: end });
+    if (segment.lightingTrack) {
+      assert(segment.lightingTrack.length >= 2, id + " 灯光轨道须包含首尾关键帧");
+      let last = -1;
+      for (const frame of segment.lightingTrack) {
+        assert(Number.isFinite(frame.at) && frame.at > last && frame.at <= 1,
+          id + " 灯光关键帧须递增且位于片段内");
+        last = frame.at;
+      }
+      assert(segment.lightingTrack[0].at === 0 && last === 1, id + " 灯光轨道须覆盖首尾");
+      for (const frame of segment.lightingTrack) {
+        const pose = makePose(frame.pose ?? from, frame);
+        const entry = { at: map(frame.at), lights: pose.lights, ambient: pose.ambient };
+        const prior = lightingTrack.at(-1);
+        if (prior?.at === entry.at) {
+          assert(JSON.stringify(prior) === JSON.stringify(entry), id + " 灯光入口须衔接前段出口");
+        } else lightingTrack.push(entry);
+      }
+    } else if (input.segments.some((item) => item.lightingTrack)) {
+      assert(false, id + " 须提供灯光轨道以保证章节衔接");
+    }
     previous = 0;
     for (const beat of beats) {
       assert(
@@ -183,6 +204,7 @@ export function compileStory(input) {
     label: input.label,
     keyframes: frames,
     captions,
+    ...(lightingTrack.length ? { lightingTrack } : {}),
   });
   return { ...flat, ranges, duration: total };
 }
@@ -197,6 +219,7 @@ export function checkLocks(before, after) {
       old.from,
       old.to,
       ...old.shots.map((shot) => shot.pose ?? old.from),
+      ...(old.lightingTrack ?? []).map((frame) => frame.pose ?? old.from),
     ]);
     for (const name of names)
       assert(
@@ -206,7 +229,7 @@ export function checkLocks(before, after) {
   }
 }
 
-export function editFrame(document, flat, progress, frame) {
+export function editFrame(document, flat, progress, frame, lightingOnly = false) {
   const range = flat.ranges.find(
     (item) => progress >= item.start && progress <= item.end,
   );
@@ -218,6 +241,22 @@ export function editFrame(document, flat, progress, frame) {
     "交界机位由相邻片段共用，请在片段内部保存",
   );
   const next = clone(document);
+  if (lightingOnly) {
+    const track = next.segments.find((item) => item.id === segment.id).lightingTrack;
+    assert(track, "当前文件没有独立灯光轨道");
+    const index = track.findIndex((key) => Math.abs(key.at - at) < 0.001);
+    if (frame) {
+      const entry = { at, lights: clone(frame.lights), ambient: frame.ambient };
+      if (index < 0) track.push(entry);
+      else track[index] = entry;
+      track.sort((a, b) => a.at - b.at);
+    } else {
+      assert(index > 0 && index < track.length - 1, "请选择片段内部的灯光关键帧");
+      track.splice(index, 1);
+    }
+    compileStory(next);
+    return next;
+  }
   const shots = next.segments.find((item) => item.id === segment.id).shots;
   const index = shots.findIndex((shot) => Math.abs(shot.at - at) < 0.001);
   if (frame) {
@@ -235,6 +274,14 @@ export function editFrame(document, flat, progress, frame) {
       at: shots[index]?.at ?? clamp(at),
       ...value,
     };
+    const track = next.segments.find((item) => item.id === segment.id).lightingTrack;
+    if (track) {
+      const lightIndex = track.findIndex((key) => Math.abs(key.at - at) < 0.001);
+      const lightFrame = { at, lights: value.lights, ambient: value.ambient };
+      if (lightIndex < 0) track.push(lightFrame);
+      else track[lightIndex] = lightFrame;
+      track.sort((a, b) => a.at - b.at);
+    }
     if (index === -1) shots.push(shot);
     else shots[index] = shot;
     shots.sort((a, b) => a.at - b.at);

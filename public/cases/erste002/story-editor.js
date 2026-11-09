@@ -17,6 +17,7 @@ export function createEditor(api) {
     <label>精确进度 0–1 <input id="ed-position" aria-label="精确进度" type="number" min="0" max="1" step=".001" value="0"></label>
     <label>关键帧 <select id="ed-frames" aria-label="关键帧"></select></label>
     <div class="actions"><button id="ed-save">保存关键帧</button><button id="ed-delete">删除当前帧</button><button id="ed-follow">返回章节演出</button></div>
+    <div class="actions"><button id="ed-light-save">仅保存灯光</button><button id="ed-light-delete">删除灯光帧</button></div>
     <div class="actions"><button id="ed-local">保存本机草稿</button><button id="ed-load">读取本机草稿</button><button id="ed-export">导出 JSON</button><button id="ed-import">导入 JSON</button></div>
     <input id="ed-file" aria-label="导入演出 JSON" type="file" accept=".json,application/json" hidden>
     <p id="editor-status" role="status">片段内部可添加机位。交界机位与锁定片段通过文件管理。</p><div class="readout" id="ed-readout"></div><div id="ed-fields"></div>`;
@@ -252,7 +253,8 @@ export function createEditor(api) {
   function refresh() {
     const select = $("ed-frames");
     select.replaceChildren();
-    for (const f of api.story().keyframes) {
+    const frames = [...api.story().keyframes, ...(api.story().lightingTrack ?? []).map((f) => ({...f, focus: "灯光"}))].sort((a,b) => a.at-b.at);
+    for (const f of frames) {
       const o = document.createElement("option");
       o.value = f.at;
       o.textContent = (f.at * 100).toFixed(1) + "% · " + (f.focus || "整体");
@@ -298,7 +300,7 @@ export function createEditor(api) {
   $("ed-frames").onchange = () => {
     const p = Number($("ed-frames").value);
     api.seek(p);
-    draft = clone(api.story().keyframes.find((f) => f.at === p));
+    draft = api.capture();
     api.setDraft(draft);
     editing = true;
     sync();
@@ -308,6 +310,16 @@ export function createEditor(api) {
     api.follow();
     message("已返回章节演出。");
   };
+  for (const [id, remove] of [["ed-light-save", false], ["ed-light-delete", true]]) {
+    $(id).onclick = () => {
+      try {
+        api.saveFrame(api.progress(), remove ? null : api.capture(), true);
+        editing = false;
+        refresh();
+        message(remove ? "灯光关键帧已删除。" : "独立灯光关键帧已保存。");
+      } catch (error) { message(error.message); }
+    };
+  }
   $("ed-save").onclick = () => {
     try {
       const next = clone(api.story()),
