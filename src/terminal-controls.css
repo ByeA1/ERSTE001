@@ -23,7 +23,6 @@ button:disabled{cursor:default;}
 [data-mode=archive] .catalogue-project-title{display:block;}
 [data-mode=boot] .project-step{visibility:hidden;}
 #archive-ui[data-portfolio=true] .file-title>:is(.legacy-file-prefix,#selected-id){display:none;}
-#archive-ui[data-portfolio=true] .catalogue-project-title{display:block;}
 [data-mode=archive] .file-title:disabled{opacity:.5;}
 .archive-callout[data-reserved=true] .callout-rule{opacity:.4;}
 .archive-callout .read-file:disabled{opacity:.45;}

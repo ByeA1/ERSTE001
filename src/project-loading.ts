@@ -8,7 +8,6 @@ export class ProjectLoading {
   readonly root = document.createElement('section');
   private started = 0;
   private slowTimer = 0;
-  private handoffTimer = 0;
   private entryFrame = 0;
   private run = new AbortController();
   private logoPlayer: RhineLogoPlayer;
@@ -27,27 +26,20 @@ export class ProjectLoading {
     panel.append(scan);
     window.addEventListener('design-terminal:language',()=>localize(this.root));
   }
-  begin(project: ProjectDefinition, approach=false, handoff=false) {
+  begin(project: ProjectDefinition, approach=false) {
     this.cancel();
     this.run = new AbortController();
     this.started = performance.now();
-    this.root.hidden = handoff;
-    this.logoPlayer.setActive(!approach && !handoff);
+    this.root.hidden = false;
+    this.logoPlayer.setActive(!approach);
     this.root.style.removeProperty('opacity');
     if(approach)this.root.style.opacity='0';
-    this.panel.dataset.casePhase = handoff ? 'handoff' : approach ? 'approach' : 'loading';
+    this.panel.dataset.casePhase = approach ? 'approach' : 'loading';
     this.panel.setAttribute('aria-busy', 'true');
     this.root.querySelector('.case-loading-file')!.textContent = project.title;
     this.root.querySelectorAll<HTMLButtonElement>('button').forEach(button => button.hidden = true);
     this.setPhase('document', '正在连接项目档案，请稍候。');
     localize(this.root);
-    if (handoff) {
-      this.handoffTimer = window.setTimeout(() => {
-        this.panel.dataset.casePhase = 'loading';
-        this.root.hidden = false;
-        this.logoPlayer.setActive(true);
-      }, 360);
-    }
     if(approach) {
       document.documentElement.classList.add('case-approaching');
       window.dispatchEvent(new Event('design-terminal:case-approach'));
@@ -79,15 +71,6 @@ export class ProjectLoading {
   preparing() { this.setPhase('assets', '档案已连接，正在准备首屏内容。'); }
   async reveal(signal: AbortSignal, partial = false) {
     clearTimeout(this.slowTimer);
-    clearTimeout(this.handoffTimer);
-    if (this.panel.dataset.casePhase === 'handoff') {
-      this.panel.dataset.casePhase = 'handoff-reveal';
-      await pause(matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 300, signal);
-      if (signal.aborted) return;
-      this.panel.dataset.casePhase = 'open';
-      this.panel.setAttribute('aria-busy', 'false');
-      return;
-    }
     // A brief scan remains visible on cached opens; never invent a percentage.
     const minimum = matchMedia('(prefers-reduced-motion: reduce)').matches ? 180 : PROJECT_ENTRY.minimum*1000;
     await pause(Math.max(0, minimum - (performance.now() - this.started)), signal);
@@ -107,8 +90,6 @@ export class ProjectLoading {
   fail(message: string, canProceed: boolean) {
     this.logoPlayer.setActive(true);
     clearTimeout(this.slowTimer);
-    clearTimeout(this.handoffTimer);
-    this.root.hidden = false;
     cancelAnimationFrame(this.entryFrame);
     this.root.style.removeProperty('opacity');
     document.documentElement.classList.remove('case-approaching');
@@ -122,7 +103,6 @@ export class ProjectLoading {
     this.logoPlayer.setActive(false);
     this.run.abort();
     clearTimeout(this.slowTimer);
-    clearTimeout(this.handoffTimer);
     cancelAnimationFrame(this.entryFrame);
     this.root.style.removeProperty('opacity');
     document.documentElement.classList.remove('case-approaching');

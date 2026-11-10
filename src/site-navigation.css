@@ -152,7 +152,7 @@ html #stage .site-navigation .system-nav > button:not(.project-shortcut) {
   html #stage .site-navigation .system-nav > button:not(.project-shortcut) { justify-content: center; }
   .site-navigation .system-nav > button > :is([data-zh],.key) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 }
-.project-case:is([data-case-phase=handoff],[data-case-phase=returning]) .site-navigation {
+.project-case[data-case-phase=returning] .site-navigation {
   opacity: 0;
   visibility: hidden;
 }

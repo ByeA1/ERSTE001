@@ -37,11 +37,9 @@
 @media(prefers-reduced-motion:reduce){.case-loading-optics>i,.case-loading-track i{animation:none!important;}.case-loading,.project-case-frame{transition-duration:80ms;}}
 .project-case{transition:background-color 420ms ease;}
 .project-case[open][data-case-phase]{animation:none;}
-.project-case:is([data-case-phase=approach],[data-case-phase=handoff],[data-case-phase=handoff-reveal]){background:transparent;animation:none;}
-.project-case:is([data-case-phase=approach],[data-case-phase=handoff],[data-case-phase=handoff-reveal])::backdrop{background:transparent;}
+.project-case[data-case-phase=approach]{background:transparent;animation:none;}
+.project-case[data-case-phase=approach]::backdrop{background:transparent;}
 .project-case[data-case-phase=approach] .case-loading,.project-case[data-case-phase=approach] .project-case-frame{opacity:0;pointer-events:none;}
-.project-case[data-case-phase=handoff] .project-case-frame{opacity:0;}
-.project-case[data-case-phase=handoff-reveal] .project-case-frame{transition-duration:300ms;}
 .project-case[data-case-phase=approach] .case-loading{transition:none;}
 .project-case[data-case-phase=loading] .case-loading{opacity:1;transition:none;}
 .project-case[data-case-phase=open] .project-case-frame{opacity:1;transition:none;}

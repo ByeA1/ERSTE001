@@ -1,11 +1,10 @@
 import {createProjectDirectory} from './project-directory';
 import { createRollingClock } from "./rolling-clock";
-import { openProject, preloadProject, caseIsOpen, caseIsApproaching } from "./project-viewer";
+import { openProject, caseIsOpen, caseIsApproaching } from "./project-viewer";
 import { siteNavigation } from './site-navigation';
 import {collectionAtLane, collectionNumberAtLane} from './project-collections';
 import {t, localize} from './terminal-language';
 import {projectSummary,projectFindings} from './project-copy';
-import {archiveCalloutCue} from './opening-cues';
 import {PROJECT_COVER_OPENING_START} from './project-cover-motion';
 import { projects, getProject, featuredProjectId } from "./projects";
 import { showProjectShowcase, showcaseVisible, returnToProjectOverview } from "./project-showcase";
@@ -178,7 +177,6 @@ let mode: Mode = "boot",
   bootStart = 0,
   lastStep = "",
   ready = false;
-let openingPreloaded = false;
 let modal: "search" | "saved" | "settings" | null = null,
   searchQuery = "",
   filter = "全部档案";
@@ -328,10 +326,6 @@ function configureAudio() {
 }
 if (isWallpaper) configureAudio();
 else saveAudioPrefs();
-const reviewEntry =
-  reviewParams.has("scene") ||
-  reviewParams.has("time") ||
-  reviewParams.get("review") === "1";
 let started = false;
 const loading = $("#loading");
 // The entry screen uses the actual viewport, including portrait phones; the
@@ -528,9 +522,9 @@ function fadeOpeningOverlay() {
   loading.inert = true;
   overlayTimer = setTimeout(() => { loading.hidden = true; }, 400);
 }
-function updateLightPreview(entering = false) {
+function updateLightPreview() {
   const project = getProject(records[selected].projectId);
-  lightPreview.hidden = !lightweight || mode === "archive" || (mode === "boot" && !entering);
+  lightPreview.hidden = !lightweight || mode !== "detail";
   const image = lightPreview.querySelector("img")!;
   image.hidden = !project?.cover;
   if (project?.cover && image.getAttribute("src") !== project.cover) image.src = project.cover;
@@ -562,7 +556,6 @@ function beginOpening() {
   $("#stage").dataset.openingTime = "0.000";
   $("#stage").dataset.openingHeld = "false";
   frozenTime = null; lastStep = "";
-  openingPreloaded = false;
   selected = openingSelection; scene?.select(selected); updateSelection();
   setMode("boot"); audio.restartBoot();
   if (!isWallpaper) bootSequence.update(openingAt(0).referenceTime, { phase:"loading", elapsed:0, lightweight });
@@ -672,15 +665,11 @@ function setMode(next: Mode) {
   }
 }
 function finishWebsiteOpening(skip = false) {
-  if (skip) {
-    scene?.revealImmediately();
-    scene?.revealProjectDisplay();
-  } else if (motionActive('detailTransition') && motionActive('surfaceTransitions') && !motionIsReduced()) {
+  if (!skip && motionActive('detailTransition') && motionActive('surfaceTransitions') && !motionIsReduced()) {
     scene?.beginOpeningHandoff();
   }
   setMode('detail');
-  if (featuredIndex >= 0 && !reviewEntry)
-    queueMicrotask(() => openProject(featuredProjectId, '', true));
+  if (skip) scene?.revealImmediately();
 }
 window.addEventListener('design-terminal:project-overview',()=>{
   if (!ready || mode === 'boot') return;
@@ -1467,11 +1456,6 @@ function bootFrame(t: number, opening?: { phase: OpeningPhase; time: number; com
     if (opening.phase === "archive") {
       if (!loading.classList.contains("loaded")) $("#stage").dataset.overlayFadeAt = opening.time.toFixed(3);
       fadeOpeningOverlay();
-      updateLightPreview(true);
-      if (!openingPreloaded && featuredIndex >= 0 && !reviewEntry) {
-        openingPreloaded = true;
-        preloadProject(featuredProjectId);
-      }
     }
     if (opening.complete) {
       finishWebsiteOpening();
@@ -1529,9 +1513,8 @@ function bootFrame(t: number, opening?: { phase: OpeningPhase; time: number; com
     "--entry-opacity",
     String(ease((t - 21.9) / 0.13)),
   );
-  const callout=archiveCalloutCue(t);
-  if(opening)$('#stage').dataset.openingCallout=callout.visible?'visible':'hidden';
-  $(".callout-rule").style.transform = `scaleX(${opening?callout.progress:ease((t - 22.08) / 0.9)})`;
+  if (isWallpaper)
+    $(".callout-rule").style.transform = `scaleX(${ease((t - 22.08) / 0.9)})`;
   const reveal = ease((t - 22) / 0.4),
     lift = ease((t - 26) / 1.8),
     zoom = 0.55 * ease((t - 27.3) / 1.65) + 0.45 * ease((t - 29.0) / 5.0);

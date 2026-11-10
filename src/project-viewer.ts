@@ -14,7 +14,7 @@ let activeSignal: AbortSignal;
 const frames = new Map<string, HTMLIFrameElement>();
 const interfaces = new Map<HTMLIFrameElement, ProjectInterface>();
 export const caseIsOpen = () => panel?.open === true;
-export const caseIsApproaching = () => caseIsOpen() && ['approach', 'handoff', 'handoff-reveal', 'returning'].includes(panel?.dataset.casePhase ?? '');
+export const caseIsApproaching = () => caseIsOpen() && (panel?.dataset.casePhase === 'approach' || panel?.dataset.casePhase === 'returning');
 let returnFrame=0;
 let closeCleaned = true;
 function finishProjectClose() {
@@ -138,14 +138,8 @@ function caseFrame(projectId: string, page: string, title: string) {
   return frame;
 }
 
-export function preloadProject(projectId: string) {
-  const project = getProject(projectId);
-  if (project?.page && project.page.startsWith('/') && !project.page.startsWith('//'))
-    caseFrame(project.id, project.page, project.title);
-}
-
 /** Open a registered same-site case without changing the terminal URL. */
-export function openProject(projectId: string, section = '', fromOpening = false): boolean {
+export function openProject(projectId: string, section = ''): boolean {
   finishProjectClose();
   if (panel?.dataset.casePhase === 'returning' && panel.open) return false;
   const project = getProject(projectId);
@@ -163,8 +157,8 @@ export function openProject(projectId: string, section = '', fromOpening = false
   frame.inert = true;
   frame.dataset.section = validSection;
   activeFrame = frame;
-  const approach=!fromOpening && !caseIsOpen() && !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.contains('cassette-showcase') && Boolean(document.querySelector('#three-scene canvas'));
-  activeSignal = loading.begin(project, approach, fromOpening);
+  const approach=!caseIsOpen() && !matchMedia('(prefers-reduced-motion: reduce)').matches && document.documentElement.classList.contains('cassette-showcase') && Boolean(document.querySelector('#three-scene canvas'));
+  activeSignal = loading.begin(project, approach);
   siteNavigation.showProject(panel!, project, id => openProject(id), closeProject);
   document.documentElement.classList.add('case-open');
   if (!panel!.open) { closeCleaned = false; panel!.showModal(); }

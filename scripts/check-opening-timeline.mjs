@@ -90,10 +90,3 @@ test('authorization stays readable before its final reversed blink',async()=>{
   assert.equal(authorizationCue(OPENING.authorizationEnd-.02,true).opacity,1);
   assert.equal(authorizationCue(OPENING.authorizationEnd).inverted,false);
 });
-test('the callout line starts with the title, never during early archive entry',async()=>{
-  const {archiveCalloutCue}=await import('../src/opening-cues.ts');
-  for(const time of [21.9,22.08,23,25.67])assert.equal(archiveCalloutCue(time).visible,false);
-  assert.deepEqual(archiveCalloutCue(25.68),{visible:true,progress:0});
-  assert.ok(archiveCalloutCue(26.2).progress>0);
-  assert.equal(archiveCalloutCue(28.3).visible,false);
-});

@@ -7,7 +7,3 @@ export function authorizationCue(time:number,reduced=false) {
   const opacity=!active || !inverted || reduced ? 1 : exit<.28 ? 1 : exit<.4 ? .18 : exit<.7 ? 1 : exit<.8 ? .15 : clamp((1-exit)/.2);
   return {inverted,opacity};
 }
-export function archiveCalloutCue(referenceTime:number) {
-  const x=clamp((referenceTime-25.68)/.9);
-  return {visible:referenceTime>=25.68 && referenceTime<28.3,progress:x*x*(3-2*x)};
-}
