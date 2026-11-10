@@ -2,10 +2,6 @@ import type {ProjectDefinition} from './projects';
 
 /** One printed layout for every cassette; Blender supplies only the hero plate. */
 export const PROJECT_COVER={width:1600,height:910,hero:{x:64,y:128,width:1472,height:510},dividerY:674} as const;
-// The legacy ERSTE001 photo needs a crop. Standard plates use the full image.
-const legacyFocus:Record<string,{x:number;y:number;width:number;height:number}>={
-  '/cases/erste001/assets/opt/assets/mouse/hero-1-1440.avif':{x:460,y:140,width:590,height:415},
-};
 export function containHero(width:number,height:number) {
   const box=PROJECT_COVER.hero;
   const scale=Math.min(box.width/Math.max(1,width),box.height/Math.max(1,height));
@@ -24,10 +20,9 @@ export function drawProjectCover(c:CanvasRenderingContext2D,project:ProjectDefin
     const source=image as HTMLImageElement|HTMLCanvasElement;
     const width=('naturalWidth' in source?source.naturalWidth:source.width)||1;
     const height=('naturalHeight' in source?source.naturalHeight:source.height)||1;
-    const crop=legacyFocus[project.cover??'']??{x:0,y:0,width,height};
-    const fit=containHero(crop.width,crop.height);
+    const fit=containHero(width,height);
     c.save();c.beginPath();c.rect(64,128,1472,510);c.clip();
-    c.drawImage(image,crop.x,crop.y,crop.width,crop.height,fit.x,fit.y,fit.width,fit.height);c.restore();
+    c.drawImage(image,fit.x,fit.y,fit.width,fit.height);c.restore();
   }
   c.strokeStyle='#868e7d';
   for(const [x,y,dx,dy] of [[64,128,1,1],[1536,128,-1,1],[64,638,1,-1],[1536,638,-1,-1]]){
