@@ -93,21 +93,26 @@
             value="0"
             disabled
         /></label>
-        <button id="explode" type="button">展开</button>
-        <button id="extract-part" type="button" disabled>提取部件</button>
-        <button id="turn-part" type="button" disabled>翻转部件</button>
-        <button id="isolate-part" type="button" aria-pressed="false" disabled>
-          仅看此件
-        </button>
-        <button id="reset" type="button">复位</button>
-        <a
-          class="tool"
-          id="assembly-link"
-          href="./assembly.html"
-          target="_blank"
-          rel="noopener"
-          >装配图 ↗</a
-        >
+        <details id="free-tools">
+          <summary id="free-tools-label">更多操作</summary>
+          <div class="free-tool-actions">
+            <button id="explode" type="button">展开</button>
+            <button id="extract-part" type="button" disabled>提取部件</button>
+            <button id="turn-part" type="button" disabled>翻转部件</button>
+            <button id="isolate-part" type="button" aria-pressed="false" disabled>
+              仅看此件
+            </button>
+            <button id="reset" type="button">复位</button>
+            <a
+              class="tool"
+              id="assembly-link"
+              href="./assembly.html"
+              target="_blank"
+              rel="noopener"
+              >装配图 ↗</a
+            >
+          </div>
+        </details>
       </div>
       <nav id="chapter-nav" class="chapter-nav" aria-label="章节导航"></nav>
       <footer class="story-footer">
@@ -130,6 +135,7 @@
           </button>
         </nav>
       </footer>
+      <span id="shot-announcement" class="shot-announcement" role="status"></span>
       <aside id="editor" hidden aria-label="演出编辑器"></aside>
     </main>
     <script type="module" src="./story-app.js"></script>

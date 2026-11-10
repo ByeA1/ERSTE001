@@ -29,6 +29,8 @@ const loading = $("#loading");
 const loadingCopy = $("#loading-copy");
 const retry = $("#retry");
 const modeButton = $("#mode");
+const freePanel = $("#free-controls");
+const freeTools = $("#free-tools");
 const autoButton = $("#auto");
 const previous = $("#prev-chapter");
 const next = $("#next-chapter");
@@ -40,6 +42,8 @@ const capIndex = $("#cap-index");
 const progress = $("#progress");
 const chapterNumber = $("#chapter-number");
 const chapterTitle = $("#chapter-title");
+const shotMeter = $(".meter-track");
+const shotAnnouncement = $("#shot-announcement");
 const partSelect = $("#part");
 const assembly = $("#assembly");
 const extractButton = $("#extract-part"),
@@ -189,6 +193,7 @@ let editor = { update() {} };
 function reducedMotion() {
   return motion.matches || parentReduced;
 }
+let keyboardShotControl;
 function updateNavigation() {
   const selected = shots[shotIndex]?.chapter;
   const number = (value) => String(value).padStart(2, "0");
@@ -202,6 +207,20 @@ function updateNavigation() {
   next.disabled = busy || shotIndex >= shots.length - 1;
   next.hidden = last && !busy;
   restart.hidden = !last || busy;
+  if (busy) next.setAttribute("aria-busy", "true");
+  else next.removeAttribute("aria-busy");
+  shotMeter.style.setProperty("--cue-count", Math.max(1, shots.length));
+  if (!busy && body.dataset.projectReady === "ready") {
+    const announcement = (lang ? "Shot " : "镜头 ") + chapterNumber.textContent;
+    if (shotAnnouncement.textContent !== announcement) shotAnnouncement.textContent = announcement;
+  }
+  if (!busy && keyboardShotControl) {
+    if ([body, keyboardShotControl].includes(document.activeElement)) {
+      const target = [keyboardShotControl, restart, next, previous].find(control => !control.hidden && !control.disabled);
+      target?.focus({ preventScroll: true });
+    }
+    keyboardShotControl = undefined;
+  }
   autoButton.disabled = body.dataset.projectReady !== "ready" || free || shots.length < 2;
   autoButton.setAttribute("aria-pressed", String(auto));
   autoButton.textContent = auto ? (lang ? "Stop auto" : "停止自动") : (lang ? "Auto play" : "自动观看");
@@ -234,6 +253,7 @@ function setLanguage(value, notify = false) {
   restart.lastElementChild.textContent = lang ? "Back to start" : "回到开头";
   $("#part-label").textContent = lang ? "Part" : "部件";
   $("#assembly-label").textContent = lang ? "Assembly" : "装配";
+  $("#free-tools-label").textContent = lang ? "More tools" : "更多操作";
   $("#explode").textContent = lang ? "Explode" : "展开";
   $("#reset").textContent = lang ? "Reset" : "复位";
   $("#assembly-link").textContent = lang ? "Assembly ↗" : "装配图 ↗";
@@ -410,8 +430,13 @@ function playToShot(index) {
   updateNavigation();
   invalidate();
 }
-previous.onclick = () => navigate(-1);
-next.onclick = () => navigate(1);
+for (const [control, direction] of [[previous, -1], [next, 1]]) {
+  control.onclick = (event) => {
+    if (event.detail === 0 && document.activeElement === control) keyboardShotControl = control;
+    navigate(direction);
+    if (!playback) keyboardShotControl = undefined;
+  };
+}
 restart.onclick = () => {
   setAuto(false);
   seek(0);
@@ -440,7 +465,8 @@ function setFree(value) {
     extractedParts.clear();
   } else freeRest = clone(draft.assembly);
   body.dataset.mode = free ? "free" : "chapter";
-  $("#free-controls").hidden = !free;
+  freePanel.hidden = !free;
+  if (!free) freeTools.open = false;
   modeButton.setAttribute("aria-pressed", String(free));
   if (controls) {
     controls.enabled = free;

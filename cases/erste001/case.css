@@ -3479,3 +3479,194 @@ html[lang="zh-CN"] .chapter-fig-caption {
 }
 
 
+
+/* ERSTE001 uses a shared datum and measured divisions. */
+:where(body[data-i18n-page=portfolio]) {
+  --datum-ink: #191919;
+  --datum-muted: #555450;
+  --datum-rule: #adaba5;
+  --datum-wash: #e8e6e029;
+  --datum-paper: #fbfaf614;
+}
+.engineering-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 18px;
+  margin-block-start: 18px;
+}
+.engineering-action {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 13px;
+  min-height: 46px;
+  padding: 0 12px;
+  border: 0;
+  border-block: 1px solid transparent;
+  border-radius: 0;
+  background: none;
+  color: var(--datum-ink);
+  font: 650 12px/1.3 system-ui, sans-serif;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 150ms, border-color 150ms, translate 100ms;
+}
+.engineering-action[data-emphasis] {
+  border-top-color: var(--datum-rule);
+  border-bottom: 2px solid var(--datum-ink);
+  background: var(--datum-paper);
+}
+.engineering-action:not([data-emphasis]) { border-bottom-color: var(--datum-rule); }
+.engineering-action > .engineering-glyph { font: 18px/1 Consolas, monospace; }
+.engineering-action:focus-visible,
+body[data-i18n-page=portfolio] .side-nav .nav-item:focus-visible {
+  outline: 2px solid #30302e;
+  outline-offset: 2px;
+}
+.engineering-action:disabled {
+  color: #65645f;
+  border-block-color: #c6c3bc;
+  background: transparent;
+  cursor: default;
+}
+.engineering-action[aria-busy=true] { cursor: progress; }
+.engineering-action[aria-busy=true] .engineering-glyph::after { content: "…"; font-size: 18px; }
+.engineering-action[aria-busy=true] .engineering-glyph { font-size: 0; animation: datum-register 750ms steps(2, end) infinite; }
+@keyframes datum-register { 50% { opacity: .45; } }
+
+body[data-i18n-page=portfolio] .side-nav { gap: 2px !important; min-height: 0; }
+body[data-i18n-page=portfolio] .side-nav .nav-item {
+  width: 48px;
+  min-height: 44px;
+  border-inline-end: 1px solid #85847f;
+  transform: none;
+  transition: background-color 150ms;
+}
+body[data-i18n-page=portfolio] .side-nav .nav-item .num {
+  color: var(--datum-muted);
+  opacity: 1;
+  transform: none;
+}
+body[data-i18n-page=portfolio] .side-nav .nav-item .label {
+  color: var(--datum-ink);
+  padding: 4px 7px;
+  background: #f8f7f3ed;
+}
+body[data-i18n-page=portfolio] .side-nav .nav-item.active {
+  background: var(--datum-paper);
+  border-inline-end: 3px solid var(--datum-ink);
+}
+body[data-i18n-page=portfolio] .side-nav .nav-item.active .num {
+  color: var(--datum-ink);
+  font-weight: 700;
+}
+
+.engineering-dock {
+  position: fixed;
+  z-index: 101;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  left: max(24px, env(safe-area-inset-left), calc((100% - 1204px) / 2));
+  display: grid;
+  grid-template-columns: minmax(105px, 1fr) repeat(3, auto);
+  align-items: stretch;
+  min-width: 376px;
+  border-block: 1px solid var(--datum-rule);
+  background: var(--datum-paper);
+  color: var(--datum-ink);
+}
+.engineering-dock .engineering-action {
+  min-width: 44px;
+  border-block: 0;
+  border-inline-start: 1px solid #c9c6c0;
+  gap: 7px;
+}
+.engineering-dock .engineering-action[data-emphasis] { box-shadow: inset 0 -2px var(--datum-ink); }
+.engineering-dock .engineering-action[data-emphasis]:disabled { box-shadow: none; }
+.engineering-reading {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;
+  gap: 3px;
+  padding: 4px 10px;
+  font: 11px/1 Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+}
+.engineering-chapter-name {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--datum-muted);
+  font-size: 9px;
+  letter-spacing: .03em;
+}
+.engineering-reading progress {
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  border: none;
+  background: #d7d5cf;
+  color: var(--datum-ink);
+}
+.engineering-reading progress::-webkit-progress-bar { background: #d7d5cf; }
+.engineering-reading progress::-webkit-progress-value { background: var(--datum-ink); }
+.engineering-reading progress::-moz-progress-bar { background: var(--datum-ink); }
+body[data-i18n-page=portfolio] .page-shell { padding-bottom: 78px; }
+
+@media (hover: hover) {
+  .engineering-action:not(:disabled):hover,
+  body[data-i18n-page=portfolio] .side-nav .nav-item:hover { background: var(--datum-wash); }
+}
+.engineering-action:not(:disabled):active,
+body[data-i18n-page=portfolio] .side-nav .nav-item:active { background: #d8d6d036; translate: 0 1px; }
+
+@media (max-width: 640px) {
+  body[data-i18n-page=portfolio] .side-nav { gap: 0 !important; padding-inline: 6px; }
+  body[data-i18n-page=portfolio] .side-nav .nav-item {
+    width: auto;
+    min-width: 0;
+    border-inline-end: 0;
+    border-bottom: 2px solid transparent;
+  }
+  body[data-i18n-page=portfolio] .side-nav .nav-item.active {
+    border-inline-end: 0;
+    border-bottom-color: var(--datum-ink);
+    background: #e8e6e01a;
+  }
+  .engineering-dock {
+    inset-inline: max(8px, env(safe-area-inset-left)) max(8px, env(safe-area-inset-right));
+    bottom: max(8px, env(safe-area-inset-bottom));
+    min-width: 0;
+  }
+  .engineering-dock .engineering-action { padding-inline: 8px; }
+  .engineering-hero-actions { margin-block-start: 10px; }
+  .engineering-action { gap: 7px; }
+}
+@media (max-width: 360px) {
+  .engineering-dock { grid-template-columns: minmax(68px, 1fr) repeat(3, auto); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .engineering-action, body[data-i18n-page=portfolio] .side-nav .nav-item { transition: none; }
+  .engineering-action[aria-busy=true] .engineering-glyph::after { content: "…"; font-size: 18px; }
+.engineering-action[aria-busy=true] .engineering-glyph { font-size: 0; animation: none; }
+}
+/* Restrained neutral glass, with a clear datum even over photos. */
+.engineering-dock, .engineering-hero-actions .engineering-action,
+body[data-i18n-page=portfolio] .side-nav {
+  -webkit-backdrop-filter: blur(6px) saturate(94%);
+  backdrop-filter: blur(6px) saturate(94%);
+}
+body[data-i18n-page=portfolio] .side-nav { background: transparent; }
+@media (min-width: 641px) {
+  body[data-i18n-page=portfolio] .side-nav { right: max(16px, env(safe-area-inset-right)) !important; }
+}
+:where(.engineering-hero-actions) .engineering-action:not([data-emphasis]) { background: #faf9f30d; }
+:where(.engineering-dock) .engineering-action[data-emphasis] { background: transparent; }
+@media (max-width: 640px) {
+  body[data-i18n-page=portfolio] .side-nav {
+    background: #faf9f214;
+  }
+}

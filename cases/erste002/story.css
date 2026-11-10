@@ -505,22 +505,58 @@ body[data-segment="exterior"] .caption h1 {
   right: var(--gutter);
   bottom: calc(var(--bottom) + 60px);
   z-index: 3;
-  display: flex;
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr) max-content;
   align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  padding: 10px;
-  background: #141416f7;
+  gap: 8px;
+  padding: 4px 6px;
+  background: #14141666;
   border: 1px solid var(--edge);
-  width: fit-content;
-  max-width: calc(100% - 2 * var(--gutter));
+  width: min(100% - 2 * var(--gutter), 480px);
 }
 .free-controls label {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding-inline: 4px;
+  gap: 6px;
   font-size: 12px;
+}
+.free-controls label:first-child { white-space: nowrap; }
+#assembly { width: 100%; min-width: 0; margin-inline: 0; }
+#free-tools-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding-inline: 5px;
+  border: 1px solid var(--edge);
+  color: var(--ink);
+  font-size: 11px;
+  white-space: nowrap;
+  cursor: pointer;
+  list-style: none;
+}
+#free-tools-label::-webkit-details-marker { display: none; }
+#free-tools[open] > summary { border-color: var(--red); }
+#free-tools:not([open]) .free-tool-actions { display: none; }
+.free-tool-actions {
+  position: absolute;
+  inset-inline: 0;
+  bottom: calc(100% + 6px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 7px;
+  max-height: max(48px, calc(100dvh - 130px));
+  overflow: auto;
+  background: #171416e8;
+  border: 1px solid var(--edge);
+}
+@media (max-width: 420px) {
+  .free-controls { gap: 5px; }
+  .free-controls label { gap: 4px; font-size: 11px; }
+  .free-controls select { max-width: min(26vw, 100px); font-size: 11px; }
+  .free-tool-actions :is(button, a) { padding-inline: 8px; }
 }
 select,
 input[type="number"],
@@ -876,5 +912,153 @@ select {
   html[data-project-hosted] body .caption { bottom: calc(var(--bottom) + 72px); }
   html[data-project-hosted] body[data-look="hero"] .caption h1 {
     font-size: clamp(26px, 6vw, 44px);
+  }
+}
+
+/* ERSTE002 uses a lit leading edge and a quiet translucent footer. */
+:where(#story) {
+  --cue: #ff7974;
+  --cue-ink: #fff3ef;
+  --cue-mute: #a49b9e;
+  --cue-rule: #8b777b;
+  --cue-glass: #17131514;
+  --cue-beam: #8b343b26;
+}
+#story .shot-announcement {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+#story .chapter-controls :is(#next-chapter, #restart-story) {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 46px;
+  gap: 17px;
+  padding-inline: 14px;
+  border: 1px solid #a85a5d;
+  border-inline-end: 3px solid var(--cue);
+  border-radius: 0;
+  background: linear-gradient(104deg, #1713150a 18%, #4c20291a 100%);
+  color: var(--cue-ink);
+  font-size: 12px;
+  font-weight: 700;
+  overflow: hidden;
+  isolation: isolate;
+  transition: border-color 150ms, background-color 180ms, translate 100ms;
+}
+#story .chapter-controls [hidden] { display: none; }
+#story .chapter-controls :is(#next-chapter, #restart-story)::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  transform: scaleX(.25);
+  transform-origin: right;
+  background: linear-gradient(95deg, transparent, var(--cue-beam));
+  transition: transform 240ms cubic-bezier(.2,.75,.3,1);
+}
+#story .chapter-controls :is(#prev-chapter, #next-chapter, #restart-story) > [aria-hidden] {
+  color: var(--cue);
+  font: 18px/1 Consolas, monospace;
+  transition: translate 180ms ease;
+}
+#story :is(#prev-chapter, .free-controls button, .free-controls select, .free-controls .tool, #retry,
+  .tools > #auto, .tools > #mode) {
+  min-height: 44px;
+  border: 1px solid #726165;
+  border-radius: 0;
+  color: #eee5e6;
+  background: var(--cue-glass);
+  transition: background-color 150ms, border-color 150ms, translate 100ms;
+}
+#story :is(#auto, #mode, #isolate-part)[aria-pressed=true] { box-shadow: inset 0 -2px var(--cue); }
+#story .free-controls select { color-scheme: dark; }
+#story #assembly { accent-color: var(--cue); min-height: 44px; }
+#story .story-footer { border-top-color: #635155; }
+#story .chapter-readout span { color: var(--cue); }
+#story .chapter-nav button { min-height: 44px; min-width: 44px; }
+#story .chapter-nav button span:first-child { color: #c0b4b6; transform: none; }
+#story .chapter-nav button[aria-current] span:first-child { color: var(--cue-ink); }
+#story .chapter-nav button::after { background: #8a7378; }
+#story .chapter-nav button[aria-current]::after { background: var(--cue); }
+#story .meter-track {
+  position: relative;
+  height: 3px;
+  background: #58454a;
+}
+#story .meter-track span { background: var(--cue); }
+#story .meter-track::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(100% / var(--cue-count, 11) - 2px), #151115 calc(100% / var(--cue-count, 11) - 2px) calc(100% / var(--cue-count, 11)));
+}
+#story :is(#prev-chapter, #next-chapter, #restart-story, .chapter-nav button,
+  .free-controls button, .free-controls select, .free-controls a, .tools > #auto, .tools > #mode, #retry):focus-visible { outline: 2px solid #ffa8a3; outline-offset: 3px; }
+
+@media (hover: hover) {
+  #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover { border-color: #ffa39c; color: white; }
+  #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover::before { transform: scaleX(1); }
+  #story #next-chapter:not(:disabled):hover > [aria-hidden] { translate: 3px 0; }
+  #story :is(#prev-chapter, .free-controls button, .free-controls select, .free-controls .tool,
+    .tools > #auto, .tools > #mode, #retry):not(:disabled):hover { background: #30222729; border-color: var(--cue-rule); }
+}
+#story .chapter-controls :is(#prev-chapter, #next-chapter, #restart-story):not(:disabled):active,
+#story :is(.free-controls button, .tools > #auto, .tools > #mode, #retry):not(:disabled):active { translate: 0 1px; background: #41282e36; }
+#story :is(#prev-chapter, #next-chapter, .free-controls button, .tools > #auto, .tools > #mode):disabled {
+  opacity: 1;
+  color: var(--cue-mute);
+  border-color: #665457;
+  background: #17141614;
+}
+#story .chapter-controls :is(#prev-chapter, #next-chapter):disabled > [aria-hidden] { color: var(--cue-mute); }
+#story .chapter-controls #next-chapter[aria-busy=true] { border-inline-end-color: var(--cue); }
+#story .chapter-controls #next-chapter[aria-busy=true]::before {
+  animation: cue-pass 1s ease-in-out infinite alternate;
+}
+@keyframes cue-pass { to { transform: scaleX(1); } }
+
+@media (min-width: 741px) and (min-height: 561px) and (orientation: landscape) {
+  body[data-look=hero] #story .caption { inset-block-end: calc(var(--bottom) + 102px); }
+}
+@media (max-width: 740px), (orientation: portrait) {
+  #story .chapter-controls :is(#next-chapter, #restart-story) { padding-inline: 9px; gap: 6px; font-size: 11px; }
+  #story .chapter-controls button > [aria-hidden] { font-size: 15px; }
+}
+@media (max-width: 370px) {
+  #story .chapter-readout { flex-direction: column; gap: 2px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #story .chapter-controls button,
+  #story .chapter-controls button::before,
+  #story .chapter-controls button > [aria-hidden] { animation: none !important; transition: none; }
+}
+/* Keep the blur local to the controls, so the model and its lighting stay crisp. */
+#story :is(.chapter-controls button, .chapter-nav,
+  .tools > #auto, .tools > #mode, .free-controls, #retry) {
+  -webkit-backdrop-filter: blur(5px) saturate(108%);
+  backdrop-filter: blur(5px) saturate(108%);
+}
+#story .chapter-nav { background: #21171a0a; }
+#story .chapter-nav button[aria-current] { background: #21171a14; }
+
+/* Short viewports inside the host iframe have less height than the device. */
+@media (orientation: landscape) and (max-height: 480px) {
+  html body[data-look] #caption #cap-title {
+    font-size: clamp(19px, min(4.2vw, 9dvh), 34px);
+    line-height: 1.08;
+    margin-block: 6px;
+  }
+  #caption { width: min(46%, 440px); }
+  #caption p {
+    line-height: 1.4;
+    text-shadow: 0 1px 5px #0b0c0f;
   }
 }
