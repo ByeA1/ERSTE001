@@ -934,8 +934,8 @@ function renderProjectDetail() {
   };
   const status=r.projectId==='erste001'?t('已打样 · 可读取','PROTOTYPED · READABLE'):t('结构迭代中 · 可读取','IN PROGRESS · READABLE');
   $('#object-id').textContent=`NO.${project.number}`;
-  $('.back-button span').textContent=t('返回档案海','BACK TO ARCHIVE');
-  $('.back-button').setAttribute('aria-label',t('返回档案海','Back to archive'));
+  $('.back-button span').textContent=t('返回项目集','BACK TO COLLECTIONS');
+  $('.back-button').setAttribute('aria-label',t('返回项目集','Back to collections'));
   $('.object-caption>div').textContent='GAMING MOUSE / DESIGN ARCHIVE';
   $('.viewer-open').innerHTML=`${t('360° 查看档案装置','360° INSPECT ARCHIVE')} <span>↗</span>`;
   $('#detail-content').innerHTML=`<div class="detail-kicker"><span>DESIGN ARCHIVE</span><span>${escapeHtml(project.title)}</span></div>
