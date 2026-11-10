@@ -201,9 +201,12 @@ body[data-mode="free"] #scene-root {
   gap: 7px;
 }
 html[data-project-hosted] .topbar {
+  top: 4px;
   justify-content: flex-start;
   border-bottom: 0;
+  padding-bottom: 0;
 }
+html[data-project-hosted] #scene-root { inset-block-start: 53px; }
 html[data-project-hosted] #editor-toggle { display: none; }
 .caption {
   position: absolute;
@@ -362,30 +365,65 @@ body[data-segment="exterior"] .caption h1 {
 .chapter-nav {
   position: absolute;
   z-index: 3;
-  top: 49%;
-  right: max(12px, env(safe-area-inset-right));
+  top: 50%;
+  inset-inline-end: max(24px, env(safe-area-inset-right));
   transform: translateY(-50%);
   display: grid;
-  gap: 4px;
+  gap: 2px;
 }
 .chapter-nav button {
-  min-height: 40px;
-  justify-content: flex-start;
-  gap: 10px;
-  padding-inline: 10px;
-  background: #1010148f;
-  border-color: transparent;
+  position: relative;
+  width: 44px;
+  padding: 0;
+  background: transparent;
+  border: 0;
 }
 .chapter-nav button span:first-child {
   color: var(--muted);
-  font: 11px var(--mono);
+  font: 12px var(--mono);
+  letter-spacing: .12em;
+  transition: color .18s, transform .18s;
 }
-.chapter-nav button[aria-current] {
-  border-inline-start-color: var(--red);
-  background: #1c171aeb;
+.chapter-nav button::after {
+  content: "";
+  position: absolute;
+  inset-inline-end: 0;
+  width: 2px;
+  height: 12px;
+  background: var(--edge);
+  transition: background .18s, height .18s;
 }
-.chapter-nav button[aria-current] span:first-child {
+.chapter-nav button[aria-current]::after {
+  height: 22px;
+  background: var(--red);
+}
+.chapter-nav button:is([aria-current], :focus-visible) span:first-child {
   color: var(--red);
+  transform: scale(1.12);
+}
+.chapter-nav button span:last-child {
+  position: absolute;
+  inset-inline-end: 100%;
+  width: max-content;
+  max-width: 145px;
+  text-align: end;
+  color: var(--ink);
+  font: 10px/1.4 var(--mono);
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  opacity: 0;
+  transform: translateX(5px);
+  pointer-events: none;
+  transition: opacity .18s, transform .18s;
+}
+.chapter-nav button[aria-current] span:last-child { color: var(--red); }
+.chapter-nav button:is([aria-current], :focus-visible) span:last-child {
+  opacity: 1;
+  transform: none;
+}
+@media (hover: hover) {
+  .chapter-nav button:hover span:first-child { color: var(--red); }
+  .chapter-nav button:hover span:last-child { opacity: 1; transform: none; }
 }
 #next-chapter:not(:disabled),
 #restart-story {
@@ -400,12 +438,13 @@ body[data-segment="exterior"] .caption h1 {
   background: #ff837f;
 }
 @media (max-width: 1100px), (orientation: portrait) {
-  .chapter-nav button {
-    justify-content: center;
-    min-width: 40px;
-  }
   .chapter-nav button span:last-child {
     display: none;
+  }
+}
+@media (min-width: 1101px) and (orientation: landscape) {
+  body[data-caption-layout="right"] .caption {
+    right: max(var(--gutter), 218px);
   }
 }
 @media (min-width: 741px) and (max-width: 1100px) and (orientation: landscape) {
@@ -643,11 +682,10 @@ select {
   }
   .chapter-nav {
     top: calc(var(--top) + 65px);
+    inset-inline-end: max(8px, env(safe-area-inset-right));
     transform: none;
   }
-  .chapter-nav button {
-    min-height: 34px;
-  }
+  html[data-project-hosted] .chapter-nav { top: 53px; }
   .progress-meter {
     grid-column: 1 / -1;
     grid-row: 2;
@@ -715,12 +753,6 @@ select {
 }
 
 @media (min-width: 741px) and (min-height: 561px) and (orientation: landscape) {
-  .chapter-nav {
-    top: calc(var(--top) + 96px);
-    right: max(16px, env(safe-area-inset-right));
-    transform: none;
-  }
-
   body[data-look="hero"] .caption {
     inset: auto auto calc(var(--bottom) + 78px) var(--gutter);
     width: min(61%, 850px);
@@ -824,5 +856,25 @@ select {
     .caption h1 {
     font-size: clamp(28px, 8.8vw, 58px);
     line-height: 1;
+  }
+}
+@media (orientation: landscape) and (max-height: 480px) {
+  html[data-project-hosted] .chapter-nav {
+    top: 4px;
+    inset-inline-end: var(--gutter);
+    grid-auto-flow: column;
+    transform: none;
+  }
+  html[data-project-hosted] .chapter-nav button { width: 38px; }
+  html[data-project-hosted] .chapter-nav button span:last-child { display: none; }
+  html[data-project-hosted] .chapter-nav button::after {
+    inset: auto auto 3px;
+    width: 12px;
+    height: 1px;
+  }
+  html[data-project-hosted] .chapter-nav button[aria-current]::after { width: 22px; height: 2px; }
+  html[data-project-hosted] body .caption { bottom: calc(var(--bottom) + 72px); }
+  html[data-project-hosted] body[data-look="hero"] .caption h1 {
+    font-size: clamp(26px, 6vw, 44px);
   }
 }
