@@ -79,8 +79,11 @@ export class SectionCut {
     this.sphere = new THREE.Sphere();
     this.inverse = new THREE.Matrix4();
     this.local = new THREE.Plane();
+    this.wasEnabled = false;
   }
   update(cut, showHelper = false) {
+    if (!cut.enabled && !this.wasEnabled) return 0;
+    this.wasEnabled = cut.enabled;
     this.euler.set(...cut.rotation.map(THREE.MathUtils.degToRad));
     this.normal.set(0, 0, 1).applyEuler(this.euler).normalize();
     this.point.fromArray(cut.position);

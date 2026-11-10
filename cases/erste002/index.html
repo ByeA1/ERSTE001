@@ -22,6 +22,7 @@
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="./story.css" />
+    <link rel="preload" as="fetch" crossorigin data-story-model href="./assets/shell-full.a7c8796cd5aec04d.glb.bin" />
   </head>
   <body data-project-ready="loading" data-look="hero">
     <main id="story" aria-label="ERSTE002">
@@ -41,11 +42,12 @@
         </div>
       </div>
       <header class="topbar">
-        <a class="identity" href="/" aria-label="返回终端"
+        <a class="identity" href="/" data-project-local-navigation aria-label="返回终端"
           ><span>ERSTE / DESIGN ARCHIVE</span><b>ERSTE002</b></a
         >
         <div class="tools">
-          <button id="lang" type="button">EN</button>
+          <button id="lang" data-project-local-navigation type="button">EN</button>
+          <button id="auto" type="button" aria-pressed="false" disabled>自动观看</button>
           <button id="mode" type="button" aria-pressed="false" disabled>
             自由查看
           </button>

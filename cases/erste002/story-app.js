@@ -11,7 +11,8 @@ import {
   smooth,
   blendPose,
 } from "./story-timeline.js";
-import { compileStory, editFrame, MODEL } from "./story-segments.js";
+import { compileStory, editFrame } from "./story-segments.js";
+import { loadStoryModel } from "./model-load.js";
 import { applyAssemblyFinish } from "./assembly-finish.js";
 import { StoryAssembly } from "./story-assembly.js";
 import { LIGHT_NAMES, LIGHT_PRESETS } from "./story-lighting.js";
@@ -28,6 +29,7 @@ const loading = $("#loading");
 const loadingCopy = $("#loading-copy");
 const retry = $("#retry");
 const modeButton = $("#mode");
+const autoButton = $("#auto");
 const previous = $("#prev-chapter");
 const next = $("#next-chapter");
 const restart = $("#restart-story");
@@ -166,8 +168,16 @@ let originalFov = 32,
   triangles = 0;
 let ready = false,
   visible = true,
-  parentPaused = false,
+  parentPaused = parent !== window,
   parentReduced = false;
+let presented = parent === window;
+let openingPlayed = false;
+let auto = false;
+let autoTimer = 0;
+let shadowLight;
+let shadowCut = "";
+const shadowPlane = new THREE.Plane();
+const lifetime = new AbortController();
 let raf = 0,
   dirty = false,
   lastTime = 0,
@@ -192,6 +202,9 @@ function updateNavigation() {
   next.disabled = busy || shotIndex >= shots.length - 1;
   next.hidden = last && !busy;
   restart.hidden = !last || busy;
+  autoButton.disabled = body.dataset.projectReady !== "ready" || free || shots.length < 2;
+  autoButton.setAttribute("aria-pressed", String(auto));
+  autoButton.textContent = auto ? (lang ? "Stop auto" : "停止自动") : (lang ? "Auto play" : "自动观看");
   for (const [index, button] of Array.from(chapterNav.children).entries()) {
     const chapter = chapters[index];
     const label = chapter.title[lang];
@@ -278,13 +291,17 @@ addEventListener("message", (event) => {
     resize();
     invalidate();
   }
+  if (type === "design-terminal:case-presented") {
+    presented = true;
+    startPresentation();
+  }
   if (type === "design-terminal:case-policy") {
     parentReduced = Boolean(reduced);
     resize();
     invalidate();
   }
 });
-motion.addEventListener("change", invalidate);
+motion.addEventListener("change", invalidate, { signal: lifetime.signal });
 function configureStory(value) {
   const compiled = compileStory(value);
   source = value;
@@ -314,7 +331,10 @@ function configureStory(value) {
       button.append(number, document.createElement("span"));
       button.onclick = () => {
         const first = shots.find((shot) => shot.chapter === chapter);
-        if (first) seek(first.hold);
+        if (first) {
+          setAuto(false);
+          seek(first.hold);
+        }
       };
       return button;
     }),
@@ -332,6 +352,7 @@ function shotAtProgress() {
   );
 }
 function navigate(offset) {
+  setAuto(false);
   const index = shotIndex + offset;
   if (
     body.dataset.projectReady === "loading" ||
@@ -341,6 +362,31 @@ function navigate(offset) {
   )
     return;
   playToShot(index);
+}
+function setAuto(value) {
+  if (value === auto) return;
+  auto = value;
+  clearTimeout(autoTimer);
+  autoTimer = 0;
+  updateNavigation();
+  if (auto) invalidate();
+}
+function scheduleAuto() {
+  if (!auto || autoTimer || playback || !ready || free || !canRender()) return;
+  if (shotIndex >= shots.length - 1) {
+    setAuto(false);
+    return;
+  }
+  autoTimer = setTimeout(() => {
+    autoTimer = 0;
+    if (canRender()) playToShot(shotIndex + 1);
+  }, 2600);
+}
+autoButton.onclick = () => setAuto(!auto);
+function startPresentation() {
+  if (!presented || openingPlayed || body.dataset.projectReady === "loading") return;
+  openingPlayed = true;
+  if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
 }
 function playToShot(index) {
   const shot = shots[index];
@@ -367,6 +413,7 @@ function playToShot(index) {
 previous.onclick = () => navigate(-1);
 next.onclick = () => navigate(1);
 restart.onclick = () => {
+  setAuto(false);
   seek(0);
   playToShot(0);
   chapterNav.firstElementChild?.focus();
@@ -407,6 +454,7 @@ function setFree(value) {
 }
 modeButton.onclick = () => {
   if (!ready) return;
+  setAuto(false);
   if (!free) {
     const current = capture();
     draft = current;
@@ -585,10 +633,11 @@ function resize() {
   camera.aspect = w / h;
   invalidate();
 }
-new ResizeObserver(resize).observe(host);
+const resizeObserver = new ResizeObserver(resize);
+resizeObserver.observe(host);
 addEventListener("resize", resize);
 function canRender() {
-  return visible && !parentPaused && !document.hidden;
+  return visible && !parentPaused && !document.hidden && !lifetime.signal.aborted;
 }
 function invalidate() {
   dirty = true;
@@ -596,32 +645,48 @@ function invalidate() {
 }
 function pause() {
   cancelAnimationFrame(raf);
+  clearTimeout(autoTimer);
+  autoTimer = 0;
   raf = 0;
   lastTime = 0;
 }
 document.addEventListener("visibilitychange", () =>
   document.hidden ? pause() : invalidate(),
 );
-new IntersectionObserver(([entry]) => {
+const visibilityObserver = new IntersectionObserver(([entry]) => {
   visible = entry.isIntersecting;
   if (visible) invalidate();
   else pause();
-}).observe(host);
+});
+visibilityObserver.observe(host);
 addEventListener("pageshow", (event) => {
   if (event.persisted) invalidate();
 });
 addEventListener("pagehide", (event) => {
   pause();
-  if (event.persisted) return;
+  if (!event.persisted) dispose();
+});
+addEventListener("design-terminal:dispose", dispose, { once: true });
+function dispose() {
+  if (lifetime.signal.aborted) return;
+  lifetime.abort();
+  pause();
+  resizeObserver.disconnect();
+  visibilityObserver.disconnect();
+  const geometries = new Set(section?.records.map(({ source }) => source));
+  const materials = new Set();
   scene?.traverse((object) => {
-    if (!object.isMesh) return;
-    object.geometry?.dispose();
-    object.material?.dispose();
+    if (object.geometry) geometries.add(object.geometry);
+    if (object.material) for (const material of [object.material].flat()) materials.add(material);
   });
+  geometries.forEach(geometry => geometry.dispose());
+  materials.forEach(material => material.dispose());
+  Object.values(lights ?? {}).forEach(light => light.shadow?.dispose());
   controls?.dispose();
   studioEnvironment?.dispose();
   renderer?.dispose();
-});
+  renderer?.forceContextLoss();
+}
 function updateCaption() {
   const cap =
     body.dataset.projectReady !== "loading" ? captionAt(story, p) : null;
@@ -717,23 +782,30 @@ function apply(value) {
       );
     }
   }
+  const shadowName = value.lights.focus.intensity > 0 ? "focus" : "key";
+  let shadowMoved = shadowName !== shadowLight;
   for (const [name, light] of Object.entries(lights)) {
     const definition = value.lights[name];
+    const angle = THREE.MathUtils.degToRad(definition.angle);
     // One shadow map follows the light responsible for the current reveal.
-    light.castShadow =
-      name === (value.lights.focus.intensity > 0 ? "focus" : "key");
+    light.castShadow = name === shadowName;
+    if (light.castShadow && !shadowMoved) {
+      shadowMoved = light.angle !== angle ||
+        definition.position.some((n, i) => n !== light.position.getComponent(i)) ||
+        definition.target.some((n, i) => n !== light.target.position.getComponent(i));
+    }
     light.position.fromArray(definition.position);
     light.target.position.fromArray(definition.target);
     light.intensity = definition.intensity;
     light.color.set(definition.color);
-    light.angle = THREE.MathUtils.degToRad(definition.angle);
+    light.angle = angle;
   }
   ambient.intensity = value.ambient;
   scene.environmentIntensity = value.reflection.intensity;
   scene.environmentRotation.y = THREE.MathUtils.degToRad(value.reflection.yaw);
   assembly.value = value.explode;
   partSelect.value = value.focus;
-  assemblyRig.apply(value, free ? isolated : value.isolate);
+  const partsMoved = assemblyRig.apply(value, free ? isolated : value.isolate);
   host.dataset.isolated = free ? isolated : value.isolate;
   host.dataset.explode = value.explode.toFixed(3);
   if (free) updatePartControls();
@@ -747,8 +819,14 @@ function apply(value) {
     mesh.material.emissiveIntensity = emissive;
     energy = Math.max(energy, emissive);
   }
-  model.updateMatrixWorld(true);
+  if (value.cut.enabled && partsMoved) model.updateMatrixWorld(true);
   const cutFaces = section.update(value.cut, helper);
+  const cutState = value.cut.enabled ? `${value.cut.target}:${value.cut.cap}` : "";
+  if (shadowMoved || partsMoved || cutState !== shadowCut || (cutState && !shadowPlane.equals(section.plane)))
+    lights[shadowName].shadow.needsUpdate = true;
+  shadowLight = shadowName;
+  shadowCut = cutState;
+  if (cutState) shadowPlane.copy(section.plane);
   host.dataset.sectionFaces = cutFaces;
   body.dataset.cut = String(value.cut.enabled);
   body.dataset.emissive = energy.toFixed(4);
@@ -805,6 +883,7 @@ function tick(now) {
     host.dataset.fpsLimit = renderLimit.fpsLimit;
   }
   if ((playback && !free) || (free && assemblyMove)) invalidate();
+  else scheduleAuto();
 }
 function setReady(value) {
   ready = value;
@@ -835,10 +914,11 @@ function setReady(value) {
 }
 async function loadStory() {
   try {
-    const response = await fetch("./story.json", { cache: "no-cache" });
+    const response = await fetch("./story.json", { signal: lifetime.signal });
     if (!response.ok) throw new Error("HTTP " + response.status);
     configureStory(await response.json());
   } catch (error) {
+    if (lifetime.signal.aborted) return;
     console.warn("ERSTE002 story fallback", error.message);
     configureStory(DEFAULT_STORY);
   }
@@ -881,6 +961,7 @@ async function start() {
     for (const name of LIGHT_NAMES) {
       const light = new THREE.SpotLight("#ffffff", 0, 0, 0.6, 0.65, 0);
       if (name === "key" || name === "focus") {
+        light.shadow.autoUpdate = false;
         light.castShadow = name === "key";
         light.shadow.mapSize.set(1024, 1024);
         light.shadow.camera.near = 0.01;
@@ -896,10 +977,12 @@ async function start() {
     resize();
     renderer.domElement.addEventListener("webglcontextlost", (event) => {
       event.preventDefault();
+      if (lifetime.signal.aborted) return;
       setReady(false);
     });
     renderer.domElement.addEventListener("webglcontextrestored", () => {
-      if (section) {
+      if (section && !lifetime.signal.aborted) {
+        shadowLight = undefined;
         studioEnvironment?.dispose();
         studioEnvironment = createStudioEnvironment(renderer);
         scene.environment = studioEnvironment.texture;
@@ -908,7 +991,8 @@ async function start() {
     });
 
     const loader = new GLTFLoader();
-    const [gltf] = await Promise.all([loader.loadAsync(MODEL), data]);
+    const [gltf] = await Promise.all([loadStoryModel(loader, lifetime.signal), data]);
+    if (lifetime.signal.aborted) return;
     studioEnvironment = createStudioEnvironment(renderer);
     scene.environment = studioEnvironment.texture;
     model = gltf.scene;
@@ -961,9 +1045,11 @@ async function start() {
     if (cutFrame) {
       apply(cutFrame);
       await renderer.compileAsync(scene, camera);
+      if (lifetime.signal.aborted) return;
     }
     apply(sampleStory(story, 0));
     await renderer.compileAsync(scene, camera);
+    if (lifetime.signal.aborted) return;
     editor = createEditor({
       capture,
       aim,
@@ -997,12 +1083,14 @@ async function start() {
         configureStory(editFrame(source, story, at, frame, lightingOnly)),
     });
     setReady(true);
-    if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
+    startPresentation();
   } catch (error) {
+    if (lifetime.signal.aborted) return;
     console.error("ERSTE002 model", error);
     await data;
+    if (lifetime.signal.aborted) return;
     setReady(false);
-    if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
+    startPresentation();
   }
 }
 body.dataset.mode = "chapter";
