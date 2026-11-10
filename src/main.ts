@@ -1,8 +1,7 @@
 import {createProjectDirectory} from './project-directory';
 import { createRollingClock } from "./rolling-clock";
 import { openProject, caseIsOpen, caseIsApproaching } from "./project-viewer";
-import { siteNavigation } from './site-navigation';
-import {collectionAtLane, collectionNumberAtLane} from './project-collections';
+import {collectionAtLane, collectionLane, collectionNumberAtLane, projectCollections} from './project-collections';
 import {t, localize} from './terminal-language';
 import {projectSummary,projectFindings} from './project-copy';
 import {PROJECT_COVER_OPENING_START} from './project-cover-motion';
@@ -93,19 +92,21 @@ import { loopingMarkSvg, loopingLogoSvg, RhineLogoPlayer, setRhineLogoPolicy, se
 
 const featuredIndex = records.findIndex(record => record.projectId === featuredProjectId && !record.section);
 const openingSelection = isWallpaper ? 0 : Math.max(0, featuredIndex);
-const terminalProjects = projects.filter(project => project.shortcut && project.page);
-const terminalProjectIds = terminalProjects.map(project => project.id);
 
 $("#stage").innerHTML = `
   <div id="three-scene" class="three-scene"></div>
   <div class="scene-atmosphere archive-atmosphere"></div>
   <div id="boot-background" class="boot-background"><svg viewBox="0 0 1920 1080" preserveAspectRatio="none"><g fill="none" stroke="#fff" stroke-width="3"><path d="M-210 705C-45 705 182 704 247 567C337 377 99 306 4 435S27 680 169 631C309 584 227 314 279 111S568-113 568-113"/><path d="M1560-80C1374 114 1671 168 1601 323S1371 367 1431 480S1692 666 1559 787S1329 886 1498 1130"/><circle cx="1450" cy="648" r="346"/><circle cx="1450" cy="648" r="348"/></g></svg></div>
   <header class="brand">${brandHeading}</header>
-  <nav class="system-nav" aria-label="系统导航">${!isWallpaper ? `<div class="project-directory"><div class="directory-window"><div class="directory-track"></div></div></div>` : projects.filter(project => project.shortcut).map(project => project.page ? `<button class="project-shortcut" data-showcase-project="${escapeHtml(project.id)}">${escapeHtml(project.title)}</button>` : project.externalUrl ? `<a class="project-shortcut" href="${escapeHtml(project.externalUrl)}">${escapeHtml(project.title)} ↗</a>` : '').join('')}
+  <nav class="system-nav${isWallpaper ? '' : ' terminal-utilities'}" aria-label="系统导航">${isWallpaper ? projects.filter(project => project.shortcut).map(project => project.page ? `<button class="project-shortcut" data-showcase-project="${escapeHtml(project.id)}">${escapeHtml(project.title)}</button>` : project.externalUrl ? `<a class="project-shortcut" href="${escapeHtml(project.externalUrl)}">${escapeHtml(project.title)} ↗</a>` : '').join('') : ''}
     <button data-action="search"><span class="nav-glyph" aria-hidden="true">⌕</span><span data-zh="档案索引" data-en="Archive index">档案索引</span><span class="key" aria-hidden="true">/</span></button>
     <button data-action="saved"><span aria-hidden="true">＋</span><span data-zh="收藏档案" data-en="Saved archives">收藏档案</span><span id="saved-count">00</span></button>
     <button class="settings-button" data-action="settings"><span class="settings-glyph" aria-hidden="true">◷</span><span class="settings-label" data-zh="终端设置" data-en="Terminal settings">终端设置</span></button>
   </nav>
+  ${!isWallpaper ? `<nav class="archive-directory" data-scope="collections" aria-label="档案集目录" inert>
+    <div data-directory-list="collections"><div class="directory-heading" data-zh="档案集" data-en="Collections">档案集</div><div class="directory-items"></div></div>
+    <div data-directory-list="projects" inert><div class="directory-heading"><button type="button" class="directory-back" data-action="collection-back" data-zh="← 档案海" data-en="← Archive sea" hidden>← 档案海</button><span data-zh="项目目录" data-en="Projects">项目目录</span></div><div class="directory-items"></div></div>
+  </nav>` : ''}
   <button id="skip" class="${isWallpaper?'skip':'opening-skip'}" data-action="skip" ${!isWallpaper?'hidden':''}><span data-zh="跳过开场" data-en="SKIP OPENING">跳过开场</span> ↗</button>
   <section id="boot" class="boot" aria-label="系统启动">
     <div class="access-text">ACCESS</div>
@@ -121,7 +122,6 @@ $("#stage").innerHTML = `
     <div id="hover-label" class="hover-label" hidden>X-<span id="hover-code">001</span> / <span id="hover-title"></span></div>
     <div class="archive-counter"><span class="tiny-label">PROJECT / SELECT</span><div><span id="selected-number">01</span><i>/</i><span class="count-total">02</span></div></div>
     ${isWallpaper?`<div class="archive-navigation"><button data-action="prev" aria-label="上一个档案">↑</button><div id="file-ticks" class="file-ticks"></div><button data-action="next" aria-label="下一个档案">↓</button></div>`:""}
-    ${!isWallpaper ? `<div class="mobile-terminal-tools"><button type="button" class="terminal-settings-open" data-action="settings" aria-haspopup="dialog"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" aria-hidden="true"><path d="M2 5h16M2 15h16"/><path d="M7 2v6M13 12v6" stroke-width="3"/></svg><span data-zh="终端设置" data-en="TERMINAL SETTINGS">终端设置</span></button></div>` : ''}
     <div class="column-navigation"><button data-action="column-prev" aria-label="上一个项目集">←</button><div><span id="column-number"><span class="collection-number-label">COLLECTION</span> <span id="column-index">01</span> / 05</span><strong id="column-name">GAMING MOUSE</strong></div><button data-action="column-next" aria-label="下一个项目集">→</button></div>
     ${!isWallpaper?'<p class="mobile-personal-use"><span>PERSONAL USE ONLY</span><small data-zh="非商业个人作品档案" data-en="NON-COMMERCIAL ARCHIVE">非商业个人作品档案</small></p>':''}
     ${isWallpaper?`<div class="archive-hint"><kbd>←</kbd> <kbd>→</kbd> 切换列 <span>／</span> <kbd>↑</kbd> <kbd>↓</kbd> 前后档案 <span>／</span> <kbd>ENTER</kbd> 读取</div>`:""}
@@ -138,11 +138,11 @@ $("#stage").innerHTML = `
   <div id="loading" class="loading"><div class="loading-mark">${loopingLogoSvg}</div><span>CONNECTING TO DESIGN ARCHIVE</span><i></i></div>
 `;
 
-// Language and project navigation share the scaled terminal coordinate system.
+// The website keeps terminal controls together in its footer.
 if (isWallpaper) $("#stage").append($(".terminal-language-site"));
 else {
-  $(".terminal-language-site").remove();
-  siteNavigation.mountTerminal($("#stage"), $(".system-nav"));
+  $(".system-nav").append($(".terminal-language-site"));
+  $(".system-footer").append($(".system-nav"));
 }
 // Opening artwork scales independently on phones; keep this control at touch size.
 if(!isWallpaper)$("#viewport").append($("#skip"));
@@ -172,6 +172,7 @@ $("#viewport").insertAdjacentHTML(
 );
 
 type Mode = "boot" | "archive" | "detail";
+let collectionOpen = false;
 let mode: Mode = "boot",
   selected = openingSelection,
   bootStart = 0,
@@ -588,6 +589,8 @@ function setMode(next: Mode) {
   }
   if (next === "detail" && mode !== "detail") recordAccess();
   mode = next;
+  if (next === 'boot') collectionOpen = false;
+  else if (!isWallpaper && next === 'detail') collectionOpen = true;
   if (next !== "boot") {
     fadeOpeningOverlay();
     if (!pwaStarted && !lightweight && import.meta.env.MODE !== "model-review") {
@@ -619,6 +622,8 @@ function setMode(next: Mode) {
   );
   $(".system-nav").inert = next === "boot" || Boolean(modal);
   $(".system-footer").inert = next === "boot" || Boolean(modal);
+  const directory = document.querySelector<HTMLElement>('.archive-directory');
+  if (directory) directory.inert = next === 'boot' || Boolean(modal);
   if (next === "detail") {
     if (previousMode !== "detail")
       detailTransition.show(!motionActive("surfaceTransitions"));
@@ -699,19 +704,38 @@ function stepFile(direction: number) {
   );
 }
 function stepColumn(direction: number) {
+  if (collectionOpen) return;
   const lane = isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length);
   const next = wrap(lane + direction, archiveColumns.length);
   select(columnMemory[next], { axis: "lane", direction });
 }
-const projectDirectory = !isWallpaper ? createProjectDirectory($('.project-directory'), terminalProjects,id=>{
-  if(!ready || mode==='boot' || modal || caseIsOpen())return;
-  const index=records.findIndex(r=>r.projectId===id && !r.section && r.title===getProject(id)?.title);
-  if(index<0)return;const detail=mode==='detail';select(index);if(detail)setMode('detail');
-}, textOptions) : undefined;
+const projectDirectory = !isWallpaper ? createProjectDirectory($('.archive-directory'), (scope, id, open) => {
+  if (!ready || mode === 'boot' || modal || viewer?.isOpen || caseIsOpen()) return;
+  if (scope === 'collections') {
+    const collection = projectCollections.find(item => item.id === id);
+    if (!collection) return;
+    collectionOpen = open && collection.projectIds.length > 0;
+    const index = columnMemory[collectionLane(id)];
+    if (selected !== index) select(index);
+    else updateSelection();
+    if (open) projectDirectory?.focus();
+    return;
+  }
+  const index = columnFiles(fileLocation(selected).lane).find(index => records[index].projectId === id);
+  if (index === undefined || (mode === 'detail' && selected === index)) return;
+  const showDetail = open || mode === 'detail';
+  if (selected !== index) select(index);
+  if (showDetail) setMode('detail');
+  if (open) projectDirectory?.focus();
+}) : undefined;
+function leaveCollection() {
+  collectionOpen = false;
+  updateSelection();
+  projectDirectory?.focus();
+}
 function updateSelection(navigation?: ArchiveNavigation) {
   const r = records[selected];
   const lane = isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length);
-  projectDirectory?.sync(r.projectId, terminalProjectIds, motionActive("rollingText") && mode !== "boot");
   const files = columnFiles(lane);
   selectionTitle.update({
     text: isWallpaper ? r.title : r.placeholder ? t('项目集待补充','COLLECTION RESERVED') : getProject(r.projectId)?.subtitle ?? r.title,
@@ -775,6 +799,20 @@ function updateSelection(navigation?: ArchiveNavigation) {
   });
   $("#saved-count").textContent = String(saved.size).padStart(2, "0");
   if (!isWallpaper) {
+    const collection = collectionAtLane(lane);
+    $('#stage').dataset.collectionOpen = String(collectionOpen);
+    projectDirectory?.sync(
+      collectionOpen ? 'projects' : 'collections',
+      collectionOpen ? files.flatMap(index => {
+        const project = getProject(records[index].projectId);
+        return project ? [{ id: project.id, label: project.title }] : [];
+      }) : projectCollections.map(item => ({
+        id: item.id, label: t(item.zh, item.title), reserved: !item.projectIds.length,
+      })),
+      collectionOpen ? r.projectId : collection.id,
+      motionActive('surfaceTransitions') && mode !== 'boot',
+      collectionOpen && mode === 'archive',
+    );
     const empty=Boolean(r.placeholder);
     $('.archive-callout').dataset.reserved=String(empty);
     $('.catalogue-project-title').textContent=empty?t('待补充','COMING SOON'):r.title;
@@ -793,9 +831,11 @@ function updateSelection(navigation?: ArchiveNavigation) {
     $('#archive-ui').setAttribute('aria-label',t('项目集与项目选择','Collections and projects'));
     $('[data-action=replay]').textContent=t('重播开场 ↗','REPLAY OPENING ↗');
     $('[data-action=replay]').title=t('重播启动流程','Replay opening sequence');
-    document.querySelectorAll<HTMLElement>('.terminal-settings-open').forEach(button=>{
-      button.setAttribute('aria-label',t('终端设置','Terminal settings'));
-      button.title=t('终端设置','Terminal settings');
+    const tools = $('.terminal-utilities');
+    tools.setAttribute('aria-label', t('终端功能', 'Terminal tools'));
+    tools.querySelectorAll<HTMLButtonElement>(':scope > button').forEach(button => {
+      const label = button.querySelector<HTMLElement>('[data-zh][data-en]')!;
+      button.setAttribute('aria-label', t(label.dataset.zh!, label.dataset.en!));
     });
     localize();
   }
@@ -1260,6 +1300,7 @@ document.addEventListener("click", (e) => {
   if (action === "next") stepFile(1);
   if (action === "column-prev") stepColumn(-1);
   if (action === "column-next") stepColumn(1);
+  if (action === "collection-back" && mode === "archive") leaveCollection();
   if (action === "open") openFile();
   if (action === "model-viewer" && mode === "detail" && scene) {
     const activeScene = scene;
@@ -1322,7 +1363,7 @@ document.addEventListener("click", (e) => {
 });
 document.addEventListener("keydown", (e) => {
   if (caseIsOpen()) return;
-  if (showcaseVisible()) {
+  if (showcaseVisible() && !modal && !viewer?.isOpen) {
     if(e.key==='Escape' && mode==='detail'){
       e.preventDefault();
       returnToProjectOverview();
@@ -1330,9 +1371,14 @@ document.addEventListener("keydown", (e) => {
     }
     if(e.key==='ArrowLeft'||e.key==='ArrowRight'){
       e.preventDefault();
-      const current=projects.findIndex(p=>p.id===records[selected].projectId);
-      const next=projects[(current+(e.key==='ArrowRight'?1:projects.length-1))%projects.length];
-      document.querySelector<HTMLButtonElement>(`[data-showcase-project="${next.id}"]`)?.click();
+      const direction = e.key === 'ArrowRight' ? 1 : -1;
+      if (isWallpaper) {
+        const current = projects.findIndex(project => project.id === records[selected].projectId);
+        const next = projects[wrap(current + direction, projects.length)];
+        document.querySelector<HTMLButtonElement>(`[data-showcase-project="${next.id}"]`)?.click();
+      } else {
+        document.querySelector<HTMLButtonElement>(`.detail-project-step[data-detail-direction="${direction}"]`)?.click();
+      }
     }
     return;
   }
@@ -1367,6 +1413,7 @@ document.addEventListener("keydown", (e) => {
   const typing = e.target instanceof HTMLInputElement;
   if (e.key === "Escape") {
     if (modal) closeModal();
+    else if (!isWallpaper && mode === 'archive' && collectionOpen) leaveCollection();
     else if (mode === "detail" || (mode === "boot" && ready)) {
       const sound = mode === "detail" ? "back" : "ui-tick";
       setMode("archive");
@@ -1696,10 +1743,12 @@ function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
   scene.select(selected, cell ? { cell } : undefined);
   scene.onSelect = (i, cell) => {
     if (mode !== "archive" || modal || viewer?.isOpen) return;
+    if (collectionOpen && records[i].collectionId !== records[selected].collectionId) return;
     select(i, cell ? { cell } : undefined);
   };
   scene.onActivate = isWallpaper ? undefined : (i, cell) => {
     if (mode !== "archive" || modal || viewer?.isOpen) return;
+    if (collectionOpen && records[i].collectionId !== records[selected].collectionId) return;
     select(i, cell ? { cell } : undefined);
     openFile();
   };
@@ -2061,7 +2110,10 @@ Object.assign(window, {
       bootStart = performance.now() / 1000 - t;
       lastStep = "";
     },
-    archive: () => setMode("archive"),
+    archive: () => {
+      collectionOpen = false;
+      setMode("archive");
+    },
     detail: () => openFile(),
     select: (i: number) => select(i),
     stats: () => ({

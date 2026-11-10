@@ -26,18 +26,6 @@
   --nav-edge: #ffffff26;
   --nav-accent: #ff5d57;
 }
-#stage .site-navigation {
-  --nav-paper: var(--theme-paper, #e8e5e1);
-  --nav-ink: var(--theme-ink, #252b20);
-  --nav-edge: var(--theme-line, #a4a096);
-  --nav-accent: var(--theme-accent, #795c34);
-  inset-block-start: var(--top-edge, 24px);
-  inset-inline-end: var(--edge, 24px);
-}
-#stage[data-mode=boot] .site-navigation,
-.terminal-modal-open #stage .site-navigation {
-  visibility: hidden;
-}
 .site-navigation :is(.site-nav-toggle,.site-nav-menu) {
   border: 1px solid var(--nav-edge);
   background: var(--nav-paper);
@@ -184,28 +172,6 @@
     inset-inline: 0 auto;
     transform-origin: top left;
   }
-}
-html #stage .site-navigation .system-nav:has(.project-directory) {
-  display: grid;
-  position: static;
-  width: 100%;
-  min-width: 146px;
-  gap: 4px;
-  margin: 0;
-  padding: 0;
-}
-html #stage .site-navigation .system-nav > button { min-height: 44px; padding-inline: 8px; }
-html #stage .site-navigation .system-nav > button:not(.project-shortcut) {
-  display: flex;
-  justify-content: flex-start;
-  font-size: 11px;
-  gap: 8px;
-}
-@media (max-width: 640px) {
-  html #stage .site-navigation .system-nav:has(.project-directory) { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .site-navigation .project-directory { grid-column: 1 / -1; }
-  html #stage .site-navigation .system-nav > button:not(.project-shortcut) { justify-content: center; }
-  .site-navigation .system-nav > button > :is([data-zh],.key) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
 }
 @keyframes site-nav-in { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
 @media (prefers-reduced-motion: reduce) { .site-nav-menu { animation: none; } }

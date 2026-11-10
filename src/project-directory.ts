@@ -1,177 +1,112 @@
 import { t } from "./terminal-language";
-import type { ProjectDefinition } from "./projects";
-import {
-  createRollingText,
-  type MotionOptions,
-} from "@kitlangton/rolling-number";
+import "./project-directory.css";
 
-/** A bounded vertical selector: wheel, touch swipe, keyboard and direct selection. */
+type DirectoryScope = "collections" | "projects";
+type DirectoryItem = { id: string; label: string; reserved?: boolean };
+
 export function createProjectDirectory(
   host: HTMLElement,
-  projects: ProjectDefinition[],
-  choose: (id: string) => void,
-  motion: MotionOptions = {},
+  choose: (scope: DirectoryScope, id: string, open: boolean) => void,
 ) {
-  let current = 0,
-    total = 0,
-    last = 0,
-    lastWheel = 0,
-    pressY: number | undefined,
-    suppressClick = false;
-  let available: ProjectDefinition[] = [];
-  const track = host.querySelector<HTMLElement>(".directory-track")!;
-  // Fixed previous/current/next slots use the same glyph movement as the site
-  // captions, rather than translating a second, independent list animation.
-  const slots = Array.from({ length: 3 }, () => {
-    const row = document.createElement("div");
-    row.className = "directory-slot";
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "project-shortcut directory-project";
-    button.hidden = true;
-    const number = document.createElement("small");
-    const title = document.createElement("span");
-    const arrow = document.createElement("i");
-    arrow.textContent = "↗";
-    arrow.setAttribute("aria-hidden", "true");
-    button.append(number, title, arrow);
-    row.append(button);
-    const options = {
-      ...motion,
-      text: "",
-      animated: false,
-      transition: "direct" as const,
-      stagger: "none" as const,
-    };
-    return {
-      row,
-      button,
-      number: createRollingText(number, options),
-      title: createRollingText(title, options),
-    };
-  });
-  track.replaceChildren(...slots.map((slot) => slot.row));
-  const enabled = () =>
-    !host.hidden &&
-    available.length > 0 &&
-    !host.closest("[inert]") &&
-    host.closest("#stage")?.getAttribute("data-mode") !== "boot";
-  function step(direction: number) {
-    if (!enabled()) return;
-    const next = Math.max(
-      0,
-      Math.min(available.length - 1, current + direction),
-    );
-    if (next !== current) choose(available[next].id);
+  const lists = {
+    collections: host.querySelector<HTMLElement>('[data-directory-list="collections"]')!,
+    projects: host.querySelector<HTMLElement>('[data-directory-list="projects"]')!,
+  };
+  const items = {
+    collections: lists.collections.querySelector<HTMLElement>('.directory-items')!,
+    projects: lists.projects.querySelector<HTMLElement>('.directory-items')!,
+  };
+  let scope: DirectoryScope = "collections";
+  let lastWheel = 0, lastStep = -Infinity, delta = 0;
+  let pressY: number | undefined;
+  let suppressClickUntil = 0;
+  const activeButton = () => items[scope].querySelector<HTMLButtonElement>('[aria-current]');
+  const enabled = () => !host.closest('[inert]');
+
+  function move(direction: number, edge = false) {
+    const buttons = [...items[scope].querySelectorAll<HTMLButtonElement>('button')];
+    const current = buttons.findIndex(button => button.hasAttribute('aria-current'));
+    const index = edge ? (direction < 0 ? 0 : buttons.length - 1)
+      : Math.max(0, Math.min(buttons.length - 1, current + direction));
+    const button = buttons[index];
+    if (button && index !== current) choose(scope, button.dataset.directoryId!, false);
   }
-  host.addEventListener(
-    "wheel",
-    (e) => {
-      if (e.ctrlKey || !enabled() || Math.abs(e.deltaX) > Math.abs(e.deltaY))
-        return;
-      e.preventDefault();
-      e.stopPropagation();
-      const now = performance.now();
-      if (now - lastWheel > 180) total = 0;
-      lastWheel = now;
-      total +=
-        e.deltaY * (e.deltaMode === 1 ? 24 : e.deltaMode === 2 ? 120 : 1);
-      if (Math.abs(total) < 35 || now - last < 240) return;
-      step(Math.sign(total));
-      total = 0;
-      last = now;
-    },
-    { passive: false },
-  );
-  host.addEventListener("keydown", (e) => {
-    if (!["ArrowUp", "ArrowDown", "Home", "End"].includes(e.key) || !enabled())
-      return;
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.key === "Home") choose(available[0].id);
-    else if (e.key === "End") choose(available.at(-1)!.id);
-    else step(e.key === "ArrowDown" ? 1 : -1);
-    slots[1].button.focus({ preventScroll: true });
+
+  host.addEventListener('click', event => {
+    const button = (event.target as Element).closest<HTMLButtonElement>('[data-directory-id]');
+    if (button && enabled() && performance.now() >= suppressClickUntil)
+      choose(scope, button.dataset.directoryId!, true);
   });
-  host.addEventListener("pointerdown", (e) => {
-    if (e.pointerType !== "mouse") pressY = e.clientY;
+  host.addEventListener('wheel', event => {
+    if (event.ctrlKey || !enabled() || Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
+    event.preventDefault();
+    event.stopPropagation();
+    const now = performance.now();
+    if (now - lastWheel > 180) delta = 0;
+    lastWheel = now;
+    delta += event.deltaY * (event.deltaMode === 1 ? 24 : event.deltaMode === 2 ? 120 : 1);
+    if (Math.abs(delta) < 35 || now - lastStep < 240) return;
+    move(Math.sign(delta));
+    delta = 0;
+    lastStep = now;
+  }, { passive: false });
+  host.addEventListener('keydown', event => {
+    if (!['ArrowUp', 'ArrowDown', 'Home', 'End'].includes(event.key) ||
+        !enabled() || !(event.target as Element).closest('[data-directory-id]')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    move(event.key === 'ArrowUp' || event.key === 'Home' ? -1 : 1, event.key === 'Home' || event.key === 'End');
+    activeButton()?.focus({ preventScroll: true });
   });
-  host.addEventListener("pointercancel", () => {
-    pressY = undefined;
+  host.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse') pressY = event.clientY;
   });
-  host.addEventListener("pointerup", (e) => {
+  host.addEventListener('pointercancel', () => { pressY = undefined; });
+  host.addEventListener('pointerup', event => {
     if (pressY === undefined) return;
-    const delta = pressY - e.clientY;
+    const movement = pressY - event.clientY;
     pressY = undefined;
-    if (Math.abs(delta) < 18) return;
-    e.preventDefault();
-    suppressClick = true;
-    step(Math.sign(delta));
-    setTimeout(() => (suppressClick = false), 350);
+    if (!enabled() || Math.abs(movement) < 18) return;
+    suppressClickUntil = performance.now() + 350;
+    move(Math.sign(movement));
   });
-  host.addEventListener(
-    "click",
-    (e) => {
-      if (suppressClick) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    },
-    true,
-  );
+
   return {
-    sync(
-      id: string | undefined,
-      projectIds: readonly string[],
-      animated = true,
-    ) {
-      const allowed = new Set(projectIds);
-      available = projects.filter((project) => allowed.has(project.id));
-      const active = available.findIndex((p) => p.id === id);
-      const previous = current;
-      current = active < 0 ? 0 : active;
-      host.hidden = available.length === 0;
-      host.setAttribute(
-        "aria-label",
-        t("当前项目集的项目", "Projects in this collection"),
-      );
-      slots.forEach((slot, i) => {
-        const index = current + i - 1;
-        const project = available[index];
-        const { button, number, title } = slot;
-        button.hidden = !project;
-        button.disabled = !project;
-        button.classList.toggle(
-          "directory-current",
-          Boolean(project) && index === active,
-        );
-        if (project) {
-          button.dataset.showcaseProject = project.id;
-          button.setAttribute("aria-label", project.title);
-        } else {
-          delete button.dataset.showcaseProject;
-          button.removeAttribute("aria-label");
-        }
-        if (project && index === active)
-          button.setAttribute("aria-current", "true");
-        else button.removeAttribute("aria-current");
-        const direction =
-          current < previous ? ("down" as const) : ("up" as const);
-        number.update({
-          text: project ? String(index + 1).padStart(2, "0") : "",
-          animated: animated && Boolean(project),
-          direction,
-        });
-        title.update({
-          text: project?.title ?? "",
-          animated: animated && Boolean(project),
-          direction,
-        });
-        if (!animated || !project) {
-          number.finish();
-          title.finish();
-        }
+    sync(next: DirectoryScope, entries: DirectoryItem[], selected: string | undefined, animate: boolean, showBack: boolean) {
+      scope = next;
+      host.dataset.scope = scope;
+      host.dataset.animate = String(animate);
+      host.setAttribute('aria-label', scope === 'collections'
+        ? t('档案集目录', 'Archive collections') : t('项目目录', 'Projects in this collection'));
+      lists.collections.inert = scope !== 'collections';
+      lists.projects.inert = scope !== 'projects';
+      host.querySelector<HTMLButtonElement>('.directory-back')!.hidden = !showBack;
+      const list = items[scope];
+      const buttons = [...list.querySelectorAll<HTMLButtonElement>('button')];
+      if (buttons.length !== entries.length || buttons.some((button, index) => button.dataset.directoryId !== entries[index].id)) {
+        list.replaceChildren(...entries.map(({ id }, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.dataset.directoryId = id;
+          const number = document.createElement('span');
+          number.className = 'directory-number';
+          number.textContent = String(index + 1).padStart(2, '0');
+          number.setAttribute('aria-hidden', 'true');
+          const label = document.createElement('span');
+          label.className = 'directory-label';
+          button.append(number, label);
+          return button;
+        }));
+      }
+      [...list.querySelectorAll<HTMLButtonElement>('button')].forEach((button, index) => {
+        const { id, label, reserved } = entries[index];
+        button.lastElementChild!.textContent = label;
+        button.setAttribute('aria-label', label);
+        button.classList.toggle('directory-reserved', Boolean(reserved));
+        if (id === selected) button.setAttribute('aria-current', 'true');
+        else button.removeAttribute('aria-current');
       });
     },
+    focus() { activeButton()?.focus({ preventScroll: true }); },
   };
 }

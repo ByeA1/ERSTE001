@@ -36,7 +36,7 @@ for(const[browserName,executablePath]of[['Chrome','C:/Program Files/Google/Chrom
     await page.evaluate(()=>{window.rhine.select(0);window.rhine.archive();window.rhine.detail();});
     await page.waitForFunction(()=>window.rhine.stats().canInspect,{},{timeout:20000});const rotationBefore=await page.evaluate(()=>window.rhine.stats().rotation);
     await page.mouse.move(box.x+box.width*.25,box.y+box.height*.48);await page.mouse.down();await page.mouse.move(box.x+box.width*.40,box.y+box.height*.48,{steps:12});await page.mouse.up();await page.waitForTimeout(300);const rotationAfter=await page.evaluate(()=>window.rhine.stats().rotation);assert.ok(Math.abs(rotationAfter-rotationBefore)>.05,'cassette rotation responds');
-    await page.locator('.project-directory [data-showcase-project="erste002"]').click();await page.waitForFunction(()=>window.rhine.stats().selected.includes('002'));
+    await page.locator('.archive-directory [data-directory-id="erste002"]').click();await page.waitForFunction(()=>window.rhine.stats().selected.includes('002'));
     await page.locator('.showcase-open[data-project="erste002"]').click();
     await page.waitForFunction(()=>document.querySelector('iframe[data-project-id="erste002"]')?.dataset.loaded==='true',{},{timeout:60000});
     const caseFrame=page.frames().find(f=>f.url().includes('/cases/erste002/'));assert.ok(caseFrame);await caseFrame.waitForFunction(()=>document.body.dataset.ready==='true',{},{timeout:60000});

@@ -5,7 +5,7 @@
 .case-open #detail-ui{pointer-events:none;}
 .case-open #detail-ui button{pointer-events:none;}
 .case-open .terminal-language-site{visibility:hidden;}
-.case-approaching #stage :is(.scene-atmosphere,.brand,.system-nav,.powered,.system-footer,#archive-ui,#detail-ui,#inspection-marks,#inspection-text){visibility:hidden!important;}
+.case-approaching #stage :is(.scene-atmosphere,.brand,.archive-directory,.system-nav,.powered,.system-footer,#archive-ui,#detail-ui,#inspection-marks,#inspection-text){visibility:hidden!important;}
 .project-detail-heading{overflow-wrap:normal;}
 .project-detail-title-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin:30px 0 13px;}
 .detail-content .project-detail-title-row>h2{margin:0;min-width:0;}

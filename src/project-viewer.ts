@@ -26,7 +26,7 @@ function finishProjectClose() {
   const projectId = activeFrame?.dataset.projectId;
   if (activeFrame && getProject(projectId)?.releaseOnClose) releaseFrame(activeFrame);
   activeFrame = undefined;
-  siteNavigation.showTerminal();
+  siteNavigation.hideProject();
   cancelAnimationFrame(returnFrame);
   document.documentElement.classList.remove('case-returning');
   document.documentElement.style.removeProperty('--case-return-ui');
@@ -39,7 +39,7 @@ function finishProjectClose() {
   window.dispatchEvent(new CustomEvent('design-terminal:case-showcase', { detail: { projectId } }));
   if (opener && opener !== document.body && opener.getClientRects().length && !opener.closest('[hidden],[inert]'))
     opener.focus({ preventScroll: true });
-  else siteNavigation.focus();
+  else document.querySelector<HTMLButtonElement>('#stage .back-button')?.focus({ preventScroll: true });
 }
 /** Cached case iframes keep their own RAF; tell them to stop when hidden. */
 function tellCase(type: 'pause' | 'resume') {

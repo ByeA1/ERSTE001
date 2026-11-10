@@ -35,6 +35,6 @@
 .project-case[data-case-phase=returning] .case-entry-scan{display:block;}
 .project-case[data-case-phase=returning] .case-entry-scan i{top:var(--return-scan-y,100%);}
 .project-case[data-case-phase=returning] .case-entry-scan span{display:none;}
-.case-returning #stage :is(.brand,.site-navigation,.system-nav,.system-footer,.powered,#detail-ui,.terminal-language-site,#inspection-marks,#inspection-text){opacity:var(--case-return-ui,0)!important;pointer-events:none;}
+.case-returning #stage > :is(.brand,.archive-directory,.system-footer,.powered,#detail-ui,.terminal-language-site,#inspection-marks,#inspection-text){opacity:var(--case-return-ui,0)!important;pointer-events:none;}
 @keyframes case-return-document{from{opacity:1;transform:scale(1)}to{opacity:0;transform:scale(.965)}}
 @media(prefers-reduced-motion:reduce){.project-case[data-case-phase=returning] .project-case-frame{animation:none;}}

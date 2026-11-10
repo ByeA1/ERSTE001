@@ -256,7 +256,7 @@ try {
           assert.equal(
             await page
               .locator(
-                '.project-directory [data-showcase-project="future-public-services"]',
+                '.archive-directory [data-directory-id="future-public-services"]',
               )
               .count(),
             1,
