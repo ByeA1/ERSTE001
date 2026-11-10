@@ -18,7 +18,7 @@ for (const [weight, font] of Object.entries(fonts)) {
     throw Error(`Licensed font checksum mismatch: ${weight}`);
 }
 const files = [...new Set([...metadata.files, 'sw.js', 'pwa-build.json', 'update.html', 'update.js',
-  'fonts/novecento/RhineLabNovecento.css'])].sort();
+  'fonts/novecento/RhineLabNovecento.css', 'cases/erste002/assets/shell-full.glb'])].sort();
 const entries = [];
 for (const path of files) {
   const from = resolve(source, path);
@@ -39,7 +39,7 @@ for (const { path, bytes } of entries) {
   await mkdir(dirname(target), { recursive: true });
   await writeFile(target, bytes);
 }
-const immutable = files.filter(path => /^assets\/archive-(cassette|assembly)\.[a-f0-9]{16}\.glb$/.test(path));
+const immutable = files.filter(path => /^(?:assets\/archive-(cassette|assembly)\.[a-f0-9]{16}\.glb|cases\/erste002\/assets\/shell-full\.[a-f0-9]{16}\.glb\.bin)$/.test(path));
 const headers = [
   '/fonts/misans-webfont-4.3.1/*\n  Cache-Control: public, max-age=31536000, immutable',
   ...immutable.map(path => `/${path}\n  Cache-Control: public, max-age=31536000, immutable`),

@@ -485,10 +485,6 @@ button {
 }
 .read-file > span {
   font-size: 24px;
-  transition: transform 0.3s;
-}
-.read-file:hover > span {
-  transform: translateX(9px);
 }
 .archive-counter {
   position: absolute;
@@ -1686,6 +1682,7 @@ button {
 }
 [data-mode="archive"] .callout-rule {
   transform: scaleX(1);
+  transition: none;
 }
 [data-mode="archive"] .callout-rule i {
   opacity: 1;

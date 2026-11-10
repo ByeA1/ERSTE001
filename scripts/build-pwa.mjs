@@ -1,7 +1,21 @@
 import { readdir, readFile, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
+import { gzipSync } from "node:zlib";
 import { resolve } from "node:path";
 const root=resolve('dist');
+const casePath = 'cases/erste002';
+const rawModel = `${casePath}/assets/shell-full.glb`;
+const originalModel = await readFile(resolve(root, rawModel));
+const modelHash = createHash('sha256').update(originalModel).digest('hex').slice(0, 16);
+const packedModel = `assets/shell-full.${modelHash}.glb.bin`;
+await writeFile(resolve(root, casePath, packedModel), gzipSync(originalModel, { level: 9 }));
+const rawPreload = 'data-story-model href="./assets/shell-full.glb"';
+for (const page of ['index.html', 'assembly.html']) {
+  const casePage = resolve(root, casePath, page);
+  const caseHtml = await readFile(casePage, 'utf8');
+  if (!caseHtml.includes(rawPreload)) throw Error(`ERSTE002 model preload not found in ${page}`);
+  await writeFile(casePage, caseHtml.replace(rawPreload, `data-story-model href="./${packedModel}"`));
+}
 const all=await readdir(root,{recursive:true});
 // Files that must never sit in the install-time cache.
 // - 753 MiSans shards (23 MB) are cached at runtime, the first time a page
@@ -11,11 +25,13 @@ const all=await readdir(root,{recursive:true});
 const excluded=path=>
   /^fonts\/.*\.woff2$/.test(path)||
   /^cases\/_template\//.test(path)||
+  path === rawModel ||
+  /^cases\/erste002\/assets\/shell-(?:full\.(?:rev2|vva-backup)|hi(?:\.three-part\.backup)?)\.glb$/.test(path)||
   /^assets\/archive-(cassette|assembly)\.glb$/.test(path);
 
 const files=all.map(path=>path.replaceAll('\\','/')).filter(path=>
   path==='index.html'||path==='manifest.webmanifest'||path==='favicon.svg'||
-  /^cases\/.*\.(html|css|js|avif|webp|png|jpe?g|svg|woff2|glb|json)$/.test(path)||
+  /^cases\/.*\.(html|css|js|avif|webp|png|jpe?g|svg|woff2|glb(?:\.bin)?|json)$/.test(path)||
   /^(assets|icons|archives|licenses)\/[^/]+\.[^/]+$/.test(path)||
   /^fonts\/.*\.(pdf|txt|json|md)$/.test(path)||
   /^audio\/(atmosphere|motif|pulse)\.ogg$/.test(path)

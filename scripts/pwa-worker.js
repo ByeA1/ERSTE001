@@ -9,6 +9,7 @@ const FONT_CACHE = PREFIX + "fonts";
 const urls = FILES.map(path => new URL(path, self.registration.scope).href);
 const allowed = new Set(urls);
 const index = new URL("index.html", self.registration.scope).href;
+const rawCaseModel = new URL("cases/erste002/assets/shell-full.glb", self.registration.scope).href;
 
 self.addEventListener("install", event => {
   event.waitUntil((async () => {
@@ -21,7 +22,7 @@ self.addEventListener("install", event => {
       const workers = Array.from({ length: 6 }, async () => {
         while (next < urls.length) {
           const url = urls[next++];
-          const immutable = /\/fonts\/misans-webfont-4\.3\.1\//.test(url) || /\/assets\/archive-(cassette|assembly)\.[a-f0-9]{16}\.glb$/.test(url);
+          const immutable = /\/fonts\/misans-webfont-4\.3\.1\//.test(url) || /\/assets\/(?:archive-(cassette|assembly)\.[a-f0-9]{16}\.glb|shell-full\.[a-f0-9]{16}\.glb\.bin)$/.test(url);
           if (url === index) {
             // Pages redirects index.html to the directory URL. Keep the release's
             // cache key, but fetch the canonical page without a followed redirect.
@@ -73,6 +74,18 @@ self.addEventListener("fetch", event => {
   const navigation = event.request.mode === "navigate" &&
     (url.href === self.registration.scope || url.href === index);
   const key = navigation ? index : url.href;
+  if (key === rawCaseModel && !allowed.has(key)) {
+    // Older browsers request the raw GLB. Store it only if it is used.
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE);
+      const hit = await cache.match(key);
+      if (hit) return hit;
+      const response = await fetch(event.request);
+      if (response.ok) await cache.put(key, response.clone());
+      return response;
+    })());
+    return;
+  }
   if (!allowed.has(key)) return;
   event.respondWith((async () => {
     const cache = await caches.open(CACHE);

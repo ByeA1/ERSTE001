@@ -1,7 +1,9 @@
 {
+  "featuredProject": "erste002",
   "projects": [
     {
       "id": "erste001",
+      "navigationTheme": "light",
       "number": "001",
       "title": "ERSTE001",
       "page": "/cases/erste001/index.html",
@@ -14,6 +16,8 @@
     },
     {
       "id": "erste002",
+      "navigationTheme": "dark",
+      "releaseOnClose": true,
       "number": "002",
       "title": "ERSTE002",
       "page": "/cases/erste002/index.html",

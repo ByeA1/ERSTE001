@@ -200,6 +200,11 @@ body[data-mode="free"] #scene-root {
   display: flex;
   gap: 7px;
 }
+html[data-project-hosted] .topbar {
+  justify-content: flex-start;
+  border-bottom: 0;
+}
+html[data-project-hosted] #editor-toggle { display: none; }
 .caption {
   position: absolute;
   z-index: 2;

@@ -12,9 +12,15 @@ export interface ProjectDefinition {
   subtitle?: string;
   status?: string;
   summary?: string;
+  navigationTheme?: 'light' | 'dark';
+  releaseOnClose?: boolean;
 }
 
-export const projects: ProjectDefinition[] = registry.projects;
+export const projects: ProjectDefinition[] = registry.projects.map(project => ({
+  ...project,
+  navigationTheme: project.navigationTheme === 'dark' ? 'dark' : 'light',
+}));
+export const featuredProjectId = registry.featuredProject;
 export function getProject(id?: string) {
   return projects.find(project => project.id === id);
 }

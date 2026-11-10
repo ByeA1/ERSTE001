@@ -10,6 +10,8 @@ for (const project of registry.projects) {
   ids.add(project.id);
   if (typeof project.title !== 'string' || !project.title.trim() || !/^[A-Z0-9-]{1,12}$/.test(project.number)) throw Error(`项目标题或编号无效：${project.id}`);
   if (project.shortcut !== undefined && typeof project.shortcut !== 'boolean') throw Error(`shortcut 必须为布尔值：${project.id}`);
+  if (project.navigationTheme !== undefined && !['light', 'dark'].includes(project.navigationTheme)) throw Error(`导航主题无效：${project.id}`);
+  if (project.releaseOnClose !== undefined && typeof project.releaseOnClose !== 'boolean') throw Error(`releaseOnClose 必须为布尔值：${project.id}`);
   if (project.page !== null) {
     if (typeof project.page !== 'string' || !/^\/cases\/[a-zA-Z0-9_/-]+\.html$/.test(project.page) || project.page.includes('..')) throw Error(`page 必须是 /cases/ 下的本站 HTML 路径：${project.id}`);
     const file = await stat(resolve('public', project.page.slice(1))).catch(() => null);
@@ -17,6 +19,7 @@ for (const project of registry.projects) {
   }
   if (project.externalUrl && new URL(project.externalUrl).protocol !== 'https:') throw Error(`外链必须为 HTTPS：${project.id}`);
 }
+if (!registry.projects.some(project => project.id === registry.featuredProject && project.page)) throw Error('主推项目必须是已注册的本站项目');
 for (const record of archives.records) {
   if (record.projectId && !ids.has(record.projectId)) throw Error(`档案 ${record.id} 引用了未注册项目 ${record.projectId}`);
   if (record.section && !/^[A-Za-z][\w:.-]{0,79}$/.test(record.section)) throw Error(`章节 ID 无效：${record.id}`);

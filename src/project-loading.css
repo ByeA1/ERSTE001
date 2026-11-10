@@ -1,4 +1,4 @@
-.case-loading{position:absolute;z-index:2;inset:64px 0 0;display:grid;place-items:center;overflow:hidden;background:var(--theme-paper,#eae5e1);color:var(--theme-ink,#171713);font-family:MiSans,Arial,sans-serif;opacity:1;transition:opacity 420ms ease;}
+.case-loading{position:absolute;z-index:2;inset:0;display:grid;place-items:center;overflow:hidden;background:var(--theme-paper,#eae5e1);color:var(--theme-ink,#171713);font-family:MiSans,Arial,sans-serif;opacity:1;transition:opacity 420ms ease;}
 .case-loading[hidden]{display:none;}
 .case-loading-grid{position:absolute;inset:7% 5%;border:1px solid var(--theme-line,#aaa59a);opacity:.3;background:linear-gradient(90deg,transparent calc(50% - .5px),var(--theme-line,#aaa59a) 50%,transparent calc(50% + .5px)),linear-gradient(transparent calc(50% - .5px),var(--theme-line,#aaa59a) 50%,transparent calc(50% + .5px));mask-image:linear-gradient(90deg,#000,transparent 35%,transparent 65%,#000);}
 .case-loading-content{position:relative;width:min(460px,82vw);text-align:center;padding:24px 0;}
@@ -31,21 +31,21 @@
 .project-case-frame{opacity:1;transition:opacity 420ms ease;}
 @keyframes case-orbit{to{transform:rotate(360deg);}}
 @keyframes case-scan{from{transform:translateX(-110%);}to{transform:translateX(450%);}}
-@media(max-width:640px){.case-loading{inset-block-start:60px;}.case-loading-optics{width:180px;height:180px;margin:24px auto;}.case-loading-steps{font-size:9px;letter-spacing:.03em;}.case-loading-foot{font-size:8px;letter-spacing:.03em;}.case-loading-foot span:last-child{display:none;}}
+@media(max-width:640px){.case-loading-optics{width:180px;height:180px;margin:24px auto;}.case-loading-steps{font-size:9px;letter-spacing:.03em;}.case-loading-foot{font-size:8px;letter-spacing:.03em;}.case-loading-foot span:last-child{display:none;}}
 @media(max-height:640px){.case-loading-optics{width:120px;height:120px;margin:12px auto;}.case-loading-optics>div{width:70px;}.case-loading-content{padding:12px 0;}.case-loading-track{margin-top:18px;}.case-loading-kicker{font-size:9px;}}
 @media(max-height:480px){.case-loading-content{padding:0;}.case-loading-kicker{display:none;}.case-loading-optics{width:80px;height:80px;margin:8px auto;}.case-loading-optics>div{width:50px;}.case-loading-optics>i:nth-child(2){inset:7px;}.case-loading h2{font-size:22px;}.case-loading-status{font-size:11px;}.case-loading-track{margin:12px 0 10px;}.case-loading-actions button{margin-top:10px;}.case-loading-foot{font-size:8px;}}
 @media(prefers-reduced-motion:reduce){.case-loading-optics>i,.case-loading-track i{animation:none!important;}.case-loading,.project-case-frame{transition-duration:80ms;}}
 .project-case{transition:background-color 420ms ease;}
 .project-case[open][data-case-phase]{animation:none;}
-.project-case-bar{transition:opacity 300ms ease;}
-.project-case[data-case-phase=approach]{background:transparent;animation:none;}
-.project-case[data-case-phase=approach]::backdrop{background:transparent;}
+.project-case:is([data-case-phase=approach],[data-case-phase=handoff],[data-case-phase=handoff-reveal]){background:transparent;animation:none;}
+.project-case:is([data-case-phase=approach],[data-case-phase=handoff],[data-case-phase=handoff-reveal])::backdrop{background:transparent;}
 .project-case[data-case-phase=approach] .case-loading,.project-case[data-case-phase=approach] .project-case-frame{opacity:0;pointer-events:none;}
+.project-case[data-case-phase=handoff] .project-case-frame{opacity:0;}
+.project-case[data-case-phase=handoff-reveal] .project-case-frame{transition-duration:300ms;}
 .project-case[data-case-phase=approach] .case-loading{transition:none;}
 .project-case[data-case-phase=loading] .case-loading{opacity:1;transition:none;}
 .project-case[data-case-phase=open] .project-case-frame{opacity:1;transition:none;}
 .project-case[data-case-phase=approach] .project-case-close{pointer-events:auto;}
-.project-case-bar{position:relative;z-index:4;}
 .case-entry-scan{display:none;position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;color:var(--theme-ink,#171713);}
 .project-case[data-case-phase=approach][data-entry-scanning=true] .case-entry-scan{display:block;}
 .case-entry-scan i{position:absolute;left:0;right:0;top:var(--entry-scan-y,0%);height:2px;background:currentColor;box-shadow:0 -8px 24px #25282022,0 5px 0 #25282018;}

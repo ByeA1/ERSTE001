@@ -29,10 +29,11 @@ export class ProjectInterface {
   ) {
     this.document = frame.contentDocument!;
     const doc = this.document;
+    doc.documentElement.dataset.projectHosted = 'true';
     const style = doc.createElement("style");
     style.dataset.terminalInterface = "true";
     style.textContent =
-      logoCss +
+      logoCss + '\nhtml[data-project-hosted] [data-project-local-navigation]{display:none!important;}' +
       '\nhtml[data-terminal-motion="reduced"] *,html[data-terminal-motion="reduced"] *::before,html[data-terminal-motion="reduced"] *::after{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important;scroll-behavior:auto!important;}';
     doc.head.append(style);
     doc.addEventListener(
@@ -196,6 +197,7 @@ export class ProjectInterface {
   }
   destroy() {
     this.events.abort();
+    delete this.document.documentElement.dataset.projectHosted;
     this.observer.disconnect();
     this.quality?.disconnect();
     this.logos.forEach((player) => player.destroy());
