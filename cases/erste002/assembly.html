@@ -46,6 +46,7 @@ button:hover{background:#293845}.primary{background:#c1dfd4;color:#10232a;border
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {applyAssemblyFinish} from './assembly-finish.js';
 const viewer=document.getElementById('viewer');
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x0c1219);
 const camera=new THREE.PerspectiveCamera(42,1,.004,10);
@@ -89,15 +90,7 @@ new GLTFLoader().load('./assets/shell-full.glb?v=rev3',gltf=>{
    for(const name of Object.keys(offsets)){
       const g=root.getObjectByName(name);if(!g)console.warn('Missing group:',name);else groups[name]=g;
    }
-   // 配色：滚轮与电池红，按键盖与上盖黑，PCB 深紫
-   const COLORS={Wheel:0xb8342a,Battery_300mAh:0xb8342a,Buttons:0x161618,Shell:0x161618,PCB_Assembly:0x3a1c5c};
-   for(const [name,g] of Object.entries(groups)){
-      const hex=COLORS[name]!==undefined?COLORS[name]:0x8a8f96;
-      g.traverse(o=>{if(o.isMesh){
-         // NX 导出的是硬边法线，焊接顶点后重算法线，表面才平滑
-         o.material=new THREE.MeshStandardMaterial({color:hex,metalness:.04,roughness:.88});
-      }});
-   }
+   root.traverse(o=>{if(o.isMesh)applyAssemblyFinish(o);});
    const status=document.getElementById('status');status.remove();enabled=true;
    camera.up.set(0,0,1);camera.position.set(.175,-.235,.135);orbit.target.set(0,0,-.008);orbit.update();
    console.info('ERSTE002 ready; embedded glTF animation clips:',gltf.animations.map(x=>x.name));

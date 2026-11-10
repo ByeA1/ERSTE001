@@ -6,7 +6,12 @@
       name="viewport"
       content="width=device-width, initial-scale=1, viewport-fit=cover"
     />
-    <title>ERSTE002 · 结构研究</title>
+    <meta
+      name="description"
+      content="ERSTE002 右手人体工学游戏鼠标。通过三维运镜与动态剖切，查看无底壳设计与一体式加强结构。"
+    />
+    <meta name="theme-color" content="#101012" />
+    <title>ERSTE002 · 右手人体工学与结构设计</title>
     <script type="importmap">
       {
         "imports": {
@@ -15,60 +20,113 @@
         }
       }
     </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="./story.css" />
   </head>
-  <body>
-    <main id="story" aria-label="ERSTE002 三维结构研究">
-      <div id="scene-root"></div>
-      <div id="scroller" tabindex="0" aria-label="滚动查看三维结构">
-        <div id="scroll-track"></div>
+  <body data-project-ready="loading" data-look="hero">
+    <main id="story" aria-label="ERSTE002">
+      <div id="scene-root" aria-hidden="true">
+        <div id="button-height-markers" hidden>
+          <svg id="button-height-guide" aria-hidden="true" hidden>
+            <path class="datum"></path>
+            <path class="difference"></path>
+          </svg>
+          <span class="height-marker" id="left-button-height"></span>
+          <span class="height-marker" id="right-button-height"></span>
+          <span class="height-marker" id="high-shell-shoulder" hidden></span>
+          <span class="height-marker" id="low-shell-shoulder" hidden></span>
+          <span class="height-marker" id="left-palm-height" hidden></span>
+          <span class="height-marker" id="right-palm-height" hidden></span>
+          <span class="height-marker" id="rib-section-marker" hidden></span>
+        </div>
       </div>
       <header class="topbar">
         <a class="identity" href="/" aria-label="返回终端"
-          ><span>DESIGN ARCHIVE / 002</span><b>ERSTE002</b></a
+          ><span>ERSTE / DESIGN ARCHIVE</span><b>ERSTE002</b></a
         >
         <div class="tools">
-          <button id="lang" type="button">EN</button
-          ><button id="mode" type="button">自由查看</button
-          ><a class="tool" href="./assembly.html">爆炸图</a
-          ><button id="editor-toggle" type="button" hidden>演出编辑器</button>
+          <button id="lang" type="button">EN</button>
+          <button id="mode" type="button" aria-pressed="false" disabled>
+            自由查看
+          </button>
+          <button id="editor-toggle" type="button" hidden>演出编辑器</button>
         </div>
       </header>
-      <aside class="caption" id="caption">
-        <span>STRUCTURE STUDY / 002</span>
-        <h1 id="cap-title">低矮外壳，向内观察。</h1>
-        <p id="cap-body">滚动探索结构；向上滚动可复原。</p>
-      </aside>
-      <div id="loading" role="status">正在载入三维结构…</div>
+      <section class="caption" id="caption" aria-labelledby="cap-title">
+        <div id="cap-content">
+          <div class="eyebrow">
+            <span id="cap-index" aria-hidden="true">01</span>
+            <span id="cap-tag">PRODUCT FORM</span>
+          </div>
+          <h1 id="cap-title">ERSTE002</h1>
+          <p id="cap-body">
+            为右手设计的超轻量游戏鼠标。非对称曲面从分离式按键延伸到掌心隆起，形成连贯轮廓。
+          </p>
+        </div>
+      </section>
+      <div id="loading" role="status">
+        <p id="loading-copy">正在载入三维模型…</p>
+        <button id="retry" type="button" hidden>重新载入</button>
+      </div>
       <div class="free-controls" id="free-controls" hidden>
         <label
-          ><span id="part-label">部件</span>
-          <select id="part">
+          ><span id="part-label">部件</span
+          ><select id="part">
             <option value="">整体</option>
             <option value="shell_top">上盖</option>
             <option value="button_cover">按键盖</option>
             <option value="wheel">滚轮</option>
             <option value="pcb">主板</option>
             <option value="battery">电池</option>
-            
           </select></label
         >
         <label
-          ><span id="assembly-label">装配</span>
-          <input
+          ><span id="assembly-label">装配</span
+          ><input
             id="assembly"
             type="range"
             min="0"
             max="1"
             step=".001"
             value="0"
+            disabled
         /></label>
-        <button id="explode" type="button">展开</button
-        ><button id="reset" type="button">复位</button>
+        <button id="explode" type="button">展开</button>
+        <button id="extract-part" type="button" disabled>提取部件</button>
+        <button id="turn-part" type="button" disabled>翻转部件</button>
+        <button id="isolate-part" type="button" aria-pressed="false" disabled>
+          仅看此件
+        </button>
+        <button id="reset" type="button">复位</button>
+        <a
+          class="tool"
+          id="assembly-link"
+          href="./assembly.html"
+          target="_blank"
+          rel="noopener"
+          >装配图 ↗</a
+        >
       </div>
-      <footer>
-        <span id="hint">向下滚动 · 镜头 / 灯光 / 剖切</span
-        ><output id="progress">000%</output>
+      <nav id="chapter-nav" class="chapter-nav" aria-label="章节导航"></nav>
+      <footer class="story-footer">
+        <div class="chapter-readout">
+          <span id="chapter-number">01 / 11</span><b id="chapter-title">外观</b>
+        </div>
+        <div class="progress-meter">
+          <span class="meter-track" aria-hidden="true"><span></span></span>
+          <output id="progress" aria-live="off">000%</output>
+        </div>
+        <nav class="chapter-controls" aria-label="演出镜头">
+          <button id="prev-chapter" type="button" disabled>
+            <span aria-hidden="true">←</span><span>上一镜</span>
+          </button>
+          <button id="next-chapter" type="button" disabled>
+            <span>下一镜</span><span aria-hidden="true">→</span>
+          </button>
+          <button id="restart-story" type="button" hidden>
+            <span aria-hidden="true">↺</span><span>回到开头</span>
+          </button>
+        </nav>
       </footer>
       <aside id="editor" hidden aria-label="演出编辑器"></aside>
     </main>

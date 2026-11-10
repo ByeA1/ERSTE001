@@ -1,13 +1,5 @@
-const NAME_MAP = {
-  Mesh_Shell: 'shell_top',
-  Mesh_Buttons: 'button_cover',
-  Mesh_Wheel: 'wheel',
-  PCB_plate: 'pcb',
-  LiPo_300mAh_envelope: 'battery',
-};
 import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
-import { DRACOLoader } from "three/addons/loaders/DRACOLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import {
   DEFAULT_STORY,
@@ -16,72 +8,248 @@ import {
   sampleStory,
   cueStrength,
   captionAt,
-  validateStory,
+  smooth,
+  blendPose,
 } from "./story-timeline.js";
+import { compileStory, editFrame, MODEL } from "./story-segments.js";
+import { applyAssemblyFinish } from "./assembly-finish.js";
+import { StoryAssembly } from "./story-assembly.js";
+import { LIGHT_NAMES, LIGHT_PRESETS } from "./story-lighting.js";
 import { SectionCut } from "./story-section.js";
+import { createStudioEnvironment } from "./studio-environment.js";
+import { createSurfaceGeometry } from "./surface-normals.js";
 import { createEditor } from "./story-editor.js";
 import { RenderFrameLimiter } from "../shared/render-frame.js";
-const renderLimit = new RenderFrameLimiter();
-const $ = (s) => document.querySelector(s),
-  host = $("#scene-root"),
-  scroller = $("#scroller"),
-  loading = $("#loading");
-let story = clone(DEFAULT_STORY),
-  p = 0,
-  draft = null,
-  free = false,
-  helper = false,
-  ready = false,
-  editor = { update() {} },
-  section,
-  model,
-  scale = 1;
-let lang = 0,
-  visible = true,
-  parentPaused = false,
-  raf = 0,
-  lastTime = 0,
-  triangles = 0;
-const meshes = [],
-  parts = new Map(),
-  origins = new Map(),
-  target = new THREE.Vector3();
-let renderer, scene, camera, controls, ambient, lights;
-const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const $ = (s) => document.querySelector(s);
+const host = $("#scene-root");
+const body = document.body;
+const loading = $("#loading");
+const loadingCopy = $("#loading-copy");
+const retry = $("#retry");
+const modeButton = $("#mode");
+const previous = $("#prev-chapter");
+const next = $("#next-chapter");
+const restart = $("#restart-story");
+const chapterNav = $("#chapter-nav");
+const caption = $("#caption");
+const capContent = $("#cap-content");
+const capIndex = $("#cap-index");
+const progress = $("#progress");
+const chapterNumber = $("#chapter-number");
+const chapterTitle = $("#chapter-title");
+const partSelect = $("#part");
+const assembly = $("#assembly");
+const extractButton = $("#extract-part"),
+  isolateButton = $("#isolate-part"),
+  turnButton = $("#turn-part");
 const status = document.createElement("span");
 status.id = "statusText";
 status.hidden = true;
 status.textContent = "LOADING";
-document.body.append(status);
-$("#assembly").disabled = true;
+body.append(status);
+
+const partNames = {
+  Mesh_Shell: "shell_top",
+  Mesh_Buttons: "button_cover",
+  Mesh_Wheel: "wheel",
+  PCB_plate: "pcb",
+  LiPo_300mAh_envelope: "battery",
+};
+const heightMarkers = $("#button-height-markers");
+const heightGuide = $("#button-height-guide");
+const heightDatum = heightGuide.querySelector(".datum");
+const heightDifference = heightGuide.querySelector(".difference");
+const heightScreen = [new THREE.Vector2(), new THREE.Vector2()];
+const heightLandmarks = [
+  {
+    node: $("#left-button-height"),
+    point: new THREE.Vector3(0.03434, 0.01199, 0.09105),
+    text: ["食指 · 高", "INDEX · HIGH"],
+  },
+  {
+    node: $("#right-button-height"),
+    point: new THREE.Vector3(-0.03458, 0.00536, 0.09099),
+    text: ["中指 · 低", "MIDDLE · LOW"],
+  },
+];
+const palmLandmarks = [
+  {
+    node: $("#left-palm-height"),
+    point: new THREE.Vector3(0.05, 0.03158268, -0.06),
+    text: ["左侧支撑", "LEFT SUPPORT"],
+  },
+  {
+    node: $("#right-palm-height"),
+    point: new THREE.Vector3(-0.05, 0.02921289, -0.06),
+    text: ["右侧下落", "RIGHT FALLAWAY"],
+  },
+];
+const shellLandmarks = [
+  {
+    node: $("#high-shell-shoulder"),
+    point: new THREE.Vector3(0.048, 0.042317, -0.015),
+    text: ["高侧延续", "HIGH SIDE"],
+  },
+  {
+    node: $("#low-shell-shoulder"),
+    point: new THREE.Vector3(-0.048, 0.037686, -0.015),
+    text: ["低侧收拢", "LOW SIDE"],
+  },
+];
+const sectionLandmarks = [
+  {
+    node: $("#rib-section-marker"),
+    point: new THREE.Vector3(0.015, 0.088, -0.041),
+    text: ["肋腹与下缘", "WEB & LOWER FLANGE"],
+  },
+];
+const markerSets = {
+  "button-height": heightLandmarks,
+  "shell-shoulders": shellLandmarks,
+  "palm-support": palmLandmarks,
+  "section-rib": sectionLandmarks,
+};
+let activeMarkers = [];
+const projected = new THREE.Vector3();
+const portrait = matchMedia("(max-width: 740px), (orientation: portrait)");
+const partLabels = [
+  ["整体", "All parts"],
+  ["上盖", "Upper shell"],
+  ["按键盖", "Button cover"],
+  ["滚轮", "Scroll wheel"],
+  ["主板", "Main board"],
+  ["电池", "Battery"],
+];
+const renderLimit = new RenderFrameLimiter();
+const motion = matchMedia("(prefers-reduced-motion: reduce)");
+const meshes = [],
+  parts = new Map();
+let assemblyRig,
+  isolated = "",
+  assemblyMove = null,
+  freeRest;
+const extractedParts = new Set();
+const target = new THREE.Vector3();
+const capTitle = $("#cap-title"),
+  capBody = $("#cap-body"),
+  capTag = $("#cap-tag");
+const initialReadout = ["外观", "Form"];
+const looks = {
+  "01 / PRODUCT FORM": "hero",
+  "02 / INDEX & MIDDLE": "diagram",
+  "02 / ASYMMETRIC SURFACE": "surface",
+  "02 / PALM & WRIST": "surface",
+  "03 / ASSEMBLY RELATIONSHIP": "assembly",
+  "03 / FULL EXPLODED VIEW": "assembly",
+  "04 / LATERAL SOLID SECTION": "section",
+  "04 / RIB CROSS-SECTION": "section",
+  "04 / UPPER SHELL JUNCTION": "section",
+  "04 / BUTTON COVER UNDERSIDE": "specimen",
+  "04 / REASSEMBLED": "hero",
+};
+let story = DEFAULT_STORY,
+  source = DEFAULT_STORY,
+  chapters = [],
+  shots = [],
+  shotIndex = 0;
+let p = 0,
+  playback = null,
+  draft = null,
+  free = false,
+  helper = false;
+let renderer, scene, camera, controls, ambient, lights, section, model;
+let studioEnvironment;
+let originalFov = 32,
+  lang = 0,
+  lastCaption = null,
+  triangles = 0;
+let ready = false,
+  visible = true,
+  parentPaused = false,
+  parentReduced = false;
+let raf = 0,
+  dirty = false,
+  lastTime = 0,
+  pixelRatio = 0,
+  renderWidth = 0,
+  renderHeight = 0;
+let editor = { update() {} };
+
+function reducedMotion() {
+  return motion.matches || parentReduced;
+}
+function updateNavigation() {
+  const selected = shots[shotIndex]?.chapter;
+  const number = (value) => String(value).padStart(2, "0");
+  chapterNumber.textContent =
+    number(shotIndex + 1) + " / " + number(shots.length || 1);
+  chapterTitle.textContent = selected?.title[lang] ?? initialReadout[lang];
+  const busy =
+    body.dataset.projectReady === "loading" || Boolean(playback && !free);
+  const last = shots.length > 1 && shotIndex === shots.length - 1;
+  previous.disabled = busy || shotIndex === 0;
+  next.disabled = busy || shotIndex >= shots.length - 1;
+  next.hidden = last && !busy;
+  restart.hidden = !last || busy;
+  for (const [index, button] of Array.from(chapterNav.children).entries()) {
+    const chapter = chapters[index];
+    const label = chapter.title[lang];
+    button.setAttribute("aria-label", `${number(index + 1)} ${label}`);
+    button.title = label;
+    button.lastElementChild.textContent = label;
+    if (chapter === selected) button.setAttribute("aria-current", "step");
+    else button.removeAttribute("aria-current");
+    button.disabled = body.dataset.projectReady === "loading";
+  }
+}
 function setLanguage(value, notify = false) {
   lang = value === "en" ? 1 : 0;
   document.documentElement.lang = lang ? "en" : "zh-CN";
   $("#lang").textContent = lang ? "中" : "EN";
+  $(".identity").setAttribute(
+    "aria-label",
+    lang ? "Back to terminal" : "返回终端",
+  );
+  $(".chapter-controls").setAttribute(
+    "aria-label",
+    lang ? "Story shots" : "演出镜头",
+  );
+  chapterNav.setAttribute("aria-label", lang ? "Chapters" : "章节导航");
+  previous.lastElementChild.textContent = lang ? "Previous" : "上一镜";
+  next.firstElementChild.textContent = lang ? "Next" : "下一镜";
+  restart.lastElementChild.textContent = lang ? "Back to start" : "回到开头";
   $("#part-label").textContent = lang ? "Part" : "部件";
   $("#assembly-label").textContent = lang ? "Assembly" : "装配";
   $("#explode").textContent = lang ? "Explode" : "展开";
   $("#reset").textContent = lang ? "Reset" : "复位";
-  const labels = lang
-    ? ["All parts", "Upper shell", "Button cover", "Scroll wheel", "Main board", "Battery"]
-    : ["整体", "上盖", "按键盖", "滚轮", "主板", "电池"];
-  [...$("#part").options].forEach(
-    (option, i) => (option.textContent = labels[i]),
+  $("#assembly-link").textContent = lang ? "Assembly ↗" : "装配图 ↗";
+  retry.textContent = lang ? "Reload model" : "重新载入";
+  [...partSelect.options].forEach(
+    (option, i) => (option.textContent = partLabels[i][lang]),
   );
-  $("#mode").textContent = free
+  modeButton.textContent = free
     ? lang
-      ? "Return to scroll"
-      : "返回滚动"
+      ? "Return to story"
+      : "返回演出"
     : lang
       ? "Free view"
       : "自由查看";
-  $("#hint").textContent = free
-    ? lang
-      ? "Drag to orbit · Scroll mode resumes the track"
-      : "拖动旋转 · 返回滚动继续演出"
-    : lang
-      ? "SCROLL / CAMERA · LIGHT · SECTION"
-      : "向下滚动 · 镜头 / 灯光 / 剖切";
+  loadingCopy.textContent =
+    body.dataset.projectReady === "failed"
+      ? lang
+        ? "The 3D model could not be displayed."
+        : "暂时无法显示三维模型。"
+      : lang
+        ? "Loading 3D model…"
+        : "正在载入三维模型…";
+  for (const landmarks of Object.values(markerSets))
+    for (const { node, text } of landmarks) node.textContent = text[lang];
+  updatePartControls();
+  lastCaption = null;
+  updateNavigation();
+  updateCaption();
+  invalidate();
   if (notify && parent !== window)
     parent.postMessage(
       { type: "design-terminal:case-language", language: value },
@@ -89,73 +257,176 @@ function setLanguage(value, notify = false) {
     );
 }
 $("#lang").onclick = () => setLanguage(lang ? "zh" : "en", true);
-addEventListener("message", (e) => {
-  if (e.origin !== location.origin || e.source !== parent) return;
-  if (e.data?.type === "design-terminal:case-language")
-    setLanguage(e.data.language);
-  // The terminal keeps the case iframe cached; stop drawing while it is closed.
-  if (e.data?.type === "design-terminal:pause") {
+$(".identity").onclick = (event) => {
+  if (parent === window) return;
+  event.preventDefault();
+  parent.postMessage(
+    { type: "design-terminal:close-project" },
+    location.origin,
+  );
+};
+addEventListener("message", (event) => {
+  if (event.origin !== location.origin || event.source !== parent) return;
+  const { type, language, reduced } = event.data ?? {};
+  if (type === "design-terminal:case-language") setLanguage(language);
+  if (type === "design-terminal:pause") {
     parentPaused = true;
     pause();
   }
-  if (e.data?.type === "design-terminal:resume") {
+  if (type === "design-terminal:resume") {
     parentPaused = false;
-    startLoop();
+    resize();
+    invalidate();
+  }
+  if (type === "design-terminal:case-policy") {
+    parentReduced = Boolean(reduced);
+    resize();
+    invalidate();
   }
 });
-$(".identity").onclick = (e) => {
-  if (parent !== window) {
-    e.preventDefault();
-    parent.postMessage(
-      { type: "design-terminal:close-project" },
-      location.origin,
-    );
-  }
-};
-function scrollProgress() {
-  return clamp(
-    scroller.scrollTop /
-      Math.max(1, scroller.scrollHeight - scroller.clientHeight),
+motion.addEventListener("change", invalidate);
+function configureStory(value) {
+  const compiled = compileStory(value);
+  source = value;
+  story = compiled;
+  chapters =
+    compiled.ranges ??
+    compiled.captions.map((item, i) => ({
+      id: "legacy-" + (i + 1),
+      title: item.title,
+      start: item.start,
+      end: item.end,
+    }));
+  shots = compiled.captions.map((item, index) => ({
+    start: item.start,
+    chapter: chapters.findLast((chapter) => item.start >= chapter.start - 1e-7),
+    hold:
+      index === compiled.captions.length - 1 && (item.leave ?? item.end) === 1
+        ? 1
+        : ((item.arrive ?? item.start) + (item.leave ?? item.end)) / 2,
+  }));
+  chapterNav.replaceChildren(
+    ...chapters.map((chapter, index) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      const number = document.createElement("span");
+      number.textContent = String(index + 1).padStart(2, "0");
+      button.append(number, document.createElement("span"));
+      button.onclick = () => {
+        const first = shots.find((shot) => shot.chapter === chapter);
+        if (first) seek(first.hold);
+      };
+      return button;
+    }),
+  );
+  shotAtProgress();
+  lastCaption = null;
+  updateNavigation();
+  updateCaption();
+  invalidate();
+}
+function shotAtProgress() {
+  shotIndex = Math.max(
+    0,
+    shots.findLastIndex((item) => p >= item.start - 1e-7),
   );
 }
-scroller.addEventListener(
-  "scroll",
-  () => {
-    draft = null;
-    free = false;
-    setLanguage(lang ? "en" : "zh");
-    controls && (controls.enabled = false);
-    $("#free-controls").hidden = true;
-    document.body.dataset.mode = "scroll";
-  },
-  { passive: true },
-);
-function mode(value) {
+function navigate(offset) {
+  const index = shotIndex + offset;
+  if (
+    body.dataset.projectReady === "loading" ||
+    index < 0 ||
+    index >= shots.length ||
+    (playback && !free)
+  )
+    return;
+  playToShot(index);
+}
+function playToShot(index) {
+  const shot = shots[index];
+  if (!shot) return;
+  if (!ready || reducedMotion()) {
+    seek(shot.hold);
+    return;
+  }
+  setFree(false);
+  draft = null;
+  shotIndex = index;
+  const to = shot.hold;
+  const duration = clamp(Math.abs(to - p) * (story.duration ?? 16), 0.45, 5.4);
+  playback = {
+    from: p,
+    to,
+    duration,
+    outgoing: captionAt(story, p)?.start,
+    elapsed: 0,
+  };
+  updateNavigation();
+  invalidate();
+}
+previous.onclick = () => navigate(-1);
+next.onclick = () => navigate(1);
+restart.onclick = () => {
+  seek(0);
+  playToShot(0);
+  chapterNav.firstElementChild?.focus();
+};
+addEventListener("keydown", (event) => {
+  if (
+    event.altKey ||
+    event.ctrlKey ||
+    event.metaKey ||
+    free ||
+    event.target.closest("button, input, select, textarea, a, #editor")
+  )
+    return;
+  if (event.key !== "ArrowLeft" && event.key !== "ArrowRight") return;
+  event.preventDefault();
+  navigate(event.key === "ArrowLeft" ? -1 : 1);
+});
+function setFree(value) {
+  if (free === value) return;
   free = value;
-  document.body.dataset.mode = free ? "free" : "scroll";
+  if (!free) {
+    isolated = "";
+    assemblyMove = null;
+    extractedParts.clear();
+  } else freeRest = clone(draft.assembly);
+  body.dataset.mode = free ? "free" : "chapter";
   $("#free-controls").hidden = !free;
+  modeButton.setAttribute("aria-pressed", String(free));
   if (controls) {
     controls.enabled = free;
-    controls.target.copy(target);
-    controls.update();
+    if (free) {
+      controls.target.fromArray(draft.camera.target);
+      camera.position.fromArray(draft.camera.position);
+      controls.update();
+    }
   }
   setLanguage(lang ? "en" : "zh");
 }
-$("#mode").onclick = () => {
+modeButton.onclick = () => {
   if (!ready) return;
-  if (!free) draft = capture();
-  else draft = null;
-  mode(!free);
+  if (!free) {
+    const current = capture();
+    draft = current;
+    draft.cut.enabled = false;
+    setFree(true);
+  } else {
+    draft = null;
+    setFree(false);
+  }
+  invalidate();
 };
 function capture() {
-  const v = clone(draft || sampleStory(story, p));
-  if (camera) {
-    v.camera.position = camera.position.toArray();
-    v.camera.target = (free ? controls.target : target).toArray();
-    v.camera.fov = camera.fov;
+  const value = clone(draft || sampleStory(story, p));
+  if (ready) {
+    value.camera.position = camera.position.toArray();
+    value.camera.target = (free ? controls.target : target).toArray();
+    value.camera.fov = originalFov;
   }
-  v.at = p;
-  return v;
+  value.at = p;
+  return value;
 }
 function aim(name) {
   if (!parts.has(name)) return;
@@ -163,318 +434,577 @@ function aim(name) {
   const center = new THREE.Box3()
     .setFromObject(parts.get(name))
     .getCenter(new THREE.Vector3());
-  draft.lights.focus.target = center.toArray();
-  draft.lights.focus.position = center
+  const light = draft.lights.focus;
+  light.target = center.toArray();
+  light.position = center
     .clone()
     .add(new THREE.Vector3(0.12, 0.16, 0.12))
     .toArray();
-  draft.lights.focus.intensity = 5;
-  draft.lights.key.intensity = 0.6;
-  draft.lights.rim.intensity = 0.35;
-  draft.ambient = 0.15;
+  light.intensity = 4;
+  draft.lights.key.intensity = 0.85;
+  draft.lights.rim.intensity = 0.65;
+  draft.lights.fill.intensity = 0.8;
+  draft.ambient = 0.4;
   draft.focus = name;
+  invalidate();
 }
-$("#part").onchange = () => {
-  const name = $("#part").value;
-  if (name) aim(name);
+function partTransformed(part) {
+  return extractedParts.has(part);
+}
+function updatePartControls() {
+  const part = partSelect.value;
+  const extracted = partTransformed(part);
+  extractButton.disabled = turnButton.disabled = isolateButton.disabled = !part;
+  extractButton.textContent = extracted
+    ? lang
+      ? "Return part"
+      : "归位部件"
+    : lang
+      ? "Extract"
+      : "提取部件";
+  turnButton.textContent = lang ? "Flip part" : "翻转部件";
+  isolateButton.textContent = isolated
+    ? lang
+      ? "Show all"
+      : "显示全部"
+    : lang
+      ? "Isolate"
+      : "仅看此件";
+  isolateButton.setAttribute("aria-pressed", String(Boolean(isolated)));
+}
+function moveAssembly(change) {
+  draft = capture();
+  const from = { explode: draft.explode, assembly: draft.assembly };
+  const to = clone(from);
+  change(to);
+  assemblyMove = { from, to, elapsed: 0 };
+  invalidate();
+}
+extractButton.onclick = () => {
+  const part = partSelect.value;
+  const extracted = partTransformed(part);
+  const towardCamera = camera.position.clone().sub(controls.target).normalize();
+  const right = new THREE.Vector3().setFromMatrixColumn(camera.matrixWorld, 0);
+  if (extracted) extractedParts.delete(part);
+  else extractedParts.add(part);
+  moveAssembly((value) => {
+    value.assembly[part] = extracted
+      ? clone(freeRest[part])
+      : {
+          ...value.assembly[part],
+          offset: towardCamera
+            .multiplyScalar(0.065)
+            .addScaledVector(right, 0.06)
+            .add(new THREE.Vector3().fromArray(freeRest[part].offset))
+            .toArray(),
+        };
+  });
+};
+turnButton.onclick = () => {
+  const part = partSelect.value;
+  moveAssembly((value) => {
+    const transform = value.assembly[part];
+    const rest = freeRest[part].rotation[0];
+    transform.rotation[0] =
+      Math.abs(transform.rotation[0] - rest) > 1
+        ? rest
+        : rest + (rest > 180 ? -165 : 165);
+  });
+};
+isolateButton.onclick = () => {
+  isolated = isolated ? "" : partSelect.value;
+  updatePartControls();
+  invalidate();
+};
+partSelect.onchange = () => {
+  if (isolated) isolated = partSelect.value;
+  if (partSelect.value) aim(partSelect.value);
   else {
     draft = capture();
-    draft.lights = clone(DEFAULT_STORY.keyframes[0].lights);
-    draft.ambient = 0.6;
+    draft.lights = clone(story.keyframes[0].lights);
+    draft.ambient = story.keyframes[0].ambient;
     draft.focus = "";
+    invalidate();
   }
 };
-$("#assembly").oninput = () => {
+assembly.oninput = () => {
+  assemblyMove = null;
   draft = capture();
-  draft.explode = Number($("#assembly").value);
+  draft.explode = Number(assembly.value);
+  invalidate();
 };
 $("#explode").onclick = () => {
-  draft = capture();
-  draft.explode = 1;
+  const preset = clone(LIGHT_PRESETS.Assembly);
+  moveAssembly((value) => {
+    value.explode = 1;
+  });
+  draft.lights = preset.lights;
+  draft.ambient = preset.ambient;
+  draft.focus = "";
 };
 $("#reset").onclick = () => {
-  draft = clone(DEFAULT_STORY.keyframes[0]);
-  controls.target.set(0, 0, 0);
-  camera.position.fromArray(draft.camera.position);
-  camera.fov = draft.camera.fov;
+  const home = clone(story.keyframes[0]);
+  freeRest = clone(home.assembly);
+  extractedParts.clear();
+  moveAssembly((value) => {
+    value.explode = 0;
+    value.assembly = home.assembly;
+  });
+  isolated = "";
+  draft.lights = home.lights;
+  draft.ambient = home.ambient;
+  draft.electronics = 0;
+  draft.focus = "";
+  camera.position.fromArray(home.camera.position);
+  controls.target.fromArray(home.camera.target);
   controls.update();
-  $("#assembly").value = 0;
-  $("#part").value = "";
+  invalidate();
 };
+retry.onclick = () => location.reload();
 function resize() {
   if (!renderer) return;
   const w = host.clientWidth,
     h = host.clientHeight;
-  renderer.setSize(w, h, false);
-  camera.aspect = w / Math.max(h, 1);
-  camera.updateProjectionMatrix();
-}
-addEventListener("resize", resize);
-function startLoop() {
-  if (ready && !raf && visible && !parentPaused && !document.hidden) {
-    lastTime = performance.now();
-    renderLimit.reset();
-    raf = requestAnimationFrame(tick);
+  if (w < 1 || h < 1) return;
+  const tier = document.documentElement.dataset.terminalQuality;
+  const mobile = portrait.matches;
+  const ratio = Math.min(
+    devicePixelRatio,
+    tier === "low" ? 1 : mobile ? 1.35 : 1.65,
+    Math.sqrt(1_450_000 / (w * h)),
+  );
+  if (pixelRatio !== ratio) {
+    renderer.setPixelRatio(ratio);
+    pixelRatio = ratio;
   }
+  if (renderWidth !== w || renderHeight !== h) {
+    renderer.setSize(w, h, false);
+    renderWidth = w;
+    renderHeight = h;
+  }
+  camera.aspect = w / h;
+  invalidate();
+}
+new ResizeObserver(resize).observe(host);
+addEventListener("resize", resize);
+function canRender() {
+  return visible && !parentPaused && !document.hidden;
+}
+function invalidate() {
+  dirty = true;
+  if (!raf && canRender()) raf = requestAnimationFrame(tick);
 }
 function pause() {
   cancelAnimationFrame(raf);
   raf = 0;
+  lastTime = 0;
 }
 document.addEventListener("visibilitychange", () =>
-  document.hidden ? pause() : startLoop(),
+  document.hidden ? pause() : invalidate(),
 );
-addEventListener("pagehide", () => {
-  pause();
-  try {
-    renderer?.dispose();
-    scene?.traverse?.((o) => {
-      if (o.isMesh) {
-        o.geometry?.dispose?.();
-        const m = o.material;
-        if (Array.isArray(m)) m.forEach((x) => x.dispose?.());
-        else m?.dispose?.();
-      }
-    });
-    controls?.dispose?.();
-  } catch {}
-});
-new IntersectionObserver((entries) => {
-  visible = entries[0].isIntersecting;
-  if (visible) startLoop();
+new IntersectionObserver(([entry]) => {
+  visible = entry.isIntersecting;
+  if (visible) invalidate();
   else pause();
 }).observe(host);
+addEventListener("pageshow", (event) => {
+  if (event.persisted) invalidate();
+});
+addEventListener("pagehide", (event) => {
+  pause();
+  if (event.persisted) return;
+  scene?.traverse((object) => {
+    if (!object.isMesh) return;
+    object.geometry?.dispose();
+    object.material?.dispose();
+  });
+  controls?.dispose();
+  studioEnvironment?.dispose();
+  renderer?.dispose();
+});
+function updateCaption() {
+  const cap =
+    body.dataset.projectReady !== "loading" ? captionAt(story, p) : null;
+  const key = cap ? cap.start : null;
+  if (
+    cap &&
+    (lastCaption !== key || capTitle.textContent !== cap.title[lang])
+  ) {
+    const frame = shots.findIndex((shot) => shot.start === key) + 1;
+    capIndex.textContent = frame ? String(frame).padStart(2, "0") : "";
+    capTag.textContent = cap.tag.replace(/^\d+ \/ /, "");
+    capTitle.textContent = cap.title[lang];
+    capBody.textContent = cap.body[lang];
+    body.dataset.segment =
+      chapters.findLast((item) => cap.start >= item.start - 1e-7)?.id ??
+      "exterior";
+    body.dataset.look = looks[cap.tag] ?? "";
+    lastCaption = key;
+  }
+  if (cap) body.dataset.captionLayout = cap.layout ?? "left";
+  const envelope =
+    playback && key === playback.outgoing
+      ? 1 - smooth(playback.elapsed / Math.min(0.28, playback.duration))
+      : 1;
+  const still = reducedMotion();
+  const annotation = cap && p >= (cap.arrive ?? cap.start) ? cap.annotation : "";
+  activeMarkers = ready && !free ? (markerSets[annotation] ?? []) : [];
+  heightMarkers.hidden = activeMarkers.length === 0;
+  heightGuide.toggleAttribute("hidden", activeMarkers !== heightLandmarks);
+  for (const [name, landmarks] of Object.entries(markerSets))
+    for (const { node } of landmarks) node.hidden = annotation !== name;
+  if (!heightMarkers.hidden)
+    heightMarkers.style.opacity = still ? 1 : cap.opacity * envelope;
+  capContent.style.opacity = cap ? (still ? 1 : envelope) : 0;
+  const reveal = still ? 1 : (cap?.revealProgress ?? 0);
+  capContent.style.setProperty("--label-in", smooth(reveal / 0.42));
+  capContent.style.setProperty("--title-in", smooth((reveal - 0.16) / 0.65));
+  capContent.style.setProperty("--copy-in", smooth((reveal - 0.45) / 0.55));
+  caption.hidden = free;
+  progress.textContent = String(Math.round(p * 100)).padStart(3, "0") + "%";
+  progress.parentElement.style.setProperty("--progress", p);
+  body.dataset.progress = p.toFixed(4);
+  body.dataset.playing = String(Boolean(playback) && !free);
+}
 function apply(value) {
-  const v = value;
+  originalFov = value.camera.fov;
+  const view = Math.tan(THREE.MathUtils.degToRad(originalFov / 2));
+  camera.fov = THREE.MathUtils.radToDeg(
+    2 * Math.atan(view * Math.max(1, 1.03 / camera.aspect)),
+  );
   if (!free) {
-    camera.position.fromArray(v.camera.position);
-    target.fromArray(v.camera.target);
-    camera.fov = v.camera.fov;
+    camera.position.fromArray(value.camera.position);
+    target.fromArray(value.camera.target);
     camera.lookAt(target);
-    camera.updateProjectionMatrix();
   } else {
     controls.update();
     target.copy(controls.target);
   }
-  for (const [name, l] of Object.entries(lights)) {
-    const def = v.lights[name];
-    l.position.fromArray(def.position);
-    l.target.position.fromArray(def.target);
-    l.intensity = def.intensity;
-    l.color.set(def.color);
-    l.angle = THREE.MathUtils.degToRad(def.angle);
+  const [x, y] = value.camera.frame;
+  if (portrait.matches || free) camera.clearViewOffset();
+  else if (renderWidth && renderHeight)
+    camera.setViewOffset(
+      renderWidth,
+      renderHeight,
+      (-x * renderWidth) / 2,
+      (y * renderHeight) / 2,
+      renderWidth,
+      renderHeight,
+    );
+  camera.updateProjectionMatrix();
+  if (!heightMarkers.hidden) {
+    camera.updateMatrixWorld();
+    for (const [index, { node, point }] of activeMarkers.entries()) {
+      projected.copy(point).project(camera);
+      const x = 0.5 + projected.x * 0.5;
+      const y = 0.5 - projected.y * 0.5;
+      node.style.left = x * 100 + "%";
+      node.style.top = y * 100 + "%";
+      if (activeMarkers === heightLandmarks)
+        heightScreen[index].set(x * renderWidth, y * renderHeight);
+    }
+    if (activeMarkers === heightLandmarks) {
+      const [high, low] = heightScreen;
+      const bracket = Math.min(renderWidth - 22, high.x + renderWidth * 0.13);
+      const gap = 7;
+      heightDatum.setAttribute(
+        "d",
+        `M ${low.x} ${low.y} H ${bracket - gap} M ${high.x} ${high.y} H ${bracket - gap}`,
+      );
+      heightDifference.setAttribute(
+        "d",
+        `M ${bracket} ${high.y} V ${low.y} M ${bracket - gap} ${high.y} h ${gap * 2} M ${bracket - gap} ${low.y} h ${gap * 2}`,
+      );
+    }
   }
-  ambient.intensity = v.ambient;
-  $("#assembly").value = String(v.explode);
-  $("#part").value = v.focus;
+  for (const [name, light] of Object.entries(lights)) {
+    const definition = value.lights[name];
+    // One shadow map follows the light responsible for the current reveal.
+    light.castShadow =
+      name === (value.lights.focus.intensity > 0 ? "focus" : "key");
+    light.position.fromArray(definition.position);
+    light.target.position.fromArray(definition.target);
+    light.intensity = definition.intensity;
+    light.color.set(definition.color);
+    light.angle = THREE.MathUtils.degToRad(definition.angle);
+  }
+  ambient.intensity = value.ambient;
+  scene.environmentIntensity = value.reflection.intensity;
+  scene.environmentRotation.y = THREE.MathUtils.degToRad(value.reflection.yaw);
+  assembly.value = value.explode;
+  partSelect.value = value.focus;
+  assemblyRig.apply(value, free ? isolated : value.isolate);
+  host.dataset.isolated = free ? isolated : value.isolate;
+  host.dataset.explode = value.explode.toFixed(3);
+  if (free) updatePartControls();
   let energy = 0;
   for (const mesh of meshes) {
-    mesh.position.copy(origins.get(mesh));
-    const lift =
-      {
-        shell_top: 0.026, button_cover: 0.058, wheel: 0.010, pcb: -0.010, battery: -0.016,
-      }[mesh.name] || 0;
-    mesh.position.y += (lift / scale) * v.explode;
-    const emissive = reduce
-      ? 0
-      : cueStrength(draft ? { keyframes: [draft] } : story, p, mesh.name);
-    mesh.material.emissive.setRGB(
-      emissive ? 1 : 0,
-      emissive ? 1 : 0,
-      emissive ? 1 : 0,
-    );
+    const emissive =
+      reducedMotion() || value.lights.focus.intensity > 0.00001
+        ? 0
+        : cueStrength(draft ? { keyframes: [draft] } : story, p, mesh.name);
+    mesh.material.emissive.setScalar(emissive > 0 ? 1 : 0);
     mesh.material.emissiveIntensity = emissive;
     energy = Math.max(energy, emissive);
   }
-  model?.updateMatrixWorld(true);
-  section?.update(v.cut, helper);
-  const cap = captionAt(story, p);
-  $("#caption").hidden = free;
-  $("#caption").style.opacity = cap ? cap.opacity : 0;
-  if (cap) {
-    $("#cap-title").textContent = cap.title[lang];
-    $("#cap-body").textContent = cap.body[lang];
-  }
-  $("#progress").textContent =
-    String(Math.round(p * 100)).padStart(3, "0") + "%";
-  document.body.dataset.progress = p.toFixed(4);
-  document.body.dataset.mode = free ? "free" : "scroll";
-  document.body.dataset.cut = String(v.cut.enabled);
-  document.body.dataset.emissive = energy.toFixed(4);
+  model.updateMatrixWorld(true);
+  const cutFaces = section.update(value.cut, helper);
+  host.dataset.sectionFaces = cutFaces;
+  body.dataset.cut = String(value.cut.enabled);
+  body.dataset.emissive = energy.toFixed(4);
   editor.update(p, {
-    mode: draft ? "手动预览" : free ? "自由查看" : "滚动轨道",
+    mode: draft ? "手动预览" : playback ? "镜头演出" : "章节停留",
     light: lights.focus.intensity,
     emissive: energy,
-    cut: v.cut.enabled ? "ON" : "OFF",
+    cut: value.cut.enabled ? "ON" : "OFF",
+    cutFaces,
     triangles,
   });
 }
 function tick(now) {
   raf = 0;
-  if (document.hidden || !visible || parentPaused) return;
-  raf = requestAnimationFrame(tick);
+  if (!canRender() || !dirty) return;
+  const previousTime = lastTime;
+  if (!previousTime || now - previousTime > 250) renderLimit.reset();
   const tier = document.documentElement.dataset.terminalQuality ?? "high";
-  if (!renderLimit.admit(now, tier === "high")) return;
-  const renderStart = performance.now();
-  const dt = Math.min(0.1, (now - lastTime) / 1000);
-  lastTime = now;
-  if (!draft && !free) {
-    const desired = scrollProgress();
-    p = reduce ? desired : p + (desired - p) * (1 - Math.exp(-dt * 12));
-    if (Math.abs(p - desired) < 0.00001) p = desired;
+  if (!renderLimit.admit(now, tier === "high")) {
+    raf = requestAnimationFrame(tick);
+    return;
   }
-  apply(draft || sampleStory(story, p));
-  renderer.render(scene, camera);
-  renderLimit.recordFrame(performance.now() - renderStart);
-  const limit = String(renderLimit.fpsLimit);
-  if (host.dataset.fpsLimit !== limit) host.dataset.fpsLimit = limit;
-}
-async function start() {
-  try {
-    if (!renderer) {
-      renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        stencil: true,
-        powerPreference: "high-performance",
-      });
-      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-      renderer.localClippingEnabled = true;
-      renderer.toneMapping = THREE.ACESFilmicToneMapping;
-      renderer.toneMappingExposure = 1.15;
-      host.append(renderer.domElement);
-      scene = new THREE.Scene();
-      scene.background = new THREE.Color("#e8e5de");
-      camera = new THREE.PerspectiveCamera(32, 1, 0.0003, 20);
-      controls = new OrbitControls(camera, renderer.domElement);
-      controls.enabled = false;
-      controls.enableDamping = true;
-      controls.minDistance = 0.003;
-      controls.maxDistance = 3;
-      controls.enablePan = true;
-      ambient = new THREE.HemisphereLight("#fff9ed", "#3d4136", 0.6);
-      scene.add(ambient);
-      lights = {};
-      for (const name of ["key", "rim", "focus"]) {
-        const light = new THREE.SpotLight("#ffffff", 0, 0, 0.6, 0.65, 0);
-        lights[name] = light;
-        scene.add(light, light.target);
-      }
-      resize();
-      renderer.domElement.addEventListener("webglcontextlost", (e) => {
-        e.preventDefault();
-        ready = false;
-        pause();
-        loading.hidden = false;
-        loading.textContent = "三维画面暂时中断，请重新载入。";
-        const b = document.createElement("button");
-        b.textContent = "重新载入";
-        b.onclick = () => location.reload();
-        loading.append(b);
-      });
+  const renderStart = performance.now();
+  const dt =
+    previousTime && now - previousTime <= 250
+      ? Math.min(0.12, (now - previousTime) / 1000)
+      : 0;
+  lastTime = now;
+  dirty = false;
+  if (playback && !free) {
+    playback.elapsed += dt;
+    const fraction = clamp(playback.elapsed / playback.duration);
+    p = playback.from + (playback.to - playback.from) * fraction;
+    if (!ready || reducedMotion() || fraction === 1) {
+      p = playback.to;
+      playback = null;
+      updateNavigation();
     }
-    try {
-      const response = await fetch("./story.json", { cache: "no-cache" });
-      if (response.ok) story = validateStory(await response.json());
-    } catch (e) {
-      console.warn("演出数据使用内置默认值", e.message);
-    }
-    const draco = new DRACOLoader();
-    draco.setDecoderPath("./vendor/draco/");
-    const loader = new GLTFLoader();
-    loader.setDRACOLoader(draco);
-    let gltf;
-    try {
-      gltf = await loader.loadAsync(story.model);
-    } finally {
-      draco.dispose();
-    }
-    model = gltf.scene;
-    // CAD export is Z-up in metres; the story track was authored for Y-up.
-    model.rotation.x = -Math.PI / 2;
-    model.updateMatrixWorld(true);
-    const bounds = new THREE.Box3().setFromObject(model),
-      size = bounds.getSize(new THREE.Vector3());
-    scale = 0.3 / Math.max(size.x, size.y, size.z);
-    model.scale.setScalar(scale);
-    model.updateMatrixWorld(true);
-    model.position.sub(
-      new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3()),
+  }
+  if (free && assemblyMove) {
+    assemblyMove.elapsed += dt;
+    const fraction = reducedMotion() ? 1 : clamp(assemblyMove.elapsed / 0.75);
+    Object.assign(
+      draft,
+      blendPose(assemblyMove.from, assemblyMove.to, smooth(fraction)),
     );
-    model.traverse((o) => {
-      if (!o.isMesh) return;
-      o.name = NAME_MAP[o.name] || o.name;
-      o.material = o.material.clone();
-      o.material.emissive.set(0);
-      o.material.emissiveIntensity = 0;
-      o.material.side = THREE.DoubleSide;
-      meshes.push(o);
-      parts.set(o.name, o);
-      origins.set(o, o.position.clone());
-      triangles +=
-        (o.geometry.index?.count || o.geometry.attributes.position.count) / 3;
-    });
-    scene.add(model);
-    section = new SectionCut(scene, meshes);
-    apply(sampleStory(story, 0));
-    await renderer.compileAsync(scene, camera);
-    editor = createEditor({
-      capture,
-      aim,
-      progress: () => p,
-      story: () => story,
-      setDraft: (v) => {
-        draft = clone(v);
-        if (free) mode(false);
-        apply(draft);
-      },
-      setHelper: (v) => {
-        helper = v;
-      },
-      seek: (v) => {
-        p = clamp(v);
-        draft = null;
-        mode(false);
-        scroller.scrollTop =
-          p * (scroller.scrollHeight - scroller.clientHeight);
-        apply(sampleStory(story, p));
-      },
-      follow: () => {
-        draft = null;
-        mode(false);
-      },
-      replace: (v) => {
-        story = validateStory(v);
-        draft = null;
-      },
-    });
-    ready = true;
-    $("#assembly").disabled = false;
-    status.textContent = "READY";
-    document.body.dataset.ready = "true";
-    loading.hidden = true;
-    startLoop();
+    if (fraction === 1) assemblyMove = null;
+  }
+  updateCaption();
+  if (ready) {
+    apply(draft || sampleStory(story, p));
+    renderer.render(scene, camera);
+    renderLimit.recordFrame(performance.now() - renderStart);
+    host.dataset.fpsLimit = renderLimit.fpsLimit;
+  }
+  if ((playback && !free) || (free && assemblyMove)) invalidate();
+}
+function setReady(value) {
+  ready = value;
+  body.dataset.ready = String(value);
+  body.dataset.projectReady = value ? "ready" : "failed";
+  status.textContent = value ? "READY" : "FAILED";
+  status.classList.toggle("err", !value);
+  modeButton.disabled = !value;
+  assembly.disabled = !value;
+  loading.hidden = value;
+  retry.hidden = value;
+  if (renderer) renderer.domElement.hidden = !value;
+  if (value) {
+    $("#fallback-poster")?.remove();
     if (parent !== window)
       parent.postMessage(
         { type: "design-terminal:case-ready" },
         location.origin,
       );
-  } catch (e) {
-    console.error("ERSTE002 viewer", e);
-    status.textContent = "FAILED";
-    status.classList.add("err");
-    loading.replaceChildren();
-    const text = document.createElement("p");
-    text.textContent = "三维内容暂未载入，可重试。";
+  } else if (!$("#fallback-poster")) {
     const image = document.createElement("img");
+    image.id = "fallback-poster";
     image.src = "/assets/render/002-cover.avif";
-    image.alt = "ERSTE002 项目静态预览";
-    image.style.cssText =
-      "max-width:min(420px,70vw);max-height:50vh;object-fit:contain";
-    const b = document.createElement("button");
-    b.textContent = "重新载入";
-    b.onclick = () => location.reload();
-    loading.append(image, text, b);
+    image.alt = "ERSTE002";
+    loading.prepend(image);
+  }
+  setLanguage(lang ? "en" : "zh");
+}
+async function loadStory() {
+  try {
+    const response = await fetch("./story.json", { cache: "no-cache" });
+    if (!response.ok) throw new Error("HTTP " + response.status);
+    configureStory(await response.json());
+  } catch (error) {
+    console.warn("ERSTE002 story fallback", error.message);
+    configureStory(DEFAULT_STORY);
   }
 }
+function seek(progress) {
+  playback = null;
+  draft = null;
+  setFree(false);
+  p = clamp(progress);
+  shotAtProgress();
+  updateNavigation();
+  if (ready) apply(sampleStory(story, p));
+  invalidate();
+}
+async function start() {
+  const data = loadStory();
+  try {
+    renderer = new THREE.WebGLRenderer({
+      alpha: true,
+      antialias: true,
+      powerPreference: "high-performance",
+    });
+    renderer.localClippingEnabled = true;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFShadowMap;
+    host.append(renderer.domElement);
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(32, 1, 0.0006, 5);
+    controls = new OrbitControls(camera, renderer.domElement);
+    controls.enabled = false;
+    controls.enableDamping = true;
+    controls.minDistance = 0.04;
+    controls.maxDistance = 2;
+    controls.addEventListener("change", invalidate);
+    ambient = new THREE.HemisphereLight("#ffffff", "#9c9ca5", 0.65);
+    scene.add(ambient);
+    lights = {};
+    for (const name of LIGHT_NAMES) {
+      const light = new THREE.SpotLight("#ffffff", 0, 0, 0.6, 0.65, 0);
+      if (name === "key" || name === "focus") {
+        light.castShadow = name === "key";
+        light.shadow.mapSize.set(1024, 1024);
+        light.shadow.camera.near = 0.01;
+        light.shadow.camera.far = 1.2;
+        light.shadow.bias = -0.0003;
+        light.shadow.normalBias = 0.0006;
+        light.shadow.radius = name === "focus" ? 3.4 : 4.5;
+        light.shadow.intensity = 0.74;
+      }
+      lights[name] = light;
+      scene.add(light, light.target);
+    }
+    resize();
+    renderer.domElement.addEventListener("webglcontextlost", (event) => {
+      event.preventDefault();
+      setReady(false);
+    });
+    renderer.domElement.addEventListener("webglcontextrestored", () => {
+      if (section) {
+        studioEnvironment?.dispose();
+        studioEnvironment = createStudioEnvironment(renderer);
+        scene.environment = studioEnvironment.texture;
+        setReady(true);
+      }
+    });
+
+    const loader = new GLTFLoader();
+    const [gltf] = await Promise.all([loader.loadAsync(MODEL), data]);
+    studioEnvironment = createStudioEnvironment(renderer);
+    scene.environment = studioEnvironment.texture;
+    model = gltf.scene;
+    model.rotation.x = -Math.PI / 2; // NX exports Z-up in metres.
+    const size = new THREE.Box3()
+      .setFromObject(model)
+      .getSize(new THREE.Vector3());
+    const scale = 0.3 / Math.max(size.x, size.y, size.z);
+    model.scale.setScalar(scale);
+    model.position.sub(
+      new THREE.Box3().setFromObject(model).getCenter(new THREE.Vector3()),
+    );
+    assemblyRig = new StoryAssembly(model);
+    for (const [part, { group }] of assemblyRig.actors) parts.set(part, group);
+    const sectionSources = new Map();
+    model.traverse((object) => {
+      if (!object.isMesh) return;
+      object.name = partNames[object.name] || object.name;
+      applyAssemblyFinish(object, true);
+      object.castShadow = true;
+      object.receiveShadow = true;
+      object.material.clipShadows = true;
+      if (!object.geometry.hasAttribute("normal")) {
+        if (
+          object.geometry.index &&
+          ["shell_top", "button_cover"].includes(object.name)
+        ) {
+          sectionSources.set(object, object.geometry);
+          object.geometry = createSurfaceGeometry(object.geometry);
+        } else object.geometry.computeVertexNormals();
+        object.material.flatShading = false;
+      }
+      object.geometry.computeBoundingSphere();
+      object.material.emissive.set(0);
+      object.material.emissiveIntensity = 0;
+      meshes.push(object);
+      triangles +=
+        (object.geometry.index?.count ||
+          object.geometry.attributes.position.count) / 3;
+    });
+    scene.add(model);
+    section = new SectionCut(scene, meshes, sectionSources);
+    // Warm the geometric section and its material before the first transition.
+    const cutFrame = story.keyframes.find(
+      (frame) =>
+        frame.cut.enabled &&
+        frame.cut.target === "shell_top" &&
+        Math.abs(frame.cut.position[0]) < 0.065,
+    );
+    if (cutFrame) {
+      apply(cutFrame);
+      await renderer.compileAsync(scene, camera);
+    }
+    apply(sampleStory(story, 0));
+    await renderer.compileAsync(scene, camera);
+    editor = createEditor({
+      capture,
+      aim,
+      seek,
+      progress: () => p,
+      story: () => story,
+      source: () => source,
+      setDraft: (value) => {
+        playback = null;
+        draft = clone(value);
+        setFree(false);
+        updateNavigation();
+        apply(draft);
+        invalidate();
+      },
+      setHelper: (value) => {
+        helper = value;
+        invalidate();
+      },
+      follow: () => {
+        draft = null;
+        setFree(false);
+        invalidate();
+      },
+      replace: (value) => {
+        draft = null;
+        playback = null;
+        configureStory(value);
+      },
+      saveFrame: (at, frame, lightingOnly) =>
+        configureStory(editFrame(source, story, at, frame, lightingOnly)),
+    });
+    setReady(true);
+    if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
+  } catch (error) {
+    console.error("ERSTE002 model", error);
+    await data;
+    setReady(false);
+    if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
+  }
+}
+body.dataset.mode = "chapter";
 setLanguage("zh");
 start();

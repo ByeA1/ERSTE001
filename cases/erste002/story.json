@@ -1,578 +1,4932 @@
 {
-  "version": 1,
+  "version": 2,
   "model": "./assets/shell-full.glb",
-  "label": "ERSTE002 / editable section study",
-  "keyframes": [
-    {
-      "at": 0,
+  "label": "ERSTE002 / Right-hand ergonomics & structural reinforcement",
+  "poses": {
+    "cover": {
+      "lighting": "Studio",
       "camera": {
         "position": [
-          0.36,
-          0.24,
-          0.64
+          0.375,
+          0.21,
+          0.425
         ],
         "target": [
           0,
           0,
-          0
+          0.007
         ],
-        "fov": 32
-      },
-      "lights": {
-        "key": {
-          "position": [
-            -0.4,
-            0.6,
-            0.35
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 3,
-          "color": "#fff5df",
-          "angle": 48
-        },
-        "rim": {
-          "position": [
-            0.3,
-            0.2,
-            -0.4
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2,
-          "color": "#ffffff",
-          "angle": 42
-        },
-        "focus": {
-          "position": [
-            0.05,
-            0.22,
-            0.15
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "color": "#ffffff",
-          "angle": 24
-        }
-      },
-      "ambient": 0.6,
-      "cut": {
-        "enabled": true,
-        "position": [
-          0.16,
-          0,
-          0
-        ],
-        "rotation": [
-          0,
-          -90,
-          0
-        ],
-        "target": "all",
-        "cap": true
-      },
-      "explode": 0,
-      "focus": "",
-      "cue": {
-        "enabled": false,
-        "start": 0.16,
-        "end": 0.24,
-        "strength": 1.5
+        "fov": 32,
+        "frame": [
+          0.15,
+          0.27
+        ]
       }
     },
-    {
-      "at": 0.16,
+    "cover-hold": {
+      "lighting": "Studio",
       "camera": {
         "position": [
-          0.36,
-          0.24,
-          0.64
+          0.335,
+          0.195,
+          0.382
         ],
         "target": [
           0,
           0,
-          0
+          0.007
         ],
-        "fov": 32
-      },
-      "lights": {
-        "key": {
-          "position": [
-            -0.4,
-            0.6,
-            0.35
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 3,
-          "color": "#fff5df",
-          "angle": 48
-        },
-        "rim": {
-          "position": [
-            0.3,
-            0.2,
-            -0.4
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2,
-          "color": "#ffffff",
-          "angle": 42
-        },
-        "focus": {
-          "position": [
-            0.05,
-            0.22,
-            0.15
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "color": "#ffffff",
-          "angle": 24
-        }
-      },
-      "ambient": 0.6,
-      "cut": {
-        "enabled": true,
-        "position": [
+        "fov": 30,
+        "frame": [
           0.16,
-          0,
-          0
-        ],
-        "rotation": [
-          0,
-          -90,
-          0
-        ],
-        "target": "all",
-        "cap": true
-      },
-      "explode": 0,
-      "focus": "",
-      "cue": {
-        "enabled": false,
-        "start": 0.16,
-        "end": 0.24,
-        "strength": 1.5
+          0.31
+        ]
       }
     },
-    {
-      "at": 0.24,
+    "index-middle-front": {
+      "lighting": "Ergonomics",
       "camera": {
         "position": [
-          0.36,
-          0.24,
-          0.64
+          0.001,
+          0.067,
+          0.433
         ],
         "target": [
           0,
-          0,
-          0
+          0.006,
+          0.031
         ],
-        "fov": 32
-      },
-      "lights": {
-        "key": {
-          "position": [
-            -0.4,
-            0.6,
-            0.35
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 3,
-          "color": "#fff5df",
-          "angle": 48
-        },
-        "rim": {
-          "position": [
-            0.3,
-            0.2,
-            -0.4
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2,
-          "color": "#ffffff",
-          "angle": 42
-        },
-        "focus": {
-          "position": [
-            0.05,
-            0.22,
-            0.15
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0,
-          "color": "#ffffff",
-          "angle": 24
-        }
-      },
-      "ambient": 0.6,
-      "cut": {
-        "enabled": true,
-        "position": [
-          0.16,
-          0,
-          0
-        ],
-        "rotation": [
-          0,
-          -90,
-          0
-        ],
-        "target": "all",
-        "cap": true
-      },
-      "explode": 0,
-      "focus": "shell_top",
-      "cue": {
-        "enabled": true,
-        "start": 0.16,
-        "end": 0.24,
-        "strength": 1.5
+        "fov": 33,
+        "frame": [
+          0.015,
+          0.22
+        ]
       }
     },
-    {
-      "at": 0.58,
+    "asymmetric-top": {
+      "lighting": "Ergonomics",
       "camera": {
         "position": [
-          0.36,
-          0.18,
-          0.46
+          0.226,
+          0.311,
+          0.334
         ],
         "target": [
-          -0.025,
+          0,
+          0.014,
+          0.019
+        ],
+        "fov": 31,
+        "frame": [
+          -0.33,
+          0.035
+        ]
+      }
+    },
+    "front-to-palm": {
+      "lighting": "Ergonomics",
+      "camera": {
+        "position": [
+          0.246,
+          0.234,
+          -0.178
+        ],
+        "target": [
+          0,
+          0.012,
+          -0.022
+        ],
+        "fov": 31,
+        "frame": [
+          -0.31,
+          0.015
+        ]
+      }
+    },
+    "wrist-side-rear": {
+      "lighting": "Ergonomics",
+      "camera": {
+        "position": [
+          0.047,
+          0.185,
+          -0.455
+        ],
+        "target": [
+          0,
+          0.006,
+          -0.022
+        ],
+        "fov": 31,
+        "frame": [
+          -0.3,
+          0
+        ]
+      }
+    },
+    "assembly-ready": {
+      "lighting": "Assembly",
+      "camera": {
+        "position": [
+          0.245,
+          -0.172,
+          0.395
+        ],
+        "target": [
+          0,
           -0.012,
-          -0.03
+          0.019
         ],
-        "fov": 36
+        "fov": 34,
+        "frame": [
+          0.25,
+          0.01
+        ]
+      }
+    },
+    "assembly-full": {
+      "lighting": "Assembly",
+      "camera": {
+        "position": [
+          0.36,
+          0.22,
+          0.526
+        ],
+        "target": [
+          0,
+          0.045,
+          0.014
+        ],
+        "fov": 34,
+        "frame": [
+          0.23,
+          0.02
+        ]
+      },
+      "explode": 1
+    },
+    "upper-shell-intro": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.278,
+          -0.125,
+          0.261
+        ],
+        "target": [
+          0,
+          0.054,
+          -0.016
+        ],
+        "fov": 36,
+        "frame": [
+          0.23,
+          0.025
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
       },
       "lights": {
-        "key": {
-          "position": [
-            -0.4,
-            0.6,
-            0.35
+        "focus": {
+          "intensity": 0
+        }
+      },
+      "focus": "shell_top"
+    },
+    "side-cut-start": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.344,
+          0.056,
+          -0.14
+        ],
+        "target": [
+          0.014,
+          0.052,
+          -0.015
+        ],
+        "fov": 35,
+        "frame": [
+          0.29,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
           ],
-          "target": [
+          "rotation": [
             0,
             0,
             0
-          ],
-          "intensity": 0.6,
-          "color": "#fff5df",
-          "angle": 48
+          ]
         },
-        "rim": {
-          "position": [
-            0.3,
-            0.2,
-            -0.4
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
           ],
-          "target": [
+          "rotation": [
             0,
             0,
             0
-          ],
-          "intensity": 0.35,
-          "color": "#ffffff",
-          "angle": 42
+          ]
         },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "cut": {
+        "enabled": true,
+        "cap": true,
+        "target": "shell_top",
+        "position": [
+          0.092,
+          0.049,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      "focus": "shell_top",
+      "lights": {
         "focus": {
           "position": [
-            0.14,
-            0.14,
-            0.03
+            0.242,
+            0.075,
+            -0.072
           ],
           "target": [
-            0,
-            -0.005,
-            -0.055
+            0.026,
+            0.055,
+            -0.039
           ],
           "intensity": 6,
-          "color": "#fff5e5",
-          "angle": 23
+          "angle": 24,
+          "color": "#ffffff"
         }
-      },
-      "ambient": 0.15,
-      "cut": {
-        "enabled": true,
-        "position": [
-          0,
-          0,
-          0
-        ],
-        "rotation": [
-          0,
-          -90,
-          0
-        ],
-        "target": "all",
-        "cap": true
-      },
-      "explode": 0,
-      "focus": "shell_top",
-      "cue": {
-        "enabled": false,
-        "start": 0.16,
-        "end": 0.24,
-        "strength": 1.5
       }
     },
-    {
-      "at": 0.8,
+    "side-cut-solid": {
+      "lighting": "Structural",
       "camera": {
         "position": [
-          0.035,
-          -0.012,
-          -0.025
+          0.344,
+          0.056,
+          -0.14
         ],
         "target": [
-          -0.025,
-          -0.012,
-          -0.075
+          0.014,
+          0.052,
+          -0.015
         ],
-        "fov": 65
+        "fov": 35,
+        "frame": [
+          0.29,
+          0.02
+        ]
       },
-      "lights": {
-        "key": {
-          "position": [
-            -0.4,
-            0.6,
-            0.35
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
           ],
-          "target": [
+          "rotation": [
             0,
             0,
             0
-          ],
-          "intensity": 0.6,
-          "color": "#fff5df",
-          "angle": 48
+          ]
         },
-        "rim": {
-          "position": [
-            0.3,
-            0.2,
-            -0.4
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 0.35,
-          "color": "#ffffff",
-          "angle": 42
-        },
-        "focus": {
-          "position": [
-            0.03,
-            0.012,
-            -0.02
-          ],
-          "target": [
-            -0.025,
-            -0.012,
-            -0.075
-          ],
-          "intensity": 1.8,
-          "color": "#fff5e5",
-          "angle": 44
-        }
-      },
-      "ambient": 0.12,
-      "cut": {
-        "enabled": true,
-        "position": [
-          0.005,
-          0,
-          0
-        ],
-        "rotation": [
-          0,
-          -105,
-          8
-        ],
-        "target": "all",
-        "cap": true
-      },
-      "explode": 0,
-      "focus": "shell_top",
-      "cue": {
-        "enabled": false,
-        "start": 0.16,
-        "end": 0.24,
-        "strength": 1.5
-      }
-    },
-    {
-      "at": 1,
-      "camera": {
-        "position": [
-          0.36,
-          0.24,
-          0.64
-        ],
-        "target": [
-          0,
-          0,
-          0
-        ],
-        "fov": 32
-      },
-      "lights": {
-        "key": {
-          "position": [
-            -0.4,
-            0.6,
-            0.35
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 3,
-          "color": "#fff5df",
-          "angle": 48
-        },
-        "rim": {
-          "position": [
-            0.3,
-            0.2,
-            -0.4
-          ],
-          "target": [
-            0,
-            0,
-            0
-          ],
-          "intensity": 2,
-          "color": "#ffffff",
-          "angle": 42
-        },
-        "focus": {
-          "position": [
-            0.05,
+        "button_cover": {
+          "offset": [
+            -0.04,
             0.22,
-            0.15
+            0.21
           ],
-          "target": [
+          "rotation": [
             0,
             0,
             0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
           ],
-          "intensity": 0,
-          "color": "#ffffff",
-          "angle": 24
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
         }
       },
-      "ambient": 0.6,
       "cut": {
         "enabled": true,
+        "cap": true,
+        "target": "shell_top",
         "position": [
-          0.16,
-          0,
+          0.026,
+          0.049,
           0
         ],
         "rotation": [
           0,
           -90,
           0
-        ],
-        "target": "all",
-        "cap": true
+        ]
       },
-      "explode": 0,
-      "focus": "",
-      "cue": {
-        "enabled": false,
-        "start": 0.16,
-        "end": 0.24,
-        "strength": 1.5
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.248,
+            0.082,
+            -0.052
+          ],
+          "target": [
+            0.024,
+            0.065,
+            -0.047
+          ],
+          "intensity": 19,
+          "angle": 29,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "side-cut-exit": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.344,
+          0.056,
+          -0.14
+        ],
+        "target": [
+          0.014,
+          0.052,
+          -0.015
+        ],
+        "fov": 35,
+        "frame": [
+          0.29,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "cut": {
+        "enabled": true,
+        "cap": true,
+        "target": "shell_top",
+        "position": [
+          0.145,
+          0.049,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.248,
+            0.082,
+            -0.052
+          ],
+          "target": [
+            0.024,
+            0.065,
+            -0.047
+          ],
+          "intensity": 19,
+          "angle": 29,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "upper-shell-junction": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.112,
+          -0.248,
+          0.275
+        ],
+        "target": [
+          0,
+          0.052,
+          -0.028
+        ],
+        "fov": 38,
+        "frame": [
+          0.3,
+          0.02
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.065,
+            -0.17,
+            0.1
+          ],
+          "target": [
+            0,
+            0.051,
+            -0.048
+          ],
+          "intensity": 17,
+          "angle": 31,
+          "color": "#ffffff"
+        }
+      }
+    },
+    "button-covers-forward": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.083,
+          0.274,
+          0.245
+        ],
+        "target": [
+          0,
+          0.071,
+          0.024
+        ],
+        "fov": 37,
+        "frame": [
+          0,
+          0.22
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.13,
+            0.23,
+            0.2
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shell_top": {
+          "offset": [
+            -0.25,
+            -0.31,
+            -0.39
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.12,
+            -0.17,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.11,
+            -0.18,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            0,
+            -0.059,
+            -0.04
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "focus": "button_cover",
+      "lights": {
+        "focus": {
+          "intensity": 0
+        }
+      }
+    },
+    "button-cover-inner-ribs": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.083,
+          0.274,
+          0.245
+        ],
+        "target": [
+          0,
+          0.071,
+          0.024
+        ],
+        "fov": 37,
+        "frame": [
+          0,
+          0.22
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.13,
+            0.23,
+            0.2
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "shell_top": {
+          "offset": [
+            -0.25,
+            -0.31,
+            -0.39
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.12,
+            -0.17,
+            0.12
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.11,
+            -0.18,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            0,
+            -0.059,
+            -0.04
+          ],
+          "rotation": [
+            175,
+            -7,
+            5
+          ]
+        }
+      },
+      "focus": "button_cover",
+      "lights": {
+        "focus": {
+          "position": [
+            0.043,
+            0.213,
+            0.165
+          ],
+          "target": [
+            0,
+            0.07,
+            0.024
+          ],
+          "intensity": 19,
+          "angle": 29,
+          "color": "#ffffff"
+        }
+      },
+      "isolate": "button_cover"
+    },
+    "hero-reassembled": {
+      "lighting": "Studio",
+      "camera": {
+        "position": [
+          0.357,
+          0.203,
+          0.408
+        ],
+        "target": [
+          0,
+          -0.003,
+          0.009
+        ],
+        "fov": 31,
+        "frame": [
+          0.16,
+          0.31
+        ]
+      }
+    },
+    "side-cut-macro": {
+      "lighting": "Structural",
+      "camera": {
+        "position": [
+          0.162,
+          0.104,
+          -0.091
+        ],
+        "target": [
+          0.015,
+          0.079,
+          -0.045
+        ],
+        "fov": 33,
+        "frame": [
+          0.23,
+          0.025
+        ]
+      },
+      "explode": 1,
+      "assembly": {
+        "wheel": {
+          "offset": [
+            0.1,
+            0.24,
+            0.19
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "button_cover": {
+          "offset": [
+            -0.04,
+            0.22,
+            0.21
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "pcb": {
+          "offset": [
+            -0.11,
+            -0.15,
+            0.1
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        },
+        "battery": {
+          "offset": [
+            0.1,
+            -0.16,
+            -0.09
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ]
+        }
+      },
+      "cut": {
+        "enabled": true,
+        "cap": true,
+        "target": "shell_top",
+        "position": [
+          0.015,
+          0.049,
+          0
+        ],
+        "rotation": [
+          0,
+          -90,
+          0
+        ]
+      },
+      "focus": "shell_top",
+      "lights": {
+        "focus": {
+          "position": [
+            0.137,
+            0.109,
+            -0.064
+          ],
+          "target": [
+            0.015,
+            0.087,
+            -0.043
+          ],
+          "intensity": 24,
+          "angle": 21,
+          "color": "#ffffff"
+        }
       }
     }
-  ],
-  "captions": [
+  },
+  "segments": [
     {
-      "start": 0,
-      "end": 0.22,
+      "id": "exterior",
       "title": [
-        "低矮外壳，向内观察。",
-        "A low shell. A closer look."
+        "外观",
+        "Form"
       ],
-      "body": [
-        "滚动推进镜头与剖切，向上滚动即可复原。",
-        "Scroll to move through the section. Scroll back to restore it."
+      "duration": 5.4,
+      "hold": 0.95,
+      "locked": false,
+      "from": "cover",
+      "to": "cover-hold",
+      "shots": [
+        {
+          "id": "silhouette-lock",
+          "at": 0.25,
+          "pose": "cover"
+        },
+        {
+          "id": "opening-orbit",
+          "at": 0.7,
+          "pose": "cover-hold"
+        }
+      ],
+      "beats": [
+        {
+          "start": 0,
+          "end": 1,
+          "arrive": 0.79,
+          "reveal": 0.53,
+          "tag": "01 / PRODUCT FORM",
+          "title": [
+            "ERSTE002",
+            "ERSTE002"
+          ],
+          "body": [
+            "右手非对称外形把键盖的高度差延续到掌心区域。下方采用开放式结构，省去传统底壳。",
+            "An asymmetric right-hand profile carries the change in button height into the palm area. An open underside replaces the conventional bottom shell."
+          ]
+        }
+      ],
+      "lightingTrack": [
+        {
+          "at": 0,
+          "ambient": 0.09,
+          "lights": {
+            "fill": {
+              "position": [
+                0.36,
+                0.25,
+                0.27
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0.14,
+              "angle": 49,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.4,
+                0.1,
+                0.1
+              ],
+              "target": [
+                -0.052,
+                0,
+                -0.055
+              ],
+              "intensity": 0.13,
+              "color": "#fff4eb",
+              "angle": 27
+            },
+            "rim": {
+              "position": [
+                0.28,
+                0.12,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 2.8,
+              "color": "#ff3545",
+              "angle": 32
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.015,
+            "yaw": -28
+          }
+        },
+        {
+          "at": 0.2,
+          "ambient": 0.09,
+          "lights": {
+            "fill": {
+              "position": [
+                0.36,
+                0.25,
+                0.27
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0.14,
+              "angle": 49,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.4,
+                0.1,
+                0.1
+              ],
+              "target": [
+                -0.052,
+                0,
+                -0.055
+              ],
+              "intensity": 0.13,
+              "color": "#fff4eb",
+              "angle": 27
+            },
+            "rim": {
+              "position": [
+                0.28,
+                0.12,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.9,
+              "color": "#ff3545",
+              "angle": 32
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.045,
+            "yaw": -28
+          }
+        },
+        {
+          "at": 0.46,
+          "ambient": 0.18,
+          "lights": {
+            "fill": {
+              "position": [
+                0.36,
+                0.25,
+                0.27
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0.72,
+              "angle": 49,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.29,
+                0.18,
+                0.25
+              ],
+              "target": [
+                -0.04,
+                0.012,
+                0.025
+              ],
+              "intensity": 4.7,
+              "color": "#fff9f4",
+              "angle": 28
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.22,
+                -0.2
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 4,
+              "color": "#ff4254",
+              "angle": 37
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.62,
+            "yaw": -18
+          }
+        },
+        {
+          "at": 0.61,
+          "ambient": 0.18,
+          "lights": {
+            "fill": {
+              "position": [
+                0.36,
+                0.25,
+                0.27
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0.72,
+              "angle": 49,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.14,
+                0.24,
+                0.3
+              ],
+              "target": [
+                0.04,
+                0.008,
+                0.07
+              ],
+              "intensity": 5.5,
+              "color": "#fff9f4",
+              "angle": 33
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.22,
+                -0.2
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 4,
+              "color": "#ff4254",
+              "angle": 37
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.78,
+            "yaw": 6
+          }
+        },
+        {
+          "at": 0.76,
+          "ambient": 0.32,
+          "lights": {
+            "fill": {
+              "position": [
+                0.32,
+                0.032,
+                0.42
+              ],
+              "target": [
+                0.025,
+                -0.023,
+                0.056
+              ],
+              "intensity": 2.05,
+              "angle": 54,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.2,
+                0.3,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.85,
+              "color": "#fff4eb",
+              "angle": 47
+            },
+            "rim": {
+              "position": [
+                0.32,
+                0.26,
+                -0.36
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.8,
+              "color": "#ff616b",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.91,
+            "yaw": 17
+          }
+        },
+        {
+          "at": 1,
+          "ambient": 0.32,
+          "lights": {
+            "fill": {
+              "position": [
+                0.32,
+                0.032,
+                0.42
+              ],
+              "target": [
+                0.025,
+                -0.023,
+                0.056
+              ],
+              "intensity": 2.05,
+              "angle": 54,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.2,
+                0.3,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.85,
+              "color": "#fff4eb",
+              "angle": 47
+            },
+            "rim": {
+              "position": [
+                0.32,
+                0.26,
+                -0.36
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.8,
+              "color": "#ff616b",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.91,
+            "yaw": 17
+          }
+        }
       ]
     },
     {
-      "start": 0.28,
-      "end": 0.64,
+      "id": "right-hand-ergonomics",
       "title": [
-        "剖开表面，观察结构。",
-        "Beyond the surface."
+        "右手人体工学",
+        "Right-hand ergonomics"
       ],
-      "body": [
-        "灯光照向切开的上盖；外壳与内部结构保留原本材质。",
-        "A real spotlight reveals the section. The original surface material stays unchanged."
+      "duration": 17.5,
+      "hold": 0.96,
+      "locked": false,
+      "from": "cover-hold",
+      "to": "wrist-side-rear",
+      "shots": [
+        {
+          "id": "front-finger-support",
+          "at": 0.17,
+          "pose": "index-middle-front"
+        },
+        {
+          "id": "hold-finger-support",
+          "at": 0.33,
+          "pose": "index-middle-front"
+        },
+        {
+          "id": "oblique-surface",
+          "at": 0.47,
+          "pose": "asymmetric-top"
+        },
+        {
+          "id": "hold-oblique-surface",
+          "at": 0.62,
+          "pose": "asymmetric-top"
+        },
+        {
+          "id": "track-from-front-to-palm",
+          "at": 0.7,
+          "pose": "front-to-palm"
+        },
+        {
+          "id": "rear-wrist-line",
+          "at": 0.8,
+          "pose": "wrist-side-rear"
+        }
+      ],
+      "beats": [
+        {
+          "start": 0,
+          "end": 0.33,
+          "arrive": 0.235,
+          "reveal": 0.14,
+          "tag": "02 / INDEX & MIDDLE",
+          "title": [
+            "食指高，中指低",
+            "Index higher, middle lower"
+          ],
+          "body": [
+            "以右手握持方向为准，左键的食指支撑面高于右键的中指支撑面。两个标记取自相同前后位置的模型表面。",
+            "In the right-hand grip, the left button supports the index finger above the right button's middle-finger surface. The markers sample both surfaces at the same depth."
+          ],
+          "layout": "right",
+          "annotation": "button-height"
+        },
+        {
+          "start": 0.33,
+          "end": 0.62,
+          "arrive": 0.54,
+          "reveal": 0.43,
+          "tag": "02 / ASYMMETRIC SURFACE",
+          "title": [
+            "倾斜延伸到上盖",
+            "The slope continues into the shell"
+          ],
+          "body": [
+            "键盖的左右高度差延续到上盖肩部。高侧保持隆起，低侧更早收向侧壁，形成连续的横向倾斜。",
+            "The height difference continues from the buttons into the shell shoulders. The high side stays raised while the low side turns into the sidewall sooner, continuing the crosswise slope."
+          ],
+          "layout": "right",
+          "annotation": "shell-shoulders"
+        },
+        {
+          "start": 0.62,
+          "end": 1,
+          "arrive": 0.875,
+          "reveal": 0.76,
+          "tag": "02 / PALM & WRIST",
+          "title": [
+            "掌心支撑与手腕方向",
+            "Palm support and wrist angle"
+          ],
+          "body": [
+            "上盖后部延续左高右低的曲面。掌心支撑面顺着这道横向斜度布置，以配合右手握持时的手腕倾斜。",
+            "The rear shell carries the higher left side and lower right side into the palm area. The crosswise slope is designed to accommodate the wrist angle of a right-hand grip."
+          ],
+          "layout": "right",
+          "annotation": "palm-support"
+        }
+      ],
+      "lightingTrack": [
+        {
+          "at": 0,
+          "ambient": 0.32,
+          "lights": {
+            "fill": {
+              "position": [
+                0.32,
+                0.032,
+                0.42
+              ],
+              "target": [
+                0.025,
+                -0.023,
+                0.056
+              ],
+              "intensity": 2.05,
+              "angle": 54,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.2,
+                0.3,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.85,
+              "color": "#fff4eb",
+              "angle": 47
+            },
+            "rim": {
+              "position": [
+                0.32,
+                0.26,
+                -0.36
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.8,
+              "color": "#ff616b",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.91,
+            "yaw": 17
+          }
+        },
+        {
+          "at": 0.17,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.5,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                -0.28,
+                0.24,
+                0.35
+              ],
+              "target": [
+                -0.035,
+                0.01,
+                0.084
+              ],
+              "intensity": 2.55,
+              "color": "#fff4eb",
+              "angle": 50
+            },
+            "rim": {
+              "position": [
+                -0.24,
+                0.36,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                -0.035
+              ],
+              "intensity": 3,
+              "color": "#ffffff",
+              "angle": 42
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.73,
+            "yaw": 35
+          }
+        },
+        {
+          "at": 0.22,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.5,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.18,
+                0.23,
+                0.34
+              ],
+              "target": [
+                0.024,
+                0.011,
+                0.084
+              ],
+              "intensity": 3.35,
+              "color": "#fff4eb",
+              "angle": 50
+            },
+            "rim": {
+              "position": [
+                -0.24,
+                0.36,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                -0.035
+              ],
+              "intensity": 3,
+              "color": "#ffffff",
+              "angle": 42
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.78,
+            "yaw": -45
+          }
+        },
+        {
+          "at": 0.33,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.5,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.18,
+                0.23,
+                0.34
+              ],
+              "target": [
+                0.024,
+                0.011,
+                0.084
+              ],
+              "intensity": 3.35,
+              "color": "#fff4eb",
+              "angle": 50
+            },
+            "rim": {
+              "position": [
+                -0.24,
+                0.36,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                -0.035
+              ],
+              "intensity": 3,
+              "color": "#ffffff",
+              "angle": 42
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.78,
+            "yaw": -45
+          }
+        },
+        {
+          "at": 0.47,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.15,
+                0.21
+              ],
+              "target": [
+                0.025,
+                0.018,
+                0.04
+              ],
+              "intensity": 5.2,
+              "color": "#fff4eb",
+              "angle": 35
+            },
+            "rim": {
+              "position": [
+                -0.24,
+                0.36,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                -0.035
+              ],
+              "intensity": 4.3,
+              "color": "#ff777a",
+              "angle": 42
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.52,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.18,
+                0.16,
+                -0.105
+              ],
+              "target": [
+                0,
+                0.034,
+                -0.018
+              ],
+              "intensity": 5.4,
+              "color": "#fff4eb",
+              "angle": 39
+            },
+            "rim": {
+              "position": [
+                -0.24,
+                0.36,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                -0.035
+              ],
+              "intensity": 4.6,
+              "color": "#ff6a70",
+              "angle": 42
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.62,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.18,
+                0.16,
+                -0.105
+              ],
+              "target": [
+                0,
+                0.034,
+                -0.018
+              ],
+              "intensity": 5.4,
+              "color": "#fff4eb",
+              "angle": 39
+            },
+            "rim": {
+              "position": [
+                -0.24,
+                0.36,
+                -0.3
+              ],
+              "target": [
+                0,
+                0,
+                -0.035
+              ],
+              "intensity": 4.6,
+              "color": "#ff6a70",
+              "angle": 42
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.8,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.26,
+                0.12,
+                -0.19
+              ],
+              "target": [
+                0.025,
+                0.01,
+                -0.07
+              ],
+              "intensity": 4.8,
+              "color": "#fff4eb",
+              "angle": 37
+            },
+            "rim": {
+              "position": [
+                -0.25,
+                0.22,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                -0.03
+              ],
+              "intensity": 3.7,
+              "color": "#ff696f",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.85,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.02,
+                0.16,
+                -0.3
+              ],
+              "target": [
+                0,
+                0.033,
+                -0.06
+              ],
+              "intensity": 5.4,
+              "color": "#fff4eb",
+              "angle": 40
+            },
+            "rim": {
+              "position": [
+                -0.17,
+                0.22,
+                0.21
+              ],
+              "target": [
+                0,
+                0,
+                -0.03
+              ],
+              "intensity": 4.4,
+              "color": "#ff8587",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 1,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.02,
+                0.16,
+                -0.3
+              ],
+              "target": [
+                0,
+                0.033,
+                -0.06
+              ],
+              "intensity": 5.4,
+              "color": "#fff4eb",
+              "angle": 40
+            },
+            "rim": {
+              "position": [
+                -0.17,
+                0.22,
+                0.21
+              ],
+              "target": [
+                0,
+                0,
+                -0.03
+              ],
+              "intensity": 4.4,
+              "color": "#ff8587",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        }
       ]
     },
     {
-      "start": 0.66,
-      "end": 0.88,
+      "id": "structure-and-assembly",
       "title": [
-        "进入壳体内部。",
-        "Inside the shell."
+        "结构与装配",
+        "Structure & assembly"
       ],
-      "body": [
-        "切面旋转后，镜头与灯光继续进入内部。",
-        "The section rotates as the camera and light move inside."
+      "duration": 14,
+      "hold": 0.95,
+      "locked": false,
+      "from": "wrist-side-rear",
+      "to": "assembly-full",
+      "shots": [
+        {
+          "id": "assembled-reference",
+          "at": 0.24,
+          "pose": "assembly-ready"
+        },
+        {
+          "id": "hold-assembled-reference",
+          "at": 0.42,
+          "pose": "assembly-ready"
+        },
+        {
+          "id": "frame-separation-axis",
+          "at": 0.53,
+          "pose": "assembly-full",
+          "explode": 0
+        },
+        {
+          "id": "open-stack",
+          "at": 0.62,
+          "pose": "assembly-full",
+          "explode": 0.48
+        },
+        {
+          "id": "full-exploded-view",
+          "at": 0.73,
+          "pose": "assembly-full"
+        }
+      ],
+      "beats": [
+        {
+          "start": 0,
+          "end": 0.42,
+          "arrive": 0.29,
+          "reveal": 0.19,
+          "tag": "03 / ASSEMBLY RELATIONSHIP",
+          "title": [
+            "开放式底部",
+            "Open underside"
+          ],
+          "body": [
+            "外壳下方省去传统底壳。开放区域露出侧壁、内部横撑和电子件的布置位置。",
+            "The design omits the conventional bottom shell. The open area exposes the sidewalls, cross-bracing and the space for the electronics."
+          ]
+        },
+        {
+          "start": 0.42,
+          "end": 1,
+          "arrive": 0.82,
+          "reveal": 0.65,
+          "tag": "03 / FULL EXPLODED VIEW",
+          "title": [
+            "五组部件的装配关系",
+            "Five groups in assembly"
+          ],
+          "body": [
+            "滚轮与键盖位于上盖上方，主板与电池布置在下方。电子件为装配示意，用于交代它们与外壳的相对位置。",
+            "The wheel and button covers sit above the upper shell, with the board and battery below. The electronics are assembly references showing their positions relative to the shell."
+          ]
+        }
+      ],
+      "lightingTrack": [
+        {
+          "at": 0,
+          "ambient": 0.28,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.32,
+                0.15,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0.02
+              ],
+              "intensity": 1.736,
+              "angle": 46,
+              "color": "#e5efff"
+            },
+            "key": {
+              "position": [
+                0.02,
+                0.16,
+                -0.3
+              ],
+              "target": [
+                0,
+                0.033,
+                -0.06
+              ],
+              "intensity": 5.4,
+              "color": "#fff4eb",
+              "angle": 40
+            },
+            "rim": {
+              "position": [
+                -0.17,
+                0.22,
+                0.21
+              ],
+              "target": [
+                0,
+                0,
+                -0.03
+              ],
+              "intensity": 4.4,
+              "color": "#ff8587",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.24,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.18,
+                -0.22,
+                0.26
+              ],
+              "target": [
+                0,
+                -0.028,
+                0.04
+              ],
+              "intensity": 4.2,
+              "angle": 45,
+              "color": "#eaf2ff"
+            },
+            "key": {
+              "position": [
+                -0.32,
+                0.52,
+                0.46
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 4.1,
+              "color": "#ffffff",
+              "angle": 53
+            },
+            "rim": {
+              "position": [
+                0.27,
+                0.3,
+                -0.42
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 3.7,
+              "color": "#ffffff",
+              "angle": 48
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.42,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.18,
+                -0.22,
+                0.26
+              ],
+              "target": [
+                0,
+                -0.028,
+                0.04
+              ],
+              "intensity": 4.2,
+              "angle": 45,
+              "color": "#eaf2ff"
+            },
+            "key": {
+              "position": [
+                -0.32,
+                0.52,
+                0.46
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 4.1,
+              "color": "#ffffff",
+              "angle": 53
+            },
+            "rim": {
+              "position": [
+                0.27,
+                0.3,
+                -0.42
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 3.7,
+              "color": "#ffffff",
+              "angle": 48
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.58,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.2,
+                0.2
+              ],
+              "target": [
+                0,
+                -0.025,
+                0.01
+              ],
+              "intensity": 2.3,
+              "angle": 42,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.27,
+                0.38,
+                0.3
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 5,
+              "color": "#fff4eb",
+              "angle": 46
+            },
+            "rim": {
+              "position": [
+                0.15,
+                0.24,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.08,
+                0
+              ],
+              "intensity": 5.4,
+              "color": "#ff777b",
+              "angle": 38
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.73,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.17,
+                0.24
+              ],
+              "target": [
+                0,
+                -0.035,
+                0.015
+              ],
+              "intensity": 2.6,
+              "angle": 40,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.3,
+                0.3,
+                0.32
+              ],
+              "target": [
+                0,
+                0.1,
+                0
+              ],
+              "intensity": 5.4,
+              "color": "#fff4eb",
+              "angle": 43
+            },
+            "rim": {
+              "position": [
+                0.25,
+                0.27,
+                -0.27
+              ],
+              "target": [
+                0,
+                0.08,
+                0
+              ],
+              "intensity": 5.9,
+              "color": "#ff7378",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.8,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.17,
+                0.24
+              ],
+              "target": [
+                0,
+                -0.035,
+                0.015
+              ],
+              "intensity": 2.6,
+              "angle": 40,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.16,
+                0.32,
+                0.36
+              ],
+              "target": [
+                0,
+                0.09,
+                0
+              ],
+              "intensity": 5.5,
+              "color": "#fff4eb",
+              "angle": 45
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.24,
+                -0.23
+              ],
+              "target": [
+                0,
+                0.085,
+                0
+              ],
+              "intensity": 6,
+              "color": "#ff8587",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 1,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.17,
+                0.24
+              ],
+              "target": [
+                0,
+                -0.035,
+                0.015
+              ],
+              "intensity": 2.6,
+              "angle": 40,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.16,
+                0.32,
+                0.36
+              ],
+              "target": [
+                0,
+                0.09,
+                0
+              ],
+              "intensity": 5.5,
+              "color": "#fff4eb",
+              "angle": 45
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.24,
+                -0.23
+              ],
+              "target": [
+                0,
+                0.085,
+                0
+              ],
+              "intensity": 6,
+              "color": "#ff8587",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        }
       ]
     },
     {
-      "start": 0.9,
-      "end": 1,
+      "id": "structural-reinforcement",
       "title": [
-        "一条轨道，可进可退。",
-        "One track. Both directions."
+        "结构强化",
+        "Structural reinforcement"
       ],
-      "body": [
-        "剖切与装配可以复原，继续向上滚动回看细节。",
-        "Scroll upward to revisit the cut and restore the assembly."
+      "duration": 37.5,
+      "hold": 1,
+      "locked": false,
+      "from": "assembly-full",
+      "to": "hero-reassembled",
+      "shots": [
+        {
+          "id": "isolate-upper-shell",
+          "at": 0.065,
+          "pose": "upper-shell-intro"
+        },
+        {
+          "id": "shell-two-pulse-cue",
+          "at": 0.105,
+          "pose": "upper-shell-intro",
+          "cue": {
+            "enabled": true,
+            "start": 0.067,
+            "end": 0.105,
+            "strength": 0.34
+          }
+        },
+        {
+          "id": "approach-side-plane",
+          "at": 0.145,
+          "pose": "side-cut-start"
+        },
+        {
+          "id": "sweep-side-plane",
+          "at": 0.221,
+          "pose": "side-cut-solid"
+        },
+        {
+          "id": "hold-solid-side-section",
+          "at": 0.261,
+          "pose": "side-cut-solid"
+        },
+        {
+          "id": "close-on-rib-section",
+          "at": 0.315,
+          "pose": "side-cut-macro"
+        },
+        {
+          "id": "hold-rib-section",
+          "at": 0.405,
+          "pose": "side-cut-macro"
+        },
+        {
+          "id": "withdraw-side-plane",
+          "at": 0.437,
+          "pose": "side-cut-exit"
+        },
+        {
+          "id": "section-cleared",
+          "at": 0.451,
+          "pose": "side-cut-exit",
+          "cut": {
+            "enabled": false
+          }
+        },
+        {
+          "id": "rib-to-wall-junction",
+          "at": 0.502,
+          "pose": "upper-shell-junction"
+        },
+        {
+          "id": "hold-wall-junction",
+          "at": 0.602,
+          "pose": "upper-shell-junction"
+        },
+        {
+          "id": "extract-button-covers",
+          "at": 0.659,
+          "pose": "button-covers-forward"
+        },
+        {
+          "id": "button-two-pulse-cue",
+          "at": 0.697,
+          "pose": "button-covers-forward",
+          "cue": {
+            "enabled": true,
+            "start": 0.661,
+            "end": 0.697,
+            "strength": 0.34
+          }
+        },
+        {
+          "id": "flip-to-inner-ribs",
+          "at": 0.759,
+          "pose": "button-cover-inner-ribs"
+        },
+        {
+          "id": "hold-button-ribs",
+          "at": 0.869,
+          "pose": "button-cover-inner-ribs"
+        },
+        {
+          "id": "align-button-covers",
+          "at": 0.902,
+          "pose": "button-covers-forward"
+        },
+        {
+          "id": "restore-exploded-positions",
+          "at": 0.93,
+          "pose": "assembly-full",
+          "camera": {
+            "position": [
+              0.275,
+              0.194,
+              0.389
+            ],
+            "target": [
+              0,
+              0.024,
+              0.015
+            ],
+            "fov": 33,
+            "frame": [
+              0.21,
+              0.01
+            ]
+          }
+        },
+        {
+          "id": "seat-shell-and-electronics",
+          "at": 0.945,
+          "pose": "hero-reassembled",
+          "camera": {
+            "position": [
+              0.275,
+              0.194,
+              0.389
+            ],
+            "target": [
+              0,
+              0.024,
+              0.015
+            ],
+            "fov": 33,
+            "frame": [
+              0.21,
+              0.01
+            ]
+          },
+          "assembly": {
+            "wheel": {
+              "offset": [
+                0,
+                0.188,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ]
+            },
+            "button_cover": {
+              "offset": [
+                0,
+                0.119,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "id": "seat-scroll-wheel",
+          "at": 0.955,
+          "pose": "hero-reassembled",
+          "camera": {
+            "position": [
+              0.275,
+              0.194,
+              0.389
+            ],
+            "target": [
+              0,
+              0.024,
+              0.015
+            ],
+            "fov": 33,
+            "frame": [
+              0.21,
+              0.01
+            ]
+          },
+          "assembly": {
+            "button_cover": {
+              "offset": [
+                0,
+                0.119,
+                0
+              ],
+              "rotation": [
+                0,
+                0,
+                0
+              ]
+            }
+          }
+        },
+        {
+          "id": "reassemble",
+          "at": 0.965,
+          "pose": "hero-reassembled",
+          "camera": {
+            "position": [
+              0.275,
+              0.194,
+              0.389
+            ],
+            "target": [
+              0,
+              0.024,
+              0.015
+            ],
+            "fov": 33,
+            "frame": [
+              0.21,
+              0.01
+            ]
+          }
+        },
+        {
+          "id": "pull-back-on-product",
+          "at": 0.983,
+          "pose": "hero-reassembled"
+        }
+      ],
+      "beats": [
+        {
+          "start": 0,
+          "end": 0.261,
+          "arrive": 0.242,
+          "reveal": 0.177,
+          "tag": "04 / LATERAL SOLID SECTION",
+          "title": [
+            "侧切上盖",
+            "Lateral shell section"
+          ],
+          "body": [
+            "剖面穿过上盖侧壁和内部加强结构。实心截面显示薄壁与筋板的材料分布，空腔保持开放。",
+            "The section crosses the sidewall and internal reinforcement. Solid cut faces show where the thin walls and ribs carry material, while cavities remain open."
+          ]
+        },
+        {
+          "start": 0.261,
+          "end": 0.405,
+          "arrive": 0.371,
+          "reveal": 0.295,
+          "tag": "04 / RIB CROSS-SECTION",
+          "title": [
+            "类工字形截面",
+            "I-like rib section"
+          ],
+          "body": [
+            "上盖截边与加强筋下缘构成两道边缘，中间由肋腹连接。类工字形截面把材料分布在上下缘及其连接处。",
+            "The shell edge and lower rib edge form two flanges linked by a web. This I-like section places material along both edges and the web that joins them."
+          ],
+          "annotation": "section-rib"
+        },
+        {
+          "start": 0.405,
+          "end": 0.602,
+          "arrive": 0.551,
+          "reveal": 0.473,
+          "tag": "04 / UPPER SHELL JUNCTION",
+          "title": [
+            "加强筋、侧壁与横撑",
+            "Ribs, sidewalls and cross-bracing"
+          ],
+          "body": [
+            "弧形筋板沿上盖内面延伸并接入侧壁。横向撑杆跨过开放底部，将两侧结构连在一起。",
+            "Curved ribs follow the inner shell and join its sidewalls. Transverse braces span the open underside and connect the two sides."
+          ]
+        },
+        {
+          "start": 0.602,
+          "end": 0.869,
+          "arrive": 0.831,
+          "reveal": 0.727,
+          "tag": "04 / BUTTON COVER UNDERSIDE",
+          "title": [
+            "按键盖内侧加强筋",
+            "Ribs beneath the buttons"
+          ],
+          "body": [
+            "两片薄壁键盖各有交叉筋。筋条沿键面内侧延伸并接入边缘，在薄壁下方形成局部支撑。",
+            "Each thin-walled button cover has crossing ribs. The ribs run along the underside and meet the edges, providing local support beneath the button surface."
+          ],
+          "layout": "bottom"
+        },
+        {
+          "start": 0.869,
+          "end": 1,
+          "arrive": 0.995,
+          "reveal": 0.978,
+          "tag": "04 / REASSEMBLED",
+          "title": [
+            "ERSTE002",
+            "ERSTE002"
+          ],
+          "body": [
+            "右手非对称外形、开放式底部与一体式加强结构构成整机方案。约 33 g 为设计目标。",
+            "The complete design combines a right-hand asymmetric profile, an open underside and integrated reinforcement. Approximately 33 g is the design target."
+          ]
+        }
+      ],
+      "lightingTrack": [
+        {
+          "at": 0,
+          "ambient": 0.4,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.17,
+                0.24
+              ],
+              "target": [
+                0,
+                -0.035,
+                0.015
+              ],
+              "intensity": 2.6,
+              "angle": 40,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.16,
+                0.32,
+                0.36
+              ],
+              "target": [
+                0,
+                0.09,
+                0
+              ],
+              "intensity": 5.5,
+              "color": "#fff4eb",
+              "angle": 45
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.24,
+                -0.23
+              ],
+              "target": [
+                0,
+                0.085,
+                0
+              ],
+              "intensity": 6,
+              "color": "#ff8587",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.59,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.065,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                -0.1,
+                0.15
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.105,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                -0.1,
+                0.15
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.145,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.242,
+                0.075,
+                -0.072
+              ],
+              "target": [
+                0.026,
+                0.055,
+                -0.039
+              ],
+              "intensity": 6,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.221,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.24,
+                0.06,
+                -0.1
+              ],
+              "target": [
+                0.024,
+                0.06,
+                -0.047
+              ],
+              "intensity": 19,
+              "color": "#fff4eb",
+              "angle": 27
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.238,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                0.1,
+                -0.03
+              ],
+              "target": [
+                0.024,
+                0.065,
+                -0.047
+              ],
+              "intensity": 19,
+              "color": "#fff4eb",
+              "angle": 29
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.261,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                0.1,
+                -0.03
+              ],
+              "target": [
+                0.024,
+                0.065,
+                -0.047
+              ],
+              "intensity": 19,
+              "color": "#fff4eb",
+              "angle": 29
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.315,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.05,
+              "color": "#ff9a98",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.145,
+                0.073,
+                -0.103
+              ],
+              "target": [
+                0.015,
+                0.084,
+                -0.064
+              ],
+              "intensity": 17,
+              "color": "#fff4eb",
+              "angle": 27
+            }
+          },
+          "reflection": {
+            "intensity": 0.26,
+            "yaw": -18
+          }
+        },
+        {
+          "at": 0.342,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 1.24,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.05,
+              "color": "#ff9a98",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.14,
+                0.076,
+                -0.012
+              ],
+              "target": [
+                0.015,
+                0.089,
+                -0.037
+              ],
+              "intensity": 18,
+              "color": "#fff4eb",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.34,
+            "yaw": -2
+          }
+        },
+        {
+          "at": 0.364,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 1.24,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.05,
+              "color": "#ff9a98",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.142,
+                0.098,
+                -0.034
+              ],
+              "target": [
+                0.015,
+                0.087,
+                -0.043
+              ],
+              "intensity": 18,
+              "color": "#fff4eb",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.37,
+            "yaw": 14
+          }
+        },
+        {
+          "at": 0.405,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 1.24,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.05,
+              "color": "#ff9a98",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.142,
+                0.098,
+                -0.034
+              ],
+              "target": [
+                0.015,
+                0.087,
+                -0.043
+              ],
+              "intensity": 18,
+              "color": "#fff4eb",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.37,
+            "yaw": 14
+          }
+        },
+        {
+          "at": 0.437,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.248,
+                0.082,
+                -0.052
+              ],
+              "target": [
+                0.024,
+                0.065,
+                -0.047
+              ],
+              "intensity": 19,
+              "color": "#ffffff",
+              "angle": 29
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.502,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.1,
+                -0.12,
+                0.12
+              ],
+              "target": [
+                0.02,
+                0.051,
+                -0.04
+              ],
+              "intensity": 17,
+              "color": "#fff4eb",
+              "angle": 30
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.534,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.028,
+                -0.149,
+                0.08
+              ],
+              "target": [
+                0.003,
+                0.051,
+                -0.042
+              ],
+              "intensity": 17,
+              "color": "#fff4eb",
+              "angle": 37
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.602,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.028,
+                -0.149,
+                0.08
+              ],
+              "target": [
+                0.003,
+                0.051,
+                -0.042
+              ],
+              "intensity": 17,
+              "color": "#fff4eb",
+              "angle": 37
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.659,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                -0.1,
+                0.15
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.697,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                -0.1,
+                0.15
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.759,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 1.4,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.055,
+                0.211,
+                0.128
+              ],
+              "target": [
+                0,
+                0.07,
+                0.024
+              ],
+              "intensity": 14,
+              "color": "#fff4eb",
+              "angle": 45
+            }
+          },
+          "reflection": {
+            "intensity": 0.5,
+            "yaw": -16
+          }
+        },
+        {
+          "at": 0.778,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 1.4,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.055,
+                0.211,
+                0.128
+              ],
+              "target": [
+                0,
+                0.07,
+                0.024
+              ],
+              "intensity": 14,
+              "color": "#fff4eb",
+              "angle": 45
+            }
+          },
+          "reflection": {
+            "intensity": 0.5,
+            "yaw": -16
+          }
+        },
+        {
+          "at": 0.812,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.13,
+                0.26,
+                0.1
+              ],
+              "target": [
+                0,
+                0.072,
+                0.018
+              ],
+              "intensity": 3.4,
+              "angle": 48,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.23,
+                0.126,
+                -0.18
+              ],
+              "target": [
+                0,
+                0.07,
+                0.024
+              ],
+              "intensity": 0.9,
+              "color": "#ff9696",
+              "angle": 28
+            },
+            "focus": {
+              "position": [
+                0.17,
+                0.153,
+                0.106
+              ],
+              "target": [
+                0.011,
+                0.072,
+                0.009
+              ],
+              "intensity": 23,
+              "color": "#fff4eb",
+              "angle": 35
+            }
+          },
+          "reflection": {
+            "intensity": 0.49,
+            "yaw": 13
+          }
+        },
+        {
+          "at": 0.869,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.13,
+                0.26,
+                0.1
+              ],
+              "target": [
+                0,
+                0.072,
+                0.018
+              ],
+              "intensity": 3.4,
+              "angle": 48,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.23,
+                0.126,
+                -0.18
+              ],
+              "target": [
+                0,
+                0.07,
+                0.024
+              ],
+              "intensity": 0.9,
+              "color": "#ff9696",
+              "angle": 28
+            },
+            "focus": {
+              "position": [
+                0.17,
+                0.153,
+                0.106
+              ],
+              "target": [
+                0.011,
+                0.072,
+                0.009
+              ],
+              "intensity": 23,
+              "color": "#fff4eb",
+              "angle": 35
+            }
+          },
+          "reflection": {
+            "intensity": 0.49,
+            "yaw": 13
+          }
+        },
+        {
+          "at": 0.913,
+          "ambient": 0.22,
+          "lights": {
+            "fill": {
+              "position": [
+                -0.21,
+                -0.23,
+                0.32
+              ],
+              "target": [
+                0,
+                0.04,
+                0
+              ],
+              "intensity": 0.85,
+              "angle": 50,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                0.28,
+                0.27,
+                0.25
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.7,
+              "color": "#ffffff",
+              "angle": 49
+            },
+            "rim": {
+              "position": [
+                -0.26,
+                0.16,
+                -0.33
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 1.6,
+              "color": "#ffffff",
+              "angle": 45
+            },
+            "focus": {
+              "position": [
+                0.23,
+                -0.1,
+                0.15
+              ],
+              "target": [
+                0,
+                0.05,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.269,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.93,
+          "ambient": 0.27,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.17,
+                0.24
+              ],
+              "target": [
+                0,
+                -0.035,
+                0.015
+              ],
+              "intensity": 1.45,
+              "angle": 40,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.16,
+                0.32,
+                0.36
+              ],
+              "target": [
+                0,
+                0.09,
+                0
+              ],
+              "intensity": 3.1,
+              "color": "#fff4eb",
+              "angle": 45
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.24,
+                -0.23
+              ],
+              "target": [
+                0,
+                0.085,
+                0
+              ],
+              "intensity": 2.3,
+              "color": "#fff4eb",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.567,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.983,
+          "ambient": 0.27,
+          "lights": {
+            "fill": {
+              "position": [
+                0.3,
+                -0.17,
+                0.24
+              ],
+              "target": [
+                0,
+                -0.035,
+                0.015
+              ],
+              "intensity": 1.45,
+              "angle": 40,
+              "color": "#fff4eb"
+            },
+            "key": {
+              "position": [
+                -0.16,
+                0.32,
+                0.36
+              ],
+              "target": [
+                0,
+                0.09,
+                0
+              ],
+              "intensity": 3.1,
+              "color": "#fff4eb",
+              "angle": 45
+            },
+            "rim": {
+              "position": [
+                0.3,
+                0.24,
+                -0.23
+              ],
+              "target": [
+                0,
+                0.085,
+                0
+              ],
+              "intensity": 2.3,
+              "color": "#fff4eb",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.567,
+            "yaw": 0
+          }
+        },
+        {
+          "at": 0.994,
+          "ambient": 0.32,
+          "lights": {
+            "fill": {
+              "position": [
+                0.32,
+                0.032,
+                0.42
+              ],
+              "target": [
+                0.025,
+                -0.023,
+                0.056
+              ],
+              "intensity": 2.05,
+              "angle": 54,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.2,
+                0.3,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.85,
+              "color": "#fff4eb",
+              "angle": 47
+            },
+            "rim": {
+              "position": [
+                0.32,
+                0.26,
+                -0.36
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.8,
+              "color": "#ff616b",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.91,
+            "yaw": 17
+          }
+        },
+        {
+          "at": 1,
+          "ambient": 0.32,
+          "lights": {
+            "fill": {
+              "position": [
+                0.32,
+                0.032,
+                0.42
+              ],
+              "target": [
+                0.025,
+                -0.023,
+                0.056
+              ],
+              "intensity": 2.05,
+              "angle": 54,
+              "color": "#eaf1ff"
+            },
+            "key": {
+              "position": [
+                -0.2,
+                0.3,
+                0.32
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.85,
+              "color": "#fff4eb",
+              "angle": 47
+            },
+            "rim": {
+              "position": [
+                0.32,
+                0.26,
+                -0.36
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 3.8,
+              "color": "#ff616b",
+              "angle": 40
+            },
+            "focus": {
+              "position": [
+                0.2,
+                0.14,
+                0.12
+              ],
+              "target": [
+                0,
+                0,
+                0
+              ],
+              "intensity": 0,
+              "color": "#ffffff",
+              "angle": 24
+            }
+          },
+          "reflection": {
+            "intensity": 0.91,
+            "yaw": 17
+          }
+        }
       ]
     }
   ]
