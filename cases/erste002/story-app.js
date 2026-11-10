@@ -29,6 +29,7 @@ const loading = $("#loading");
 const loadingCopy = $("#loading-copy");
 const retry = $("#retry");
 const modeButton = $("#mode");
+const initialAssembly = $("#initial-assembly");
 const freePanel = $("#free-controls");
 const freeTools = $("#free-tools");
 const autoButton = $("#auto");
@@ -222,6 +223,7 @@ function updateNavigation() {
     keyboardShotControl = undefined;
   }
   autoButton.disabled = body.dataset.projectReady !== "ready" || free || shots.length < 2;
+  initialAssembly.disabled = !ready || !shots.length;
   autoButton.setAttribute("aria-pressed", String(auto));
   autoButton.textContent = auto ? (lang ? "Stop auto" : "停止自动") : (lang ? "Auto play" : "自动观看");
   for (const [index, button] of Array.from(chapterNav.children).entries()) {
@@ -251,6 +253,7 @@ function setLanguage(value, notify = false) {
   previous.lastElementChild.textContent = lang ? "Previous" : "上一镜";
   next.firstElementChild.textContent = lang ? "Next" : "下一镜";
   restart.lastElementChild.textContent = lang ? "Back to start" : "回到开头";
+  initialAssembly.textContent = lang ? "Initial assembly" : "初始总装";
   $("#part-label").textContent = lang ? "Part" : "部件";
   $("#assembly-label").textContent = lang ? "Assembly" : "装配";
   $("#free-tools-label").textContent = lang ? "More tools" : "更多操作";
@@ -442,6 +445,10 @@ restart.onclick = () => {
   seek(0);
   playToShot(0);
   chapterNav.firstElementChild?.focus();
+};
+initialAssembly.onclick = () => {
+  setAuto(false);
+  seek(shots[0].hold);
 };
 addEventListener("keydown", (event) => {
   if (

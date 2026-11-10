@@ -519,8 +519,8 @@ body[data-segment="exterior"] .caption h1 {
   align-items: center;
   gap: 6px;
   font-size: 12px;
+  white-space: nowrap;
 }
-.free-controls label:first-child { white-space: nowrap; }
 #assembly { width: 100%; min-width: 0; margin-inline: 0; }
 #free-tools-label {
   display: flex;
@@ -970,7 +970,7 @@ select {
   transition: translate 180ms ease;
 }
 #story :is(#prev-chapter, .free-controls button, .free-controls select, .free-controls .tool, #retry,
-  .tools > #auto, .tools > #mode) {
+  .tools > :is(#auto, #mode, #initial-assembly)) {
   min-height: 44px;
   border: 1px solid #726165;
   border-radius: 0;
@@ -979,7 +979,32 @@ select {
   transition: background-color 150ms, border-color 150ms, translate 100ms;
 }
 #story :is(#auto, #mode, #isolate-part)[aria-pressed=true] { box-shadow: inset 0 -2px var(--cue); }
-#story .free-controls select { color-scheme: dark; }
+#story #initial-assembly:not(:disabled) {
+  border-inline-start-color: var(--cue);
+  color: var(--cue-ink);
+  font-weight: 650;
+  white-space: nowrap;
+}
+#story #part {
+  color-scheme: dark;
+  background: #21191c;
+  color: #fff3ef;
+}
+#story #part option {
+  background: #21191c;
+  color: #fff3ef;
+}
+@supports (appearance: base-select) {
+  #story #part,
+  #part::picker(select) { appearance: base-select; }
+  #part::picker(select) {
+    min-inline-size: 140px;
+    background: #21191c;
+    border: 1px solid #8b777b;
+  }
+  #story #part option { min-height: 36px; padding: 6px 10px; }
+  #story #part option:is(:checked, :hover, :focus-visible) { background: #523036; }
+}
 #story #assembly { accent-color: var(--cue); min-height: 44px; }
 #story .story-footer { border-top-color: #635155; }
 #story .chapter-readout span { color: var(--cue); }
@@ -1001,18 +1026,19 @@ select {
   background: repeating-linear-gradient(90deg, transparent 0 calc(100% / var(--cue-count, 11) - 2px), #151115 calc(100% / var(--cue-count, 11) - 2px) calc(100% / var(--cue-count, 11)));
 }
 #story :is(#prev-chapter, #next-chapter, #restart-story, .chapter-nav button,
-  .free-controls button, .free-controls select, .free-controls a, .tools > #auto, .tools > #mode, #retry):focus-visible { outline: 2px solid #ffa8a3; outline-offset: 3px; }
+  .free-controls button, .free-controls select, .free-controls a, .tools > :is(#auto, #mode, #initial-assembly), #retry):focus-visible { outline: 2px solid #ffa8a3; outline-offset: 3px; }
 
 @media (hover: hover) {
   #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover { border-color: #ffa39c; color: white; }
   #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover::before { transform: scaleX(1); }
   #story #next-chapter:not(:disabled):hover > [aria-hidden] { translate: 3px 0; }
   #story :is(#prev-chapter, .free-controls button, .free-controls select, .free-controls .tool,
-    .tools > #auto, .tools > #mode, #retry):not(:disabled):hover { background: #30222729; border-color: var(--cue-rule); }
+    .tools > :is(#auto, #mode, #initial-assembly), #retry):not(:disabled):hover { background: #30222729; border-color: var(--cue-rule); }
+  #story #part:not(:disabled):hover { background: #35252a; }
 }
 #story .chapter-controls :is(#prev-chapter, #next-chapter, #restart-story):not(:disabled):active,
-#story :is(.free-controls button, .tools > #auto, .tools > #mode, #retry):not(:disabled):active { translate: 0 1px; background: #41282e36; }
-#story :is(#prev-chapter, #next-chapter, .free-controls button, .tools > #auto, .tools > #mode):disabled {
+#story :is(.free-controls button, .tools > :is(#auto, #mode, #initial-assembly), #retry):not(:disabled):active { translate: 0 1px; background: #41282e36; }
+#story :is(#prev-chapter, #next-chapter, .free-controls button, .tools > :is(#auto, #mode, #initial-assembly)):disabled {
   opacity: 1;
   color: var(--cue-mute);
   border-color: #665457;
@@ -1042,12 +1068,18 @@ select {
 }
 /* Keep the blur local to the controls, so the model and its lighting stay crisp. */
 #story :is(.chapter-controls button, .chapter-nav,
-  .tools > #auto, .tools > #mode, .free-controls, #retry) {
+  .tools > :is(#auto, #mode, #initial-assembly), .free-controls, #retry) {
   -webkit-backdrop-filter: blur(5px) saturate(108%);
   backdrop-filter: blur(5px) saturate(108%);
 }
 #story .chapter-nav { background: #21171a0a; }
 #story .chapter-nav button[aria-current] { background: #21171a14; }
+
+@media (max-width: 480px) {
+  html:not([data-project-hosted]) .topbar { flex-wrap: wrap; gap: 8px; }
+  html:not([data-project-hosted]) .identity { display: flex; align-items: center; flex-wrap: wrap; }
+  html:not([data-project-hosted]) #scene-root { inset-block-start: calc(var(--top) + 86px); }
+}
 
 /* Short viewports inside the host iframe have less height than the device. */
 @media (orientation: landscape) and (max-height: 480px) {
