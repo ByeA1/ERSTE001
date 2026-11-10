@@ -695,6 +695,7 @@ select {
   }
   body[data-caption-layout="bottom"] .caption {
     width: min(76%, 550px);
+    background: none;
   }
   .caption p {
     font-size: 12px;

@@ -906,7 +906,7 @@ function setReady(value) {
   } else if (!$("#fallback-poster")) {
     const image = document.createElement("img");
     image.id = "fallback-poster";
-    image.src = "/assets/render/002-cover.avif";
+    image.src = "./assets/erste002-hero-front-right-v01.webp";
     image.alt = "ERSTE002";
     loading.prepend(image);
   }
