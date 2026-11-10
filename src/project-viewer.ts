@@ -92,7 +92,7 @@ function createPanel() {
     void loading.reveal(signal, true).then(() => {
       presentFrame(frame, signal);
     });
-  });
+  }, closeProject);
   panel.addEventListener('cancel',event=>{event.preventDefault();closeProject();});
   panel.addEventListener('close', finishProjectClose);
   window.addEventListener('message', event => {
@@ -166,7 +166,7 @@ export function openProject(projectId: string, section = ''): boolean {
   syncCaseLanguage();
   localize(panel!);
   void prepareProject(frame, activeSignal);
-  siteNavigation.focus();
+  panel!.focus({ preventScroll: true });
   return true;
 }
 

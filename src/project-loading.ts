@@ -11,13 +11,20 @@ export class ProjectLoading {
   private entryFrame = 0;
   private run = new AbortController();
   private logoPlayer: RhineLogoPlayer;
-  constructor(private panel: HTMLDialogElement, retry: () => void, proceed: () => void) {
+  constructor(private panel: HTMLDialogElement, retry: () => void, proceed: () => void, back: () => void) {
     this.root.className = 'case-loading';
     this.root.hidden = true;
     this.root.setAttribute('aria-label', '项目档案加载');
     this.root.innerHTML = `<div class="case-loading-grid" aria-hidden="true"></div><div class="case-loading-scanlines" aria-hidden="true"></div><div class="case-loading-content"><div class="case-loading-kicker">ANALYSIS OS / ARCHIVE ACCESS</div><div class="case-loading-optics" aria-hidden="true"><i></i><i></i><i></i><b>+</b><b>+</b><div>${loopingLogoSvg}</div></div><div class="case-loading-file"></div><h2>正在读取项目档案</h2><p class="case-loading-status" role="status" aria-live="polite"></p><div class="case-loading-track" aria-hidden="true"><i></i></div><ol class="case-loading-steps" aria-label="加载步骤"><li data-zh="01 / 档案读取" data-en="01 / CONNECT">01 / 档案读取</li><li data-zh="02 / 首屏准备" data-en="02 / PREPARE">02 / 首屏准备</li><li data-zh="03 / 确认访问" data-en="03 / ACCESS">03 / 确认访问</li></ol><div class="case-loading-actions"><button type="button" data-retry data-zh="重新载入 ↻" data-en="RETRY ↻" hidden>重新载入 ↻</button><button type="button" data-proceed data-zh="先查看页面 →" data-en="OPEN PAGE →" hidden>先查看页面 →</button></div></div><div class="case-loading-foot"><span>SESSION AUTHORIZED</span><span>DESIGN ARCHIVE / READ ONLY</span></div>`;
     this.root.querySelector('[data-retry]')!.addEventListener('click', retry);
     this.root.querySelector('[data-proceed]')!.addEventListener('click', proceed);
+    const backButton = document.createElement('button');
+    backButton.type = 'button';
+    backButton.dataset.loadingBack = '';
+    backButton.hidden = true;
+    translatedText(backButton, '← 返回终端', '← Back to terminal');
+    backButton.addEventListener('click', back);
+    this.root.querySelector('.case-loading-actions')!.append(backButton);
     panel.append(this.root);
     this.logoPlayer = new RhineLogoPlayer(this.root.querySelector<SVGSVGElement>('svg.rhine-logo')!);
     const scan=document.createElement('div');
@@ -98,6 +105,7 @@ export class ProjectLoading {
     this.setPhase('failed', message);
     this.root.querySelector<HTMLButtonElement>('[data-retry]')!.hidden = false;
     this.root.querySelector<HTMLButtonElement>('[data-proceed]')!.hidden = !canProceed;
+    this.root.querySelector<HTMLButtonElement>('[data-loading-back]')!.hidden = false;
   }
   cancel() {
     this.logoPlayer.setActive(false);

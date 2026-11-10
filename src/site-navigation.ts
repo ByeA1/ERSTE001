@@ -6,7 +6,10 @@ class SiteNavigation {
   readonly root = document.createElement('nav');
   private readonly toggle: HTMLButtonElement;
   private readonly menu: HTMLElement;
-  private readonly projectMenu: HTMLElement;
+  private readonly profile: HTMLElement;
+  private readonly metadata: HTMLElement;
+  private readonly language: HTMLElement;
+  private readonly close: HTMLButtonElement;
   private readonly projectLinks: HTMLElement;
   private readonly name: HTMLElement;
   private timer = 0;
@@ -18,14 +21,20 @@ class SiteNavigation {
 
   constructor() {
     this.root.className = 'site-navigation';
-    this.root.innerHTML = `<button class="site-nav-toggle" type="button" aria-controls="site-nav-menu"><span aria-hidden="true" class="site-nav-glyph">☰</span><b></b></button>
+    this.root.innerHTML = `<div class="site-nav-profile" hidden><strong>albert_z0413@hotmail.com</strong><span>Product Design · 2026</span></div>
+      <div class="site-nav-meta" hidden><span>Product Design</span><span>2026</span></div>
+      <button class="site-nav-toggle" type="button" aria-controls="site-nav-menu"><span aria-hidden="true" class="site-nav-glyph">☰</span><b></b></button>
+      <button type="button" class="project-case-close" hidden><span aria-hidden="true">←</span><span data-zh="返回终端" data-en="Back to terminal">返回终端</span></button>
       <div id="site-nav-menu" class="site-nav-menu" hidden>
         <div class="site-nav-language">${languageControls()}</div>
-        <div class="site-nav-projects" hidden><div class="site-nav-links"></div><button type="button" class="project-case-close"><span class="site-nav-back-full" data-zh="← 返回档案展示" data-en="← Back to archive">← 返回档案展示</span><span class="site-nav-back-short" data-zh="← 档案" data-en="← Archive">← 档案</span></button></div>
+        <div class="site-nav-links" hidden></div>
       </div>`;
     this.toggle = this.root.querySelector('.site-nav-toggle')!;
     this.menu = this.root.querySelector('.site-nav-menu')!;
-    this.projectMenu = this.root.querySelector('.site-nav-projects')!;
+    this.profile = this.root.querySelector('.site-nav-profile')!;
+    this.metadata = this.root.querySelector('.site-nav-meta')!;
+    this.language = this.root.querySelector('.site-nav-language')!;
+    this.close = this.root.querySelector('.project-case-close')!;
     this.projectLinks = this.root.querySelector('.site-nav-links')!;
     this.name = this.toggle.querySelector('b')!;
     for (const project of projects.filter(item => item.page && item.shortcut !== false)) {
@@ -36,7 +45,7 @@ class SiteNavigation {
       button.addEventListener('click', () => this.switchProject?.(project.id));
       this.projectLinks.append(button);
     }
-    this.root.querySelector('.project-case-close')!.addEventListener('click', () => this.back?.());
+    this.close.addEventListener('click', () => this.back?.());
     this.toggle.addEventListener('click', () => this.expand(this.menu.hidden));
     this.root.addEventListener('pointerenter', () => clearTimeout(this.timer));
     this.root.addEventListener('pointerleave', () => this.schedule());
@@ -64,7 +73,8 @@ class SiteNavigation {
     if (!this.terminal) return;
     this.current = undefined;
     this.root.dataset.theme = 'terminal';
-    this.projectMenu.hidden = true;
+    this.profile.hidden = this.metadata.hidden = this.close.hidden = this.projectLinks.hidden = true;
+    this.menu.prepend(this.language);
     this.terminalTools!.hidden = false;
     this.terminal.append(this.root);
     this.expand(false);
@@ -75,7 +85,8 @@ class SiteNavigation {
     this.switchProject = select;
     this.back = back;
     this.root.dataset.theme = project.navigationTheme ?? 'light';
-    this.projectMenu.hidden = false;
+    this.profile.hidden = this.metadata.hidden = this.close.hidden = this.projectLinks.hidden = false;
+    this.close.before(this.language);
     if (this.terminalTools) this.terminalTools.hidden = true;
     this.projectLinks.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
       const current = button.dataset.navProject === project.id;
@@ -87,7 +98,7 @@ class SiteNavigation {
     this.expand(false);
   }
 
-  focus() { this.toggle.focus({ preventScroll: true }); }
+  focus() { (this.current ? this.close : this.toggle).focus({ preventScroll: true }); }
 
   private expand(open: boolean) {
     this.menu.hidden = !open;
@@ -107,8 +118,11 @@ class SiteNavigation {
 
   private localize() {
     this.root.setAttribute('aria-label', t('站点导航', 'Site navigation'));
-    this.toggle.setAttribute('aria-label', this.menu.hidden ? t('展开导航', 'Expand navigation') : t('收起导航', 'Collapse navigation'));
-    this.name.textContent = this.current?.title ?? 'ANALYSIS OS';
+    const collapsed = this.menu.hidden;
+    this.toggle.setAttribute('aria-label', this.current
+      ? (collapsed ? t('展开作品集', 'Expand portfolio') : t('收起作品集', 'Collapse portfolio'))
+      : (collapsed ? t('展开导航', 'Expand navigation') : t('收起导航', 'Collapse navigation')));
+    this.name.textContent = this.current ? t('作品集', 'Portfolio') : 'ANALYSIS OS';
     localize(this.root);
   }
 }
