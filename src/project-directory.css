@@ -1,7 +1,7 @@
 .archive-directory {
   position: absolute;
   z-index: 6;
-  inset-block-start: 25%;
+  inset-block-start: calc(var(--top-edge, 84px) + 50px);
   inset-inline-end: max(22px, env(safe-area-inset-right));
   display: grid;
   justify-items: end;
@@ -15,9 +15,6 @@
 .terminal-modal-open .archive-directory {
   visibility: hidden;
 }
-#stage[data-mode=detail] .archive-directory {
-  inset-block-start: calc(var(--top-edge, 84px) + 50px);
-}
 .archive-directory > div {
   grid-area: 1 / 1;
   display: grid;
@@ -25,15 +22,13 @@
   align-content: start;
   gap: 7px;
   pointer-events: auto;
-  transition: opacity 220ms ease, transform 300ms cubic-bezier(.2,.7,.25,1);
+  transition: opacity 220ms ease;
 }
 .archive-directory[data-scope=projects] [data-directory-list=collections],
 .archive-directory[data-scope=collections] [data-directory-list=projects] {
   opacity: 0;
   pointer-events: none;
 }
-.archive-directory[data-scope=projects] [data-directory-list=collections] { transform: translateY(-10px); }
-.archive-directory[data-scope=collections] [data-directory-list=projects] { transform: translateY(10px); }
 .archive-directory[data-animate=false] > div,
 #stage.reduce-motion .archive-directory > div { transition: none; }
 .directory-heading {
@@ -63,9 +58,12 @@
   min-height: 44px;
   color: inherit;
   font: inherit;
+}
+.directory-items button:not(:disabled):is(:hover, :active) {
   scale: none;
   filter: none;
 }
+.directory-items .terminal-clicked { animation: none; }
 .directory-number {
   color: var(--theme-muted, #6c6a5e);
   opacity: .76;
@@ -130,15 +128,14 @@
 #stage .terminal-utilities .terminal-language > span { display: none; }
 #stage:has(.terminal-utilities) .system-footer { align-items: center; gap: 22px; }
 #stage:is([data-layout=compact], [data-layout=portrait]) .archive-directory {
-  inset-block-start: var(--top-edge);
+  inset-block-start: max(env(safe-area-inset-top), calc(var(--top-edge) - 12px));
   inset-inline-end: var(--edge);
 }
 #stage[data-layout=portrait] .archive-directory {
-  inset-block-start: calc(var(--top-edge) + 47px);
+  inset-block-start: calc(var(--top-edge) + 37px);
 }
 #stage:is([data-layout=compact], [data-layout=portrait]) .archive-directory > div { gap: 0; }
 #stage:is([data-layout=compact], [data-layout=portrait]) .directory-items { grid-auto-flow: column; gap: 0; }
-#stage:is([data-layout=compact], [data-layout=portrait]) .directory-heading { min-height: 24px; }
 #stage:is([data-layout=compact], [data-layout=portrait]) .directory-label {
   inset-block-start: 100%;
   inset-inline-end: 0;
