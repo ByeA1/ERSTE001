@@ -42,13 +42,6 @@
   text-transform: uppercase;
   white-space: nowrap;
 }
-.directory-back {
-  min-height: 44px;
-  color: var(--theme-ink, #252b20);
-  font: inherit;
-  letter-spacing: .04em;
-}
-.directory-back[hidden] { display: none; }
 .directory-items { display: grid; gap: 2px; justify-items: end; }
 .directory-items button {
   position: relative;
@@ -96,7 +89,6 @@
   .directory-items button:hover .directory-number { color: var(--theme-ink, #252b20); opacity: 1; }
   .directory-items button:hover .directory-label { opacity: 1; transform: none; }
 }
-#stage[data-collection-open=true] #archive-ui[data-portfolio=true] .column-navigation { display: none; }
 
 #stage .system-footer .terminal-utilities {
   position: static;

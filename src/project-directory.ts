@@ -72,7 +72,7 @@ export function createProjectDirectory(
   });
 
   return {
-    sync(next: DirectoryScope, entries: DirectoryItem[], selected: string | undefined, animate: boolean, showBack: boolean) {
+    sync(next: DirectoryScope, entries: DirectoryItem[], selected: string | undefined, animate: boolean) {
       scope = next;
       host.dataset.scope = scope;
       host.dataset.animate = String(animate);
@@ -80,7 +80,6 @@ export function createProjectDirectory(
         ? t('档案集目录', 'Archive collections') : t('项目目录', 'Projects in this collection'));
       lists.collections.inert = scope !== 'collections';
       lists.projects.inert = scope !== 'projects';
-      host.querySelector<HTMLButtonElement>('.directory-back')!.hidden = !showBack;
       const list = items[scope];
       const buttons = [...list.querySelectorAll<HTMLButtonElement>('button')];
       if (buttons.length !== entries.length || buttons.some((button, index) => button.dataset.directoryId !== entries[index].id)) {

@@ -105,7 +105,7 @@ $("#stage").innerHTML = `
   </nav>
   ${!isWallpaper ? `<nav class="archive-directory" data-scope="collections" aria-label="档案集目录" inert>
     <div data-directory-list="collections"><div class="directory-heading" data-zh="档案集" data-en="Collections">档案集</div><div class="directory-items"></div></div>
-    <div data-directory-list="projects" inert><div class="directory-heading"><button type="button" class="directory-back" data-action="collection-back" data-zh="← 档案海" data-en="← Archive sea" hidden>← 档案海</button><span data-zh="项目目录" data-en="Projects">项目目录</span></div><div class="directory-items"></div></div>
+    <div data-directory-list="projects" inert><div class="directory-heading" data-zh="项目目录" data-en="Projects">项目目录</div><div class="directory-items"></div></div>
   </nav>` : ''}
   <button id="skip" class="${isWallpaper?'skip':'opening-skip'}" data-action="skip" ${!isWallpaper?'hidden':''}><span data-zh="跳过开场" data-en="SKIP OPENING">跳过开场</span> ↗</button>
   <section id="boot" class="boot" aria-label="系统启动">
@@ -172,7 +172,6 @@ $("#viewport").insertAdjacentHTML(
 );
 
 type Mode = "boot" | "archive" | "detail";
-let collectionOpen = false;
 let mode: Mode = "boot",
   selected = openingSelection,
   bootStart = 0,
@@ -589,8 +588,6 @@ function setMode(next: Mode) {
   }
   if (next === "detail" && mode !== "detail") recordAccess();
   mode = next;
-  if (next === 'boot') collectionOpen = false;
-  else if (!isWallpaper && next === 'detail') collectionOpen = true;
   if (next !== "boot") {
     fadeOpeningOverlay();
     if (!pwaStarted && !lightweight && import.meta.env.MODE !== "model-review") {
@@ -704,7 +701,6 @@ function stepFile(direction: number) {
   );
 }
 function stepColumn(direction: number) {
-  if (collectionOpen) return;
   const lane = isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length);
   const next = wrap(lane + direction, archiveColumns.length);
   select(columnMemory[next], { axis: "lane", direction });
@@ -714,25 +710,18 @@ const projectDirectory = !isWallpaper ? createProjectDirectory($('.archive-direc
   if (scope === 'collections') {
     const collection = projectCollections.find(item => item.id === id);
     if (!collection) return;
-    collectionOpen = open && collection.projectIds.length > 0;
     const index = columnMemory[collectionLane(id)];
     if (selected !== index) select(index);
-    else updateSelection();
+    if (open && collection.projectIds.length) setMode('detail');
     if (open) projectDirectory?.focus();
     return;
   }
   const index = columnFiles(fileLocation(selected).lane).find(index => records[index].projectId === id);
-  if (index === undefined || (mode === 'detail' && selected === index)) return;
-  const showDetail = open || mode === 'detail';
-  if (selected !== index) select(index);
-  if (showDetail) setMode('detail');
+  if (index === undefined || selected === index) return;
+  select(index);
+  setMode('detail');
   if (open) projectDirectory?.focus();
 }) : undefined;
-function leaveCollection() {
-  collectionOpen = false;
-  updateSelection();
-  projectDirectory?.focus();
-}
 function updateSelection(navigation?: ArchiveNavigation) {
   const r = records[selected];
   const lane = isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length);
@@ -800,18 +789,16 @@ function updateSelection(navigation?: ArchiveNavigation) {
   $("#saved-count").textContent = String(saved.size).padStart(2, "0");
   if (!isWallpaper) {
     const collection = collectionAtLane(lane);
-    $('#stage').dataset.collectionOpen = String(collectionOpen);
     projectDirectory?.sync(
-      collectionOpen ? 'projects' : 'collections',
-      collectionOpen ? files.flatMap(index => {
+      mode === 'detail' ? 'projects' : 'collections',
+      mode === 'detail' ? files.flatMap(index => {
         const project = getProject(records[index].projectId);
         return project ? [{ id: project.id, label: project.title }] : [];
       }) : projectCollections.map(item => ({
         id: item.id, label: t(item.zh, item.title), reserved: !item.projectIds.length,
       })),
-      collectionOpen ? r.projectId : collection.id,
+      mode === 'detail' ? r.projectId : collection.id,
       motionActive('surfaceTransitions') && mode !== 'boot',
-      collectionOpen && mode === 'archive',
     );
     const empty=Boolean(r.placeholder);
     $('.archive-callout').dataset.reserved=String(empty);
@@ -947,8 +934,8 @@ function renderProjectDetail() {
   };
   const status=r.projectId==='erste001'?t('已打样 · 可读取','PROTOTYPED · READABLE'):t('结构迭代中 · 可读取','IN PROGRESS · READABLE');
   $('#object-id').textContent=`NO.${project.number}`;
-  $('.back-button span').textContent=t('返回项目集','PROJECT COLLECTIONS');
-  $('.back-button').setAttribute('aria-label',t('返回项目集','Back to collections'));
+  $('.back-button span').textContent=t('返回档案海','BACK TO ARCHIVE');
+  $('.back-button').setAttribute('aria-label',t('返回档案海','Back to archive'));
   $('.object-caption>div').textContent='GAMING MOUSE / DESIGN ARCHIVE';
   $('.viewer-open').innerHTML=`${t('360° 查看档案装置','360° INSPECT ARCHIVE')} <span>↗</span>`;
   $('#detail-content').innerHTML=`<div class="detail-kicker"><span>DESIGN ARCHIVE</span><span>${escapeHtml(project.title)}</span></div>
@@ -1300,7 +1287,6 @@ document.addEventListener("click", (e) => {
   if (action === "next") stepFile(1);
   if (action === "column-prev") stepColumn(-1);
   if (action === "column-next") stepColumn(1);
-  if (action === "collection-back" && mode === "archive") leaveCollection();
   if (action === "open") openFile();
   if (action === "model-viewer" && mode === "detail" && scene) {
     const activeScene = scene;
@@ -1413,7 +1399,6 @@ document.addEventListener("keydown", (e) => {
   const typing = e.target instanceof HTMLInputElement;
   if (e.key === "Escape") {
     if (modal) closeModal();
-    else if (!isWallpaper && mode === 'archive' && collectionOpen) leaveCollection();
     else if (mode === "detail" || (mode === "boot" && ready)) {
       const sound = mode === "detail" ? "back" : "ui-tick";
       setMode("archive");
@@ -1743,12 +1728,10 @@ function bindScene(scene: ArchiveScene, cell?: { lane: number; row: number }) {
   scene.select(selected, cell ? { cell } : undefined);
   scene.onSelect = (i, cell) => {
     if (mode !== "archive" || modal || viewer?.isOpen) return;
-    if (collectionOpen && records[i].collectionId !== records[selected].collectionId) return;
     select(i, cell ? { cell } : undefined);
   };
   scene.onActivate = isWallpaper ? undefined : (i, cell) => {
     if (mode !== "archive" || modal || viewer?.isOpen) return;
-    if (collectionOpen && records[i].collectionId !== records[selected].collectionId) return;
     select(i, cell ? { cell } : undefined);
     openFile();
   };
@@ -2110,10 +2093,7 @@ Object.assign(window, {
       bootStart = performance.now() / 1000 - t;
       lastStep = "";
     },
-    archive: () => {
-      collectionOpen = false;
-      setMode("archive");
-    },
+    archive: () => setMode("archive"),
     detail: () => openFile(),
     select: (i: number) => select(i),
     stats: () => ({
