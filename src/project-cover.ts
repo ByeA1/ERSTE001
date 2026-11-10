@@ -2,12 +2,9 @@ import type {ProjectDefinition} from './projects';
 
 /** One printed layout for every cassette; Blender supplies only the hero plate. */
 export const PROJECT_COVER={width:1600,height:910,hero:{x:64,y:128,width:1472,height:510},dividerY:674} as const;
-// The two existing plates have very different empty margins. These source-only
-// crops keep their subjects comparable until the standard Blender plates arrive.
-// New cover paths use the full image; the card layout remains identical.
+// The legacy ERSTE001 photo needs a crop. Standard plates use the full image.
 const legacyFocus:Record<string,{x:number;y:number;width:number;height:number}>={
   '/cases/erste001/assets/opt/assets/mouse/hero-1-1440.avif':{x:460,y:140,width:590,height:415},
-  '/assets/render/002-cover.avif':{x:300,y:300,width:930,height:640},
 };
 export function containHero(width:number,height:number) {
   const box=PROJECT_COVER.hero;
