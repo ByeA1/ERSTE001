@@ -1,18 +1,26 @@
 ﻿albert_z0413@hotmail.com · DESIGN ARCHIVE
 FILE X-004 / 三维结构档案
-INTERACTIVE ASSEMBLY
+ASSEMBLY / SOLID SECTION
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
 相关人物：albert_z0413@hotmail.com
 访问范围：PREVIEW / WIP
 
-在线项目页提供鼠标壳体的三维展示，可以旋转、拆解与复位，观察上壳与底部结构的关系。
+三维结构档案用于阅读零件之间的空间关系。开放式底部与完整爆炸展示装配层次，侧向实体剖切揭示上盖内部类工字形加强筋，按键盖独立翻转展示内侧筋位。电子件仅用于表达装配占位与相对位置。
 
 研究记录
-1. 点击完整项目档案，进入鼠标的三维展示。
-2. 拆解用于观察分件关系，复位返回组合状态。
-3. 本终端中的玻璃档案装置仅承担导航展示。
+1. 无传统底壳的开放式底部保留内部结构的可见性；爆炸状态用于辨认分件和装配关系。
+2. 实体剖切观察截面厚度、筋板与侧壁连接；按键盖内侧特写观察交叉筋和薄壁连接。
+3. 主板、电池等电子件为参考模型，不能据此确认最终硬件规格、装配公差或整机重量。
+
+ABSTRACT
+This 3D record explains spatial relationships between parts. The open underside and full exploded assembly show assembly layers. A lateral solid-section cut reveals I-like reinforcement ribs inside the upper shell, while an independently flipped button cover exposes its internal ribs. Electronic components serve only as references for occupied space and relative placement.
+
+RESEARCH NOTES
+1. The open underside has no conventional bottom shell and leaves internal structures visible. The exploded state clarifies part divisions and assembly relationships.
+2. Solid-section views show section thickness and rib-to-sidewall connections. Interior button-cover close-ups show cross ribs and their thin-wall connections.
+3. The mainboard, battery and other electronics are reference models. They do not establish final hardware specifications, assembly tolerances or total product weight.
 
 完整项目：https://www.zlf666.xyz/projects/erste002.html
 albert_z0413@hotmail.com · 独立产品设计 / 2026

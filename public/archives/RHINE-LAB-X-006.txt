@@ -1,18 +1,26 @@
 ﻿albert_z0413@hotmail.com · DESIGN ARCHIVE
-FILE X-006 / 有限空间的重排
-VERTICAL ENVELOPE
+FILE X-006 / 非对称曲面与支撑路径
+ASYMMETRIC SURFACES / SUPPORT PATHS
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
 相关人物：albert_z0413@hotmail.com
 访问范围：ERSTE002 / STRUCTURE
 
-低矮外形限制了壳体内部的垂直空间。ERSTE002 继续研究 PCB、传感器和滚轮的相对位置与装配关系。
+设计研究关注外部曲面与内部支撑如何共同组织。食指侧较高、中指侧较低的几何关系贯穿按键、上盖与掌心区域；内部筋板、类工字形截面及横向支撑连接上盖和侧壁，意在为无传统底壳、无独立中央龙骨的壳体提供支撑。
 
 研究记录
-1. 保留低矮壳体的形态目标。
-2. 结合首轮打印检查内部空间。
-3. 传感器轴线图示和装配顺序尚在完善。
+1. 人体工学研究对象是右手及手腕的自然倾斜，几何表达为食指高、中指低及其向掌心区域的连续过渡。
+2. 结构研究对象是筋板、上盖、侧壁与横向支撑之间的连接关系，而非独立中央龙骨。
+3. 曲面与支撑布局属于设计意图；现有档案不构成人体工学实验、有限元仿真或刚度提升的验证结论。
+
+ABSTRACT
+The design research considers how outer surfaces and internal supports are organized together. The higher index-finger side and lower middle-finger side continue through the buttons, upper shell and palm region. Internal ribs, I-like cross-sections and transverse supports connect the upper shell and sidewalls, intended to support a shell without a conventional bottom shell or separate central spine.
+
+RESEARCH NOTES
+1. The ergonomic study addresses the natural tilt of the right hand and wrist, expressed as a higher index-finger side, a lower middle-finger side and a continuous transition toward the palm region.
+2. The structural study addresses connections among ribs, the upper shell, sidewalls and transverse supports, rather than a separate central spine.
+3. Surface and support layouts express design intent. This record does not establish results from ergonomic experiments, finite element analysis or stiffness-improvement testing.
 
 完整项目：https://www.zlf666.xyz/projects/erste002.html
 albert_z0413@hotmail.com · 独立产品设计 / 2026

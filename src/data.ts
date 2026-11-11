@@ -13,7 +13,9 @@ export interface ArchiveRecord {
   lead: string;
   clearance: string;
   abstract: string;
+  abstractEn?: string;
   findings: string[];
+  findingsEn?: string[];
   source: string;
   projectId?: string;
   section?: string;

@@ -63,6 +63,16 @@ export function validateContent(content) {
     ) {
       errors.push(`${label}.findings：必须包含至少一条非空研究记录`);
     }
+    if (record.abstractEn !== undefined && !isText(record.abstractEn)) {
+      errors.push(`${label}.abstractEn：必须是非空英文摘要`);
+    }
+    if (record.findingsEn !== undefined && (
+      !Array.isArray(record.findingsEn) ||
+      record.findingsEn.length !== record.findings?.length ||
+      !record.findingsEn.every(isText)
+    )) {
+      errors.push(`${label}.findingsEn：须与中文研究记录逐条对应`);
+    }
     try {
       const url = new URL(record.source);
       if (!["https:", "http:"].includes(url.protocol)) throw new Error();
@@ -93,5 +103,6 @@ export async function loadContent() {
 }
 
 export function archiveText(r) {
-  return `\uFEFFalbert_z0413@hotmail.com · DESIGN ARCHIVE\nFILE ${r.id} / ${r.title}\n${r.en}\n\n科室：${r.department}\n编目范围：${r.date}\n相关人物：${r.lead}\n访问范围：${r.clearance}\n\n${r.abstract}\n\n研究记录\n${r.findings.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n\n完整项目：${r.source}\nalbert_z0413@hotmail.com · 独立产品设计 / 2026\n`;
+  const english = r.abstractEn ? `\nABSTRACT\n${r.abstractEn}\n\nRESEARCH NOTES\n${(r.findingsEn ?? []).map((f, i) => `${i + 1}. ${f}`).join("\n")}\n` : '';
+  return `\uFEFFalbert_z0413@hotmail.com · DESIGN ARCHIVE\nFILE ${r.id} / ${r.title}\n${r.en}\n\n科室：${r.department}\n编目范围：${r.date}\n相关人物：${r.lead}\n访问范围：${r.clearance}\n\n${r.abstract}\n\n研究记录\n${r.findings.map((f, i) => `${i + 1}. ${f}`).join("\n")}\n${english}\n完整项目：${r.source}\nalbert_z0413@hotmail.com · 独立产品设计 / 2026\n`;
 }

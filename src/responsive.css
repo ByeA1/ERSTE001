@@ -60,6 +60,7 @@
 :is([data-layout="compact"], [data-layout="portrait"]) .callout-rule { margin: 8px 0 0 20px; }
 :is([data-layout="compact"], [data-layout="portrait"]) .callout-rule i { left: -20px; }
 :is([data-layout="compact"], [data-layout="portrait"]) .file-summary { margin: 12px 0 0; width: 100%; gap: 8px; font-size: 15px; flex-wrap: wrap; }
+:is([data-layout="compact"], [data-layout="portrait"]) #archive-ui[data-portfolio="true"] #selected-title { max-width: 100%; min-width: 0; white-space: normal; }
 :is([data-layout="compact"], [data-layout="portrait"]) .file-summary > span:last-child { font-size: 8px; }
 :is([data-layout="compact"], [data-layout="portrait"]) .read-file { margin: 8px 0 0; min-height: 44px; font-size: 11px; gap: 36px; }
 :is([data-layout="compact"], [data-layout="portrait"]) .archive-counter { left: var(--edge); bottom: 61px; }

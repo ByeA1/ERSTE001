@@ -10,8 +10,10 @@ export interface ProjectDefinition {
   cover?: string;
   preview?: string;
   subtitle?: string;
+  subtitleZh?: string;
   status?: string;
   summary?: string;
+  summaryEn?: string;
   navigationTheme?: 'light' | 'dark';
   releaseOnClose?: boolean;
 }

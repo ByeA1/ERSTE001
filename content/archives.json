@@ -54,38 +54,50 @@
     {
       "id": "X-003",
       "title": "ERSTE002",
-      "en": "SHELL REBUILD",
+      "en": "RIGHT-HAND ERGONOMICS / STRUCTURAL REINFORCEMENT",
       "department": "独立产品设计 / 建模 / 打样",
       "category": "ERSTE002",
       "date": "2026",
       "lead": "albert_z0413@hotmail.com",
       "clearance": "结构迭代中 / WIP",
-      "abstract": "低矮壳体内的结构重排：把传感器光心、PCB 与滚轮放进同一段有限的垂直空间。当前处于结构迭代和打样阶段。",
+      "abstract": "ERSTE002 围绕右手人体工学与结构强化展开设计。食指侧较高、中指侧较低的非对称曲面延续至掌心，意在顺应右手及手腕的自然倾斜。无传统底壳、无独立中央龙骨的结构，以一体式特殊加强筋和横向支撑组织壳体内部。约 33 g 为设计目标，尚非实测重量。",
       "findings": [
-        "壳体已完成首轮打印。",
-        "当前展示模型移除了前后耳片，并以 1.6 mm 底板封闭。",
-        "PCB、滚轮模型及装配照片仍待补充。"
+        "右手人体工学以食指高、中指低为起点，将横向高度差延续至上盖和掌心支撑区域。",
+        "结构强化采用一体式特殊加强筋、类工字形截面及横向支撑，连接上盖与侧壁。",
+        "约 33 g 为待验证的轻量化目标；主板、电池等电子件为装配展示参考模型。"
       ],
       "source": "https://www.zlf666.xyz/projects/erste002.html",
-      "projectId": "erste002"
+      "projectId": "erste002",
+      "abstractEn": "ERSTE002 explores right-hand ergonomics and structural reinforcement. An asymmetric surface, higher beneath the index finger and lower beneath the middle finger, extends into the palm region to follow the natural tilt of the right hand and wrist. With no conventional bottom shell or separate central spine, the design uses integral reinforcement ribs and transverse supports within the shell. Approximately 33 g is a design target, not a measured weight.",
+      "findingsEn": [
+        "Right-hand ergonomics begins with a higher index-finger position and a lower middle-finger position, extending the lateral height difference into the upper shell and palm support region.",
+        "Structural reinforcement uses integral ribs, I-like cross-sections and transverse supports to connect the upper shell and sidewalls.",
+        "Approximately 33 g remains an unverified lightweight design target. The mainboard, battery and other electronic components are reference models for the assembly presentation."
+      ]
     },
     {
       "id": "X-004",
       "title": "三维结构档案",
-      "en": "INTERACTIVE ASSEMBLY",
+      "en": "ASSEMBLY / SOLID SECTION",
       "department": "独立产品设计 / 建模 / 打样",
       "category": "ERSTE002",
       "date": "2026",
       "lead": "albert_z0413@hotmail.com",
       "clearance": "PREVIEW / WIP",
-      "abstract": "在线项目页提供鼠标壳体的三维展示，可以旋转、拆解与复位，观察上壳与底部结构的关系。",
+      "abstract": "三维结构档案用于阅读零件之间的空间关系。开放式底部与完整爆炸展示装配层次，侧向实体剖切揭示上盖内部类工字形加强筋，按键盖独立翻转展示内侧筋位。电子件仅用于表达装配占位与相对位置。",
       "findings": [
-        "点击完整项目档案，进入鼠标的三维展示。",
-        "拆解用于观察分件关系，复位返回组合状态。",
-        "本终端中的玻璃档案装置仅承担导航展示。"
+        "无传统底壳的开放式底部保留内部结构的可见性；爆炸状态用于辨认分件和装配关系。",
+        "实体剖切观察截面厚度、筋板与侧壁连接；按键盖内侧特写观察交叉筋和薄壁连接。",
+        "主板、电池等电子件为参考模型，不能据此确认最终硬件规格、装配公差或整机重量。"
       ],
       "source": "https://www.zlf666.xyz/projects/erste002.html",
-      "projectId": "erste002"
+      "projectId": "erste002",
+      "abstractEn": "This 3D record explains spatial relationships between parts. The open underside and full exploded assembly show assembly layers. A lateral solid-section cut reveals I-like reinforcement ribs inside the upper shell, while an independently flipped button cover exposes its internal ribs. Electronic components serve only as references for occupied space and relative placement.",
+      "findingsEn": [
+        "The open underside has no conventional bottom shell and leaves internal structures visible. The exploded state clarifies part divisions and assembly relationships.",
+        "Solid-section views show section thickness and rib-to-sidewall connections. Interior button-cover close-ups show cross ribs and their thin-wall connections.",
+        "The mainboard, battery and other electronics are reference models. They do not establish final hardware specifications, assembly tolerances or total product weight."
+      ]
     },
     {
       "id": "X-005",
@@ -108,21 +120,27 @@
     },
     {
       "id": "X-006",
-      "title": "有限空间的重排",
-      "en": "VERTICAL ENVELOPE",
+      "title": "非对称曲面与支撑路径",
+      "en": "ASYMMETRIC SURFACES / SUPPORT PATHS",
       "department": "独立产品设计 / 建模 / 打样",
       "category": "结构研究",
       "date": "2026",
       "lead": "albert_z0413@hotmail.com",
       "clearance": "ERSTE002 / STRUCTURE",
-      "abstract": "低矮外形限制了壳体内部的垂直空间。ERSTE002 继续研究 PCB、传感器和滚轮的相对位置与装配关系。",
+      "abstract": "设计研究关注外部曲面与内部支撑如何共同组织。食指侧较高、中指侧较低的几何关系贯穿按键、上盖与掌心区域；内部筋板、类工字形截面及横向支撑连接上盖和侧壁，意在为无传统底壳、无独立中央龙骨的壳体提供支撑。",
       "findings": [
-        "保留低矮壳体的形态目标。",
-        "结合首轮打印检查内部空间。",
-        "传感器轴线图示和装配顺序尚在完善。"
+        "人体工学研究对象是右手及手腕的自然倾斜，几何表达为食指高、中指低及其向掌心区域的连续过渡。",
+        "结构研究对象是筋板、上盖、侧壁与横向支撑之间的连接关系，而非独立中央龙骨。",
+        "曲面与支撑布局属于设计意图；现有档案不构成人体工学实验、有限元仿真或刚度提升的验证结论。"
       ],
       "source": "https://www.zlf666.xyz/projects/erste002.html",
-      "projectId": "erste002"
+      "projectId": "erste002",
+      "abstractEn": "The design research considers how outer surfaces and internal supports are organized together. The higher index-finger side and lower middle-finger side continue through the buttons, upper shell and palm region. Internal ribs, I-like cross-sections and transverse supports connect the upper shell and sidewalls, intended to support a shell without a conventional bottom shell or separate central spine.",
+      "findingsEn": [
+        "The ergonomic study addresses the natural tilt of the right hand and wrist, expressed as a higher index-finger side, a lower middle-finger side and a continuous transition toward the palm region.",
+        "The structural study addresses connections among ribs, the upper shell, sidewalls and transverse supports, rather than a separate central spine.",
+        "Surface and support layouts express design intent. This record does not establish results from ergonomic experiments, finite element analysis or stiffness-improvement testing."
+      ]
     },
     {
       "id": "X-007",
@@ -145,21 +163,27 @@
     },
     {
       "id": "X-008",
-      "title": "下一轮迭代",
-      "en": "ITERATION IN PROGRESS",
+      "title": "版本演进与验证边界",
+      "en": "ITERATION / VALIDATION STATUS",
       "department": "独立产品设计 / 建模 / 打样",
       "category": "原型验证",
       "date": "2026",
       "lead": "albert_z0413@hotmail.com",
       "clearance": "ERSTE002 / WIP",
-      "abstract": "ERSTE002 已进入壳体打印与结构迭代阶段，后续档案将随实体模型与装配验证进度更新。",
+      "abstract": "ERSTE002 的早期档案曾以低矮壳体内的空间重排和封闭底板为研究内容。当前正式展示采用无传统底壳、无独立中央龙骨的版本，叙事重点转向右手非对称曲面与一体式结构强化。早期版本记录不代表当前结构。",
       "findings": [
-        "首轮壳体打印已完成。",
-        "当前三维档案用于展示结构状态。",
-        "后续补充打样照片、PCB、滚轮与装配顺序。"
+        "早期版本的封闭底板与空间重排属于历史迭代，不能作为当前模型的结构说明。",
+        "当前版本以无底壳结构、一体式特殊加强筋和横向支撑为展示基线。",
+        "约 33 g 仍为设计目标；实体重量、结构表现与最终硬件配合需以对应版本的后续实物验证为准。"
       ],
       "source": "https://www.zlf666.xyz/projects/erste002.html",
-      "projectId": "erste002"
+      "projectId": "erste002",
+      "abstractEn": "Early ERSTE002 records studied space rearrangement within a low-profile shell and a closed base plate. The current portfolio presents a version with no conventional bottom shell or separate central spine, focusing on right-hand asymmetric surfaces and integral structural reinforcement. Early-version records do not describe the current structure.",
+      "findingsEn": [
+        "The closed base plate and space rearrangement belong to earlier iterations and must not be used to describe the current model.",
+        "The current presentation baseline is a structure without a conventional bottom shell, using integral reinforcement ribs and transverse supports.",
+        "Approximately 33 g remains a design target. Physical weight, structural performance and final hardware fit require subsequent physical validation of the corresponding version."
+      ]
     },
     {
       "id": "X-009",
@@ -188,14 +212,20 @@
       "date": "2026",
       "lead": "albert_z0413@hotmail.com",
       "clearance": "OPEN PORTFOLIO",
-      "abstract": "欢迎浏览我的产品设计档案。ERSTE001 展示已完成的设计与原型过程，ERSTE002 记录正在推进的结构迭代。",
+      "abstract": "本索引汇集 ERSTE 系列项目及联系入口。ERSTE001 展示已完成的设计与原型过程；ERSTE002 以右手人体工学和结构强化为核心，通过外观、右手人体工学、结构与装配、结构强化四章展示当前设计。",
       "findings": [
         "ERSTE001：FPS 游戏鼠标设计与实体原型。",
-        "ERSTE002：低矮壳体内的结构重排。",
+        "ERSTE002：右手非对称曲面、开放式底部与特殊加强筋；约 33 g 为设计目标，电子件为装配参考模型。",
         "联系邮箱：albert_z0413@hotmail.com"
       ],
       "source": "https://www.zlf666.xyz/projects/erste002.html",
-      "projectId": "erste002"
+      "projectId": "erste002",
+      "abstractEn": "This index brings together the ERSTE projects and contact information. ERSTE001 presents its completed design and prototyping process. ERSTE002 focuses on right-hand ergonomics and structural reinforcement through four chapters covering appearance, right-hand ergonomics, structure and assembly, and structural reinforcement.",
+      "findingsEn": [
+        "ERSTE001 — FPS gaming mouse design and physical prototype.",
+        "ERSTE002 — right-hand asymmetric surfaces, an open underside and special reinforcement ribs. Approximately 33 g is a design target; electronics are assembly reference models.",
+        "Contact — albert_z0413@hotmail.com"
+      ]
     }
   ]
 }

@@ -493,6 +493,7 @@ function fit() {
   updateQualitySummary();
   // Re-measure line covers and tab underline after wrapping changes.
   requestAnimationFrame(() => {
+    updateSelectionTitle();
     documentDecryption.refresh();
     const tab = document.querySelector<HTMLElement>(
       ".detail-tabs button.active",
@@ -722,14 +723,23 @@ const projectDirectory = !isWallpaper ? createProjectDirectory($('.archive-direc
   setMode('detail');
   if (open) projectDirectory?.focus();
 }) : undefined;
+// Rolling glyphs use a single line. Keep longer localized copy readable instead.
+function updateSelectionTitle() {
+  const r = records[selected];
+  const text = isWallpaper ? r.title : r.placeholder ? t('项目集待补充','COLLECTION RESERVED') : getProject(r.projectId)?.subtitle ?? r.title;
+  const title = $('#selected-title');
+  const style = getComputedStyle(title);
+  const measure = document.createElement('canvas').getContext('2d')!;
+  measure.font = style.font;
+  const textWidth = measure.measureText(text).width + (parseFloat(style.letterSpacing) || 0) * text.length;
+  const wraps = !isWallpaper && textWidth > title.parentElement!.clientWidth;
+  selectionTitle.update({ text, animated: motionActive('rollingText') && mode === 'archive' && !wraps });
+}
 function updateSelection(navigation?: ArchiveNavigation) {
   const r = records[selected];
   const lane = isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length);
   const files = columnFiles(lane);
-  selectionTitle.update({
-    text: isWallpaper ? r.title : r.placeholder ? t('项目集待补充','COLLECTION RESERVED') : getProject(r.projectId)?.subtitle ?? r.title,
-    animated: motionActive("rollingText") && mode === "archive",
-  });
+  updateSelectionTitle();
   clearanceTitle.update({
     text: isWallpaper ? r.clearance : r.placeholder ? t('尚未开放','NOT AVAILABLE') : r.projectId==='erste001' ? t('已打样 / 2026','PROTOTYPED / 2026') : t('结构迭代中 / 2026','IN PROGRESS / 2026'),
     animated: motionActive("rollingText") && mode === "archive",
@@ -939,7 +949,7 @@ function renderProjectDetail() {
   $('.object-caption>div').textContent='GAMING MOUSE / DESIGN ARCHIVE';
   $('.viewer-open').innerHTML=`${t('360° 查看档案装置','360° INSPECT ARCHIVE')} <span>↗</span>`;
   $('#detail-content').innerHTML=`<div class="detail-kicker"><span>DESIGN ARCHIVE</span><span>${escapeHtml(project.title)}</span></div>
-    <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn">${r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t('低矮壳体结构重排','Low-profile Shell Rebuild')}<span>GAMING MOUSE</span></div>
+    <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn">${r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t(project.subtitleZh ?? project.subtitle ?? '', project.subtitle ?? '')}<span>GAMING MOUSE</span></div>
     <div class="detail-rule"></div>
     <dl class="metadata"><div><dt>${t('DISCIPLINE / 设计方向','DISCIPLINE')}</dt><dd>${t('独立产品设计','Independent product design')}</dd></div><div><dt>${t('COLLECTION / 项目集','COLLECTION')}</dt><dd>GAMING MOUSE</dd></div><div><dt>${t('DESIGNER / 设计师','DESIGNER')}</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>${t('STATUS / 状态','STATUS')}</dt><dd><i></i>${status}</dd></div></dl>
     <div class="detail-tabs" role="tablist"><button id="tab-overview" role="tab" aria-controls="tab-panel" data-tab="overview">01 <span>${t('概述','Overview')}</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" data-tab="notes">02 <span>${t('研究记录','Research')}</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" data-tab="history">03 <span>${t('访问记录','Access log')}</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
