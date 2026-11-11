@@ -7,12 +7,20 @@ CONTACT & ARCHIVE
 相关人物：albert_z0413@hotmail.com
 访问范围：OPEN PORTFOLIO
 
-欢迎浏览我的产品设计档案。ERSTE001 展示已完成的设计与原型过程，ERSTE002 记录正在推进的结构迭代。
+本索引汇集 ERSTE 系列项目及联系入口。ERSTE001 展示已完成的设计与原型过程；ERSTE002 以右手人体工学和结构强化为核心，通过外观、右手人体工学、结构与装配、结构强化四章展示当前设计。
 
 研究记录
 1. ERSTE001：FPS 游戏鼠标设计与实体原型。
-2. ERSTE002：低矮壳体内的结构重排。
+2. ERSTE002：右手非对称曲面、开放式底部与特殊加强筋；约 33 g 为设计目标，电子件为装配参考模型。
 3. 联系邮箱：albert_z0413@hotmail.com
+
+ABSTRACT
+This index brings together the ERSTE projects and contact information. ERSTE001 presents its completed design and prototyping process. ERSTE002 focuses on right-hand ergonomics and structural reinforcement through four chapters covering appearance, right-hand ergonomics, structure and assembly, and structural reinforcement.
+
+RESEARCH NOTES
+1. ERSTE001 — FPS gaming mouse design and physical prototype.
+2. ERSTE002 — right-hand asymmetric surfaces, an open underside and special reinforcement ribs. Approximately 33 g is a design target; electronics are assembly reference models.
+3. Contact — albert_z0413@hotmail.com
 
 完整项目：https://www.zlf666.xyz/projects/erste002.html
 albert_z0413@hotmail.com · 独立产品设计 / 2026

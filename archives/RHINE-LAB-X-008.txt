@@ -1,18 +1,26 @@
 ﻿albert_z0413@hotmail.com · DESIGN ARCHIVE
-FILE X-008 / 下一轮迭代
-ITERATION IN PROGRESS
+FILE X-008 / 版本演进与验证边界
+ITERATION / VALIDATION STATUS
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
 相关人物：albert_z0413@hotmail.com
 访问范围：ERSTE002 / WIP
 
-ERSTE002 已进入壳体打印与结构迭代阶段，后续档案将随实体模型与装配验证进度更新。
+ERSTE002 的早期档案曾以低矮壳体内的空间重排和封闭底板为研究内容。当前正式展示采用无传统底壳、无独立中央龙骨的版本，叙事重点转向右手非对称曲面与一体式结构强化。早期版本记录不代表当前结构。
 
 研究记录
-1. 首轮壳体打印已完成。
-2. 当前三维档案用于展示结构状态。
-3. 后续补充打样照片、PCB、滚轮与装配顺序。
+1. 早期版本的封闭底板与空间重排属于历史迭代，不能作为当前模型的结构说明。
+2. 当前版本以无底壳结构、一体式特殊加强筋和横向支撑为展示基线。
+3. 约 33 g 仍为设计目标；实体重量、结构表现与最终硬件配合需以对应版本的后续实物验证为准。
+
+ABSTRACT
+Early ERSTE002 records studied space rearrangement within a low-profile shell and a closed base plate. The current portfolio presents a version with no conventional bottom shell or separate central spine, focusing on right-hand asymmetric surfaces and integral structural reinforcement. Early-version records do not describe the current structure.
+
+RESEARCH NOTES
+1. The closed base plate and space rearrangement belong to earlier iterations and must not be used to describe the current model.
+2. The current presentation baseline is a structure without a conventional bottom shell, using integral reinforcement ribs and transverse supports.
+3. Approximately 33 g remains a design target. Physical weight, structural performance and final hardware fit require subsequent physical validation of the corresponding version.
 
 完整项目：https://www.zlf666.xyz/projects/erste002.html
 albert_z0413@hotmail.com · 独立产品设计 / 2026

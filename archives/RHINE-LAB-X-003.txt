@@ -1,18 +1,26 @@
 ﻿albert_z0413@hotmail.com · DESIGN ARCHIVE
 FILE X-003 / ERSTE002
-SHELL REBUILD
+RIGHT-HAND ERGONOMICS / STRUCTURAL REINFORCEMENT
 
 科室：独立产品设计 / 建模 / 打样
 编目范围：2026
 相关人物：albert_z0413@hotmail.com
 访问范围：结构迭代中 / WIP
 
-低矮壳体内的结构重排：把传感器光心、PCB 与滚轮放进同一段有限的垂直空间。当前处于结构迭代和打样阶段。
+ERSTE002 围绕右手人体工学与结构强化展开设计。食指侧较高、中指侧较低的非对称曲面延续至掌心，意在顺应右手及手腕的自然倾斜。无传统底壳、无独立中央龙骨的结构，以一体式特殊加强筋和横向支撑组织壳体内部。约 33 g 为设计目标，尚非实测重量。
 
 研究记录
-1. 壳体已完成首轮打印。
-2. 当前展示模型移除了前后耳片，并以 1.6 mm 底板封闭。
-3. PCB、滚轮模型及装配照片仍待补充。
+1. 右手人体工学以食指高、中指低为起点，将横向高度差延续至上盖和掌心支撑区域。
+2. 结构强化采用一体式特殊加强筋、类工字形截面及横向支撑，连接上盖与侧壁。
+3. 约 33 g 为待验证的轻量化目标；主板、电池等电子件为装配展示参考模型。
+
+ABSTRACT
+ERSTE002 explores right-hand ergonomics and structural reinforcement. An asymmetric surface, higher beneath the index finger and lower beneath the middle finger, extends into the palm region to follow the natural tilt of the right hand and wrist. With no conventional bottom shell or separate central spine, the design uses integral reinforcement ribs and transverse supports within the shell. Approximately 33 g is a design target, not a measured weight.
+
+RESEARCH NOTES
+1. Right-hand ergonomics begins with a higher index-finger position and a lower middle-finger position, extending the lateral height difference into the upper shell and palm support region.
+2. Structural reinforcement uses integral ribs, I-like cross-sections and transverse supports to connect the upper shell and sidewalls.
+3. Approximately 33 g remains an unverified lightweight design target. The mainboard, battery and other electronic components are reference models for the assembly presentation.
 
 完整项目：https://www.zlf666.xyz/projects/erste002.html
 albert_z0413@hotmail.com · 独立产品设计 / 2026
