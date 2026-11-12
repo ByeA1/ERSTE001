@@ -1,6 +1,6 @@
 {
-  "version": "fde6df04966aea5e",
-  "bytes": 14964246,
+  "version": "b0b11185e8d5f3b4",
+  "bytes": 14964452,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -15,8 +15,8 @@
     "assets/archive-assembly.d411170676f55a32.glb",
     "assets/archive-cassette.94fc471418156825.glb",
     "assets/boot-lettering-notice.txt",
-    "assets/index-BjeAYN1I.js",
-    "assets/index-CMpCWLzT.css",
+    "assets/index-ChOgh-x6.js",
+    "assets/index-Dsu5AHQP.css",
     "audio/atmosphere.ogg",
     "audio/motif.ogg",
     "audio/pulse.ogg",
@@ -120,8 +120,8 @@
     "archives/RHINE-LAB-X-010.txt",
     "assets/archive-cassette.94fc471418156825.glb",
     "assets/boot-lettering-notice.txt",
-    "assets/index-BjeAYN1I.js",
-    "assets/index-CMpCWLzT.css",
+    "assets/index-ChOgh-x6.js",
+    "assets/index-Dsu5AHQP.css",
     "audio/atmosphere.ogg",
     "audio/motif.ogg",
     "audio/pulse.ogg",
@@ -184,7 +184,7 @@
     "licenses/rolling-number.txt",
     "manifest.webmanifest"
   ],
-  "precacheBytes": 7282859,
+  "precacheBytes": 7283065,
   "deferred": [
     "assets/archive-assembly.d411170676f55a32.glb",
     "cases/erste001/assets/opt/assets/mouse/bottom-shell-cad-1440.avif",
