@@ -1,6 +1,6 @@
 .project-copy-rolling { position: relative; }
 .detail-project-subtitle { min-width: 0; overflow-wrap: anywhere; }
-.project-copy-native { color: transparent; }
+.project-copy-native { opacity: 0; }
 .project-copy-native::selection { color: HighlightText; background: Highlight; }
 .project-copy-reels, .project-copy-measure {
   position: absolute;

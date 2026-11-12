@@ -105,8 +105,10 @@ export class ProjectCopyMotion {
       reels.push(reel);
     }
     native.className = 'project-copy-native';
+    const handoff: Animation[] = [];
     const cleanup = () => {
       clearTimeout(timer);
+      handoff.forEach(animation => animation.cancel());
       controllers.forEach(controller => controller.destroy());
       overlay.remove();
       // Restore the original simple DOM after motion, including selection/copy.
@@ -123,7 +125,15 @@ export class ProjectCopyMotion {
       this.starts.delete(element);
       controllers.forEach((controller, index) => controller.update({ text: nextLines[index].text, animated: true }));
       clearTimeout(timer);
-      timer = window.setTimeout(cleanup, 560);
+      // Glyph reels cannot exactly reproduce native kerning/justification.
+      // Hand back to the text already in its final layout while the reels settle,
+      // then release the hidden controllers only after that handoff has finished.
+      const timing: KeyframeAnimationOptions = {
+        delay: 340, duration: 200, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both',
+      };
+      const reveal = native.animate([{ opacity: 0 }, { opacity: 1 }], timing);
+      handoff.push(reveal, overlay.animate([{ opacity: 1 }, { opacity: 0 }], timing));
+      void reveal.finished.then(cleanup).catch(() => {});
     });
     this.active.set(element, cleanup);
   }
