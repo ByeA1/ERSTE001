@@ -973,7 +973,7 @@ function overview() {
 }
 function setTab(tab: string, sound = true) {
   if (sound && tab === activeTab) return;
-  if (sound) projectCopyMotion.finish();
+  if (sound) projectCopyMotion.finish($('#tab-panel'));
   activeTab = tab;
   document.querySelectorAll("[data-tab]").forEach((b) => {
     const active = (b as HTMLElement).dataset.tab === tab;

@@ -34,9 +34,11 @@ export class ProjectCopyMotion {
     for (const start of this.starts.values()) start();
   }
 
-  finish() {
-    this.pending.clear();
-    for (const cleanup of [...this.active.values()]) cleanup();
+  finish(root?: HTMLElement) {
+    for (const [key, copy] of this.pending)
+      if (!root || root.contains(copy.element)) this.pending.delete(key);
+    for (const [element, cleanup] of [...this.active])
+      if (!root || root.contains(element)) cleanup();
   }
 
   private roll({ element, previous, text }: PendingCopy) {
@@ -105,13 +107,11 @@ export class ProjectCopyMotion {
       reels.push(reel);
     }
     native.className = 'project-copy-native';
-    const handoff: Animation[] = [];
     const cleanup = () => {
       clearTimeout(timer);
-      handoff.forEach(animation => animation.cancel());
       controllers.forEach(controller => controller.destroy());
       overlay.remove();
-      // Restore the original simple DOM after motion, including selection/copy.
+      // Restore native text only when this field is actually retired/reflowed.
       element.replaceChildren(document.createTextNode(text));
       element.classList.remove('project-copy-rolling');
       this.active.delete(element);
@@ -125,15 +125,9 @@ export class ProjectCopyMotion {
       this.starts.delete(element);
       controllers.forEach((controller, index) => controller.update({ text: nextLines[index].text, animated: true }));
       clearTimeout(timer);
-      // Glyph reels cannot exactly reproduce native kerning/justification.
-      // Hand back to the text already in its final layout while the reels settle,
-      // then release the hidden controllers only after that handoff has finished.
-      const timing: KeyframeAnimationOptions = {
-        delay: 340, duration: 200, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'both',
-      };
-      const reveal = native.animate([{ opacity: 0 }, { opacity: 1 }], timing);
-      handoff.push(reveal, overlay.animate([{ opacity: 1 }, { opacity: 0 }], timing));
-      void reveal.finished.then(cleanup).catch(() => {});
+      // Like the archive collection label, keep the same renderer mounted after
+      // its springs settle. Native fallback has different kerning/justification;
+      // even crossfading to it produces a visible second movement at the end.
     });
     this.active.set(element, cleanup);
   }
