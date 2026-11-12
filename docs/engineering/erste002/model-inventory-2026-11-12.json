@@ -1,0 +1,456 @@
+{
+  "notice": "Metadata only. Incoming package and revision assignments remain unconfirmed.",
+  "inventory": {
+    "schemaVersion": 1,
+    "scannedAtUtc": "2026-11-12T03:58:32.664498+00:00",
+    "archiveRoot": "D:\\RhineTerminal\\_archive\\ERSTE002",
+    "timeWarning": "Filesystem/ZIP times are metadata, not proven design, printing or test dates.",
+    "records": [
+      {
+        "locator": "D:\\RhineTerminal\\_archive\\1.zip",
+        "originalName": "1.zip",
+        "sizeBytes": 1040956,
+        "modifiedUtc": "2026-10-04T16:00:51.240709+00:00",
+        "sha256": "9fe5d61c3c6a58970f3c03de7814cf08f4b59366646a0fe49c1ee2ce67fb2b8b",
+        "source": "parent-inbox-project-and-revision-unconfirmed",
+        "confirmedRevision": null,
+        "revisionNote": "Neither a numeric package name, filename nor timestamp establishes REV00–REV03.",
+        "fileId": "F-9fe5d61c3c6a5897",
+        "directoryClaim": null,
+        "readStatus": "zip-directory-readable",
+        "members": [
+          {
+            "zipIndex": 1,
+            "originalName": "新建文件夹/上盖1.3.试打印.1.stl",
+            "sizeBytes": 2292984,
+            "compressedBytes": 1040540,
+            "crc32": "f7fe7ab2",
+            "zipLocalTimeUnzoned": [
+              2026,
+              10,
+              4,
+              23,
+              58,
+              54
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\1.zip::新建文件夹/上盖1.3.试打印.1.stl",
+            "sha256": "682a701464c9ff59296762c9443316489c7e955515fefcdc7bb5e108848128a6",
+            "fileId": "F-682a701464c9ff59",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 45858,
+              "bounds": {
+                "min": [
+                  -31.019428253173828,
+                  -59.36040496826172,
+                  -0.01464882306754589
+                ],
+                "max": [
+                  31.019428253173828,
+                  60.68515396118164,
+                  38.15658187866211
+                ]
+              },
+              "dimensions": [
+                62.038856506347656,
+                120.04555892944336,
+                38.171230701729655
+              ],
+              "weldToleranceInFileUnits": 1.4041651893058138e-05,
+              "weldedVertices": 22932,
+              "vertexConnectedIslands": 9,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 17,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          }
+        ]
+      },
+      {
+        "locator": "D:\\RhineTerminal\\_archive\\2.zip",
+        "originalName": "2.zip",
+        "sizeBytes": 2650207,
+        "modifiedUtc": "2026-10-16T14:29:08.381083+00:00",
+        "sha256": "29ff0600b36da6c364f8eba55ac1a776f079c4f0ee61c58f8017780c48b1a634",
+        "source": "parent-inbox-project-and-revision-unconfirmed",
+        "confirmedRevision": null,
+        "revisionNote": "Neither a numeric package name, filename nor timestamp establishes REV00–REV03.",
+        "fileId": "F-29ff0600b36da6c3",
+        "directoryClaim": null,
+        "readStatus": "zip-directory-readable",
+        "members": [
+          {
+            "zipIndex": 1,
+            "originalName": "试样2/上盖1.4.试打印.2.stl",
+            "sizeBytes": 4856584,
+            "compressedBytes": 2296240,
+            "crc32": "ab953096",
+            "zipLocalTimeUnzoned": [
+              2026,
+              10,
+              16,
+              22,
+              28,
+              12
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\2.zip::试样2/上盖1.4.试打印.2.stl",
+            "sha256": "985d5724a24f0a2ca5d761c3494ababbe8c4f4e8f32de346366f90932cbc3f57",
+            "fileId": "F-985d5724a24f0a2c",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 97130,
+              "bounds": {
+                "min": [
+                  -31.026575088500977,
+                  -59.36226272583008,
+                  -1.758520170369593e-06
+                ],
+                "max": [
+                  31.026185989379883,
+                  60.68515396118164,
+                  38.157325744628906
+                ]
+              },
+              "dimensions": [
+                62.05276107788086,
+                120.04741668701172,
+                38.15732750314908
+              ],
+              "weldToleranceInFileUnits": 1.40420472342163e-05,
+              "weldedVertices": 48552,
+              "vertexConnectedIslands": 9,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 16,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          },
+          {
+            "zipIndex": 2,
+            "originalName": "试样2/按键盖1.4.试打印.stl",
+            "sizeBytes": 767884,
+            "compressedBytes": 353367,
+            "crc32": "17c80e66",
+            "zipLocalTimeUnzoned": [
+              2026,
+              10,
+              16,
+              22,
+              28,
+              28
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\2.zip::试样2/按键盖1.4.试打印.stl",
+            "sha256": "0f90a216e347f0646543abec1ce1ddfaa9eae93f6692cf04ce491a57c15afe34",
+            "fileId": "F-0f90a216e347f064",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 15356,
+              "bounds": {
+                "min": [
+                  -26.36609649658203,
+                  -59.85490798950195,
+                  7.398794651031494
+                ],
+                "max": [
+                  26.940343856811523,
+                  17.799999237060547,
+                  36.7841796875
+                ]
+              },
+              "dimensions": [
+                53.306440353393555,
+                77.6549072265625,
+                29.385385036468506
+              ],
+              "weldToleranceInFileUnits": 9.86679383247539e-06,
+              "weldedVertices": 7674,
+              "vertexConnectedIslands": 2,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 0,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          }
+        ]
+      },
+      {
+        "locator": "D:\\RhineTerminal\\_archive\\3.zip",
+        "originalName": "3.zip",
+        "sizeBytes": 3604508,
+        "modifiedUtc": "2026-10-28T06:30:00.008367+00:00",
+        "sha256": "9127520a587924ecf0e34501df2c57cd9ce86b56c8b8cef9b83ddc988dd251b1",
+        "source": "parent-inbox-project-and-revision-unconfirmed",
+        "confirmedRevision": null,
+        "revisionNote": "Neither a numeric package name, filename nor timestamp establishes REV00–REV03.",
+        "fileId": "F-9127520a587924ec",
+        "directoryClaim": null,
+        "readStatus": "zip-directory-readable",
+        "members": [
+          {
+            "zipIndex": 1,
+            "originalName": "新建文件夹/上盖1.5_1.stl",
+            "sizeBytes": 5955684,
+            "compressedBytes": 2759826,
+            "crc32": "0c3b48ea",
+            "zipLocalTimeUnzoned": [
+              2026,
+              10,
+              28,
+              14,
+              29,
+              16
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\3.zip::新建文件夹/上盖1.5_1.stl",
+            "sha256": "62fec0b1c8e337b842098a2a0209b2ff4f43508e42feffa16bbe2ca947f5d719",
+            "fileId": "F-62fec0b1c8e337b8",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 119112,
+              "bounds": {
+                "min": [
+                  -31.026575088500977,
+                  -61.021873474121094,
+                  -3.0000693798065186
+                ],
+                "max": [
+                  31.026575088500977,
+                  60.68515396118164,
+                  38.157325744628906
+                ]
+              },
+              "dimensions": [
+                62.05315017700195,
+                121.70702743530273,
+                41.157395124435425
+              ],
+              "weldToleranceInFileUnits": 1.4267839762015828e-05,
+              "weldedVertices": 59461,
+              "vertexConnectedIslands": 1,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 16,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          },
+          {
+            "zipIndex": 2,
+            "originalName": "新建文件夹/按键盖1.5.stl",
+            "sizeBytes": 2168584,
+            "compressedBytes": 844074,
+            "crc32": "e2a7e21b",
+            "zipLocalTimeUnzoned": [
+              2026,
+              10,
+              28,
+              14,
+              25,
+              52
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\3.zip::新建文件夹/按键盖1.5.stl",
+            "sha256": "957a92aa9f34cf5b0be73805fa9f2db1b87f7642194a5d00360177fb598c751d",
+            "fileId": "F-957a92aa9f34cf5b",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 43370,
+              "bounds": {
+                "min": [
+                  -26.36609649658203,
+                  -59.84638214111328,
+                  7.398876190185547
+                ],
+                "max": [
+                  26.940343856811523,
+                  7.900000095367432,
+                  36.7841796875
+                ]
+              },
+              "dimensions": [
+                53.306440353393555,
+                67.74638223648071,
+                29.385303497314453
+              ],
+              "weldToleranceInFileUnits": 9.107494139943508e-06,
+              "weldedVertices": 21669,
+              "vertexConnectedIslands": 1,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 56,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          }
+        ]
+      },
+      {
+        "locator": "D:\\RhineTerminal\\_archive\\4.zip",
+        "originalName": "4.zip",
+        "sizeBytes": 6729941,
+        "modifiedUtc": "2026-11-08T07:59:11.333399+00:00",
+        "sha256": "bb4532e0a46adaac4bb837f6f4e106325dc13de5ee2d12c82503c8aee45fd82d",
+        "source": "parent-inbox-project-and-revision-unconfirmed",
+        "confirmedRevision": null,
+        "revisionNote": "Neither a numeric package name, filename nor timestamp establishes REV00–REV03.",
+        "fileId": "F-bb4532e0a46adaac",
+        "directoryClaim": null,
+        "readStatus": "zip-directory-readable",
+        "members": [
+          {
+            "zipIndex": 1,
+            "originalName": "新建文件夹/上盖1.6.stl",
+            "sizeBytes": 10107284,
+            "compressedBytes": 4840170,
+            "crc32": "aa3d8b24",
+            "zipLocalTimeUnzoned": [
+              2026,
+              11,
+              8,
+              15,
+              57,
+              6
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\4.zip::新建文件夹/上盖1.6.stl",
+            "sha256": "e021d685620d46c48b4d885b019b51d9f3f5e875002857dbfc88dd603d155898",
+            "fileId": "F-e021d685620d46c4",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 202144,
+              "bounds": {
+                "min": [
+                  -31.026575088500977,
+                  -61.0306282043457,
+                  -3.000070810317993
+                ],
+                "max": [
+                  31.026575088500977,
+                  60.68515396118164,
+                  38.15986633300781
+                ]
+              },
+              "dimensions": [
+                62.05315017700195,
+                121.71578216552734,
+                41.159937143325806
+              ],
+              "weldToleranceInFileUnits": 1.4268659888264977e-05,
+              "weldedVertices": 100973,
+              "vertexConnectedIslands": 3,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 17,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          },
+          {
+            "zipIndex": 2,
+            "originalName": "新建文件夹/按键盖1.6.stl",
+            "sizeBytes": 4560084,
+            "compressedBytes": 1889167,
+            "crc32": "78d3d729",
+            "zipLocalTimeUnzoned": [
+              2026,
+              11,
+              8,
+              15,
+              58,
+              20
+            ],
+            "confirmedRevision": null,
+            "locator": "D:\\RhineTerminal\\_archive\\4.zip::新建文件夹/按键盖1.6.stl",
+            "sha256": "e1db3451d1aa7d3a2230ec9fd1ad8b0ae34eab1f3343c881670d9b47f618cfa2",
+            "fileId": "F-e1db3451d1aa7d3a",
+            "readStatus": "mesh-readable",
+            "geometry": {
+              "parser": "STL binary",
+              "unit": null,
+              "unitNote": "STL does not declare units; do not label as mm without export evidence.",
+              "triangles": 91200,
+              "bounds": {
+                "min": [
+                  -26.366262435913086,
+                  -59.8002815246582,
+                  7.1569366455078125
+                ],
+                "max": [
+                  26.940345764160156,
+                  7.900000095367432,
+                  36.78371047973633
+                ]
+              },
+              "dimensions": [
+                53.30660820007324,
+                67.70028162002563,
+                29.626773834228516
+              ],
+              "weldToleranceInFileUnits": 9.111897901673078e-06,
+              "weldedVertices": 45584,
+              "vertexConnectedIslands": 1,
+              "boundaryEdgesAfterWeld": 0,
+              "nonManifoldEdgesAfterWeld": 43,
+              "sameDirectionPairedEdges": 0,
+              "collapsedTrianglesAfterWeld": 0,
+              "limitations": "Read-only tessellation metrics at stated weld tolerance. Islands are not confirmed parts. No CAD solid, material, manufacturing or stiffness conclusion."
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "currentWebsiteReference": {
+    "id": "E-WEB-001",
+    "locator": "D:\\RhineTerminal\\public\\cases\\erste002\\assets\\shell-full.glb",
+    "sha256": "a7c8796cd5aec04dc4d8e8e5e1282fc2982e362fcc1da8925923d40663e4b557",
+    "sizeBytes": 7107132,
+    "meshNodeNames": [
+      "PCB_plate",
+      "MainSwitch_L",
+      "MainSwitch_R",
+      "TTC_Encoder_proxy",
+      "WheelClick_proxy",
+      "nRF52840_proxy",
+      "PowerIC_proxy",
+      "Battery_Connector_proxy",
+      "Passive_01",
+      "Passive_02",
+      "Passive_03",
+      "Passive_04",
+      "Passive_05",
+      "Passive_06",
+      "Passive_07",
+      "LiPo_300mAh_envelope",
+      "Mesh_Buttons",
+      "Mesh_Wheel",
+      "Mesh_Shell"
+    ],
+    "provenance": "Current website display asset; REV03 label is designer-supplied, not a proven source-CAD match."
+  }
+}

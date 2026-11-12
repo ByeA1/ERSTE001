@@ -1,0 +1,240 @@
+{
+  "schemaVersion": 1,
+  "registeredOn": "2026-11-12",
+  "dateNote": "Registration date is not a design, printing or test date.",
+  "evidencePolicy": "Separate designer recollection, observable geometry, physical evidence and hypotheses. Unknown facts remain null.",
+  "revisions": [
+    {
+      "id": "REV00",
+      "stage": "FDM 手感验证",
+      "changes": [
+        "制作最初外形样件",
+        "按实际握持反馈调整一次外形"
+      ],
+      "goals": [
+        "检查实际握持手感"
+      ],
+      "printingProcess": {
+        "reported": "FDM",
+        "independentlyVerified": false
+      },
+      "physicalChecksReported": [
+        "实际握持手感"
+      ],
+      "reportedProblems": [
+        "反馈的具体问题未提供"
+      ],
+      "reportedResults": [
+        "外形修改过一次",
+        "最初的 FDM 模型仍然保留"
+      ],
+      "unverified": [
+        "原始与改形后的文件对应",
+        "具体反馈和样件证据"
+      ],
+      "claims": [
+        "MC00-01",
+        "MC00-02",
+        "MC00-03"
+      ],
+      "eventDates": {
+        "design": null,
+        "printing": null,
+        "test": null
+      },
+      "modelFiles": [],
+      "originalFileNames": [],
+      "temporaryModelIds": [],
+      "localFolder": "D:\\RhineTerminal\\_archive\\ERSTE002\\REV00_FDM_手感验证",
+      "fileAssignment": "unconfirmed",
+      "evidenceType": "designer-recollection",
+      "evidenceVerified": false,
+      "evidenceRefs": [
+        "E-MEM-001"
+      ],
+      "physicalEvidencePaths": [],
+      "modelEvidencePaths": [],
+      "physicalValidationStatus": "回忆记录，物证待核对"
+    },
+    {
+      "id": "REV01",
+      "stage": "首次 MJF 结构验证",
+      "changes": [
+        "上盖、按键盖等分件",
+        "增加加强筋"
+      ],
+      "goals": [
+        "检查手感、初步刚度与装配"
+      ],
+      "printingProcess": {
+        "reported": "MJF",
+        "independentlyVerified": false
+      },
+      "physicalChecksReported": [
+        "手感",
+        "初步刚度",
+        "装配"
+      ],
+      "reportedProblems": [
+        "整体刚度不足",
+        "装配孔位不准确"
+      ],
+      "reportedResults": [
+        "发现刚度及孔位问题，未登记通过"
+      ],
+      "unverified": [
+        "对应 CAD 与样件",
+        "打印批次及材料",
+        "原始测试与问题位置"
+      ],
+      "claims": [
+        "MC01-01",
+        "MC01-02",
+        "MC01-03",
+        "MC01-04",
+        "MC01-05"
+      ],
+      "eventDates": {
+        "design": null,
+        "printing": null,
+        "test": null
+      },
+      "modelFiles": [],
+      "originalFileNames": [],
+      "temporaryModelIds": [],
+      "localFolder": "D:\\RhineTerminal\\_archive\\ERSTE002\\REV01_MJF_首次结构验证",
+      "fileAssignment": "unconfirmed",
+      "evidenceType": "designer-recollection",
+      "evidenceVerified": false,
+      "evidenceRefs": [
+        "E-MEM-001"
+      ],
+      "physicalEvidencePaths": [],
+      "modelEvidencePaths": [],
+      "physicalValidationStatus": "回忆记录，物证待核对"
+    },
+    {
+      "id": "REV02",
+      "stage": "支撑杆与装配改进",
+      "changes": [
+        "引入支撑杆尝试改善刚度",
+        "调整装配设计"
+      ],
+      "goals": [
+        "尝试提高整体刚度",
+        "改善装配"
+      ],
+      "printingProcess": {
+        "reported": "MJF",
+        "independentlyVerified": false
+      },
+      "physicalChecksReported": [
+        "结构",
+        "装配",
+        "拆杆后的装配观察"
+      ],
+      "reportedProblems": [
+        "整体刚度仍不足",
+        "键盖与微动配合不到位",
+        "键盖与上盖干涉",
+        "缺少键盖抬起限位",
+        "侧键小板与上盖干涉",
+        "PCB 与杆干涉",
+        "电池安装不稳定"
+      ],
+      "reportedResults": [
+        "拆除杆后成功完成装配",
+        "拆杆后整体刚度仍不足"
+      ],
+      "unverified": [
+        "有杆与无杆样件和操作记录",
+        "实际电子件及装配基准",
+        "各问题位置与测量条件"
+      ],
+      "claims": [
+        "MC02-01",
+        "MC02-02",
+        "MC02-03",
+        "MC02-04",
+        "MC02-05",
+        "MC02-06",
+        "MC02-07",
+        "MC02-08",
+        "MC02-09",
+        "MC02-10"
+      ],
+      "eventDates": {
+        "design": null,
+        "printing": null,
+        "test": null
+      },
+      "modelFiles": [],
+      "originalFileNames": [],
+      "temporaryModelIds": [],
+      "localFolder": "D:\\RhineTerminal\\_archive\\ERSTE002\\REV02_MJF_支撑杆与装配验证",
+      "fileAssignment": "unconfirmed",
+      "evidenceType": "designer-recollection",
+      "evidenceVerified": false,
+      "evidenceRefs": [
+        "E-MEM-001"
+      ],
+      "physicalEvidencePaths": [],
+      "modelEvidencePaths": [],
+      "physicalValidationStatus": "回忆记录，物证待核对"
+    },
+    {
+      "id": "REV03",
+      "stage": "当前网站展示，待打印验证",
+      "changes": [
+        "据设计者概括陈述，已针对上一轮问题完成 CAD 修改；逐项措施待核"
+      ],
+      "goals": [
+        "尝试处理结构与装配问题"
+      ],
+      "printingProcess": {
+        "reported": null,
+        "independentlyVerified": false,
+        "note": "新一轮待打印，工艺未提供"
+      },
+      "physicalChecksReported": [],
+      "reportedProblems": [],
+      "reportedResults": [
+        "设计修订完成的陈述；没有新一轮实物通过结论"
+      ],
+      "unverified": [
+        "原始 CAD 与网站展示资源对应",
+        "逐项修订与问题映射",
+        "打印及刚度、装配验证"
+      ],
+      "claims": [
+        "MC03-01",
+        "MC03-02",
+        "MC03-03"
+      ],
+      "eventDates": {
+        "design": null,
+        "printing": null,
+        "test": null
+      },
+      "modelFiles": [],
+      "originalFileNames": [],
+      "temporaryModelIds": [],
+      "localFolder": "D:\\RhineTerminal\\_archive\\ERSTE002\\REV03_当前版本_待打印验证",
+      "fileAssignment": "unconfirmed",
+      "evidenceType": "designer-recollection",
+      "evidenceVerified": false,
+      "evidenceRefs": [
+        "E-MEM-001"
+      ],
+      "physicalEvidencePaths": [],
+      "modelEvidencePaths": [],
+      "displayEvidenceRefs": [
+        "E-WEB-001"
+      ],
+      "physicalValidationStatus": "等待验证",
+      "hypotheses": [
+        "H-001"
+      ]
+    }
+  ]
+}
