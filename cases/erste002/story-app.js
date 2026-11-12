@@ -21,6 +21,7 @@ import { createStudioEnvironment } from "./studio-environment.js";
 import { createSurfaceGeometry } from "./surface-normals.js";
 import { createEditor } from "./story-editor.js";
 import { RenderFrameLimiter } from "../shared/render-frame.js";
+import { StoryInterfaceMotion } from "./story-interface-motion.js";
 
 const $ = (s) => document.querySelector(s);
 const host = $("#scene-root");
@@ -117,6 +118,7 @@ const markerSets = {
   "palm-support": palmLandmarks,
   "section-rib": sectionLandmarks,
 };
+const interfaceMotion = new StoryInterfaceMotion(heightMarkers, markerSets);
 let activeMarkers = [];
 const projected = new THREE.Vector3();
 const portrait = matchMedia("(max-width: 740px), (orientation: portrait)");
@@ -198,9 +200,8 @@ let keyboardShotControl;
 function updateNavigation() {
   const selected = shots[shotIndex]?.chapter;
   const number = (value) => String(value).padStart(2, "0");
-  chapterNumber.textContent =
-    number(shotIndex + 1) + " / " + number(shots.length || 1);
-  chapterTitle.textContent = selected?.title[lang] ?? initialReadout[lang];
+  interfaceMotion.readout(chapterNumber, number(shotIndex + 1) + " / " + number(shots.length || 1));
+  interfaceMotion.readout(chapterTitle, selected?.title[lang] ?? initialReadout[lang]);
   const busy =
     body.dataset.projectReady === "loading" || Boolean(playback && !free);
   const last = shots.length > 1 && shotIndex === shots.length - 1;
@@ -280,7 +281,11 @@ function setLanguage(value, notify = false) {
         ? "Loading 3D model…"
         : "正在载入三维模型…";
   for (const landmarks of Object.values(markerSets))
-    for (const { node, text } of landmarks) node.textContent = text[lang];
+    for (const { node, text } of landmarks) {
+      const label = node.querySelector(".marker-text");
+      if (!heightMarkers.hidden && !node.hidden) interfaceMotion.readout(label, text[lang]);
+      else label.textContent = text[lang];
+    }
   updatePartControls();
   lastCaption = null;
   updateNavigation();
@@ -409,6 +414,7 @@ autoButton.onclick = () => setAuto(!auto);
 function startPresentation() {
   if (!presented || openingPlayed || body.dataset.projectReady === "loading") return;
   openingPlayed = true;
+  body.dataset.presented = "true";
   if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
 }
 function playToShot(index) {
@@ -427,7 +433,7 @@ function playToShot(index) {
     from: p,
     to,
     duration,
-    outgoing: captionAt(story, p)?.start,
+    outgoing: captionAt(story, p)?.start === shot.start ? undefined : captionAt(story, p)?.start,
     elapsed: 0,
   };
   updateNavigation();
@@ -472,7 +478,7 @@ function setFree(value) {
     extractedParts.clear();
   } else freeRest = clone(draft.assembly);
   body.dataset.mode = free ? "free" : "chapter";
-  freePanel.hidden = !free;
+  interfaceMotion.presence($("#free-controls"), free);
   if (!free) freeTools.open = false;
   modeButton.setAttribute("aria-pressed", String(free));
   if (controls) {
@@ -674,9 +680,13 @@ function canRender() {
 }
 function invalidate() {
   dirty = true;
-  if (!raf && canRender()) raf = requestAnimationFrame(tick);
+  if (!raf && canRender()) {
+    interfaceMotion.pause(false);
+    raf = requestAnimationFrame(tick);
+  }
 }
 function pause() {
+  interfaceMotion.pause(true);
   cancelAnimationFrame(raf);
   clearTimeout(autoTimer);
   autoTimer = 0;
@@ -704,6 +714,7 @@ function dispose() {
   if (lifetime.signal.aborted) return;
   lifetime.abort();
   pause();
+  interfaceMotion.dispose();
   resizeObserver.disconnect();
   visibilityObserver.disconnect();
   const geometries = new Set(section?.records.map(({ source }) => source));
@@ -746,19 +757,20 @@ function updateCaption() {
       : 1;
   const still = reducedMotion();
   const annotation = cap && p >= (cap.arrive ?? cap.start) ? cap.annotation : "";
-  activeMarkers = ready && !free ? (markerSets[annotation] ?? []) : [];
-  heightMarkers.hidden = activeMarkers.length === 0;
+  interfaceMotion.reduce(still);
+  activeMarkers = interfaceMotion.annotations(
+    ready && !free && markerSets[annotation] ? `${key}:${annotation}` : '',
+    annotation, still ? 1 : (cap?.opacity ?? 0) * envelope,
+  );
   heightGuide.toggleAttribute("hidden", activeMarkers !== heightLandmarks);
-  for (const [name, landmarks] of Object.entries(markerSets))
-    for (const { node } of landmarks) node.hidden = annotation !== name;
-  if (!heightMarkers.hidden)
-    heightMarkers.style.opacity = still ? 1 : cap.opacity * envelope;
   capContent.style.opacity = cap ? (still ? 1 : envelope) : 0;
   const reveal = still ? 1 : (cap?.revealProgress ?? 0);
   capContent.style.setProperty("--label-in", smooth(reveal / 0.42));
   capContent.style.setProperty("--title-in", smooth((reveal - 0.16) / 0.65));
   capContent.style.setProperty("--copy-in", smooth((reveal - 0.45) / 0.55));
-  caption.hidden = free;
+  interfaceMotion.caption(cap && !free ? `${key}:${lang}` : null,
+    [capIndex, capTag, capTitle, capBody], ready && (!playback || playback.to < playback.from));
+  interfaceMotion.presence(caption, !free);
   progress.textContent = String(Math.round(p * 100)).padStart(3, "0") + "%";
   progress.parentElement.style.setProperty("--progress", p);
   body.dataset.progress = p.toFixed(4);
@@ -926,7 +938,7 @@ function setReady(value) {
   status.classList.toggle("err", !value);
   modeButton.disabled = !value;
   assembly.disabled = !value;
-  loading.hidden = value;
+  interfaceMotion.presence(loading, !value);
   retry.hidden = value;
   if (renderer) renderer.domElement.hidden = !value;
   if (value) {

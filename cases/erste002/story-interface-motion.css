@@ -1,0 +1,81 @@
+/* Screen-space cues reveal independently of the model's projection transform. */
+.model-annotations { position: absolute; inset: 0; pointer-events: none; }
+.model-annotations .height-marker {
+  padding: 0; border: 0; background: none;
+}
+.marker-text {
+  display: block;
+  padding: 5px 8px;
+  border: 1px solid #ffffff3b;
+  background: #121216f2;
+}
+.model-annotations[data-entering] .height-marker::before {
+  animation: annotation-point 240ms var(--marker-delay, 0ms) both ease-out;
+}
+.model-annotations[data-entering] .height-marker::after {
+  transform-origin: bottom;
+  animation: annotation-stem 380ms calc(var(--marker-delay, 0ms) + 70ms) both cubic-bezier(.2,.75,.25,1);
+}
+.model-annotations[data-entering] .marker-text {
+  animation: annotation-label 440ms calc(var(--marker-delay, 0ms) + 180ms) both cubic-bezier(.2,.75,.25,1);
+}
+.model-annotations[data-entering] #button-height-guide {
+  animation: annotation-guide 700ms 100ms both cubic-bezier(.2,.75,.25,1);
+}
+.annotation-ghost { z-index: 1; }
+.annotation-ghost svg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  fill: none; stroke-width: 1;
+}
+.annotation-ghost .datum { stroke: #f4f0efb3; stroke-dasharray: 3 4; }
+.annotation-ghost .difference { stroke: #ff716b; stroke-width: 1.5; }
+.annotation-ghost .height-marker::before { opacity: var(--ghost-point-opacity, 1); }
+.annotation-ghost .height-marker::after { transform: var(--ghost-stem-transform, none); }
+@keyframes annotation-point {
+  from { opacity: 0; scale: .45; }
+  to { opacity: 1; scale: 1; }
+}
+@keyframes annotation-stem {
+  from { transform: scaleY(0); opacity: 0; }
+  to { transform: scaleY(1); opacity: 1; }
+}
+@keyframes annotation-label {
+  from { opacity: 0; translate: 0 5px; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; translate: 0 0; clip-path: inset(0); }
+}
+@keyframes annotation-guide {
+  from { opacity: 0; clip-path: inset(0 100% 0 0); }
+  to { opacity: 1; clip-path: inset(0); }
+}
+@keyframes interface-arrive {
+  from { opacity: 0; translate: 0 6px; }
+  to { opacity: 1; translate: 0 0; }
+}
+body[data-presented=true][data-project-ready=ready] .tools {
+  animation: interface-arrive 440ms 60ms both cubic-bezier(.2,.75,.25,1);
+}
+body[data-presented=true][data-project-ready=ready] .story-footer {
+  animation: interface-arrive 480ms 120ms both cubic-bezier(.2,.75,.25,1);
+}
+body[data-presented=true][data-project-ready=ready] .chapter-nav {
+  animation: interface-arrive 480ms 190ms both cubic-bezier(.2,.75,.25,1);
+}
+#restart-story:not([hidden]), #free-tools[open] .free-tool-actions {
+  animation: interface-arrive 360ms both cubic-bezier(.2,.75,.25,1);
+}
+#chapter-number, #chapter-title { display: inline-block; }
+body[data-project-ready=failed] #loading { animation: interface-arrive 320ms both ease-out; }
+body[data-interface-paused=true] :is(.tools, .story-footer, .chapter-nav, #restart-story, .free-tool-actions,
+  .marker-text, #button-height-guide),
+body[data-interface-paused=true] .height-marker::before,
+body[data-interface-paused=true] .height-marker::after { animation-play-state: paused; }
+body[data-interface-still=true] :is(.tools, .story-footer, .chapter-nav, #restart-story, .free-tool-actions,
+  .marker-text, #button-height-guide),
+body[data-interface-still=true] .height-marker::before,
+body[data-interface-still=true] .height-marker::after { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  :is(.tools, .story-footer, .chapter-nav, #restart-story, .free-tool-actions,
+    .marker-text, #button-height-guide), .height-marker::before, .height-marker::after {
+    animation: none !important;
+  }
+}
