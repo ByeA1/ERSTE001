@@ -4,6 +4,7 @@ import { openProject, caseIsOpen, caseIsApproaching } from "./project-viewer";
 import {collectionAtLane, collectionLane, collectionNumberAtLane, projectCollections} from './project-collections';
 import {t, localize} from './terminal-language';
 import {projectSummary,projectFindings} from './project-copy';
+import { ProjectCopyMotion } from './project-copy-motion';
 import {PROJECT_COVER_OPENING_START} from './project-cover-motion';
 import { projects, getProject, featuredProjectId } from "./projects";
 import { showProjectShowcase, showcaseVisible, returnToProjectOverview } from "./project-showcase";
@@ -257,6 +258,7 @@ const prefs = {
   colorTheme: isWallpaper && storedPrefs.colorTheme === "dark" ? "dark" : "light",
 };
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
+const projectCopyMotion = new ProjectCopyMotion();
 const motionIsReduced = () =>
   Object.values(prefs.motion).every((value) => !value);
 paintTheme(prefs.colorTheme === "dark" ? 1 : 0);
@@ -376,6 +378,7 @@ function savePrefs() {
   saveAudioPrefs();
   if (!motionActive("rollingText"))
     rollingTitles.forEach((title) => title.finish());
+  if (!motionActive("rollingText")) projectCopyMotion.finish();
   if (!motionActive("rollingNumbers"))
     [fileCounter, columnCounter, selectedCode, hoverCode].forEach((counter) =>
       counter.finish(),
@@ -487,6 +490,7 @@ function fit() {
   ]);
   if (layoutKey !== previousLayout) {
     previousLayout = layoutKey;
+    projectCopyMotion.finish();
     scene?.resize();
     viewer?.resize();
   }
@@ -573,6 +577,7 @@ function setMode(next: Mode) {
   if (!isWallpaper && next === 'detail' && records[selected].placeholder) next = 'archive';
   if (workbench?.enabled && next === "detail") next = "archive";
   const previousMode = mode;
+  if (next !== 'detail') projectCopyMotion.finish();
   const openingBrandBounds=!isWallpaper && previousMode==='boot' && next==='detail' && scene?.openingHandoffVisibility!==undefined ? $('.brand').getBoundingClientRect() : undefined;
   rollingTitles.forEach((title) =>
     title.update({
@@ -907,6 +912,7 @@ function toggleSaved() {
   notify(saved.has(id) ? "档案已加入收藏" : "已取消收藏");
 }
 function renderDetail() {
+  projectCopyMotion.finish();
   tabTransition.cancel();
   const r = records[selected];
   if(!isWallpaper && r.projectId) {renderProjectDetail();return;}
@@ -949,7 +955,7 @@ function renderProjectDetail() {
   $('.object-caption>div').textContent='GAMING MOUSE / DESIGN ARCHIVE';
   $('.viewer-open').innerHTML=`${t('360° 查看档案装置','360° INSPECT ARCHIVE')} <span>↗</span>`;
   $('#detail-content').innerHTML=`<div class="detail-kicker"><span>DESIGN ARCHIVE</span><span>${escapeHtml(project.title)}</span></div>
-    <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn">${r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t(project.subtitleZh ?? project.subtitle ?? '', project.subtitle ?? '')}<span>GAMING MOUSE</span></div>
+    <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn"><div class="detail-project-subtitle">${escapeHtml(r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t(project.subtitleZh ?? project.subtitle ?? '', project.subtitle ?? ''))}</div><span>GAMING MOUSE</span></div>
     <div class="detail-rule"></div>
     <dl class="metadata"><div><dt>${t('DISCIPLINE / 设计方向','DISCIPLINE')}</dt><dd>${t('独立产品设计','Independent product design')}</dd></div><div><dt>${t('COLLECTION / 项目集','COLLECTION')}</dt><dd>GAMING MOUSE</dd></div><div><dt>${t('DESIGNER / 设计师','DESIGNER')}</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>${t('STATUS / 状态','STATUS')}</dt><dd><i></i>${status}</dd></div></dl>
     <div class="detail-tabs" role="tablist"><button id="tab-overview" role="tab" aria-controls="tab-panel" data-tab="overview">01 <span>${t('概述','Overview')}</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" data-tab="notes">02 <span>${t('研究记录','Research')}</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" data-tab="history">03 <span>${t('访问记录','Access log')}</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
@@ -959,12 +965,15 @@ function renderProjectDetail() {
   $('#detail-content').setAttribute('tabindex','-1');
   documentDecryption.reset($('#detail-content'),!motionActive('documentReveal')||!scene||scene.decryptionFrame.phase==='clear');
   setTab(activeTab,false);
+  projectCopyMotion.update('heading', $('.project-detail-heading'), motionActive('rollingText'));
+  projectCopyMotion.update('subtitle', $('.detail-project-subtitle'), motionActive('rollingText'));
 }
 function overview() {
   return `<div class="panel-label">${t('ABSTRACT / 摘要','ABSTRACT')}</div><p>${escapeHtml(!isWallpaper && records[selected].projectId ? projectSummary(records[selected].projectId!) : records[selected].abstract)}</p>`;
 }
 function setTab(tab: string, sound = true) {
   if (sound && tab === activeTab) return;
+  if (sound) projectCopyMotion.finish();
   activeTab = tab;
   document.querySelectorAll("[data-tab]").forEach((b) => {
     const active = (b as HTMLElement).dataset.tab === tab;
@@ -996,6 +1005,8 @@ function setTab(tab: string, sound = true) {
             )}<p class="log-note">${t('此处记录本次浏览会话中的档案阅读操作。','Archive views recorded in this browser session.')}</p>`;
   $("#tab-panel").scrollTop = 0;
   documentDecryption.refresh();
+  if (!isWallpaper && r.projectId && tab === 'overview')
+    projectCopyMotion.update('summary', $('#tab-panel p'), motionActive('rollingText'));
   if (sound) {
     tabTransition.reveal($("#tab-panel"), !motionActive("surfaceTransitions"));
     audio.play("ui-tick");
@@ -1700,6 +1711,9 @@ function frame(ms: number) {
       pendingDetailFocus = false;
     }
   }
+  if (mode === 'detail') projectCopyMotion.reveal(
+    (!scene || scene.detailVisibility >= .9) && !$('#detail-content').querySelector('.document-redaction-window'),
+  );
   $("#stage").style.setProperty(
     "--detail-shade",
     String(mode === "boot" ? 0 : (scene?.detailVisibility ?? 0)*(handoffVisibility??1)),
