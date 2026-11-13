@@ -1,12 +1,12 @@
 /* Archive command hierarchy: smoked tea glass routes, quiet glass navigation. */
 html:not([data-wallpaper]) #stage[data-layout] {
-  --action-glass-ink: #4a3826;
+  --action-glass-ink: #433222;
   --action-glass-paper: #f4ead7;
-  --action-glass-rule: #8f745885;
+  --action-glass-rule: #82674e85;
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button) {
   border: 1px solid #70583f65;
-  background-color: #4f3b2bba;
+  background-color: #443123ba;
   color: var(--action-glass-paper);
   box-shadow: inset 0 1px 0 #ffffff24, inset 0 -1px 0 #00000016;
   -webkit-backdrop-filter: blur(6px) saturate(105%);
@@ -32,13 +32,13 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
   transition: translate 160ms ease;
 }
 html:not([data-wallpaper]) #stage[data-layout] button.back-button {
-  background-color: #3b2b1ea8;
+  background-color: #332519a8;
   background-image: none;
   min-height: max(44px, var(--access-target, 44px));
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.project-step, .detail-project-step, .viewer-open),
 html:not([data-wallpaper]) #stage[data-layout] .column-navigation > button {
-  background: #c5a77a1f;
+  background: #b99a6d1f;
   color: var(--action-glass-ink);
   border: 1px solid var(--action-glass-rule);
   box-shadow: inset 0 1px 0 #ffffff40;
@@ -56,7 +56,7 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
 }
 @media (hover: hover) {
   html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open):not(:disabled):hover {
-    background-color: #4f3b2bd1;
+    background-color: #443123d1;
     border-color: #70583f85;
     color: var(--action-glass-paper);
     scale: 1.015;
@@ -67,19 +67,19 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
     translate: 2px -1px;
   }
   html:not([data-wallpaper]) #stage[data-layout] button.back-button:not(:disabled):hover {
-    background-color: #634a33bf;
+    background-color: #58412dbf;
     color: var(--action-glass-paper);
   }
   html:not([data-wallpaper]) #stage[data-layout] button:is(.project-step, .detail-project-step, .viewer-open):not(:disabled):hover,
   html:not([data-wallpaper]) #stage[data-layout] .column-navigation > button:not(:disabled):hover {
-    background-color: #c5a77a61;
+    background-color: #b99a6d61;
     border-color: #5a422ca6;
     color: var(--action-glass-ink);
     scale: none;
   }
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button):not(:disabled):active {
-  background-color: #493521c7;
+  background-color: #3e2d1cc7;
   color: var(--action-glass-paper);
   scale: .985;
   translate: 0 1px;
@@ -101,23 +101,24 @@ html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powe
 
 /* Keep the existing shared navigation layout; emphasize its always-visible exit. */
 .project-case .site-navigation button.project-case-close {
-  background: #3b2b1ea8;
-  border: 1px solid #70583f55;
-  color: #f4ead7;
+  background: #171713a8;
+  border: 1px solid #17171355;
+  color: #ffffff;
   box-shadow: inset 0 1px 0 #ffffff1c;
   -webkit-backdrop-filter: blur(6px) saturate(105%);
   backdrop-filter: blur(6px) saturate(105%);
   transition: background-color 160ms ease, translate 110ms ease;
 }
 .project-case .site-navigation button.project-case-close > [aria-hidden] { color: inherit; }
+.project-case .site-navigation[data-theme=dark] button.project-case-close > [aria-hidden] { color: var(--nav-accent); }
 .project-case .site-navigation[data-theme=dark] button.project-case-close {
-  background: #9d7a4b36;
-  border-color: #ba946775;
-  color: #fff2df;
+  background: #f4f0ef17;
+  border-color: #f4f0ef6b;
+  color: #f4f0ef;
 }
 @media (hover: hover) {
-  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background: #634a33bf; color: #f4ead7; }
-  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background: #b08b5b52; color: #fff2df; }
+  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background: #343430bf; color: #ffffff; }
+  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background: #f4f0ef2e; color: #f4f0ef; }
 }
 .project-case .site-navigation button.project-case-close:not(:disabled):active { translate: 0 1px; }
 @media (max-width: 540px) {
