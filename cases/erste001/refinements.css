@@ -1,29 +1,6 @@
-/* Product study: a clear cover, a quieter reading measure and a source notebook. */
-#s01 { height: auto; min-height: min(820px, 100svh); }
-#s01 .hero-wallhack-stage {
-  height: min(820px, 100svh);
-  min-height: 620px;
-  max-width: 1600px;
-  isolation: isolate;
-}
-#s01 .hero-info-panel {
-  inset: 0 auto 0 7%;
-  width: 43%;
-  max-width: 590px;
-  display: flex;
-  align-items: center;
-  text-align: left;
-}
-#s01 .hero-title-group { align-items: flex-start; }
-#s01 .hero-title-group h1 { font-size: clamp(64px, 7.4vw, 112px); line-height: .98; letter-spacing: -.065em; margin-block: 20px 16px; }
-#s01 .hero-title-group .eyebrow { max-width: 32ch; line-height: 1.7; }
-#s01 .hero-title-group .sub-title { white-space: normal; max-width: 40ch !important; line-height: 1.9; }
-.hero-deck { max-width: 30ch; margin-top: 22px; color: #5d5a57; font-size: clamp(15px, 1.4vw, 19px); line-height: 1.8; }
-#s01 .hero-wallhack-stage .hero-visual { position: absolute; inset: 0 0 0 39%; width: 61% !important; height: 100%; margin: 0; overflow: hidden; }
-#s01 .hero-visual picture { display: block; width: 100%; height: 100%; }
-#s01 .hero-wallhack-stage .hero-visual img { width: 100% !important; height: 100% !important; max-height: none !important; object-fit: contain !important; transform: scale(2.15) !important; filter: drop-shadow(0 24px 26px #1c1c1c12); }
-#s01 .floor-watermark { opacity: .38; }
-.hero-study-meta { position: absolute; inset: auto 7% 90px; display: flex; justify-content: space-between; gap: 16px; border-top: 1px solid #b9b6af; padding-top: 12px; color: #6a6660; font: 10px/1.5 var(--font-mono); letter-spacing: .08em; }
+/* Case study reading refinements and source notebook; original cover composition retained. */
+/* Opacity may animate, but a chapter's scroll destination must not move with it. */
+.case-section { transform: none !important; }
 .body-text, .chapter-body-copy { text-wrap: pretty; }
 .media-figure img { border-radius: 0; }
 #s06 .proto-overlay-note { position: static; display: block; padding: 16px 0 8px; max-width: 62ch; background: none; color: #5d5a57; font-size: 13px; line-height: 1.8; }
@@ -71,24 +48,10 @@
 @keyframes process-dialog-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 @media (hover: hover) { .process-image:hover img { scale: 1.025; } .process-image:hover::after, .process-dialog button:hover { background: #fffdf6; } }
 @media (max-width: 1000px) and (min-width: 641px) {
-  #s01 .hero-info-panel { inset-inline-start: 6%; width: 47%; }
-  #s01 .hero-wallhack-stage .hero-visual { inset-inline-start: 42%; }
-  #s01 .hero-title-group h1 { font-size: 68px; }
   .process-image img { height: 270px; }
   .process-record[data-record="04"] img, .process-record[data-record="05"] img { height: 330px; }
 }
 @media (max-width: 640px) {
-  #s01 { min-height: 0; }
-  #s01 .hero-wallhack-stage { min-height: 0; height: auto; display: flex; flex-direction: column; padding: 30px 20px 0; }
-  #s01 .hero-info-panel { position: relative; inset: auto; max-width: none; width: 100%; align-self: stretch; order: 0; }
-  #s01 .hero-title-group { width: 100%; }
-  #s01 .hero-title-group h1 { font-size: clamp(54px, 17vw, 88px); margin-block: 12px; }
-  #s01 .hero-title-group .eyebrow { font-size: 10px; max-width: none; }
-  #s01 .hero-title-group .sub-title { font-size: 10px; line-height: 1.8; max-width: 34ch !important; }
-  .hero-deck { margin-top: 12px; max-width: 34ch; font-size: 14px; line-height: 1.8; }
-  #s01 .hero-wallhack-stage .hero-visual { position: relative; inset: auto; width: calc(100% + 40px) !important; height: clamp(230px, 67vw, 340px); flex: none; margin-block: 4px 0; order: 1; }
-  #s01 .hero-wallhack-stage .hero-visual img { transform: scale(2.25) !important; }
-  .hero-study-meta { position: relative; inset: auto; width: 100%; padding-block: 14px 24px; font-size: 8px; letter-spacing: .03em; order: 2; }
   #s06 .proto-overlay-note { padding-top: 12px; font-size: 12px; }
   #s07 { padding-bottom: 48px !important; }
   #s07 .conclusion-hero-stage { height: 340px; }
@@ -117,3 +80,13 @@
 }
 html[data-terminal-motion=reduced] .process-image img { transition: none; }
 html[data-terminal-motion=reduced] .process-dialog[open] { animation: none; }
+@media (min-width: 641px) and (max-width: 1000px) {
+  #s01 .hero-info-panel, #s07 .hero-info-panel { right: 84px; max-width: calc(100% - 120px); }
+}
+/* Keep the conclusion heading visible when a landscape phone has little height. */
+@media (max-height: 500px) {
+  #s07 .conclusion-hero-stage { height: max(180px, calc(100svh - 100px)); }
+  #s07 .hero-info-panel { bottom: 24px; }
+  body[data-i18n-page=portfolio] .side-nav { gap: 0 !important; }
+  body[data-i18n-page=portfolio] .side-nav .nav-item { min-height: 30px; }
+}

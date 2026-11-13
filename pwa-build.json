@@ -1,6 +1,6 @@
 {
-  "version": "a22dd36561303320",
-  "bytes": 15887448,
+  "version": "22cc5c534c855227",
+  "bytes": 15887886,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -202,7 +202,7 @@
     "licenses/rolling-number.txt",
     "manifest.webmanifest"
   ],
-  "precacheBytes": 7321833,
+  "precacheBytes": 7322271,
   "deferred": [
     "assets/archive-assembly.d411170676f55a32.glb",
     "cases/erste001/assets/opt/assets/mouse/bottom-shell-cad-1440.avif",
