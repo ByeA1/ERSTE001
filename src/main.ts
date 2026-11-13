@@ -26,6 +26,7 @@ import "./style.css";
 import "./opening-status.css";
 import "./quality-settings.css";
 import "./responsive.css";
+import "./action-buttons.css";
 import { viewportLayout, openingLayout } from "./viewport-layout";
 import { assetUrl } from "./asset-url";
 import { initPwa, pwaSettingsMarkup } from "./pwa";

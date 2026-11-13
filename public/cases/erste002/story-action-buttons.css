@@ -1,0 +1,48 @@
+/* Command-study controls. Only local button surfaces blur the scene. */
+#story .chapter-controls :is(#next-chapter, #restart-story) {
+  background-color: #f24a42e6;
+  background-image: linear-gradient(#fff2e9b3, #fff2e9b3), linear-gradient(#fff2e9b3, #fff2e9b3), linear-gradient(#fff2e9b3, #fff2e9b3), linear-gradient(#fff2e9b3, #fff2e9b3);
+  background-size: 12px 1px, 1px 8px, 12px 1px, 1px 8px;
+  background-position: 4px 4px, 4px 4px, calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) calc(100% - 4px);
+  background-repeat: no-repeat;
+  border: 1px solid #ff80777a;
+  color: #080807;
+  box-shadow: inset 0 1px 0 #ffffff3d;
+  -webkit-backdrop-filter: blur(6px) saturate(105%);
+  backdrop-filter: blur(6px) saturate(105%);
+  transition: background-color 160ms ease, border-color 160ms ease, translate 110ms ease;
+}
+#story .chapter-controls :is(#next-chapter, #restart-story)::before { content: none; animation: none; }
+#story .chapter-controls :is(#next-chapter, #restart-story) > [aria-hidden] { color: inherit; }
+#story .chapter-controls #prev-chapter,
+#story .tools > #initial-assembly {
+  background: #efede40d;
+  border: 1px solid #a49c986b;
+  color: #f5f2ed;
+  box-shadow: inset 0 1px 0 #ffffff0c;
+  -webkit-backdrop-filter: blur(6px) saturate(105%);
+  backdrop-filter: blur(6px) saturate(105%);
+}
+#story .tools > #initial-assembly { border-inline-start: 2px solid #f24a42a6; }
+@media (hover: hover) {
+  #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover {
+    background-color: #ff675ee6;
+    border-color: #ffb6ada6;
+    color: #080807;
+  }
+  #story .chapter-controls #prev-chapter:not(:disabled):hover,
+  #story .tools > #initial-assembly:not(:disabled):hover { background: #efede421; border-color: #a49c98a6; color: #f5f2ed; }
+}
+#story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):active { background-color: #d83d37e6; translate: 0 1px; }
+#story .chapter-controls :is(#prev-chapter, #next-chapter):disabled,
+#story .tools > #initial-assembly:disabled {
+  background: #efede408;
+  color: #b8adb0;
+  border-color: #66545780;
+  box-shadow: none;
+}
+#story .chapter-controls :is(#prev-chapter, #next-chapter):disabled > [aria-hidden] { color: inherit; }
+@media (prefers-reduced-motion: reduce) {
+  #story .chapter-controls :is(#prev-chapter, #next-chapter, #restart-story),
+  #story .tools > #initial-assembly { transition: none; }
+}

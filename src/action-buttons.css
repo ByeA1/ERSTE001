@@ -1,0 +1,129 @@
+/* Archive command hierarchy: dark glass routes, quiet glass navigation. */
+html:not([data-wallpaper]) #stage[data-layout] {
+  --action-glass-ink: #151714;
+  --action-glass-paper: #f3f1e5;
+  --action-glass-rule: #787e6d85;
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button) {
+  border: 1px solid #15171465;
+  background-color: #151714ba;
+  color: var(--action-glass-paper);
+  box-shadow: inset 0 1px 0 #ffffff24, inset 0 -1px 0 #00000016;
+  -webkit-backdrop-filter: blur(6px) saturate(105%);
+  backdrop-filter: blur(6px) saturate(105%);
+  filter: none;
+  scale: none;
+  transition: background-color 160ms ease, border-color 160ms ease, scale 160ms ease, translate 110ms ease;
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open) {
+  min-height: max(52px, var(--access-target, 52px));
+  border-inline-start-width: 1px;
+  padding-inline: 22px 12px;
+  background-image: linear-gradient(#f3f1e5b8, #f3f1e5b8), linear-gradient(#f3f1e5b8, #f3f1e5b8), linear-gradient(#f3f1e5b8, #f3f1e5b8), linear-gradient(#f3f1e5b8, #f3f1e5b8);
+  background-size: 15px 1px, 1px 11px, 15px 1px, 1px 11px;
+  background-position: 5px 5px, 5px 5px, calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) calc(100% - 5px);
+  background-repeat: no-repeat;
+  font-weight: 650;
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open)::before { content: none; }
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open) > span:last-child {
+  color: inherit;
+  border-inline-start-color: #f3f1e540;
+  transition: translate 160ms ease;
+}
+html:not([data-wallpaper]) #stage[data-layout] button.back-button {
+  background-color: #151714a8;
+  background-image: none;
+  min-height: max(44px, var(--access-target, 44px));
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.project-step, .detail-project-step, .viewer-open),
+html:not([data-wallpaper]) #stage[data-layout] .column-navigation > button {
+  background: #f3f1e51f;
+  color: var(--action-glass-ink);
+  border: 1px solid var(--action-glass-rule);
+  box-shadow: inset 0 1px 0 #ffffff40;
+  filter: none;
+  scale: none;
+  -webkit-backdrop-filter: blur(6px) saturate(105%);
+  backdrop-filter: blur(6px) saturate(105%);
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button, .project-step, .detail-project-step).terminal-clicked {
+  animation: action-glass-confirm 240ms ease-out;
+}
+@keyframes action-glass-confirm {
+  from { box-shadow: inset 0 0 0 1px #f3f1e57a; }
+  to { box-shadow: inset 0 0 0 1px #f3f1e500; }
+}
+@media (hover: hover) {
+  html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open):not(:disabled):hover {
+    background-color: #151714d1;
+    border-color: #15171485;
+    color: var(--action-glass-paper);
+    scale: 1.015;
+    filter: none;
+  }
+  html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open):not(:disabled):hover > span:last-child {
+    color: inherit;
+    translate: 2px -1px;
+  }
+  html:not([data-wallpaper]) #stage[data-layout] button.back-button:not(:disabled):hover {
+    background-color: #34362fbf;
+    color: var(--action-glass-paper);
+  }
+  html:not([data-wallpaper]) #stage[data-layout] button:is(.project-step, .detail-project-step, .viewer-open):not(:disabled):hover,
+  html:not([data-wallpaper]) #stage[data-layout] .column-navigation > button:not(:disabled):hover {
+    background-color: #f3f1e561;
+    border-color: #292d24a6;
+    color: var(--action-glass-ink);
+    scale: none;
+  }
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button):not(:disabled):active {
+  background-color: #151714c7;
+  color: var(--action-glass-paper);
+  scale: .985;
+  translate: 0 1px;
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button):disabled {
+  color: #61655b;
+  border-color: #8b8f8280;
+  background-color: #e9e8df18;
+  background-image: none;
+  box-shadow: none;
+}
+/* Keep the secondary signature clear of the detail action row. */
+html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powered {
+  inset-inline-start: var(--edge, 59px);
+  inset-inline-end: auto;
+  bottom: 74px;
+  font-size: 14px;
+}
+
+/* Keep the existing shared navigation layout; emphasize its always-visible exit. */
+.project-case .site-navigation button.project-case-close {
+  background: #151714a8;
+  border: 1px solid #15171455;
+  color: #f3f1e5;
+  box-shadow: inset 0 1px 0 #ffffff1c;
+  -webkit-backdrop-filter: blur(6px) saturate(105%);
+  backdrop-filter: blur(6px) saturate(105%);
+  transition: background-color 160ms ease, translate 110ms ease;
+}
+.project-case .site-navigation button.project-case-close > [aria-hidden] { color: inherit; }
+.project-case .site-navigation[data-theme=dark] button.project-case-close {
+  background: #b5b0a617;
+  border-color: #a49c986b;
+  color: #f5f2ed;
+}
+@media (hover: hover) {
+  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background: #34362fbf; color: #f3f1e5; }
+  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background: #b5b0a62e; color: #f5f2ed; }
+}
+.project-case .site-navigation button.project-case-close:not(:disabled):active { translate: 0 1px; }
+@media (max-width: 540px) {
+  .project-case .site-navigation button.project-case-close { padding-inline: 8px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button, .project-step, .detail-project-step, .viewer-open),
+  .project-case .site-navigation button.project-case-close { transition: none; animation: none; }
+}
