@@ -1,12 +1,12 @@
-/* Archive command hierarchy: dark glass routes, quiet glass navigation. */
+/* Archive command hierarchy: smoked tea glass routes, quiet glass navigation. */
 html:not([data-wallpaper]) #stage[data-layout] {
-  --action-glass-ink: #151714;
-  --action-glass-paper: #f3f1e5;
-  --action-glass-rule: #787e6d85;
+  --action-glass-ink: #4a3826;
+  --action-glass-paper: #f4ead7;
+  --action-glass-rule: #8f745885;
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button) {
-  border: 1px solid #15171465;
-  background-color: #151714ba;
+  border: 1px solid #70583f65;
+  background-color: #4f3b2bba;
   color: var(--action-glass-paper);
   box-shadow: inset 0 1px 0 #ffffff24, inset 0 -1px 0 #00000016;
   -webkit-backdrop-filter: blur(6px) saturate(105%);
@@ -19,7 +19,7 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
   min-height: max(52px, var(--access-target, 52px));
   border-inline-start-width: 1px;
   padding-inline: 22px 12px;
-  background-image: linear-gradient(#f3f1e5b8, #f3f1e5b8), linear-gradient(#f3f1e5b8, #f3f1e5b8), linear-gradient(#f3f1e5b8, #f3f1e5b8), linear-gradient(#f3f1e5b8, #f3f1e5b8);
+  background-image: linear-gradient(#f4ead7b8, #f4ead7b8), linear-gradient(#f4ead7b8, #f4ead7b8), linear-gradient(#f4ead7b8, #f4ead7b8), linear-gradient(#f4ead7b8, #f4ead7b8);
   background-size: 15px 1px, 1px 11px, 15px 1px, 1px 11px;
   background-position: 5px 5px, 5px 5px, calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) calc(100% - 5px);
   background-repeat: no-repeat;
@@ -28,17 +28,17 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open)::before { content: none; }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open) > span:last-child {
   color: inherit;
-  border-inline-start-color: #f3f1e540;
+  border-inline-start-color: #f4ead740;
   transition: translate 160ms ease;
 }
 html:not([data-wallpaper]) #stage[data-layout] button.back-button {
-  background-color: #151714a8;
+  background-color: #3b2b1ea8;
   background-image: none;
   min-height: max(44px, var(--access-target, 44px));
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.project-step, .detail-project-step, .viewer-open),
 html:not([data-wallpaper]) #stage[data-layout] .column-navigation > button {
-  background: #f3f1e51f;
+  background: #c5a77a1f;
   color: var(--action-glass-ink);
   border: 1px solid var(--action-glass-rule);
   box-shadow: inset 0 1px 0 #ffffff40;
@@ -51,13 +51,13 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
   animation: action-glass-confirm 240ms ease-out;
 }
 @keyframes action-glass-confirm {
-  from { box-shadow: inset 0 0 0 1px #f3f1e57a; }
-  to { box-shadow: inset 0 0 0 1px #f3f1e500; }
+  from { box-shadow: inset 0 0 0 1px #f4ead77a; }
+  to { box-shadow: inset 0 0 0 1px #f4ead700; }
 }
 @media (hover: hover) {
   html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open):not(:disabled):hover {
-    background-color: #151714d1;
-    border-color: #15171485;
+    background-color: #4f3b2bd1;
+    border-color: #70583f85;
     color: var(--action-glass-paper);
     scale: 1.015;
     filter: none;
@@ -67,27 +67,27 @@ html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-o
     translate: 2px -1px;
   }
   html:not([data-wallpaper]) #stage[data-layout] button.back-button:not(:disabled):hover {
-    background-color: #34362fbf;
+    background-color: #634a33bf;
     color: var(--action-glass-paper);
   }
   html:not([data-wallpaper]) #stage[data-layout] button:is(.project-step, .detail-project-step, .viewer-open):not(:disabled):hover,
   html:not([data-wallpaper]) #stage[data-layout] .column-navigation > button:not(:disabled):hover {
-    background-color: #f3f1e561;
-    border-color: #292d24a6;
+    background-color: #c5a77a61;
+    border-color: #5a422ca6;
     color: var(--action-glass-ink);
     scale: none;
   }
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button):not(:disabled):active {
-  background-color: #151714c7;
+  background-color: #493521c7;
   color: var(--action-glass-paper);
   scale: .985;
   translate: 0 1px;
 }
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button):disabled {
-  color: #61655b;
-  border-color: #8b8f8280;
-  background-color: #e9e8df18;
+  color: #756754;
+  border-color: #a48c7280;
+  background-color: #d6c3a518;
   background-image: none;
   box-shadow: none;
 }
@@ -101,9 +101,9 @@ html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powe
 
 /* Keep the existing shared navigation layout; emphasize its always-visible exit. */
 .project-case .site-navigation button.project-case-close {
-  background: #151714a8;
-  border: 1px solid #15171455;
-  color: #f3f1e5;
+  background: #3b2b1ea8;
+  border: 1px solid #70583f55;
+  color: #f4ead7;
   box-shadow: inset 0 1px 0 #ffffff1c;
   -webkit-backdrop-filter: blur(6px) saturate(105%);
   backdrop-filter: blur(6px) saturate(105%);
@@ -111,13 +111,13 @@ html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powe
 }
 .project-case .site-navigation button.project-case-close > [aria-hidden] { color: inherit; }
 .project-case .site-navigation[data-theme=dark] button.project-case-close {
-  background: #b5b0a617;
-  border-color: #a49c986b;
-  color: #f5f2ed;
+  background: #9d7a4b36;
+  border-color: #ba946775;
+  color: #fff2df;
 }
 @media (hover: hover) {
-  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background: #34362fbf; color: #f3f1e5; }
-  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background: #b5b0a62e; color: #f5f2ed; }
+  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background: #634a33bf; color: #f4ead7; }
+  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background: #b08b5b52; color: #fff2df; }
 }
 .project-case .site-navigation button.project-case-close:not(:disabled):active { translate: 0 1px; }
 @media (max-width: 540px) {
