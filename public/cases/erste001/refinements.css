@@ -1,4 +1,6 @@
 /* Case study reading refinements and source notebook; original cover composition retained. */
+/* Opacity may animate, but a chapter's scroll destination must not move with it. */
+.case-section { transform: none !important; }
 .body-text, .chapter-body-copy { text-wrap: pretty; }
 .media-figure img { border-radius: 0; }
 #s06 .proto-overlay-note { position: static; display: block; padding: 16px 0 8px; max-width: 62ch; background: none; color: #5d5a57; font-size: 13px; line-height: 1.8; }
@@ -78,3 +80,13 @@
 }
 html[data-terminal-motion=reduced] .process-image img { transition: none; }
 html[data-terminal-motion=reduced] .process-dialog[open] { animation: none; }
+@media (min-width: 641px) and (max-width: 1000px) {
+  #s01 .hero-info-panel, #s07 .hero-info-panel { right: 84px; max-width: calc(100% - 120px); }
+}
+/* Keep the conclusion heading visible when a landscape phone has little height. */
+@media (max-height: 500px) {
+  #s07 .conclusion-hero-stage { height: max(180px, calc(100svh - 100px)); }
+  #s07 .hero-info-panel { bottom: 24px; }
+  body[data-i18n-page=portfolio] .side-nav { gap: 0 !important; }
+  body[data-i18n-page=portfolio] .side-nav .nav-item { min-height: 30px; }
+}

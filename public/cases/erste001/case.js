@@ -364,19 +364,57 @@ document.addEventListener('DOMContentLoaded', function () {
     const next = dock.querySelector('[data-reading-step="1"]');
     const root = document.documentElement;
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
-    const scroller = document.querySelector('#scroller');
+    const scroller = document.querySelector('#scroller') || document.scrollingElement;
     const number = value => String(value).padStart(2, '0');
     progress.max = navItems.length;
     let current = 0;
     let pending;
     let settleTimer;
 
-    // Tall chapters cannot reach a 50% intersection ratio on a phone.
-    // Follow the chapter at the reading line instead of its visible fraction.
+    // Align against the unobstructed reading area, not nested CSS scroll offsets.
+    function readingViewport() {
+        const nested = scroller !== document.scrollingElement;
+        const box = nested ? scroller.getBoundingClientRect() : { top: 0, bottom: innerHeight };
+        let top = Math.max(0, box.top) + 24;
+        let bottom = Math.min(innerHeight, box.bottom) - 24;
+        for (const bar of document.querySelectorAll('.top-profile-bar, .side-nav')) {
+            const rect = bar.getBoundingClientRect();
+            const position = getComputedStyle(bar).position;
+            if (!rect.height || rect.width < innerWidth / 2) continue;
+            if (position === 'sticky') {
+                const barBottom = nested && !scroller.contains(bar) ? rect.bottom : Math.max(0, box.top) + rect.height;
+                top = Math.max(top, barBottom + 20);
+            }
+            else if (position === 'fixed') top = Math.max(top, rect.bottom + 20);
+        }
+        const dockBox = dock.getBoundingClientRect();
+        if (dockBox.height && dockBox.top > top) bottom = Math.min(bottom, dockBox.top - 20);
+        return { top, bottom, height: Math.max(1, bottom - top) };
+    }
+
+    function chapterContent(target) {
+        const container = target.id === 's07' ? target : target.querySelector(':scope > .section-inner') || target;
+        const children = [...container.children].filter(element => {
+            const style = getComputedStyle(element);
+            return element.getBoundingClientRect().height > 0 && style.display !== 'none' &&
+                style.position !== 'absolute' && style.position !== 'fixed';
+        });
+        if (!children.length) return target.getBoundingClientRect();
+        const boxes = children.map(element => {
+            const box = element.getBoundingClientRect();
+            const transform = getComputedStyle(element).transform;
+            const offset = transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m42;
+            return { top: box.top - offset, bottom: box.bottom - offset };
+        });
+        const top = Math.min(...boxes.map(box => box.top));
+        const bottom = Math.max(...boxes.map(box => box.bottom));
+        return { top, bottom, height: bottom - top };
+    }
     let scheduled = false;
     const updateChapter = () => {
         scheduled = false;
-        const readingLine = Math.min(window.innerHeight * 0.25, 200);
+        const viewport = readingViewport();
+        const readingLine = (viewport.top + viewport.bottom) / 2;
         let id = sections[0]?.id;
         sections.forEach((section) => {
             if (section.getBoundingClientRect().top <= readingLine) id = section.id;
@@ -392,17 +430,18 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         count.value = `${number(current + 1)} / ${number(navItems.length)}`;
         progress.value = current + 1;
-        previous.disabled = current === 0;
-        next.disabled = current === navItems.length - 1;
+        const controlIndex = pending?.index ?? current;
+        previous.disabled = controlIndex === 0;
+        next.disabled = controlIndex === navItems.length - 1;
         updateChapterName();
-        if (pending?.index === current) finishJump();
+        if (pending && Math.abs(scroller.scrollTop - pending.top) < 2) finishJump();
     };
     const scheduleChapter = () => {
         if (scheduled) return;
         scheduled = true;
         requestAnimationFrame(updateChapter);
     };
-    (scroller || window).addEventListener('scroll', scheduleChapter, { passive: true });
+    (scroller === document.scrollingElement ? document : scroller).addEventListener('scroll', scheduleChapter, { passive: true });
     window.addEventListener('resize', scheduleChapter);
     window.addEventListener('load', scheduleChapter);
     updateChapter();
@@ -439,14 +478,24 @@ document.addEventListener('DOMContentLoaded', function () {
         finishJump();
         const instant = reducedMotion.matches || root.dataset.terminalMotion === 'reduced';
         const target = document.querySelector(navItems[index].hash);
-        pending = { index, control, moveFocus };
-        if (!instant && index !== current) control.setAttribute('aria-busy', 'true');
-        target.scrollIntoView({ behavior: instant ? 'instant' : 'smooth' });
-        if (index === current) finishJump();
-        else settleTimer = setTimeout(finishJump, 1300);
+        const viewport = readingViewport();
+        const content = chapterContent(target);
+        const desiredTop = viewport.top + Math.max(0, (viewport.height - content.height) / 2);
+        const maximum = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
+        // The cover retains its original centered product composition.
+        const top = index === 0 ? 0 : Math.max(0, Math.min(maximum, scroller.scrollTop + content.top - desiredTop));
+        pending = { index, control, moveFocus, top };
+        previous.disabled = index === 0;
+        next.disabled = index === navItems.length - 1;
+        if (!instant && Math.abs(scroller.scrollTop - top) >= 2) control.setAttribute('aria-busy', 'true');
+        scroller.scrollTo({ top, behavior: instant ? 'instant' : 'smooth' });
+        if (instant) updateChapter();
+        else scheduleChapter();
+        if (Math.abs(scroller.scrollTop - top) < 2) finishJump();
+        else settleTimer = setTimeout(finishJump, 1600);
     }
 
-    for (const item of [...navItems, ...document.querySelectorAll('.engineering-hero-actions a, .engineering-dock a')]) {
+    for (const item of [...navItems, ...document.querySelectorAll('.engineering-hero-actions a, .engineering-dock a, .process-footer a')]) {
         item.addEventListener('click', event => {
             event.preventDefault();
             jump(navItems.findIndex(chapter => chapter.hash === item.hash), item, item.closest('.engineering-hero-actions') !== null);
