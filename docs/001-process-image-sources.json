@@ -1,0 +1,120 @@
+{
+  "sourceDirectory": "C:\\ZLF Files\\UG(NX)\\ERSTE001\\res",
+  "note": "Sources preserved unchanged. Ordered by design activity, not a verified revision chronology.",
+  "images": [
+    {
+      "name": "curve-study",
+      "source": "31feffec8c6e5e2d5dc35d6accff35c7.jpg",
+      "sha256": "a86439817a5546599774ab79f8fabbb10146598739b79350c834b116815cbd1f",
+      "width": 1131,
+      "height": 602,
+      "variants": [
+        {
+          "file": "curve-study-640.webp",
+          "width": 640,
+          "bytes": 19720
+        },
+        {
+          "file": "curve-study-1131.webp",
+          "width": 1131,
+          "bytes": 46748
+        }
+      ]
+    },
+    {
+      "name": "shell-study",
+      "source": "屏幕截图 2026-08-24 235712.png",
+      "sha256": "d8ac6c0b1d2880abca192dea42b7f257c536267138545e6853f1c364f35c9125",
+      "width": 1672,
+      "height": 922,
+      "variants": [
+        {
+          "file": "shell-study-640.webp",
+          "width": 640,
+          "bytes": 23574
+        },
+        {
+          "file": "shell-study-1600.webp",
+          "width": 1600,
+          "bytes": 100120
+        }
+      ]
+    },
+    {
+      "name": "interface-study",
+      "source": "屏幕截图 2026-08-25 000045.png",
+      "sha256": "1cb775da48066dad125be4053c38fb04d3ad675a9dadbd641b0fdd3b2b9d0f73",
+      "width": 885,
+      "height": 639,
+      "variants": [
+        {
+          "file": "interface-study-640.webp",
+          "width": 640,
+          "bytes": 33500
+        },
+        {
+          "file": "interface-study-885.webp",
+          "width": 885,
+          "bytes": 54954
+        }
+      ]
+    },
+    {
+      "name": "assembly-study",
+      "source": "屏幕截图 2026-08-28 215526.png",
+      "sha256": "057e0748e9c520a06e2bc09110f7860f19eecb28e5520ae27ba586dab045e3ef",
+      "width": 2117,
+      "height": 1321,
+      "variants": [
+        {
+          "file": "assembly-study-640.webp",
+          "width": 640,
+          "bytes": 16934
+        },
+        {
+          "file": "assembly-study-1600.webp",
+          "width": 1600,
+          "bytes": 68904
+        }
+      ]
+    },
+    {
+      "name": "printed-parts",
+      "source": "e5efe8c478bf0f77fe0eaac113455db7.jpg",
+      "sha256": "0a6f7c932bd1e5c7f1525d86ad7d46f1539c9eb110d3fdccd89c028917ea2990",
+      "width": 900,
+      "height": 1200,
+      "variants": [
+        {
+          "file": "printed-parts-640.webp",
+          "width": 640,
+          "bytes": 57888
+        },
+        {
+          "file": "printed-parts-900.webp",
+          "width": 900,
+          "bytes": 98216
+        }
+      ]
+    },
+    {
+      "name": "assembly-workbench",
+      "source": "7edd502c81b67ad20b020cfa9f24c3fc.jpg",
+      "sha256": "8122403f121c7f3d81e3f75242f1e827f08e5a4e77b4d73a737493b83b4a4267",
+      "width": 1706,
+      "height": 1279,
+      "variants": [
+        {
+          "file": "assembly-workbench-640.webp",
+          "width": 640,
+          "bytes": 69318
+        },
+        {
+          "file": "assembly-workbench-1600.webp",
+          "width": 1600,
+          "bytes": 294352
+        }
+      ]
+    }
+  ]
+}

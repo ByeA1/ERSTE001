@@ -355,7 +355,21 @@
 
 document.addEventListener('DOMContentLoaded', function () {
     const sections = document.querySelectorAll('.case-section');
-    const navItems = document.querySelectorAll('.side-nav .nav-item');
+    const navItems = [...document.querySelectorAll('.side-nav .nav-item')];
+    const dock = document.querySelector('.engineering-dock');
+    const count = dock.querySelector('output');
+    const chapterName = dock.querySelector('.engineering-chapter-name');
+    const progress = dock.querySelector('progress');
+    const previous = dock.querySelector('[data-reading-step="-1"]');
+    const next = dock.querySelector('[data-reading-step="1"]');
+    const root = document.documentElement;
+    const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+    const scroller = document.querySelector('#scroller');
+    const number = value => String(value).padStart(2, '0');
+    progress.max = navItems.length;
+    let current = 0;
+    let pending;
+    let settleTimer;
 
     // Tall chapters cannot reach a 50% intersection ratio on a phone.
     // Follow the chapter at the reading line instead of its visible fraction.
@@ -368,31 +382,79 @@ document.addEventListener('DOMContentLoaded', function () {
             if (section.getBoundingClientRect().top <= readingLine) id = section.id;
         });
         if (id === 's05-b' || id === 's05-c') id = 's05';
-        navItems.forEach((item) => {
-            const active = item.getAttribute('href') === `#${id}`;
+        const index = navItems.findIndex(item => item.hash === `#${id}`);
+        if (index >= 0) current = index;
+        navItems.forEach((item, i) => {
+            const active = i === current;
             item.classList.toggle('active', active);
             if (active) item.setAttribute('aria-current', 'location');
             else item.removeAttribute('aria-current');
         });
+        count.value = `${number(current + 1)} / ${number(navItems.length)}`;
+        progress.value = current + 1;
+        previous.disabled = current === 0;
+        next.disabled = current === navItems.length - 1;
+        updateChapterName();
+        if (pending?.index === current) finishJump();
     };
     const scheduleChapter = () => {
         if (scheduled) return;
         scheduled = true;
         requestAnimationFrame(updateChapter);
     };
-    window.addEventListener('scroll', scheduleChapter, { passive: true });
+    (scroller || window).addEventListener('scroll', scheduleChapter, { passive: true });
     window.addEventListener('resize', scheduleChapter);
     window.addEventListener('load', scheduleChapter);
     updateChapter();
 
-    navItems.forEach((item) => {
-        item.addEventListener('click', function (e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSec = document.querySelector(targetId);
-            if (targetSec) {
-                targetSec.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
-            }
+    function updateChapterName() {
+        const label = navItems[current].querySelector('.label').textContent.trim();
+        if (chapterName.textContent !== label) chapterName.textContent = label;
+    }
+
+    function labelChapters() {
+        navItems.forEach((item, index) => {
+            item.setAttribute('aria-label', `${number(index + 1)} ${item.querySelector('.label').textContent.trim()}`);
         });
-    });
+        updateChapterName();
+    }
+
+    function finishJump() {
+        clearTimeout(settleTimer);
+        if (!pending) return;
+        const { index, control, moveFocus } = pending;
+        pending = undefined;
+        control.removeAttribute('aria-busy');
+        if (moveFocus && index === current && document.activeElement === control) {
+            const heading = document.querySelector(navItems[index].hash + ' :is(h1,h2)');
+            if (heading) {
+                heading.tabIndex = -1;
+                heading.focus({ preventScroll: true });
+            }
+        }
+    }
+
+    function jump(index, control, moveFocus = false) {
+        if (index < 0 || index >= navItems.length) return;
+        finishJump();
+        const instant = reducedMotion.matches || root.dataset.terminalMotion === 'reduced';
+        const target = document.querySelector(navItems[index].hash);
+        pending = { index, control, moveFocus };
+        if (!instant && index !== current) control.setAttribute('aria-busy', 'true');
+        target.scrollIntoView({ behavior: instant ? 'instant' : 'smooth' });
+        if (index === current) finishJump();
+        else settleTimer = setTimeout(finishJump, 1300);
+    }
+
+    for (const item of [...navItems, ...document.querySelectorAll('.engineering-hero-actions a, .engineering-dock a')]) {
+        item.addEventListener('click', event => {
+            event.preventDefault();
+            jump(navItems.findIndex(chapter => chapter.hash === item.hash), item, item.closest('.engineering-hero-actions') !== null);
+        });
+    }
+    for (const step of [previous, next]) {
+        step.addEventListener('click', () => jump((pending?.index ?? current) + Number(step.dataset.readingStep), step));
+    }
+    new MutationObserver(labelChapters).observe(root, { attributes: true, attributeFilter: ['lang'] });
+    labelChapters();
 });
