@@ -4,6 +4,7 @@ import {
   getRhineLogoPolicy,
 } from "./rhine-logo";
 import logoCss from "./rhine-logo.css?inline";
+import hostedCss from "./project-hosted.css?inline";
 import {
   currentLanguage,
   setTerminalLanguage,
@@ -19,6 +20,17 @@ export class ProjectInterface {
   private events = new AbortController();
   private observer: MutationObserver;
   private quality?: MutationObserver;
+  private toolbar?: ResizeObserver;
+  private syncToolbar = () => {
+    if (this.events.signal.aborted || this.frame.hidden || !this.frame.isConnected) return;
+    const bar = this.frame.parentElement?.querySelector<HTMLElement>('.site-navigation');
+    if (!bar) return;
+    const inset = Math.max(0, Math.ceil(bar.getBoundingClientRect().bottom - this.frame.getBoundingClientRect().top + 6));
+    const root = this.document.documentElement;
+    if (root.style.getPropertyValue('--project-toolbar-inset') === `${inset}px`) return;
+    root.style.setProperty('--project-toolbar-inset', `${inset}px`);
+    this.frame.contentWindow?.dispatchEvent(new Event('resize'));
+  };
   private lastPolicy = "";
   readonly document: Document;
   private policyChanged = () => this.applyPolicy();
@@ -29,13 +41,24 @@ export class ProjectInterface {
   ) {
     this.document = frame.contentDocument!;
     const doc = this.document;
+    doc.documentElement.style.setProperty('--project-body-padding', getComputedStyle(doc.body).paddingTop);
+    for (const main of doc.querySelectorAll<HTMLElement>('body > main')) {
+      const computed = getComputedStyle(main);
+      if (computed.position === 'fixed' && computed.top === '0px' && computed.bottom === '0px')
+        main.dataset.projectFixedRoot = 'true';
+    }
     doc.documentElement.dataset.projectHosted = 'true';
     const style = doc.createElement("style");
     style.dataset.terminalInterface = "true";
     style.textContent =
-      logoCss + '\nhtml[data-project-hosted] [data-project-local-navigation]{display:none!important;}' +
+      logoCss + '\n' + hostedCss +
       '\nhtml[data-terminal-motion="reduced"] *,html[data-terminal-motion="reduced"] *::before,html[data-terminal-motion="reduced"] *::after{animation-duration:0.001ms!important;animation-iteration-count:1!important;transition-duration:0.001ms!important;scroll-behavior:auto!important;}';
     doc.head.append(style);
+    this.toolbar = new ResizeObserver(this.syncToolbar);
+    const bar = frame.parentElement?.querySelector('.site-navigation');
+    if (bar) this.toolbar.observe(bar);
+    this.toolbar.observe(frame);
+    this.syncToolbar();
     doc.addEventListener(
       "click",
       (event) => {
@@ -198,6 +221,10 @@ export class ProjectInterface {
   destroy() {
     this.events.abort();
     delete this.document.documentElement.dataset.projectHosted;
+    this.toolbar?.disconnect();
+    this.document.documentElement.style.removeProperty('--project-toolbar-inset');
+    this.document.documentElement.style.removeProperty('--project-body-padding');
+    this.document.querySelectorAll('[data-project-fixed-root]').forEach(element => element.removeAttribute('data-project-fixed-root'));
     this.observer.disconnect();
     this.quality?.disconnect();
     this.logos.forEach((player) => player.destroy());

@@ -375,14 +375,16 @@ document.addEventListener('DOMContentLoaded', function () {
     function readingViewport() {
         const nested = scroller !== document.scrollingElement;
         const box = nested ? scroller.getBoundingClientRect() : { top: 0, bottom: innerHeight };
-        let top = Math.max(0, box.top) + 24;
+        const toolbarInset = parseFloat(getComputedStyle(root).getPropertyValue('--project-toolbar-inset')) || 0;
+        let top = Math.max(0, box.top, toolbarInset) + 24;
         let bottom = Math.min(innerHeight, box.bottom) - 24;
         for (const bar of document.querySelectorAll('.top-profile-bar, .side-nav')) {
             const rect = bar.getBoundingClientRect();
             const position = getComputedStyle(bar).position;
             if (!rect.height || rect.width < innerWidth / 2) continue;
             if (position === 'sticky') {
-                const barBottom = nested && !scroller.contains(bar) ? rect.bottom : Math.max(0, box.top) + rect.height;
+                const stickyTop = parseFloat(getComputedStyle(bar).top) || 0;
+                const barBottom = nested && !scroller.contains(bar) ? rect.bottom : Math.max(0, box.top, stickyTop) + rect.height;
                 top = Math.max(top, barBottom + 20);
             }
             else if (position === 'fixed') top = Math.max(top, rect.bottom + 20);

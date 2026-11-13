@@ -3,7 +3,7 @@
   --case-nav-top: max(18px, env(safe-area-inset-top));
   --case-nav-height: 56px;
   --case-nav-edge: max(30px, env(safe-area-inset-left), env(safe-area-inset-right));
-  padding-block-start: calc(var(--case-nav-top) + var(--case-nav-height) + 6px);
+  padding-block-start: 0;
 }
 .project-case:is([data-case-phase=revealing], [data-case-phase=open]):has(> .site-navigation[data-theme=dark]) { background: #101012; }
 @media (max-width: 900px) {

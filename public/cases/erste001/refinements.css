@@ -1,6 +1,16 @@
 /* Case study reading refinements and source notebook; original cover composition retained. */
 /* Opacity may animate, but a chapter's scroll destination must not move with it. */
 .case-section { transform: none !important; }
+html[data-project-hosted] {
+  --project-usable-height: calc(100svh - var(--project-toolbar-inset, 0px));
+}
+html[data-project-hosted] .case-section:not(#s07) { min-height: var(--project-usable-height) !important; }
+html[data-project-hosted] #s01 .hero-wallhack-stage { height: calc(var(--project-usable-height) * .82); }
+html[data-project-hosted] .hero-wallhack-stage .hero-visual { height: calc(var(--project-usable-height) * .72); }
+html[data-project-hosted] .hero-wallhack-stage .hero-visual img { max-height: calc(var(--project-usable-height) * .55) !important; }
+@media (max-width: 640px) {
+  html[data-project-hosted] body .side-nav { top: var(--project-toolbar-inset, 0px) !important; }
+}
 .body-text, .chapter-body-copy { text-wrap: pretty; }
 .media-figure img { border-radius: 0; }
 #s06 .proto-overlay-note { position: static; display: block; padding: 16px 0 8px; max-width: 62ch; background: none; color: #5d5a57; font-size: 13px; line-height: 1.8; }
@@ -36,6 +46,10 @@
 .process-image:focus-visible, .process-dialog button:focus-visible { outline: 2px solid #24241f; outline-offset: 4px; }
 
 .process-dialog { position: fixed; inset: 0; width: min(1340px, calc(100vw - 48px)); height: min(920px, calc(100dvh - 48px)); max-width: none; max-height: none; margin: auto; padding: 22px; border: 1px solid #aaa69c; background: #f3f1eb; color: #24241f; }
+html[data-project-hosted] .process-dialog {
+  inset-block-start: var(--project-toolbar-inset, 0px);
+  height: min(920px, calc(100dvh - var(--project-toolbar-inset, 0px) - 48px));
+}
 .process-dialog::backdrop { background: #11120fe0; }
 .process-dialog[open] { display: flex; flex-direction: column; gap: 16px; animation: process-dialog-in 220ms ease-out; }
 .process-dialog-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 11px/1.6 var(--font-mono); }
@@ -70,6 +84,7 @@
   .process-record p { font-size: 12px; }
   .process-footer { margin-top: 36px; }
   .process-dialog { width: calc(100vw - 16px); height: calc(100dvh - 16px); padding: 14px; }
+  html[data-project-hosted] .process-dialog { height: calc(100dvh - var(--project-toolbar-inset, 0px) - 16px); }
   .process-dialog-bar > span { max-width: 22ch; font-size: 10px; }
   .process-dialog figcaption { font-size: 12px; }
   .process-dialog-controls button { max-width: 40%; font-size: 12px; }
@@ -86,6 +101,7 @@ html[data-terminal-motion=reduced] .process-dialog[open] { animation: none; }
 /* Keep the conclusion heading visible when a landscape phone has little height. */
 @media (max-height: 500px) {
   #s07 .conclusion-hero-stage { height: max(180px, calc(100svh - 100px)); }
+  html[data-project-hosted] #s07 .conclusion-hero-stage { height: max(180px, calc(var(--project-usable-height) - 100px)); }
   #s07 .hero-info-panel { bottom: 24px; }
   body[data-i18n-page=portfolio] .side-nav { gap: 0 !important; }
   body[data-i18n-page=portfolio] .side-nav .nav-item { min-height: 30px; }

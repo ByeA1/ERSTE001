@@ -1,0 +1,9 @@
+/* The iframe paints the whole project surface; only the toolbar owns glass. */
+html[data-project-hosted] [data-project-local-navigation] { display: none !important; }
+html[data-project-hosted] body {
+  box-sizing: border-box;
+  padding-block-start: calc(var(--project-toolbar-inset, 0px) + var(--project-body-padding, 0px)) !important;
+}
+html[data-project-hosted] [data-project-fixed-root] {
+  inset-block-start: var(--project-toolbar-inset, 0px) !important;
+}

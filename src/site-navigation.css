@@ -3,6 +3,8 @@
   --nav-ink: #22231f;
   --nav-edge: #d1cdc5;
   --nav-accent: #795c34;
+  --nav-glass: #f6f4efad;
+  --nav-menu-glass: #f6f4efe0;
   position: absolute;
   z-index: 25;
   inset-block-start: max(12px, env(safe-area-inset-top));
@@ -19,16 +21,22 @@
   --nav-ink: #171713;
   --nav-edge: #1111111a;
   --nav-accent: #4b4b44;
+  --nav-glass: #ffffffa3;
+  --nav-menu-glass: #ffffffe0;
 }
 .site-navigation[data-theme=dark] {
   --nav-paper: #141417;
   --nav-ink: #f4f0ef;
   --nav-edge: #ffffff26;
   --nav-accent: #ff5d57;
+  --nav-glass: #141417a3;
+  --nav-menu-glass: #141417e0;
 }
 .site-navigation :is(.site-nav-toggle,.site-nav-menu) {
   border: 1px solid var(--nav-edge);
-  background: var(--nav-paper);
+  background: var(--nav-menu-glass);
+  -webkit-backdrop-filter: blur(14px) saturate(110%);
+  backdrop-filter: blur(14px) saturate(110%);
   box-shadow: 0 4px 18px #0002;
 }
 .site-navigation .site-nav-toggle {
@@ -95,7 +103,9 @@
   display: flex;
   align-items: center;
   gap: clamp(8px, 1.15vw, 18px);
-  background: color-mix(in srgb, var(--nav-paper) 92%, transparent);
+  background: var(--nav-glass);
+  -webkit-backdrop-filter: blur(14px) saturate(110%);
+  backdrop-filter: blur(14px) saturate(110%);
   border: 1px solid var(--nav-edge);
   box-shadow: 0 10px 35px #0001;
   font-size: 11px;
