@@ -2,8 +2,9 @@ import {createProjectDirectory} from './project-directory';
 import { createRollingClock } from "./rolling-clock";
 import { openProject, caseIsOpen, caseIsApproaching } from "./project-viewer";
 import {collectionAtLane, collectionLane, collectionNumberAtLane, projectCollections} from './project-collections';
-import {t, localize} from './terminal-language';
-import {projectSummary,projectFindings} from './project-copy';
+import {t, localize, currentLanguage} from './terminal-language';
+import { terminalMarkup, localizeTerminalCopy } from './terminal-ui-copy';
+import {projectSubtitle,projectSummary,projectFindings} from './project-copy';
 import { ProjectCopyMotion } from './project-copy-motion';
 import {PROJECT_COVER_OPENING_START} from './project-cover-motion';
 import { projects, getProject, featuredProjectId } from "./projects";
@@ -57,7 +58,7 @@ import {
   fullMotion,
   motionEnabled,
   motionPresetFor,
-  motionSettingsMarkup,
+  motionSettingsMarkup as rawMotionSettingsMarkup,
   motionSummary,
   reducedMotion,
   type MotionKey,
@@ -77,6 +78,7 @@ import "./startup.css";
 import "./personal.css";
 import "./wallpaper.css";
 import { Workbench } from "./workbench";
+const motionSettingsMarkup: typeof rawMotionSettingsMarkup = (...args) => terminalMarkup(rawMotionSettingsMarkup(...args));
 let workbench: Workbench | undefined;
 import { ArchivePlayground } from "./archive-playground";
 import { ARRAY_OPENING_END, openingShowsDetail } from "./wallpaper-opening";
@@ -110,7 +112,7 @@ $("#stage").innerHTML = `
     <div data-directory-list="projects" inert><div class="directory-heading" data-zh="项目目录" data-en="Projects">项目目录</div><div class="directory-items"></div></div>
   </nav>` : ''}
   <button id="skip" class="${isWallpaper?'skip':'opening-skip'}" data-action="skip" ${!isWallpaper?'hidden':''}><span data-zh="跳过开场" data-en="SKIP OPENING">跳过开场</span> ↗</button>
-  <section id="boot" class="boot" aria-label="系统启动">
+  <section id="boot" class="boot" data-aria-zh="系统启动" data-aria-en="System startup" aria-label="系统启动">
     <div class="access-text">ACCESS</div>
     <div class="boot-logo">${loopingLogoSvg}</div>
     <div class="auth-status"><span>▪</span> <span id="auth-message"></span><i></i></div>
@@ -125,10 +127,10 @@ $("#stage").innerHTML = `
     <div class="archive-counter"><span class="tiny-label">PROJECT / SELECT</span><div><span id="selected-number">01</span><i>/</i><span class="count-total">02</span></div></div>
     ${isWallpaper?`<div class="archive-navigation"><button data-action="prev" aria-label="上一个档案">↑</button><div id="file-ticks" class="file-ticks"></div><button data-action="next" aria-label="下一个档案">↓</button></div>`:""}
     <div class="column-navigation"><button data-action="column-prev" aria-label="上一个项目集">←</button><div><span id="column-number"><span class="collection-number-label">COLLECTION</span> <span id="column-index">01</span> / 05</span><strong id="column-name">GAMING MOUSE</strong></div><button data-action="column-next" aria-label="下一个项目集">→</button></div>
-    ${!isWallpaper?'<p class="mobile-personal-use"><span>PERSONAL USE ONLY</span><small data-zh="非商业个人作品档案" data-en="NON-COMMERCIAL ARCHIVE">非商业个人作品档案</small></p>':''}
+    ${!isWallpaper?'<p class="mobile-personal-use"><span data-zh="仅供个人使用" data-en="PERSONAL USE ONLY">PERSONAL USE ONLY</span><small data-zh="非商业个人作品档案" data-en="NON-COMMERCIAL ARCHIVE">非商业个人作品档案</small></p>':''}
     ${isWallpaper?`<div class="archive-hint"><kbd>←</kbd> <kbd>→</kbd> 切换列 <span>／</span> <kbd>↑</kbd> <kbd>↓</kbd> 前后档案 <span>／</span> <kbd>ENTER</kbd> 读取</div>`:""}
   </section>
-  <section id="detail-ui" class="detail-ui" aria-label="档案内容" hidden>
+  <section id="detail-ui" class="detail-ui" data-aria-zh="档案内容" data-aria-en="Archive content" aria-label="档案内容" hidden>
     <button class="back-button" data-action="back">← <span>ARCHIVE OVERVIEW</span><small>ESC</small></button>
     <div class="object-caption"><span id="object-id">NO.001</span><div>DESIGN ARCHIVE</div><button class="viewer-open" data-action="model-viewer">360° 查看档案装置 <span>↗</span></button></div>
     <article id="detail-content" class="detail-content"></article>
@@ -732,7 +734,7 @@ const projectDirectory = !isWallpaper ? createProjectDirectory($('.archive-direc
 // Rolling glyphs use a single line. Keep longer localized copy readable instead.
 function updateSelectionTitle() {
   const r = records[selected];
-  const text = isWallpaper ? r.title : r.placeholder ? t('项目集待补充','COLLECTION RESERVED') : getProject(r.projectId)?.subtitle ?? r.title;
+  const text = isWallpaper ? r.title : r.placeholder ? t('项目集待补充','COLLECTION RESERVED') : projectSubtitle(r.projectId) || r.title;
   const title = $('#selected-title');
   const style = getComputedStyle(title);
   const measure = document.createElement('canvas').getContext('2d')!;
@@ -751,7 +753,7 @@ function updateSelection(navigation?: ArchiveNavigation) {
     animated: motionActive("rollingText") && mode === "archive",
   });
   categoryTitle.update({
-    text: isWallpaper ? r.category : collectionAtLane(lane).id==='gamingmouse' ? 'GAMING MOUSE' : t(collectionAtLane(lane).zh,collectionAtLane(lane).title),
+    text: isWallpaper ? r.category : collectionAtLane(lane).id==='gamingmouse' ? t('游戏鼠标','GAMING MOUSE') : t(collectionAtLane(lane).zh,collectionAtLane(lane).title),
     animated: motionActive("rollingText") && mode === "archive",
   });
   const direction =
@@ -783,7 +785,7 @@ function updateSelection(navigation?: ArchiveNavigation) {
         : "auto",
   });
   columnTitle.update({
-    text: isWallpaper ? archiveColumns[lane] : collectionAtLane(lane).id==='gamingmouse' ? 'GAMING MOUSE' : t(collectionAtLane(lane).zh,collectionAtLane(lane).title),
+    text: isWallpaper ? archiveColumns[lane] : collectionAtLane(lane).id==='gamingmouse' ? t('游戏鼠标','GAMING MOUSE') : t(collectionAtLane(lane).zh,collectionAtLane(lane).title),
     animated: motionActive("rollingText") && mode === "archive",
   });
   $<HTMLButtonElement>('[data-action="column-prev"]').disabled = false;
@@ -843,7 +845,22 @@ function updateSelection(navigation?: ArchiveNavigation) {
     localize();
   }
 }
-window.addEventListener('design-terminal:language',()=>{updateSelection();if(mode==='detail')renderDetail();});
+window.addEventListener('design-terminal:language',()=>{
+  updateSelection();
+  if(mode==='detail') renderDetail();
+  if(modal) {
+    const root = $('#modal-root');
+    const panel = root.querySelector<HTMLElement>('.terminal-modal');
+    const scrollTop = panel?.scrollTop ?? 0;
+    const openDetails = [...root.querySelectorAll<HTMLDetailsElement>('details')].map(el => el.open);
+    renderModal();
+    root.querySelectorAll<HTMLDetailsElement>('details').forEach((el, i) => el.open = openDetails[i] ?? false);
+    const nextPanel = root.querySelector<HTMLElement>('.terminal-modal');
+    if(nextPanel) nextPanel.scrollTop = scrollTop;
+    const search = root.querySelector<HTMLInputElement>('#archive-search');
+    if(search) search.value = searchQuery;
+  }
+});
 window.addEventListener('design-terminal:case-approach',()=>scene?.beginProjectApproach());
 window.addEventListener('design-terminal:case-return',()=>scene?.endProjectApproach());
 window.addEventListener('design-terminal:case-return-start',()=>scene?.beginProjectReturn());
@@ -910,7 +927,7 @@ function toggleSaved() {
       { duration: 220, easing: "ease-out" },
     );
   audio.play("confirm");
-  notify(saved.has(id) ? "档案已加入收藏" : "已取消收藏");
+  notify(saved.has(id) ? t("档案已加入收藏", "Archive saved") : t("已取消收藏", "Archive removed from saved"));
 }
 function renderDetail() {
   projectCopyMotion.finish();
@@ -953,16 +970,16 @@ function renderProjectDetail() {
   $('#object-id').textContent=`NO.${project.number}`;
   $('.back-button span').textContent=t('返回项目集','BACK TO COLLECTIONS');
   $('.back-button').setAttribute('aria-label',t('返回项目集','Back to collections'));
-  $('.object-caption>div').textContent='GAMING MOUSE / DESIGN ARCHIVE';
+  $('.object-caption>div').textContent=t('游戏鼠标 / 设计档案','GAMING MOUSE / DESIGN ARCHIVE');
   $('.viewer-open').innerHTML=`${t('360° 查看档案装置','360° INSPECT ARCHIVE')} <span>↗</span>`;
-  $('#detail-content').innerHTML=`<div class="detail-kicker"><span>DESIGN ARCHIVE</span><span>${escapeHtml(project.title)}</span></div>
-    <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn"><div class="detail-project-subtitle">${escapeHtml(r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t(project.subtitleZh ?? project.subtitle ?? '', project.subtitle ?? ''))}</div><span>GAMING MOUSE</span></div>
+  $('#detail-content').innerHTML=`<div class="detail-kicker"><span>${t("设计档案","DESIGN ARCHIVE")}</span><span>${escapeHtml(project.title)}</span></div>
+    <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn"><div class="detail-project-subtitle">${escapeHtml(r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t(project.subtitleZh ?? project.subtitle ?? '', project.subtitle ?? ''))}</div><span>${t("游戏鼠标","GAMING MOUSE")}</span></div>
     <div class="detail-rule"></div>
-    <dl class="metadata"><div><dt>${t('DISCIPLINE / 设计方向','DISCIPLINE')}</dt><dd>${t('独立产品设计','Independent product design')}</dd></div><div><dt>${t('COLLECTION / 项目集','COLLECTION')}</dt><dd>GAMING MOUSE</dd></div><div><dt>${t('DESIGNER / 设计师','DESIGNER')}</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>${t('STATUS / 状态','STATUS')}</dt><dd><i></i>${status}</dd></div></dl>
+    <dl class="metadata"><div><dt>${t('DISCIPLINE / 设计方向','DISCIPLINE')}</dt><dd>${t('独立产品设计','Independent product design')}</dd></div><div><dt>${t('COLLECTION / 项目集','COLLECTION')}</dt><dd>${t("游戏鼠标","GAMING MOUSE")}</dd></div><div><dt>${t('DESIGNER / 设计师','DESIGNER')}</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>${t('STATUS / 状态','STATUS')}</dt><dd><i></i>${status}</dd></div></dl>
     <div class="detail-tabs" role="tablist"><button id="tab-overview" role="tab" aria-controls="tab-panel" data-tab="overview">01 <span>${t('概述','Overview')}</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" data-tab="notes">02 <span>${t('研究记录','Research')}</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" data-tab="history">03 <span>${t('访问记录','Access log')}</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
     <div id="tab-panel" class="tab-panel" role="tabpanel"></div>
     <div class="detail-actions"><button class="solid-button showcase-open" data-project="${escapeHtml(project.id)}">${t('进入项目','ENTER PROJECT')}<span>↗</span></button><button class="export-button" data-action="bookmark" aria-pressed="${saved.has(r.id)}">${saved.has(r.id)?t('已保存','SAVED'):t('保存档案','SAVE')}<span>${saved.has(r.id)?'−':'+'}</span></button></div>
-    <div class="detail-footnote"><span>${project.subtitle??''}</span><span>${project.number} / 002</span></div>`;
+    <div class="detail-footnote"><span>${escapeHtml(projectSubtitle(r.projectId))}</span><span>${project.number} / 002</span></div>`;
   $('#detail-content').setAttribute('tabindex','-1');
   documentDecryption.reset($('#detail-content'),!motionActive('documentReveal')||!scene||scene.decryptionFrame.phase==='clear');
   setTab(activeTab,false);
@@ -1062,11 +1079,27 @@ function closeModal(afterClose?: () => void) {
     afterClose?.();
   });
 }
+const archiveCategoryEnglish: Record<string, string> = {
+  "全部档案": "All archives",
+  "结构研究": "Structure",
+  "原型验证": "Prototyping",
+  "关于我": "About",
+};
+const archiveDisciplineEnglish = "Independent design / Modelling / Prototyping";
+function archiveDiscipline(department: string) {
+  return department === "独立产品设计 / 建模 / 打样"
+    ? t(department, archiveDisciplineEnglish)
+    : department;
+}
 function renderModal() {
   if (!modal) return;
+  const savedOnly = modal === "saved";
+  const title = modal === "settings" ? t("系统设置", "Terminal settings")
+    : savedOnly ? t("收藏档案", "Saved archives") : t("档案检索", "Archive search");
   modalTransition?.dispose();
   $("#modal-root").innerHTML =
-    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${modal === "settings" ? "系统设置" : modal === "saved" ? "收藏档案" : "档案检索"}"><div class="modal-top"><span>albert_z0413@hotmail.com / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="关闭窗口">CLOSE <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${modal === "saved" ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${modal === "saved" ? "收藏档案" : "内部档案检索"}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="搜索项目、结构或原型" aria-label="检索档案"/><span class="key">ESC</span></div><div class="category-filters">${categories.map((c, i) => `<button data-filter="${escapeHtml(c)}" class="${i === 0 ? "active" : ""}">${escapeHtml(c)}</button>`).join("")}</div><div class="result-header"><span>FILE / 档案</span><span>DISCIPLINE / 方向</span><span>ACCESS</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>DESIGN ARCHIVE <i>●</i> CONNECTED</span></div>`}</section></div>`;
+    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${title}"><div class="modal-top"><span>albert_z0413@hotmail.com / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="${t("关闭窗口", "Close dialog")}">${t("关闭", "CLOSE")} <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${savedOnly ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${savedOnly ? t("收藏档案", "Your saved records") : t("内部档案检索", "Search internal records")}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="${t("搜索项目、结构或原型", "Search projects, structures or prototypes")}" aria-label="${t("检索档案", "Search archives")}"/><span class="key">ESC</span></div><div class="category-filters">${categories.map(c => `<button data-filter="${escapeHtml(c)}" class="${c === filter ? "active" : ""}">${escapeHtml(t(c, archiveCategoryEnglish[c] ?? c))}</button>`).join("")}</div><div class="result-header"><span>${t("档案", "FILE")}</span><span>${t("方向", "DISCIPLINE")}</span><span>${t("权限", "ACCESS")}</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>${t("设计档案", "DESIGN ARCHIVE")} <i>●</i> ${t("已连接", "CONNECTED")}</span></div>`}</section></div>`;
+  localizeTerminalCopy($("#modal-root"));
   const backdrop = $(".modal-backdrop");
   backdrop.hidden = true;
   modalTransition = new SurfaceTransition(backdrop, $(".terminal-modal"));
@@ -1095,7 +1128,7 @@ function renderResults() {
       ({ r }) =>
         (modal !== "saved" || saved.has(r.id)) &&
         (filter === "全部档案" || r.category === filter) &&
-        `${r.id} ${r.title} ${r.en} ${r.department} ${r.lead}`
+        `${r.id} ${r.title} ${r.en} ${r.department} ${archiveDiscipline(r.department)} ${r.lead}`
           .toLowerCase()
           .includes(searchQuery.toLowerCase()),
     );
@@ -1103,33 +1136,33 @@ function renderResults() {
     ? results
         .map(
           ({ r, i }) =>
-            `<button class="result-row" data-result="${i}"><span class="result-name"><b>${escapeHtml(getProject(r.projectId)?.title ?? r.title)}</b><span>${escapeHtml(r.title)}<small>${escapeHtml(r.en)}</small></span>${saved.has(r.id) ? "<i>＋</i>" : ""}</span><span>${escapeHtml(r.department)}</span><span>${r.clearance === "RESTRICTED" ? "CATALOG ONLY" : "AUTHORIZED"} <i>↗</i></span></button>`,
+            `<button class="result-row" data-result="${i}"><span class="result-name"><b>${escapeHtml(getProject(r.projectId)?.title ?? t(r.title, r.en))}</b><span>${escapeHtml(t(r.title, r.en))}<small>${escapeHtml(r.en)}</small></span>${saved.has(r.id) ? "<i>＋</i>" : ""}</span><span>${escapeHtml(archiveDiscipline(r.department))}</span><span>${r.clearance === "RESTRICTED" ? t("仅目录", "CATALOG ONLY") : t("可读取", "AUTHORIZED")} <i>↗</i></span></button>`,
         )
         .join("")
-    : `<div class="empty-results"><span>∅</span><strong>${modal === "saved" && !searchQuery ? "尚无收藏档案" : "没有匹配的档案"}</strong><p>${modal === "saved" && !searchQuery ? "读取档案时，选择 SAVE ARCHIVE 将其保存在此处。" : "尝试其他名称、档案编号，或切换科室分类。"}</p><button data-action="reset-search">${modal === "saved" ? "查看全部档案 →" : "重置检索 →"}</button></div>`;
-  $("#result-count").textContent =
-    `${String(results.length).padStart(2, "0")} RECORDS FOUND`;
+    : `<div class="empty-results"><span>∅</span><strong>${modal === "saved" && !searchQuery ? t("尚无收藏档案", "No saved archives") : t("没有匹配的档案", "No matching archives")}</strong><p>${modal === "saved" && !searchQuery ? t("读取档案时，选择保存档案将其保存在此处。", "Choose Save archive while viewing a record to keep it here.") : t("尝试其他名称、档案编号，或切换分类。", "Try another name, record number or category.")}</p><button data-action="reset-search">${modal === "saved" ? t("查看全部档案 →", "View all archives →") : t("重置检索 →", "Reset search →")}</button></div>`;
+  const count = String(results.length).padStart(2, "0");
+  $("#result-count").textContent = t(`找到 ${count} 份档案`, `${count} ${results.length === 1 ? "RECORD" : "RECORDS"} FOUND`);
 }
 function updateQualitySummary() {
   const summary = document.querySelector("#quality-summary");
   if (!summary) return;
   if (!scene) {
-    summary.textContent = "3D 已关闭 · 三维模型与渲染资源已释放";
+    summary.textContent = t("3D 已关闭 · 三维模型与渲染资源已释放", "3D disabled · Model and rendering resources released");
     return;
   }
   const canvas = scene.renderer.domElement;
   const metrics = JSON.parse(
     canvas.parentElement?.dataset.renderQuality ?? "{}",
   );
-  summary.textContent = `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
+  summary.textContent = currentLanguage() === "en" ? `${superPerformanceEnabled() ? "Super performance enabled · Quality settings temporarily overridden · " : ""}Rendering ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "Original antialiasing"} · Texture ${metrics.anisotropy ?? 1}×${metrics.limited ? " · Buffer limit reached" : ""}` : `${superPerformanceEnabled() ? "超级性能模式已启用 · 画质设置暂被覆盖，关闭后恢复 · " : ""}实际渲染 ${canvas.width} × ${canvas.height} · ${effectiveRenderQuality().antialias === "smaa" ? "SMAA" : "原始抗锯齿"} · 纹理 ${metrics.anisotropy ?? 1}×${metrics.limited ? " · 已达到缓冲上限" : ""}`;
 }
 function motionPreferenceNoteMarkup() {
   const preset = prefs.motionPreset;
   const allEnabled = Object.values(prefs.motion).every(Boolean);
-  return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion)}</p><span>预设：${preset === "full" ? "完整动画" : preset === "reduced" ? "减少动画" : "自定义"} · 选择会保存在本站</span>${allEnabled ? "" : '<button data-action="enable-motion">启用完整动画并重播 ↻</button>'}</div>`;
+  return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion, currentLanguage())}</p><span>${t("预设：", "Preset: ")}${preset === "full" ? t("完整动画","Full") : preset === "reduced" ? t("减少动画","Reduced") : t("自定义","Custom")}${t(" · 选择会保存在本站", " · Saved on this site")}</span>${allEnabled ? "" : `<button data-action="enable-motion">${t('启用完整动画并重播 ↻','Enable full animation and replay ↻')}</button>`}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">albert_z0413@hotmail.com <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${isWallpaper ? themeSettingsMarkup(prefs.colorTheme === "dark") : ""}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${isWallpaper ? audioSettingsMarkup(prefs) : ""}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? "<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>" : "<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>"}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? '<button data-action="fullscreen">FULLSCREEN <span>↗</span></button>' : ""}<button data-action="restart">REINITIALIZE SYSTEM <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>界面基于 <a href="https://github.com/LBEILC/RhineLabUI" target="_blank" rel="noopener">RhineLabUI</a></span></div>`;
+  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">albert_z0413@hotmail.com <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${isWallpaper ? themeSettingsMarkup(prefs.colorTheme === "dark") : ""}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${isWallpaper ? audioSettingsMarkup(prefs) : ""}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? "<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>" : "<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>"}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? `<button data-action="fullscreen">${t('全屏显示','FULLSCREEN')} <span>↗</span></button>` : ""}<button data-action="restart">${t("重启终端","REINITIALIZE SYSTEM")} <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>界面基于 <a href="https://github.com/LBEILC/RhineLabUI" target="_blank" rel="noopener">RhineLabUI</a></span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -1209,10 +1242,10 @@ document.addEventListener("change", (e) => {
     });
     notify(
       key === "boot"
-        ? "开场设置将在下次重播时生效"
+        ? t("开场设置将在下次重播时生效", "Opening settings apply on the next replay")
         : el.checked
-          ? "已启用此动画"
-          : "已关闭此动画",
+          ? t("已启用此动画", "Animation enabled")
+          : t("已关闭此动画", "Animation disabled"),
     );
     audio.play("confirm");
   }
@@ -1366,7 +1399,7 @@ document.addEventListener("click", (e) => {
     else
       void document.documentElement
         .requestFullscreen()
-        .catch(() => notify("请使用浏览器的全屏快捷键 F11"));
+        .catch(() => notify(t("请使用浏览器的全屏快捷键 F11", "Use the browser fullscreen shortcut F11")));
   }
 });
 document.addEventListener("keydown", (e) => {
@@ -1876,7 +1909,7 @@ async function toggleThree() {
     scene = undefined;
     threeState = "off";
     syncThreeButton();
-    notify("三维模型载入失败，请点击 3D 关闭重试。");
+    notify(t("三维模型载入失败，请点击 3D 关闭重试。", "3D model failed to load. Toggle 3D off and on to retry."));
     console.error(error);
   }
 }

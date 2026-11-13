@@ -1,3 +1,4 @@
+import { terminalCopy, terminalMarkup } from "./terminal-ui-copy";
 import {
   matchingPreset,
   presetLabels,
@@ -9,10 +10,10 @@ import { escapeHtml } from "./html";
 
 function choiceControl(attributes: string, label: string, value: string | number, choices: (readonly [string | number, string])[]) {
   if (isWallpaper) {
-    const text = choices.find(([key]) => key === value)?.[1] ?? "自定义";
-    return `<button type="button" ${attributes} class="quality-cycle" aria-label="${label}" title="点击切换${label}" value="${value}" data-quality-choices="${escapeHtml(JSON.stringify(choices))}"><span data-quality-label>${text}</span><span aria-hidden="true">↻</span></button>`;
+    const text = choices.find(([key]) => key === value)?.[1] ?? terminalCopy("自定义");
+    return `<button type="button" ${attributes} class="quality-cycle" aria-label="${terminalCopy(label)}" title="点击切换${label}" value="${value}" data-quality-choices="${escapeHtml(JSON.stringify(choices))}"><span data-quality-label>${text}</span><span aria-hidden="true">↻</span></button>`;
   }
-  return `<select ${attributes} aria-label="${label}">${choices.map(([key, text]) => `<option value="${key}" ${key === value ? "selected" : ""}>${text}</option>`).join("")}${value === "custom" ? '<option value="custom" disabled selected>自定义</option>' : ""}</select>`;
+  return `<select ${attributes} aria-label="${terminalCopy(label)}">${choices.map(([key, text]) => `<option value="${key}" ${key === value ? "selected" : ""}>${text}</option>`).join("")}${value === "custom" ? '<option value="custom" disabled selected>自定义</option>' : ""}</select>`;
 }
 
 if (isWallpaper) document.addEventListener("click", event => {
@@ -43,11 +44,11 @@ function range(
   min: number,
   max: number,
 ) {
-  return `<label class="quality-control quality-range"><span>${label}<small>${hint}</small></span><div><input type="range" data-quality="${key}" aria-label="${label}" min="${min}" max="${max}" step="5" value="${quality[key]}"/><output data-quality-output="${key}">${quality[key]}%</output></div></label>`;
+  return `<label class="quality-control quality-range"><span>${label}<small>${hint}</small></span><div><input type="range" data-quality="${key}" aria-label="${terminalCopy(label)}" min="${min}" max="${max}" step="5" value="${quality[key]}"/><output data-quality-output="${key}">${quality[key]}%</output></div></label>`;
 }
 export function qualityMarkup(quality: RenderQuality) {
   const preset = matchingPreset(quality);
-  return `<section class="quality-settings" aria-label="画质设置">
+  return terminalMarkup(`<section class="quality-settings" aria-label="画质设置">
     <div class="quality-heading"><h3>RENDER QUALITY <span>渲染画质</span></h3>${choiceControl('id="quality-preset"', "画质预设", preset, (Object.keys(presetLabels) as QualityPreset[]).map(key => [key, presetLabels[key]]))}</div>
     <p class="quality-summary" id="quality-summary" aria-live="polite"></p>
     <details class="quality-advanced"><summary>精细设置 <span>清晰度 / 材质 / 阴影</span></summary><div class="quality-grid">
@@ -110,7 +111,7 @@ export function qualityMarkup(quality: RenderQuality) {
     )}
     ${range(quality, "depthOfField", "景深强度 · 阵列", "0% 关闭；100% 保留原始镜头虚化", 0, 150)}
     </div></details><p class="quality-note">${isWallpaper ? "即时生效，仅限当前运行；长期设置请在 Wallpaper Engine 中调整。" : "即时生效并自动保存。"}清晰度与材质设置同步至 360° 查看器。高渲染比例更适合静态观察；缓冲上限为 829 万像素，硬件限制时自动收敛。</p>
-  </section>`;
+  </section>`);
 }
 
 export function syncQualityUI(quality: RenderQuality) {
@@ -120,7 +121,7 @@ export function syncQualityUI(quality: RenderQuality) {
   if (preset instanceof HTMLSelectElement) {
     let custom = preset.querySelector<HTMLOptionElement>('option[value="custom"]');
     if (value === "custom" && !custom) {
-      custom = new Option("自定义", "custom");
+      custom = new Option(terminalCopy("自定义"), "custom");
       custom.disabled = true;
       preset.add(custom);
     } else if (value !== "custom") {
@@ -137,7 +138,7 @@ export function syncQualityUI(quality: RenderQuality) {
     });
   document.querySelectorAll<HTMLButtonElement>("[data-quality-choices]").forEach(button => {
     const choices = JSON.parse(button.dataset.qualityChoices!) as [string | number, string][];
-    button.querySelector("[data-quality-label]")!.textContent = choices.find(([value]) => String(value) === button.value)?.[1] ?? "自定义";
+    button.querySelector("[data-quality-label]")!.textContent = choices.find(([value]) => String(value) === button.value)?.[1] ?? terminalCopy("自定义");
   });
   document
     .querySelectorAll<HTMLOutputElement>("[data-quality-output]")

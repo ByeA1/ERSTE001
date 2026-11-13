@@ -4,17 +4,6 @@ html:not([data-wallpaper]) #stage[data-layout] {
   --action-glass-paper: #f4ead7;
   --action-glass-rule: #82674e85;
 }
-/* The close-up cassette view lets more of the scene through its controls. */
-html:not([data-wallpaper]) #stage[data-layout][data-mode=detail] {
-  --action-glass-paper: #fff8ec;
-  --action-command-fill: #443123a8;
-  --action-return-fill: #3325199c;
-  --action-command-hover: #443123ba;
-  --action-return-hover: #58412da8;
-  --action-command-active: #3e2d1cb3;
-  --action-quiet-fill: #b99a6d14;
-  --action-quiet-hover: #b99a6d47;
-}
 html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button) {
   border: 1px solid #70583f65;
   background-color: var(--action-command-fill, #443123ba);

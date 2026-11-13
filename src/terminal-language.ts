@@ -12,6 +12,7 @@ export function translatedText(node: Element, zh: string, en: string) {
 }
 export function localize(root: ParentNode = document) {
   root.querySelectorAll<HTMLElement>('[data-zh][data-en]').forEach(el=>el.textContent=t(el.dataset.zh!,el.dataset.en!));
+  root.querySelectorAll<HTMLElement>('[data-aria-zh][data-aria-en]').forEach(el=>el.setAttribute('aria-label',t(el.dataset.ariaZh!,el.dataset.ariaEn!)));
   root.querySelectorAll<HTMLButtonElement>('[data-terminal-language]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.terminalLanguage===language)));
   document.documentElement.lang = language === 'zh' ? 'zh-CN' : 'en';
 }

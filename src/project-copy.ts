@@ -1,5 +1,10 @@
 import {records} from './data';
 import {t} from './terminal-language';
+import {getProject} from './projects';
+export function projectSubtitle(id?: string) {
+  const project = getProject(id);
+  return t(project?.subtitleZh ?? project?.subtitle ?? '', project?.subtitle ?? '');
+}
 export function projectSummary(id: string) {
   const record=records.find(record=>record.projectId===id && !record.section);
   const zh=record?.abstract ?? '';

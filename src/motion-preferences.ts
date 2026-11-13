@@ -171,17 +171,18 @@ export function motionEnabled(motion: MotionPreferences, key: MotionKey) {
   return motion[key];
 }
 
-export function motionSummary(motion: MotionPreferences) {
+export function motionSummary(motion: MotionPreferences, language: "zh" | "en" = "zh") {
+  const text = (zh: string, en: string) => language === "zh" ? zh : en;
   const enabled = Object.values(motion).filter(Boolean).length;
-  if (enabled === Object.keys(motion).length) return "当前使用完整动画。";
-  if (enabled === 0) return "当前已减少动画。";
+  if (enabled === Object.keys(motion).length) return text("当前使用完整动画。", "Full animation is enabled.");
+  if (enabled === 0) return text("当前已减少动画。", "Reduced motion is enabled.");
   const highlights: string[] = [];
-  if (!motion.boot) highlights.push("开场已跳过");
+  if (!motion.boot) highlights.push(text("开场已跳过", "opening skipped"));
   if (!motion.selectionWave && !motion.idleWave)
-    highlights.push("阵列波动已关闭");
+    highlights.push(text("阵列波动已关闭", "array waves off"));
   if (!motion.rollingText && !motion.rollingNumbers)
-    highlights.push("文字滚动已关闭");
-  return `当前使用自定义动画（${highlights.slice(0, 2).join("、") || `启用 ${enabled} 项`}）。`;
+    highlights.push(text("文字滚动已关闭", "rolling text off"));
+  return text(`当前使用自定义动画（${highlights.slice(0, 2).join("、") || `启用 ${enabled} 项`}）。`, `Custom motion (${highlights.slice(0, 2).join(", ") || `${enabled} effects enabled`}).`);
 }
 
 export function motionSettingsMarkup(

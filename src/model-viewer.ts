@@ -1,3 +1,4 @@
+import { terminalCopy, localizeTerminalCopy } from "./terminal-ui-copy";
 import * as THREE from "three";
 import { disposeThreeTree } from "./three-resources";
 import { themeEnvironment } from "./theme-material";
@@ -46,6 +47,7 @@ export class ModelViewer {
   private superPerformance = false;
   dispose() {
     this.disposeDeviceListener?.();
+    window.removeEventListener("design-terminal:language", this.localizeChrome);
     this.request++;
     if (this.isOpen) this.finishClose();
     this.controls.dispose();
@@ -84,6 +86,10 @@ export class ModelViewer {
   private modelTransition?: Animation;
   private transitionId = 0;
   private status = "";
+  private localizeChrome = () => {
+    localizeTerminalCopy(this.root);
+    this.updateHelp();
+  };
   private opener: HTMLElement | null = null;
   private siblings: { node: HTMLElement; inert: boolean }[] = [];
   private initialCamera = new THREE.Vector3(7.2, 3.8, 12);
@@ -122,6 +128,8 @@ export class ModelViewer {
         <button class="viewer-reset" data-viewer="reset">复位视角 <span>↗</span></button>
       </footer>
       <div class="viewer-state" aria-live="polite">已组装</div>`;
+    localizeTerminalCopy(this.root);
+    window.addEventListener("design-terminal:language", this.localizeChrome);
     parent.appendChild(this.root);
     this.disposeDeviceListener = onInputDevice(() => this.updateHelp());
     this.canvasHost = this.root.querySelector(".viewer-canvas")!;
@@ -134,7 +142,7 @@ export class ModelViewer {
     this.renderer.domElement.tabIndex = 0;
     this.renderer.domElement.setAttribute(
       "aria-label",
-      "档案三维模型：拖动旋转，方向键平移，滚轮或加减键缩放，Home 复位",
+      terminalCopy("档案三维模型：拖动旋转，方向键平移，滚轮或加减键缩放，Home 复位"),
     );
     this.canvasHost.appendChild(this.renderer.domElement);
     this.scene.background = new THREE.Color("#eae5e1");
@@ -267,7 +275,7 @@ export class ModelViewer {
     this.controls.enabled = false;
     const loading = this.root.querySelector<HTMLElement>(".viewer-loading")!;
     loading.hidden = false;
-    loading.querySelector("span")!.textContent = "正在载入模型…";
+    loading.querySelector("span")!.textContent = terminalCopy("正在载入模型…");
     loading.querySelector<HTMLElement>("button")!.hidden = true;
     this.setButtonsDisabled(true);
     try {
@@ -311,6 +319,7 @@ export class ModelViewer {
       this.loading = false;
       loading.querySelector("span")!.textContent = "模型载入失败，请重试";
       loading.querySelector<HTMLElement>("button")!.hidden = false;
+      localizeTerminalCopy(loading);
       console.error("Model viewer failed to load", error);
     }
   }
@@ -463,7 +472,7 @@ export class ModelViewer {
   private setStatus(value: string) {
     if (value !== this.status) {
       this.status = value;
-      this.root.querySelector(".viewer-state")!.textContent = value;
+      this.root.querySelector(".viewer-state")!.textContent = terminalCopy(value);
     }
   }
   private resetView(animated = true) {
@@ -604,6 +613,7 @@ export class ModelViewer {
         : touch
           ? "<span>单指旋转</span><span>双指缩放 / 平移</span>"
           : "<span>拖动旋转</span><span>↑ ↓ ← → 平移</span><span>滚轮缩放</span>";
+    localizeTerminalCopy(help);
   }
 
   update(time: number) {
