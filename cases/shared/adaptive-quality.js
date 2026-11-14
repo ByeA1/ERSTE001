@@ -5,7 +5,7 @@ export const adaptivePolicy = {
     slowP75Ms: 20, slowP90Ms: 28, slowMeanMs: 18.2,
     fastP90Ms: 17.5, upgradeCpuP90Ms: 5,
 };
-const tiers = ['high', 'medium', 'low'];
+const tiers = ['high', 'standard', 'medium', 'low'];
 const percentile = (values, p) => {
     const sorted = [...values].sort((a, b) => a - b);
     return sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))] ?? 0;
@@ -42,7 +42,7 @@ export class AdaptiveQuality {
         if (this.mode === value)
             return;
         this.mode = value;
-        this.tier = value === 'auto' ? 'high' : value;
+        this.tier = value === 'auto' || value === 'custom' ? 'high' : value;
         this.changedAt = now;
         this.resetTiming(now);
         this.onChange(this.tier);
@@ -94,7 +94,7 @@ export class AdaptiveQuality {
         this.windowStart = undefined;
         const index = tiers.indexOf(this.tier), elapsed = now - this.changedAt;
         let next = this.tier;
-        if (index < 2 && this.slow >= adaptivePolicy.downgradeWindows && elapsed >= adaptivePolicy.cooldownMs)
+        if (index < tiers.length - 1 && this.slow >= adaptivePolicy.downgradeWindows && elapsed >= adaptivePolicy.cooldownMs)
             next = tiers[index + 1];
         else if (index > 0 && this.fast >= adaptivePolicy.upgradeWindows && elapsed >= adaptivePolicy.upgradeCooldownMs)
             next = tiers[index - 1];
