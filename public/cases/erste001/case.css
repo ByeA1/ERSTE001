@@ -125,7 +125,7 @@ header {
 .profile-name {
     font-size: 0.7rem;
     letter-spacing: 0.22em;
-    text-transform: uppercase;
+    text-transform: none;
     font-weight: 600;
 }
 

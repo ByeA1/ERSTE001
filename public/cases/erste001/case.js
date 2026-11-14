@@ -356,17 +356,10 @@
 document.addEventListener('DOMContentLoaded', function () {
     const sections = document.querySelectorAll('.case-section');
     const navItems = [...document.querySelectorAll('.side-nav .nav-item')];
-    const dock = document.querySelector('.engineering-dock');
-    const count = dock.querySelector('output');
-    const chapterName = dock.querySelector('.engineering-chapter-name');
-    const progress = dock.querySelector('progress');
-    const previous = dock.querySelector('[data-reading-step="-1"]');
-    const next = dock.querySelector('[data-reading-step="1"]');
     const root = document.documentElement;
     const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
     const scroller = document.querySelector('#scroller') || document.scrollingElement;
     const number = value => String(value).padStart(2, '0');
-    progress.max = navItems.length;
     let current = 0;
     let pending;
     let settleTimer;
@@ -377,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const box = nested ? scroller.getBoundingClientRect() : { top: 0, bottom: innerHeight };
         const toolbarInset = parseFloat(getComputedStyle(root).getPropertyValue('--project-toolbar-inset')) || 0;
         let top = Math.max(0, box.top, toolbarInset) + 24;
-        let bottom = Math.min(innerHeight, box.bottom) - 24;
+        const bottom = Math.min(innerHeight, box.bottom) - 24;
         for (const bar of document.querySelectorAll('.top-profile-bar, .side-nav')) {
             const rect = bar.getBoundingClientRect();
             const position = getComputedStyle(bar).position;
@@ -389,8 +382,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             else if (position === 'fixed') top = Math.max(top, rect.bottom + 20);
         }
-        const dockBox = dock.getBoundingClientRect();
-        if (dockBox.height && dockBox.top > top) bottom = Math.min(bottom, dockBox.top - 20);
         return { top, bottom, height: Math.max(1, bottom - top) };
     }
 
@@ -430,12 +421,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (active) item.setAttribute('aria-current', 'location');
             else item.removeAttribute('aria-current');
         });
-        count.value = `${number(current + 1)} / ${number(navItems.length)}`;
-        progress.value = current + 1;
-        const controlIndex = pending?.index ?? current;
-        previous.disabled = controlIndex === 0;
-        next.disabled = controlIndex === navItems.length - 1;
-        updateChapterName();
         if (pending && Math.abs(scroller.scrollTop - pending.top) < 2) finishJump();
     };
     const scheduleChapter = () => {
@@ -448,34 +433,21 @@ document.addEventListener('DOMContentLoaded', function () {
     window.addEventListener('load', scheduleChapter);
     updateChapter();
 
-    function updateChapterName() {
-        const label = navItems[current].querySelector('.label').textContent.trim();
-        if (chapterName.textContent !== label) chapterName.textContent = label;
-    }
-
     function labelChapters() {
         navItems.forEach((item, index) => {
             item.setAttribute('aria-label', `${number(index + 1)} ${item.querySelector('.label').textContent.trim()}`);
         });
-        updateChapterName();
     }
 
     function finishJump() {
         clearTimeout(settleTimer);
         if (!pending) return;
-        const { index, control, moveFocus } = pending;
+        const { control } = pending;
         pending = undefined;
         control.removeAttribute('aria-busy');
-        if (moveFocus && index === current && document.activeElement === control) {
-            const heading = document.querySelector(navItems[index].hash + ' :is(h1,h2)');
-            if (heading) {
-                heading.tabIndex = -1;
-                heading.focus({ preventScroll: true });
-            }
-        }
     }
 
-    function jump(index, control, moveFocus = false) {
+    function jump(index, control) {
         if (index < 0 || index >= navItems.length) return;
         finishJump();
         const instant = reducedMotion.matches || root.dataset.terminalMotion === 'reduced';
@@ -486,9 +458,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const maximum = Math.max(0, scroller.scrollHeight - scroller.clientHeight);
         // The cover retains its original centered product composition.
         const top = index === 0 ? 0 : Math.max(0, Math.min(maximum, scroller.scrollTop + content.top - desiredTop));
-        pending = { index, control, moveFocus, top };
-        previous.disabled = index === 0;
-        next.disabled = index === navItems.length - 1;
+        pending = { control, top };
         if (!instant && Math.abs(scroller.scrollTop - top) >= 2) control.setAttribute('aria-busy', 'true');
         scroller.scrollTo({ top, behavior: instant ? 'instant' : 'smooth' });
         if (instant) updateChapter();
@@ -497,14 +467,11 @@ document.addEventListener('DOMContentLoaded', function () {
         else settleTimer = setTimeout(finishJump, 1600);
     }
 
-    for (const item of [...navItems, ...document.querySelectorAll('.engineering-hero-actions a, .engineering-dock a, .process-footer a')]) {
+    for (const item of [...navItems, ...document.querySelectorAll('.process-footer a')]) {
         item.addEventListener('click', event => {
             event.preventDefault();
-            jump(navItems.findIndex(chapter => chapter.hash === item.hash), item, item.closest('.engineering-hero-actions') !== null);
+            jump(navItems.findIndex(chapter => chapter.hash === item.hash), item);
         });
-    }
-    for (const step of [previous, next]) {
-        step.addEventListener('click', () => jump((pending?.index ?? current) + Number(step.dataset.readingStep), step));
     }
     new MutationObserver(labelChapters).observe(root, { attributes: true, attributeFilter: ['lang'] });
     labelChapters();

@@ -118,7 +118,7 @@
   display: grid;
   gap: 4px;
   margin-inline-end: auto;
-  text-transform: uppercase;
+  text-transform: none;
   letter-spacing: .16em;
 }
 .site-nav-profile span,
