@@ -1,4 +1,19 @@
 /* Case study reading refinements and source notebook; original cover composition retained. */
+/* One explicit viewport scroller also works before any chapter is selected.
+   overflow-x:hidden on both auto-height roots can swallow the first wheel. */
+html, body { height: 100%; overflow: hidden; }
+#scroller {
+  height: calc(100vh - var(--project-toolbar-inset, 0px));
+  height: calc(100svh - var(--project-toolbar-inset, 0px));
+  width: 100%;
+  overflow-x: clip;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  #scroller { scroll-behavior: auto; }
+}
 /* Opacity may animate, but a chapter's scroll destination must not move with it. */
 .case-section { transform: none !important; }
 html[data-project-hosted] {
@@ -9,7 +24,7 @@ html[data-project-hosted] #s01 .hero-wallhack-stage { height: calc(var(--project
 html[data-project-hosted] .hero-wallhack-stage .hero-visual { height: calc(var(--project-usable-height) * .72); }
 html[data-project-hosted] .hero-wallhack-stage .hero-visual img { max-height: calc(var(--project-usable-height) * .55) !important; }
 @media (max-width: 640px) {
-  html[data-project-hosted] body .side-nav { top: var(--project-toolbar-inset, 0px) !important; }
+  html[data-project-hosted] body .side-nav { top: 0 !important; }
 }
 .body-text, .chapter-body-copy { text-wrap: pretty; }
 .media-figure img { border-radius: 0; }
