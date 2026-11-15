@@ -160,7 +160,13 @@ html[data-terminal-motion=reduced] .process-dialog[open] { animation: none; }
   width:100% !important;height:auto !important;max-height:none !important;transform:none !important;
   object-fit:contain !important;margin:0;filter:none;
  }
- #s01 .floor-watermark {top:43%;width:180%;height:70%;font-size:clamp(14px,4vw,28px);opacity:.6;z-index:1;}
+ /* The lettering is a perspective floor beneath the product, not a faint label. */
+ #s01 .floor-watermark {
+  top:46%;width:240%;height:90%;font-size:clamp(30px,8.5vw,68px);
+  color:rgba(0,0,0,.14);gap:2vw;z-index:1;
+  -webkit-mask-image:radial-gradient(ellipse at center,#000 22%,#0009 52%,transparent 76%);
+  mask-image:radial-gradient(ellipse at center,#000 22%,#0009 52%,transparent 76%);
+ }
  #s01 .hero-info-panel {position:relative;inset:auto;max-width:100%;width:100%;text-align:left;z-index:3;}
  #s01 .hero-title-group {align-items:flex-start;gap:0;}
  #s01 .hero-title-group .eyebrow {font-size:9px;letter-spacing:.055em;margin:0 0 13px;line-height:1.5;}
