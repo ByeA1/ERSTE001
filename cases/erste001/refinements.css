@@ -121,3 +121,70 @@ html[data-terminal-motion=reduced] .process-dialog[open] { animation: none; }
   body[data-i18n-page=portfolio] .side-nav { gap: 0 !important; }
   body[data-i18n-page=portfolio] .side-nav .nav-item { min-height: 30px; }
 }
+/* The cover stays white and centered; mobile gets a deliberate product poster. */
+#s01 .hero-title-group {font-family:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;}
+#s01 .hero-category::after {content:'  |  ';white-space:pre;}
+@media (max-width:640px), (pointer:coarse) and (orientation:portrait) and (max-width:1000px) {
+ :root {--cover-reading-height:calc(100svh - var(--project-toolbar-inset,0px) - 40px);}
+ body[data-i18n-page=portfolio] .side-nav {
+  position:sticky !important;inset:auto !important;top:0 !important;transform:none !important;
+  display:flex !important;flex-direction:row !important;align-items:center !important;
+  width:100%;height:40px;min-height:40px;gap:0 !important;padding:0 16px;
+  background:#ffffff80;border:0;z-index:110 !important;
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+ }
+ body[data-i18n-page=portfolio] .side-nav .nav-item {
+  display:flex;flex:1;justify-content:center;align-items:center;height:40px;min-height:40px;
+  min-width:0;padding:0;margin:0;border:0;position:relative;background:transparent;
+ }
+ body[data-i18n-page=portfolio] .side-nav .nav-item .label {display:none !important;}
+ body[data-i18n-page=portfolio] .side-nav .nav-item .num {font-size:10px;letter-spacing:.04em;opacity:.5;}
+ body[data-i18n-page=portfolio] .side-nav .nav-item.active {border:0;background:transparent;}
+ body[data-i18n-page=portfolio] .side-nav .nav-item.active .num {opacity:1;}
+ body[data-i18n-page=portfolio] .side-nav .nav-item::after {content:'';position:absolute;bottom:4px;left:calc(50% - 7px);width:14px;height:1px;background:transparent;}
+ body[data-i18n-page=portfolio] .side-nav .nav-item.active::after {background:currentColor;}
+ html[data-project-hosted] #s01.case-section, body #s01 {
+  height:var(--cover-reading-height) !important;min-height:var(--cover-reading-height) !important;
+  max-height:none;display:block;padding:0 !important;
+ }
+ html[data-project-hosted] #s01 .hero-wallhack-stage, body #s01 .hero-wallhack-stage {
+  height:100%;max-width:none;display:grid;grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;justify-content:stretch;align-items:stretch;
+  padding:16px 24px 28px;gap:12px;margin:0;
+ }
+ html[data-project-hosted] #s01 .hero-wallhack-stage .hero-visual, body #s01 .hero-visual {
+  display:block !important;position:relative;width:100% !important;height:100%;min-height:0;
+  margin:0 !important;padding:0 !important;align-self:stretch;z-index:2;
+ }
+ #s01 .hero-visual picture {display:block;position:absolute;left:50%;top:50%;width:260%;height:auto;transform:translate(-52.45%,-42.18%);}
+ html[data-project-hosted] #s01 .hero-wallhack-stage .hero-visual img, body #s01 .hero-visual img {
+  width:100% !important;height:auto !important;max-height:none !important;transform:none !important;
+  object-fit:contain !important;margin:0;filter:none;
+ }
+ #s01 .floor-watermark {top:43%;width:180%;height:70%;font-size:clamp(14px,4vw,28px);opacity:.6;z-index:1;}
+ #s01 .hero-info-panel {position:relative;inset:auto;max-width:100%;width:100%;text-align:left;z-index:3;}
+ #s01 .hero-title-group {align-items:flex-start;gap:0;}
+ #s01 .hero-title-group .eyebrow {font-size:9px;letter-spacing:.055em;margin:0 0 13px;line-height:1.5;}
+ #s01 .hero-title-group h1 {font-size:clamp(44px,13.7vw,72px);line-height:.96;letter-spacing:-.055em;margin:0 0 13px;white-space:nowrap;}
+ #s01 .hero-title-group .sub-title {display:flex;flex-direction:column;align-items:flex-start;gap:8px;white-space:normal;line-height:1.4;}
+ #s01 .hero-category {font:500 14px/1.4 -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#333;letter-spacing:0;}
+ #s01 .hero-category::after {content:none;}
+ #s01 .hero-traits {font-size:8px;letter-spacing:.1em;color:#777;}
+}
+@media(max-height:600px) and (orientation:portrait) {
+ #s01 .hero-wallhack-stage {padding-block:8px 18px !important;gap:8px !important;}
+ #s01 .hero-title-group .eyebrow {margin-bottom:8px;}
+ #s01 .hero-title-group h1 {font-size:44px;margin-bottom:8px;}
+ #s01 .hero-title-group .sub-title {gap:4px;}
+}
+/* Short landscape phones use the width rather than crowding a tall poster. */
+@media (max-width:640px) and (orientation:landscape) and (max-height:500px) {
+ html[data-project-hosted] #s01 .hero-wallhack-stage, body #s01 .hero-wallhack-stage {
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr);
+  align-items:center;padding:12px 24px 18px;column-gap:20px;
+ }
+ #s01 .hero-title-group h1 {font-size:clamp(30px,6.2vw,40px);}
+ #s01 .hero-title-group .eyebrow {font-size:8px;margin-bottom:10px;}
+ #s01 .hero-title-group .sub-title {gap:6px;}
+ #s01 .hero-category {font-size:12px;}
+ #s01 .hero-traits {font-size:7px;letter-spacing:.035em;}
+}
