@@ -4,7 +4,7 @@ import {mkdir,writeFile,readFile} from 'node:fs/promises';
 import {chapters,topics,productToTopic} from '../public/cases/erste002/engineering-content.js';
 const {chromium}=createRequire(import.meta.url)('../.audit/model-logo/tools/node_modules/playwright');
 const origin=process.env.ERSTE_ORIGIN||'http://127.0.0.1:5207';
-const out='docs/erste002-engineering-evidence';await mkdir(out,{recursive:true});
+const out=process.env.ERSTE_EVIDENCE_OUT||'docs/erste002-engineering-evidence';await mkdir(out,{recursive:true});
 const browser=await chromium.launch({channel:'msedge',headless:true}),report={browser:'Microsoft Edge / Chromium, real headless browser',origin,started:new Date().toISOString(),checks:[],errors:[],screenshots:[]};
 const check=(name,data={})=>{report.checks.push({name,pass:true,...data});console.log('PASS '+name)};
 const open=async(page,hash='')=>{await page.goto(origin+'/cases/erste002/index.html'+hash);await page.locator('#topic-overview').waitFor({state:'attached'});await page.waitForFunction(()=>document.body.dataset.projectReady!=='loading');};
@@ -98,7 +98,30 @@ try{
  await context.close();
  // Normal motion: auto-play keeps its original linear product behavior.
  const motion=await browser.newContext({viewport:{width:1920,height:1080},serviceWorkers:'block'}),mp=await motion.newPage();mp.on('pageerror',e=>report.errors.push(e.message));
- await open(mp);await settled(mp);await mp.locator('#auto').click();await mp.waitForFunction(()=>document.querySelector('#chapter-number').textContent.startsWith('02'),null,{timeout:18000});
+ await open(mp);await settled(mp);
+ async function traceOpeningAdvance(selector){
+  await mp.evaluate(()=>{
+   window.__openingAdvance=null;
+   addEventListener('click',()=>{const start=performance.now(),samples=[];let moved=false;
+    const sample=()=>{const playing=document.body.dataset.playing==='true';samples.push({ms:performance.now()-start,p:Number(document.body.dataset.progress),playing});moved ||= playing;
+     if((moved&&!playing)||performance.now()-start>8000)window.__openingAdvance={moved,samples};else requestAnimationFrame(sample);
+    };requestAnimationFrame(sample);
+   },{once:true,capture:true});
+  });
+  await mp.locator(selector).click();await mp.waitForFunction(()=>window.__openingAdvance!==null);
+  const trace=await mp.evaluate(()=>window.__openingAdvance),first=trace.samples[0].p,last=trace.samples.at(-1).p;
+  assert.equal(trace.moved,true,selector+' must play the story transition');
+  assert.ok(trace.samples.some(s=>s.p>first&&s.p<last),selector+' must include intermediate camera progress');
+  return {from:first,to:last,durationMs:trace.samples.at(-1).ms,frames:trace.samples.length};
+ }
+ const nextTrace=await traceOpeningAdvance('#next-chapter');
+ await mp.locator('#prev-chapter').click();await settled(mp);
+ const entranceTrace=await traceOpeningAdvance('[data-explore-product]');
+ assert.equal(entranceTrace.from,nextTrace.from);assert.equal(entranceTrace.to,nextTrace.to);
+ assert.ok(Math.abs(entranceTrace.durationMs-nextTrace.durationMs)<350,'Both controls use the same transition duration');
+ check('Explore Product and Next Shot play the same opening-to-shot-02 transition',{nextTrace,entranceTrace});
+ await mp.locator('#prev-chapter').click();await settled(mp);
+ await mp.locator('#auto').click();await mp.waitForFunction(()=>document.querySelector('#chapter-number').textContent.startsWith('02'),null,{timeout:18000});
  await mp.locator('.route-related').click();await route(mp,'engineering');assert.equal(await mp.locator('#auto').getAttribute('aria-pressed'),'false');
  check('Normal-motion auto-play advances linearly and pauses on engineering entry');await motion.close();
  // Degraded index and unavailable WebGL are checked independently.

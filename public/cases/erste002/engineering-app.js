@@ -124,7 +124,7 @@ export function createEngineeringArchive(bridge) {
     const link=event.target.closest('[data-engineering-topic],[data-related-product],[data-explore-product]');
     if(!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey)return;
     event.preventDefault();
-    if(link.hasAttribute('data-explore-product'))navigate({route:'product',shot:2});
+    if(link.hasAttribute('data-explore-product'))bridge.nextShot();
     else if(link.dataset.relatedProduct)navigate({route:'product',shot:topicById(link.dataset.relatedProduct).shot});
     else navigate({route:'engineering',topic:link.dataset.engineeringTopic});
   });

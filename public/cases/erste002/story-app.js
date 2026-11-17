@@ -1114,6 +1114,7 @@ async function start() {
 archive = createEngineeringArchive({
   state: () => ({shot:shotIndex + 1, language:lang ? "en" : "zh", busy:Boolean(playback), loaded:body.dataset.projectReady !== "loading", auto, free}),
   stopAuto: () => setAuto(false),
+  nextShot: () => navigate(1),
   pause,
   resume: () => { resize(); invalidate(); },
   seekShot: (number) => { if (shots[number - 1]) seek(shots[number - 1].hold); },
