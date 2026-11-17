@@ -1,3 +1,5 @@
+@import '../public/cases/shared/project-command-colors.css';
+
 /* Archive command hierarchy: smoked tea glass routes, quiet glass navigation. */
 html:not([data-wallpaper]) #stage[data-layout] {
   --action-glass-ink: #433222;

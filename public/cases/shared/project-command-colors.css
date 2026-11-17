@@ -1,0 +1,54 @@
+/* Project command colors shared by the host and standalone case pages. */
+.project-case .site-navigation[data-theme=light] {
+  --project-command-fill: #171713f5;
+  --project-command-hover: #080807;
+  --project-command-active: #000;
+  --project-command-border: #171713;
+  --project-command-emphasis: #171713;
+}
+.project-case .site-navigation[data-theme=dark],
+#story, .reading-progress {
+  --project-command-fill: #c92d2df5;
+  --project-command-hover: #dc3732;
+  --project-command-active: #aa201f;
+  --project-command-border: #ff837bc7;
+  --project-command-emphasis: #ff5d57;
+}
+html .project-case .site-navigation[data-theme] button.project-case-close,
+html #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled),
+html .reading-progress [data-chapter-next]:not(:disabled) {
+  background-color: var(--project-command-fill);
+  border-color: var(--project-command-border);
+  color: #fff;
+}
+html .project-case .site-navigation[data-theme] button.project-case-close > .action-icon {
+  color: inherit;
+}
+@media (hover:hover) {
+  html .project-case .site-navigation[data-theme] button.project-case-close:not(:disabled):hover,
+  html #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover,
+  html .reading-progress [data-chapter-next]:not(:disabled):hover {
+    background-color: var(--project-command-hover);
+    color: #fff;
+  }
+}
+html .project-case .site-navigation[data-theme] button.project-case-close:not(:disabled):active,
+html #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):active,
+html .reading-progress [data-chapter-next]:not(:disabled):active {
+  background-color: var(--project-command-active);
+  color: #fff;
+}
+html .reading-progress [data-chapter-prev]:not(:disabled) {
+  color: var(--project-command-emphasis);
+}
+html .specimen-key button[aria-pressed=true] {
+  border-color: #ed4540;
+  color: #ff6b65;
+}
+@media (max-width:640px), (pointer:coarse) and (orientation:portrait) and (max-width:1000px) {
+  html .project-case .site-navigation[data-theme] button.project-case-close,
+  html .project-case .site-navigation[data-theme] button.project-case-close:not(:disabled):is(:hover,:active) {
+    background-color: transparent;
+    color: var(--project-command-emphasis);
+  }
+}
