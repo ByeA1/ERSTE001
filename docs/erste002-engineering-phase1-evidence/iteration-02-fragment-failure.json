@@ -1,0 +1,128 @@
+{
+  "origin": "http://127.0.0.1:5209",
+  "url": "http://127.0.0.1:5209/cases/erste002/engineering.html",
+  "browser": "Microsoft Edge / Chromium, real headless browser",
+  "started": "2026-11-17T14:39:40.037Z",
+  "checks": [
+    {
+      "name": "Independent static archive: prologue + five chapters + conclusion, unique IDs, 19 labeled media slots, no PRODUCT or model runtime",
+      "pass": true
+    },
+    {
+      "name": "1920px zh: all seven sections, readable bounds, language and screenshot review",
+      "pass": true
+    },
+    {
+      "name": "1920px en: all seven sections, readable bounds, language and screenshot review",
+      "pass": true
+    },
+    {
+      "name": "1440px zh: all seven sections, readable bounds, language and screenshot review",
+      "pass": true
+    },
+    {
+      "name": "1440px en: all seven sections, readable bounds, language and screenshot review",
+      "pass": true
+    },
+    {
+      "name": "All 12 physical/CAD placements decode while walking the page; 8 unique photographs remain traceable",
+      "pass": true,
+      "gallery": [
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4238-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4241-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4237-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4242-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4244-1536.webp",
+          "width": 1440,
+          "height": 1920
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4235-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4236-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p01-inside.webp",
+          "width": 1200,
+          "height": 900
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p04-inside.webp",
+          "width": 1200,
+          "height": 900
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4238-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4236-1536.webp",
+          "width": 1439,
+          "height": 1079
+        },
+        {
+          "source": "http://127.0.0.1:5209/cases/erste002/assets/engineering/p4240-1536.webp",
+          "width": 1439,
+          "height": 1079
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    "pc-1920-zh-00-prologue.jpg",
+    "pc-1920-zh-01-form.jpg",
+    "pc-1920-zh-02-structure.jpg",
+    "pc-1920-zh-03-assembly.jpg",
+    "pc-1920-zh-04-challenges.jpg",
+    "pc-1920-zh-05-refinement.jpg",
+    "pc-1920-zh-06-conclusion.jpg",
+    "pc-1920-en-00-prologue.jpg",
+    "pc-1920-en-01-form.jpg",
+    "pc-1920-en-02-structure.jpg",
+    "pc-1920-en-03-assembly.jpg",
+    "pc-1920-en-04-challenges.jpg",
+    "pc-1920-en-05-refinement.jpg",
+    "pc-1920-en-06-conclusion.jpg",
+    "pc-1440-zh-00-prologue.jpg",
+    "pc-1440-zh-01-form.jpg",
+    "pc-1440-zh-02-structure.jpg",
+    "pc-1440-zh-03-assembly.jpg",
+    "pc-1440-zh-04-challenges.jpg",
+    "pc-1440-zh-05-refinement.jpg",
+    "pc-1440-zh-06-conclusion.jpg",
+    "pc-1440-en-00-prologue.jpg",
+    "pc-1440-en-01-form.jpg",
+    "pc-1440-en-02-structure.jpg",
+    "pc-1440-en-03-assembly.jpg",
+    "pc-1440-en-04-challenges.jpg",
+    "pc-1440-en-05-refinement.jpg",
+    "pc-1440-en-06-conclusion.jpg"
+  ],
+  "errors": [],
+  "status": "failed",
+  "failure": "page.waitForFunction: Timeout 20000ms exceeded.\n    at rectSettled (D:\\RhineTerminal\\scripts\\check-002-engineering-phase1.mjs:12:40)\n    at gotoTopic (D:\\RhineTerminal\\scripts\\check-002-engineering-phase1.mjs:13:77)\n    at async file:///D:/RhineTerminal/scripts/check-002-engineering-phase1.mjs:53:3",
+  "finished": "2026-11-17T14:40:26.795Z"
+}

@@ -1,0 +1,1193 @@
+{
+  "baselineCommit": "a442f819607398e50bca58a2f7122dd1aca67133",
+  "checkedAt": "2026-11-17T15:05:12.605Z",
+  "originals": [
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4235.jpeg",
+      "sha256": "168ee73abadce0cf58d4b4ba8c6485820a3e5700b8d5f92d6b758b78a35fa3da",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4236.jpeg",
+      "sha256": "ed7fbb26338ea219b0e81350e0352fef32f1a2c6e90d583510bf46a4f42b52d7",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4237.jpeg",
+      "sha256": "706d1cd3f6017feea9bd4134690cf3e9c33211813dd7f272ec159143f330a586",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4238.jpeg",
+      "sha256": "c0921d9bbd04fba21f7926c0c62ae704b152129fff5e68a626b98e1869b19244",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4239.jpeg",
+      "sha256": "3051182dc4efef8762ed346c546555a7011300bf0b60bc0630a4bbe9494c2cf3",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4240.jpeg",
+      "sha256": "50d27842900209d83022ce9221505b4a72146493fd95e93304d197c93cba222f",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4241.jpeg",
+      "sha256": "e09b345579194cedda31639a24b5e988d13927d29056597645cf859149a933bb",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4242.jpeg",
+      "sha256": "4a3c38f5c6ddee429b1b5dcae614951a839f10d36afbbd3a01039ebae93b483e",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4243.jpeg",
+      "sha256": "b3ab44002ea7a4473788e05956cdc85a3ed835cda1deda27ded99cbbb3bbc1fa",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/ERSTE002/ERSTE002_Engineering_Archive/00_原始附件/批次B_IMG4235-4244/IMG_4244.jpeg",
+      "sha256": "03293067a94eda019e8f8b1996159206103d2d2790aa206fe55c398b8301f9e5",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/1.zip",
+      "sha256": "9fe5d61c3c6a58970f3c03de7814cf08f4b59366646a0fe49c1ee2ce67fb2b8b",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/2.zip",
+      "sha256": "29ff0600b36da6c364f8eba55ac1a776f079c4f0ee61c58f8017780c48b1a634",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/3.zip",
+      "sha256": "9127520a587924ecf0e34501df2c57cd9ce86b56c8b8cef9b83ddc988dd251b1",
+      "unchanged": true
+    },
+    {
+      "file": "_archive/4.zip",
+      "sha256": "bb4532e0a46adaac4bb837f6f4e106325dc13de5ee2d12c82503c8aee45fd82d",
+      "unchanged": true
+    }
+  ],
+  "protectedFiles": [
+    {
+      "file": "public/cases/erste001/assets/erste001-hero-front-right-v01.webp",
+      "sha256": "7962f9cdd339d596714eefd3f8f8943e1b83f0b9ba6c5c692b3ec1ed6b19ce46",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/bottom-shell-cad-1440.avif",
+      "sha256": "0d434c36f677aeba9d88e315dc95b33cee19516955a46d55dd2da4ccbcae665c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/bottom-shell-cad-1920.avif",
+      "sha256": "c131db151f3e0f2c67350cdc80745911df27ed50a1343b456d048ade519dd21c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/bottom-shell-cad-480.avif",
+      "sha256": "ce3d0d2eafa94d3c84dffd5d95ee390e54fe470eaee42b94658567ada1a91c5a",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/bottom-shell-cad-960.avif",
+      "sha256": "09dc48723229866502bb7c1e1684795d7b5240cc5c40be869f230fffadafcfa1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/explosive-view-1440.avif",
+      "sha256": "6f428f070eb2a8736a8049ba19f68f62fdaa8522f0d31bbc25ba9b02db71f629",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/explosive-view-480.avif",
+      "sha256": "5c0854544c085eff92c2953e449bb5e81daacf07b972d67c1dccf872b3010c90",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/explosive-view-960.avif",
+      "sha256": "669da453a61779de4bb2f67766bbf989f8b627f1c6d6b2a4c218cc2327fdf325",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/hero-1-1440.avif",
+      "sha256": "99f05deb3af2f4e8a2bb1eee4879b17e60ffdf69e9d14fa7557294cc7df70e56",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/hero-1-1920.avif",
+      "sha256": "427306281abcf5edad21bbf2bf18ba8e9b7286a19471e62304e23dd40c715cb8",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/hero-1-480.avif",
+      "sha256": "482e3aea1cab40f9c1eea6722244c212fbd8e891479059e71bfc97dd7313d6ff",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/hero-1-960.avif",
+      "sha256": "cfce768412dfdab413017b8bee38af7886a75be80e41c254d0e89bd74a395262",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/internal-constraint-1440.avif",
+      "sha256": "1065fc90221e9fa78f3c99db4f63a09efea90250e08fb23d1d42c1c6cb6fb058",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/internal-constraint-480.avif",
+      "sha256": "5b70e1aeebbd5d21e4664cd0b625ad6600d134d714ed7f5bb8996d3980d8006b",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/internal-constraint-960.avif",
+      "sha256": "d5500477ccd5f6e573f4e025acc4ab963cbdd02e1f6c747f4bbb94fa4f41eb15",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/sensor-spine-cad-1440.avif",
+      "sha256": "0744e9d0f9076e96bca7c29a22ce2224903c4e8323f7a1dc18187e02558ce5ed",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/sensor-spine-cad-480.avif",
+      "sha256": "f0aee3a1e8a418c4375d1577f0664ee096211d3fde0d231b1c6a0f0e4493105e",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/sensor-spine-cad-960.avif",
+      "sha256": "f8a023b4ab05c167383c630fa9adfc4aeea98e2913c566aedc9107c30a0ba2ec",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/side1-1440.avif",
+      "sha256": "17444920a42638688b93d945fc3dd886c6a7880be3efb63c0d51a468b60c28bb",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/side1-480.avif",
+      "sha256": "d1e0d3ba8c68330e6a3526194c13f2139d88f43629c137431c676a176dad7e5b",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/side1-960.avif",
+      "sha256": "2a8b89f47cfa9927007c786d8c89362514034ffd3e8c6f916c2f61af93a5bc6d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/upper1-1440.avif",
+      "sha256": "30cc4576b318c3bee6f71fa28815cde732f73ee403e90360875442e70c68a157",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/upper1-480.avif",
+      "sha256": "0805112ce073d118368de18360df577c9ff1e6b4795d8897ceca16fe48dd0230",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/assets/mouse/upper1-960.avif",
+      "sha256": "3ebd37c2f8646a5f258a7f5e4b30c34b233b362b006028eb33491d93369fa0f0",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_01_hero_4x3-1440.avif",
+      "sha256": "831ae96c1619faeea9a8bb1163c4545278395f778185a4bc6341e028c03201c1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_01_hero_4x3-1920.avif",
+      "sha256": "6ccfac4b7b4c4b7a2d93ca77362129f506026b5ae7c2cedcbf6da22455c40d98",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_01_hero_4x3-480.avif",
+      "sha256": "051c576185de0068347d36184e680dd73343cfbb7dbd6d2e4ef5d59fbca54a3d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_01_hero_4x3-960.avif",
+      "sha256": "cda3a3c7c1e3e9141bd16f552abbefe9c7c41b498649e16201527695a34bb645",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_02_internal_4x3-1440.avif",
+      "sha256": "0e0c6544f0274017fb52cc78bfe7f117a3a307ee71c2028d9348c75f3adb46ac",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_02_internal_4x3-1920.avif",
+      "sha256": "e10f216db7d7117d6c28fb0118c33c4f22cbdfcb2b112b8df720ea46db8c55d1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_02_internal_4x3-480.avif",
+      "sha256": "becc55f0cf2b16d49853135770966f2881e5bf24d9bc5ccfbd4e31dd09556a88",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/mouse/prototype_02_internal_4x3-960.avif",
+      "sha256": "650c2e5e38198b8ed0df60fea29e7a92a815fcc3597602e8a1d2bc275355a7fd",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/assembly-study-1600.webp",
+      "sha256": "c7d669de0fa8f7c9daa0689912b09b009a0647a4f5b11fb7e58be453b40f81ed",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/assembly-study-640.webp",
+      "sha256": "a9cbf009a5ae3799f176e1c99539441d0cc6736f2e5ee83d0b390768781ed0f4",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/assembly-workbench-1600.webp",
+      "sha256": "ad2cbc356838672a1b2342595527fcd62a78d3d85cc5892e6bde47d33c389d03",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/assembly-workbench-640.webp",
+      "sha256": "c31933fbccbc592e3c414e1811bc6d97a9bf0d88231a0edce8a2ac99a5e4d679",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/curve-study-1131.webp",
+      "sha256": "eef55a76fea8fdca11933d7f3447690cd341302077ee7d32f72be76ee3f3cab1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/curve-study-640.webp",
+      "sha256": "dbce3610514d6fcb9e5e1c8ccfe2c2c9bc33ec0ba98389e4b172332eddb7721d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/interface-study-640.webp",
+      "sha256": "90b7258f01d581fdd35b78b263adbc4bf910521c9874adda1dbb976879b2816c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/interface-study-885.webp",
+      "sha256": "dec0e3dc0117765e85426179fe99551916f8bad201044f8ad056a2fab647321a",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/printed-parts-640.webp",
+      "sha256": "17af5c3169842e232b0da63f3f7cbdea103815f68a6cc5e7c83fc9e2abe849cd",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/printed-parts-900.webp",
+      "sha256": "d91880b88aa60a90bec7b9549daab51535479caad92b8c4b38781594966521e7",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/shell-study-1600.webp",
+      "sha256": "f1cdb246dbc35f4949fa5ec4164af28a7145d9cd36dc74a170cea356d6a84fc4",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/assets/opt/process/shell-study-640.webp",
+      "sha256": "b430269d7fd5372ff0a7e8fa750020d47fe739936c10f31559b590e7d240a0c2",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/case.css",
+      "sha256": "cd7efb077b7da2723301017d723f0a9e1247aab196fcfbba00c692de32e2253f",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/case.js",
+      "sha256": "d289cb8a7ee75d1c2938dbab01a62c67a89d6f77616ac71aced9caa4b22d32b1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/index.html",
+      "sha256": "88d02e2537f4dc03eae1184d70f4db827b0a4533437a7ca250bd723b9ae41578",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/process.js",
+      "sha256": "2b16fd532cd397add2fd878098ceba7586714a0d131d822f177ec13d868d5e4a",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste001/refinements.css",
+      "sha256": "3eb4ae136ba6fcfc012df8aa6348a428db9a7737291645e8e2d293491220c45d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assembly-finish.js",
+      "sha256": "4661b7da95bb6db888b3e084950b2196eb31cfbfb2785315a3a93af6f8f45982",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assembly.html",
+      "sha256": "0501549280ef7cfb09faa560a8333c26eb8362caff42744e4d64547709211e90",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/engineering-app.js",
+      "sha256": "492a653f22cbc752a2172a82faf9b2fab764a47c937c2fa631df0dd2f14b189f",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/engineering-assets.json",
+      "sha256": "a632fee5070770f96b0e1d68ad779bb927cd816342efc4077ca6b2119774b21c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/engineering-content.js",
+      "sha256": "f2b4afedc7bb6481b50da67c90e3002955bbf2cd810b4ab539c6bce53e3f3cf6",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/engineering-view.js",
+      "sha256": "2b69b3fda795aec19a2f979770b86d3a6ecdd15c73edfaf0ec78d2c196a96c29",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/engineering.css",
+      "sha256": "19a3b9e73a3ffc62ce787b6ed4f652e06f1cec9a86bcc991eb1365b06bea3c06",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/index.html",
+      "sha256": "135e46f21c7ece241772e94af82a6c23345e5b374a25871e435f82eae7af4e81",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/model-load.js",
+      "sha256": "01719e393a340de2dc021cb8e2e1c11d74dc5cde1a93def45d86823447834b7a",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/section-contours.js",
+      "sha256": "7c59542b097b6504b151a83a9a805a2355e35db6066dd6245094d476d1d3eb6d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-action-buttons.css",
+      "sha256": "a1438762a6d834ec8f65d7617c2b981c14757be2a521f4788188390236532b3c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-app.js",
+      "sha256": "d2f36fa791c211b402ad6704339e4fc23930ea7772076b4904bb1dd692483213",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-assembly.js",
+      "sha256": "dfb604388aec8faf03f39613f5677c62760dbdc3995055525e745d3f9104f4a9",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-editor.js",
+      "sha256": "fc74c4362189d06581314bc1511c5c9efdc8885796980ec07023de68db4ba4dc",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-interface-motion.css",
+      "sha256": "7448158c90affe9623df7c76439506753af134424c830456142dd05a2f26e2b9",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-interface-motion.js",
+      "sha256": "9124f83b9988d3fd363fe9ed9d4b0072e6bb3ea704c54ca86c42b02d8f9c04a8",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-lighting.js",
+      "sha256": "7ad55e07ba949be4d90b6d5f69ebd4040f174e002025a1751a9062d7f6caefcb",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-section.js",
+      "sha256": "fd1fc779309b17bbc63d9c35b6318824d2470fe74bb7fefcd27f53e46dfc70b2",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-segments.js",
+      "sha256": "52a190f76a01108df44d8452f9ded7a270707643e30515c6fcf92f4e13f0c82c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story-timeline.js",
+      "sha256": "3ac6fb5890997023ec612fae2fabd1e7edbae9490173273d054762b9e95e87e3",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story.css",
+      "sha256": "3d515644835d506ef4cfd49101afa5cc9cc0e8e6be5ff01d8f4348bf71e8d67e",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/story.json",
+      "sha256": "1dd5a299c22285ecc3daf519ad4e0a66c5e91f35d91afb2236c36d553c24fca2",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/studio-environment.js",
+      "sha256": "49ba41a26487780526ac8255425eed019634bfcfd58c8e47283c067b49f4e15d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/surface-normals.js",
+      "sha256": "da3ca9811f70f658df81537b93b8e92165f38696eab0eb4cb7a26c54b09aa478",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/viewer.js",
+      "sha256": "efecf5dcd92ced5428767c05ed2af9c18374406b1df05b4170510bec14432a2c",
+      "unchanged": true
+    },
+    {
+      "file": "src/action-buttons.css",
+      "sha256": "3a63356d5578e3dca538e862c8b75ac2d86037cc423c80effeca67ddc743180a",
+      "unchanged": true
+    },
+    {
+      "file": "src/adaptive-quality.ts",
+      "sha256": "8e0e34ca91166fbbb8bc8af0eda3a1611be39eb1d2cffef331401172c0b7b29d",
+      "unchanged": true
+    },
+    {
+      "file": "src/appearance.ts",
+      "sha256": "a92d816c3cd054afce839a644ef6fa0eefd31d27b2f7b0b9ae3b4aee654a85be",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-drag.ts",
+      "sha256": "3d6d370ffd918547fa3d89800c54cece889bef1f2def441c9d5dbe3e844359ee",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-draw-coverage.ts",
+      "sha256": "76eeea0c5edd490519ad3078bab2cb57de4746e4d6e45eb97cb58252c6fac65d",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-lighting.ts",
+      "sha256": "364d84f63f54dbcf3adcd4de3c6196fcfc0f63ee342dbd8ff798662a985ac48d",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-loop.ts",
+      "sha256": "aeb45324bbb642e83caa11edd6cffe6396a73b2da3c220b382da8c48b529e216",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-play-motion.ts",
+      "sha256": "462cf36906760027b400c317fbec1b24e32525f9bb6e613bbd333ef5fc6faed3",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-playground.css",
+      "sha256": "57d36f94c970a8c89d0497a7a4ecc106cfd0d17764eb1865cb290282a1921c7c",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-playground.ts",
+      "sha256": "217641663f44a92054e9e15139f4785c3e9809c564f6d9e85d6909cf1195e1a0",
+      "unchanged": true
+    },
+    {
+      "file": "src/archive-visibility.ts",
+      "sha256": "83e125b42c6cf9eb9494cd475b5ecb75662865a7344092798f30bfb66ba9598b",
+      "unchanged": true
+    },
+    {
+      "file": "src/asset-url.ts",
+      "sha256": "6aa72ebf8a5a25974664f262f7c1dcd1a26407b12132027eb2846efedc4c431e",
+      "unchanged": true
+    },
+    {
+      "file": "src/audio-settings.ts",
+      "sha256": "36c77ae460cc8d7e1c16bb6af42c1e14b571a9eedf8bc5794c689f55d130ebee",
+      "unchanged": true
+    },
+    {
+      "file": "src/audio.ts",
+      "sha256": "1d3b9457a7c3394ac7db03a90143d76b8afd35eface91596032e9ff76a3b2be3",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-lettering-art.json",
+      "sha256": "8748e6b2d5431e0243ef0e2d2b4075bf5282a8e2c720cb1fc9a3c5bd7d5c208c",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-lettering.css",
+      "sha256": "c5ba308cc440b036a3b95cb1ec7a47d7d5c333c863f335650657d6cc1d3bc05c",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-lettering.ts",
+      "sha256": "093309873c028a23bf9a5d4f3d383feecc4ccb416637cac78e44e2e333f57d6c",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-logo-tracks.ts",
+      "sha256": "3311a6cf99edefa4175ecd3d89c80f21a40f56551b9980fac4b1e17f5bb0df90",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-motion.ts",
+      "sha256": "f67e582bd7b6963e58c9c3c8d81555e58914b0891f74794ec3ecb2915fdef200",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-orbit-tracks.ts",
+      "sha256": "ba21662b3c108701d63a169662d66845a302603a62c97e19e676823218abcf10",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot-tracks.ts",
+      "sha256": "3163389299c486367c1b96e3aca412501ed7093acbffba3266944feaeb90acc0",
+      "unchanged": true
+    },
+    {
+      "file": "src/boot.ts",
+      "sha256": "3c9a0872570dea3b167cf4e72dd1d4e6c7069c90b43ad40b52af42dca12b6907",
+      "unchanged": true
+    },
+    {
+      "file": "src/brand.ts",
+      "sha256": "07ed4a1d2b0fbde078a44106b87bfc67db66a7f57204c2af2c808fb8a5fcf63d",
+      "unchanged": true
+    },
+    {
+      "file": "src/cassette-review.ts",
+      "sha256": "18d8deb5beca2c1e8ca0ec2ce4fc7f491e36bbb99b9b40fec3a44bc25959dce2",
+      "unchanged": true
+    },
+    {
+      "file": "src/data.ts",
+      "sha256": "314b5f75724e58c12edd062243884b66dcae540cf7112ca32899562566389601",
+      "unchanged": true
+    },
+    {
+      "file": "src/decryption.css",
+      "sha256": "ea95ab1ccb18fbbec6884d5b22a4297bd3a46ab4ac3b68e8258122fbe4f3d45d",
+      "unchanged": true
+    },
+    {
+      "file": "src/decryption.ts",
+      "sha256": "9829abe60298346dbdf47461303aca2a38c2d29113ae24eab4ea9023ca12dccc",
+      "unchanged": true
+    },
+    {
+      "file": "src/document-decryption.css",
+      "sha256": "a644842b67cbe335085e39d1e88d06e6033b7130977cdf2b5e011dcbd7b3649f",
+      "unchanged": true
+    },
+    {
+      "file": "src/document-decryption.ts",
+      "sha256": "8bb499795831b0f0b9e06b149b46b8f34d8e6704ee0191636ea6379329a4522b",
+      "unchanged": true
+    },
+    {
+      "file": "src/fonts.css",
+      "sha256": "63d5271b9154a55e23a26e1a5ec73ffa9e6874d56db4c6a629c88175d50fa975",
+      "unchanged": true
+    },
+    {
+      "file": "src/frame-loop.ts",
+      "sha256": "f3fba430602ed6de33d7722dcaea7af8909e4832a944184276cadab036ff8347",
+      "unchanged": true
+    },
+    {
+      "file": "src/gamepad.ts",
+      "sha256": "366d03f89640cc7dd1e387233053e5bbceba154c4e0153ccbc7d06bba72b0dfb",
+      "unchanged": true
+    },
+    {
+      "file": "src/glass-reveal.ts",
+      "sha256": "a18c306e66ff94432ae68b6c1c2235200a19d2d09343f62886a28c18fb9074f0",
+      "unchanged": true
+    },
+    {
+      "file": "src/html.ts",
+      "sha256": "e43703bfe99fca233f2199f544d43682c7d35fcfe117d691bd6aabd10912f913",
+      "unchanged": true
+    },
+    {
+      "file": "src/hud-projection.ts",
+      "sha256": "453aa73b66116a76bbc30299524a07cdbd1576dd1ce5a0978ce722ea0afd2a45",
+      "unchanged": true
+    },
+    {
+      "file": "src/inspection-overlay.ts",
+      "sha256": "7733faa49691da49d8a874e9fa9b2d8223dc7473700583bb0a65a306efdeee59",
+      "unchanged": true
+    },
+    {
+      "file": "src/instance-updates.ts",
+      "sha256": "ceb245f4ccae5c163aee8750fd8dc36736cbb96160258f63e4c98647414f35b8",
+      "unchanged": true
+    },
+    {
+      "file": "src/internal-optics.ts",
+      "sha256": "9caad082d277fefa49e07cf8703ae55a4d41c6e13686542952d7f1708830c275",
+      "unchanged": true
+    },
+    {
+      "file": "src/main.ts",
+      "sha256": "7e8346db170625238b3627ddd5f25b0068272b2b484eb95c60451ed51e5ae069",
+      "unchanged": true
+    },
+    {
+      "file": "src/model-viewer.ts",
+      "sha256": "65ffc1d76b37ef1a83d20dee4ec7e07dee17b85659b004da543a3ab4a7ae9be2",
+      "unchanged": true
+    },
+    {
+      "file": "src/motion-preferences.ts",
+      "sha256": "4c5fe9d36a37faa85cce0ca92e55e4a4b59514730f9a5c4d853aca05449a39c1",
+      "unchanged": true
+    },
+    {
+      "file": "src/motion.ts",
+      "sha256": "e7516d56bc9397e3089cc2fbe69ac04159820a5b29bcad2928fc940aca7ca91e",
+      "unchanged": true
+    },
+    {
+      "file": "src/opening-cues.ts",
+      "sha256": "3548c2e0afc92424ae3509278f8b8d1d667cf85a32d34e0dd1a18d696c7db689",
+      "unchanged": true
+    },
+    {
+      "file": "src/opening-handoff.ts",
+      "sha256": "3eb44027a9bd4651300d7d50d64205e07f28cc4fb3ce5f3d63e6a712e8c81216",
+      "unchanged": true
+    },
+    {
+      "file": "src/opening-status.css",
+      "sha256": "85574b5914f91e9977a77f380e1abf95d84d9b60b9b46771693df4f01dfccd4a",
+      "unchanged": true
+    },
+    {
+      "file": "src/opening-status.ts",
+      "sha256": "5eaf2f98b32efa04ef87842d0d6cf4487063d6908f949cbfcecd6624f16b71c2",
+      "unchanged": true
+    },
+    {
+      "file": "src/opening-timeline.ts",
+      "sha256": "c1e408cfcb2106739c81608cc1a42ea302ca56138240d70a9dca3b286042633d",
+      "unchanged": true
+    },
+    {
+      "file": "src/owned-tweens.js",
+      "sha256": "14033917333d14c2970edd32fc783264d9a2e3032ebafeb73e13f03013edfbcf",
+      "unchanged": true
+    },
+    {
+      "file": "src/personal.css",
+      "sha256": "f6f23d78c5dfb8c8da87feaadff2c6416c0304f7a69622836ec43160ee7141da",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-case.css",
+      "sha256": "3838b76c72f311f5663cf371ab60b4e51bc44bb776f741c60b836d0574de64c0",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-collections.ts",
+      "sha256": "1a0e481f041668ae9a72a60c083e32b47faa51c854a191370d4cd2b873fa4469",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-copy-motion.css",
+      "sha256": "3ff41e532c638177690a4f1e0734cc256d1fe8fde6e83944a2da143b3a6b3882",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-copy-motion.ts",
+      "sha256": "4e866b59dc2799d057799ddf0d4a06c3d620bfe46c9fc5295964c67acd667363",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-copy.ts",
+      "sha256": "5a693b3c8980ba5b2761454145253794627d4aa5e0a5d6b3c5fd3bd1b53bf984",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-cover-motion.ts",
+      "sha256": "0699c18fd8fc88e17cf09df8ff4b002c3ae743912403cce712f38597ec97f78d",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-cover.ts",
+      "sha256": "9c4aeb7b7bd9f4d18fb440dd3c65edc7743315519582ee1ce49501335054340a",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-directory.css",
+      "sha256": "ab53ac4d1187333cf7bc74b697d399f2e11b820754321d3f02410b9c7e4fb056",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-directory.ts",
+      "sha256": "752c3a9365804d2d7710583bbf55b73f79f43c03bffbd497d514e80ac7be6a75",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-entry-motion.ts",
+      "sha256": "dbe8fca1e1b84ab902af7864d69fc45ddc6040ccb5dd286de426782f83062cee",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-home.css",
+      "sha256": "d43e17e6d0649c7b4bd596973d1165d56b8c23bf5848dd2710c2a8442c250207",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-home.ts",
+      "sha256": "b19fd87dd2b8987d2873f53768f179f980c59e50d9bebc8c855be2f3b094c2c5",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-hosted.css",
+      "sha256": "ac226264e29d2e10f86093768c66d22f7dc5b898ed0c9a8f191a86b4b3feddb1",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-interface.ts",
+      "sha256": "313b402830a29dc98b1bf7ec5b9d42c5cdf266c83fd203e9d97984374e8dcefe",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-loading.css",
+      "sha256": "8298f5f637dcf1ee5be3f077778b8f948c87577e8a91c1956e3c29c883b9c0ca",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-loading.ts",
+      "sha256": "bb986e6bbab7e2c637e57376d048b5fb9ff3b81b9bb061eee22fa6422d3b16cd",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-panel.ts",
+      "sha256": "ed8c2cfa34590f031f36320e50551c74b64d454015e69bbe7579f0fcabf4e341",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-records.d.mts",
+      "sha256": "34df4a86785f157f87afe423ae257a61603da9ccb01243d5a0da51011a8dda68",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-records.mjs",
+      "sha256": "927b0a699497ce8c4227905beb41642015f7bd4b171901075f9ae8a3c0d10e16",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-showcase.css",
+      "sha256": "7982f73df7a471fff50855d3a1e5be1fbc568f485be2747b739db7d25571a3a8",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-showcase.ts",
+      "sha256": "23ef8dc0666d7cf513aab2f74da2bac40ab37a0abd296b9f55c79563b5ba3d9b",
+      "unchanged": true
+    },
+    {
+      "file": "src/project-viewer.ts",
+      "sha256": "0f847d31b05195dcfcf421ff92cfb6bdba3bb048332a8b389b8687708fb4c34e",
+      "unchanged": true
+    },
+    {
+      "file": "src/projects.ts",
+      "sha256": "b8cd036399dc498db7f54c91ff620036f95c91df7b077b07c087d474fbb93334",
+      "unchanged": true
+    },
+    {
+      "file": "src/pwa.ts",
+      "sha256": "2e633e44864a560aefc324e8059eebe766ef67221af0be9f943db9cf73b0d196",
+      "unchanged": true
+    },
+    {
+      "file": "src/quality-recommendation.ts",
+      "sha256": "b262debe6500389be621e0a8d9e9cc54cd0042454d66621dd52f229179d02e46",
+      "unchanged": true
+    },
+    {
+      "file": "src/quality-renderer.ts",
+      "sha256": "cf5f92bad29f7b976c8442b4e922f86275d50442d4ad471b5add2fd5a37d6fd4",
+      "unchanged": true
+    },
+    {
+      "file": "src/quality-settings.css",
+      "sha256": "e18ebbbfa746b4adcce5c6096e685f3ae2c8ceceb00183648aa45f7c0fe1b551",
+      "unchanged": true
+    },
+    {
+      "file": "src/quality-settings.ts",
+      "sha256": "3542049ab0911a2a8ad11c1bfab75c97633b283130f62f8ba600edcb48925bb9",
+      "unchanged": true
+    },
+    {
+      "file": "src/render-quality.ts",
+      "sha256": "e27020f9e263fd2395393b9151c9e69e5bd016737bf7450b0fd679fae40ac7ea",
+      "unchanged": true
+    },
+    {
+      "file": "src/render-state.ts",
+      "sha256": "3501a1ace94194b74081c4f1f794169b83bc95ce2bc53f769431073f714414ea",
+      "unchanged": true
+    },
+    {
+      "file": "src/responsive.css",
+      "sha256": "38a4d2ad1745e2f9b7cdb09861c3f7d00da2460b5127b812b73945c01a744902",
+      "unchanged": true
+    },
+    {
+      "file": "src/rhine-logo.css",
+      "sha256": "7c84cf8f59e755455d98967d23f578f3f777123d726d07dd1e85c4ff1189099d",
+      "unchanged": true
+    },
+    {
+      "file": "src/rhine-logo.ts",
+      "sha256": "3fd5606ac8e3552af56b05202999e27e62bf9cd4f629771d4b5cb1d152a60f26",
+      "unchanged": true
+    },
+    {
+      "file": "src/rolling-clock.ts",
+      "sha256": "c9117e77e1820612a82c8a5c0c41a9a6968bc712be371bd7a6f46161fb32029e",
+      "unchanged": true
+    },
+    {
+      "file": "src/scene.ts",
+      "sha256": "05d644993792cdd3ff274c76d9521125746a36a79d8b8459d95878946413a103",
+      "unchanged": true
+    },
+    {
+      "file": "src/screen-finish.ts",
+      "sha256": "8504221010a3ad8fb6b240058ff591dedb96c8913d3f6b09683f471201ee8ea1",
+      "unchanged": true
+    },
+    {
+      "file": "src/shared-depth.ts",
+      "sha256": "76ea887efbc09c2ec7b1396e1824b84bcc6f8cc2b8cc2ab5eb859ace3d75df18",
+      "unchanged": true
+    },
+    {
+      "file": "src/site-navigation.css",
+      "sha256": "46038052edbe163096e97fd3a622e2ed536b5a08b3b509a217b0f923d508632d",
+      "unchanged": true
+    },
+    {
+      "file": "src/site-navigation.ts",
+      "sha256": "89e7ad8e0fae6d1ee6418395eb783ed0ef21294f6ca2b24bc9c4ea11ed85c615",
+      "unchanged": true
+    },
+    {
+      "file": "src/startup-frame-timer.ts",
+      "sha256": "2d89857d14a8227f91b26adbab915d8105cc252bbb1350c5e9cf244b910e310d",
+      "unchanged": true
+    },
+    {
+      "file": "src/startup.css",
+      "sha256": "abd80073e340e88850773759e767e96c813afb21f2faea26a8a62f4023372b40",
+      "unchanged": true
+    },
+    {
+      "file": "src/startup.ts",
+      "sha256": "7b0202d51a8ef0852209dc0112df7554ddfd3c0af06d4222c6f5bc9f56879409",
+      "unchanged": true
+    },
+    {
+      "file": "src/style.css",
+      "sha256": "7bbb4a71041d88ff5dad7d2062c3329a5e5de31a7d93062595a120683c092693",
+      "unchanged": true
+    },
+    {
+      "file": "src/terminal-controls.css",
+      "sha256": "9b13ce73f4e7efaa8ecbf425285a135937b788a709520c1286d0338cf5741fa3",
+      "unchanged": true
+    },
+    {
+      "file": "src/terminal-icons.ts",
+      "sha256": "1e51d2396ce461f7ac57103db5bbc81cacf76f6cd7589505c681f194888412e4",
+      "unchanged": true
+    },
+    {
+      "file": "src/terminal-language.ts",
+      "sha256": "da22c28d3c399754378d3507e3f8f9ad1af8f8bb4d190230f185f06bc50023f7",
+      "unchanged": true
+    },
+    {
+      "file": "src/terminal-ui-copy.ts",
+      "sha256": "d6b24f60ceaf81276948627f5b602e4d42466c6bda66a0d02d6995d534b9dc1b",
+      "unchanged": true
+    },
+    {
+      "file": "src/theme-material.ts",
+      "sha256": "3996d6abdd0e4634ce28add778a15b5aa033aa10ffc7499f691b1fc0e144384a",
+      "unchanged": true
+    },
+    {
+      "file": "src/theme-motion.ts",
+      "sha256": "ff2353ad3c653e3312a29a023d47447e3199e46b371afca72304d33f61f70c2a",
+      "unchanged": true
+    },
+    {
+      "file": "src/theme-ui.ts",
+      "sha256": "b2c1a0b5b73e5693a65be8e792b6e45c7edf6db5c8734abd27e0f2277ea11e96",
+      "unchanged": true
+    },
+    {
+      "file": "src/theme.css",
+      "sha256": "fbf9d648be1ac5cf680420db22d19bb5442fb404dbec4ee60df1606dc3942ab1",
+      "unchanged": true
+    },
+    {
+      "file": "src/three-resources.ts",
+      "sha256": "58a0202dcafbda40ff3d5aa9f2c7dd57b8a7883e2d86bd7127a4071ff2c09d85",
+      "unchanged": true
+    },
+    {
+      "file": "src/typing-rhythm.ts",
+      "sha256": "8979413fd0e2cb47fe131b001e26d7a75282903b5022d022d3a74b3bb4cd6eab",
+      "unchanged": true
+    },
+    {
+      "file": "src/typing-samples.ts",
+      "sha256": "dd161810def2b93eef62b2a34c39392b89cbc33f0f4a136b3e34660a5c1595dd",
+      "unchanged": true
+    },
+    {
+      "file": "src/ui-transitions.ts",
+      "sha256": "7626a50473e57b5a6d387cb3f8328f2bfc9123f6dfe165a394cd4a686d7466c6",
+      "unchanged": true
+    },
+    {
+      "file": "src/viewer-camera.ts",
+      "sha256": "f975228170928bbb52aa667af4a7a83a8063b34cb7b65c2ae950cf47b59730a2",
+      "unchanged": true
+    },
+    {
+      "file": "src/viewport-layout.ts",
+      "sha256": "e54026ee8cf43bf5e67b91ea11022e09285641aa8d17d3490cfb926474f58dbb",
+      "unchanged": true
+    },
+    {
+      "file": "src/vite-env.d.ts",
+      "sha256": "424faf9241dd699dda995b367ed36665732da1e6ec1f33b2fd40394488ecac92",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-background.ts",
+      "sha256": "54e4ba9c2242327dddf7ebf242cadc1db442b5494f3ee8d4f2c6a5f25a02c63b",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-effects.css",
+      "sha256": "125e8ad1839633c7aa43e1448c1a47b35fda2ef3767e8facaec151feb6efdad2",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-effects.ts",
+      "sha256": "abb5160693c877a2b8aa5735bdd6e752210187be92ace3d37e021cd23cd44b53",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-image-url.ts",
+      "sha256": "be96d44a60a55af309729a3fcf3e6ac69cc14aeecfa282f1e9954238fb1cc40d",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-insets.css",
+      "sha256": "37aedabe9dbcff14603da99d3d5e22c1dce5d11b7b8408a2ce7474ad3bd19f64",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-opening.ts",
+      "sha256": "37cf360ff8da4d88e356d2624a229a02dbddb84578a879e4b887525e9688dbfe",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper-quality.ts",
+      "sha256": "3eef763b932a95cdc17250783d152945c349471e8467d9fc445c9254d638b40b",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper.css",
+      "sha256": "a2ec232aa2eda5381b0b4f29809ba7bfb1fb7d64f2150ed7aff8a13efa0aab9b",
+      "unchanged": true
+    },
+    {
+      "file": "src/wallpaper.ts",
+      "sha256": "fc4a1e86d495ad718cedbe3e33763a4296355a9b257a044495bd345a750ff25f",
+      "unchanged": true
+    },
+    {
+      "file": "src/workbench-rolling.ts",
+      "sha256": "3c964a8cf1904535a6c849fc37873b8f9b56d281ca4d70ad7e36c863ba7697ce",
+      "unchanged": true
+    },
+    {
+      "file": "src/workbench-state.ts",
+      "sha256": "926eaaecfc582b3392fdf14305592e61cb04b5d11f8eb4df8bae8264a53998ff",
+      "unchanged": true
+    },
+    {
+      "file": "src/workbench-visibility.ts",
+      "sha256": "12435aaaaf10063afec78d067b4d34f029c49823afb8295959de79d3349a0bd8",
+      "unchanged": true
+    },
+    {
+      "file": "src/workbench.css",
+      "sha256": "292b0191abec5045e9b485d834b62e910e4afe15472f069391408d6c837d36f9",
+      "unchanged": true
+    },
+    {
+      "file": "src/workbench.ts",
+      "sha256": "437bd5fb0fbaf0c2c6ed407c216978fc5ab79e899fe92a0571bf82eb919eefea",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p01-inside.webp",
+      "sha256": "df007a4c2e23fe322968fc2c68a4842cb65934b288b7552485ba31636f23051c",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p02-inside.webp",
+      "sha256": "03aad49850b87f0fdde2af6c9439405381d1503c49569b3352cec6b009e6e5ba",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p03-inside.webp",
+      "sha256": "b24ca4cbf810e83bde7b807d51e0c74a6a1a22d508e282fec4abea50f7065448",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p04-inside.webp",
+      "sha256": "07c21578adb5396d1cc27da40472b37c8e2807131c20061616af79e3c57e5c5a",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4235-1536.webp",
+      "sha256": "6059ab59cda5c5fb05b4bd7c0b54a9db16a63a2447d2eaa8c79adb6f701fb1d5",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4235-640.webp",
+      "sha256": "f2b2a1a2df7521024f8a35fd7684b85f0775ccf21d94b5d96442e580bf9575fe",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4236-1536.webp",
+      "sha256": "e2485cabd4e26d1229d453c288fbd8670f7bd7c5185653d9be645ecdb25a1f9b",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4236-640.webp",
+      "sha256": "531da481cf983b341f91308651700f2229d04b3c80cae49d7cf36aa73b495f07",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4237-1536.webp",
+      "sha256": "9513700ec0b9d0b3f563c57872b933a1db62148d4114598b01827f117d79b6ca",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4237-640.webp",
+      "sha256": "6295faa8645bba28abbb1ac5a37db197bb262ece67dd7722bf7d854beb60f009",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4238-1536.webp",
+      "sha256": "cdb677ad506cfaa661fd20804e6cc62b83a4db4a5c61bafb4a3fd8242de30359",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4238-640.webp",
+      "sha256": "febc02979aa4668ffc60e009d4176186774b3f813aa493895933ca17cb44f9ef",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4240-1536.webp",
+      "sha256": "a9749f8f8e06ae0ded51c4dba97bae531f3d5683c5f58778aea771be34eeea05",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4240-640.webp",
+      "sha256": "76b4e18dc8ac6b77b5fa9f2294ae5073f82465b9521753b05169ebcb2aa0e064",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4241-1536.webp",
+      "sha256": "3b7e40c3c77facb7827b51bea63a36c8c772b8d646e0c3891738e861a09c7649",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4241-640.webp",
+      "sha256": "b7755db690d485ed0c4f0d54a7ea9614c4424c247c0c862207c281e66f75a190",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4242-1536.webp",
+      "sha256": "2d8f9e013d462b5096573180f3afdb40a1680cf074919d0112818d6be34493e1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4242-640.webp",
+      "sha256": "47536f3e773e0b26532a3b9ded8d681958352c6766c58541c5f002f61624dd44",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4244-1536.webp",
+      "sha256": "7920b315eb8013732fbb208c25fa40699316fa8869357096aba0968514726f58",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/engineering/p4244-640.webp",
+      "sha256": "81474f7b8a5c33a15e471176793e905c8de050f187522121dd615c79cf88fe12",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/erste002-hero-front-left-v01.webp",
+      "sha256": "8086f69aa83c940dc274af994949e525abfb327318b986c003e0751774d4bfab",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/erste002-hero-front-right-v01.webp",
+      "sha256": "40444657d595257475ac40b8d1e059b7e4d2f8242534f034c0935b33d49a95f1",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/shell-full.glb",
+      "sha256": "a7c8796cd5aec04dc4d8e8e5e1282fc2982e362fcc1da8925923d40663e4b557",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/shell-full.rev2.glb",
+      "sha256": "36e4e57b66983fb29c64a4f78129121fcd9c95a69c3cde0abe94d12d06928789",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/shell-full.vva-backup.glb",
+      "sha256": "3cae9fef134a6653d760c7b81495fe7d9f28b42553218acdbbfc04417f5a716d",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/shell-hi.glb",
+      "sha256": "062e3a60c3c9042cdf2c2c5d9f12552b6078b1a1d2f5389c50cc56453cb72ef4",
+      "unchanged": true
+    },
+    {
+      "file": "public/cases/erste002/assets/shell-hi.three-part.backup.glb",
+      "sha256": "062e3a60c3c9042cdf2c2c5d9f12552b6078b1a1d2f5389c50cc56453cb72ef4",
+      "unchanged": true
+    }
+  ],
+  "summary": {
+    "originalFiles": 14,
+    "protectedExistingFiles": 222,
+    "changed": []
+  }
+}

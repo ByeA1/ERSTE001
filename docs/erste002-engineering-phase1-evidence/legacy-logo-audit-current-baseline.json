@@ -1,0 +1,184 @@
+{
+  "date": "2026-11-17T15:03:48.707Z",
+  "protectedPaths": [
+    "public/assets/archive-cassette.glb",
+    "public/assets/archive-assembly.glb",
+    ".audit/model-logo/models/draco-18.glb",
+    "src/boot-logo-tracks.ts",
+    "src/opening-timeline.ts",
+    "src/boot-motion.ts"
+  ],
+  "approvedVisualMatch": true,
+  "checks": [
+    {
+      "key": "Chrome-desktop",
+      "welcome": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "loader": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "inherited": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "registryOnlyNewProject": true,
+      "asynchronousReady": true,
+      "offscreenPaused": true,
+      "closed002RafStopped": true,
+      "language": true,
+      "lowReduced": true,
+      "reenter": true,
+      "overflow": true,
+      "errors": []
+    },
+    {
+      "key": "Edge-desktop",
+      "welcome": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "loader": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "inherited": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "registryOnlyNewProject": true,
+      "asynchronousReady": true,
+      "offscreenPaused": true,
+      "closed002RafStopped": true,
+      "language": true,
+      "lowReduced": true,
+      "reenter": true,
+      "overflow": true,
+      "errors": []
+    }
+  ],
+  "errors": [
+    {
+      "key": "Chrome-mobile",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.project-case [data-terminal-language=\"en\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-pressed=\"false\" data-terminal-language=\"en\" aria-label=\"Switch to English\">EN</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at D:\\RhineTerminal\\scripts\\audit-logo-unification.mjs:233:14",
+      "console": [],
+      "state": {
+        "phase": "open",
+        "frames": [
+          {
+            "url": "http://127.0.0.1:4182/cases/erste001/index.html",
+            "hidden": false,
+            "inert": false,
+            "opacity": "1",
+            "body": "\n  <div id=\"scroller\" tabindex=\"0\" aria-label=\"ERSTE001 项目案例\" data-aria-en=\"ERSTE001 case study\" data-aria-zh=\"ERSTE001 项目案例\" style=\"\">\n    <header class=\"top-profile-bar\" data-project-local-navigation=\"\" aria-label=\"个人信息\" data-aria-en=\"Profile information\" data-aria-zh=\"个人信息\">\n        <div class=\"profile-chip\">\n            <span class=\"profile-name\">albert_z0413@hotmail.com</span>\n            <sp",
+            "logos": []
+          }
+        ]
+      }
+    },
+    {
+      "key": "Edge-mobile",
+      "error": "locator.click: Timeout 30000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('.project-case [data-terminal-language=\"en\"]')\u001b[22m\n\u001b[2m    - locator resolved to <button type=\"button\" aria-pressed=\"false\" data-terminal-language=\"en\" aria-label=\"Switch to English\">EN</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    58 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m       - element is not visible\u001b[22m\n\u001b[2m     - retrying click action\u001b[22m\n\u001b[2m       - waiting 500ms\u001b[22m\n\n    at D:\\RhineTerminal\\scripts\\audit-logo-unification.mjs:233:14",
+      "console": [],
+      "state": {
+        "phase": "open",
+        "frames": [
+          {
+            "url": "http://127.0.0.1:4182/cases/erste001/index.html",
+            "hidden": false,
+            "inert": false,
+            "opacity": "1",
+            "body": "\n  <div id=\"scroller\" tabindex=\"0\" aria-label=\"ERSTE001 项目案例\" data-aria-en=\"ERSTE001 case study\" data-aria-zh=\"ERSTE001 项目案例\" style=\"\">\n    <header class=\"top-profile-bar\" data-project-local-navigation=\"\" aria-label=\"个人信息\" data-aria-en=\"Profile information\" data-aria-zh=\"个人信息\">\n        <div class=\"profile-chip\">\n            <span class=\"profile-name\">albert_z0413@hotmail.com</span>\n            <sp",
+            "logos": []
+          }
+        ]
+      }
+    }
+  ]
+}

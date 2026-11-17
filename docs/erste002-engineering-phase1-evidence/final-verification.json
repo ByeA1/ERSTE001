@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-11-17T15:10:54.211Z",
+  "branch": "source",
+  "previewStatus": 200,
+  "frontend": [
+    {
+      "file": "engineering.html",
+      "sha256": "14de390e61d18924c97ff20b292fdf6b24cb63acbfdb11e8776d470629bdbbca",
+      "builtMatches": true
+    },
+    {
+      "file": "engineering-archive.css",
+      "sha256": "5102ada2a577851f5bd5c3bd6e6c27f7ff1d9745b6996da4f2fc919bb0bb175c",
+      "builtMatches": true
+    },
+    {
+      "file": "engineering-archive.js",
+      "sha256": "b1cf4a7ac96faca838ab7e6d7e114acd02ba453b8eeb4d67e95123885f4c55fc",
+      "builtMatches": true
+    }
+  ],
+  "stagedScopeChecked": true,
+  "browserChecks": 17,
+  "allArchiveChecksPassed": true,
+  "legacyAuditExceptions": "build-and-legacy-audit.json",
+  "integrity": {
+    "originalFiles": 14,
+    "protectedExistingFiles": 222,
+    "changed": []
+  },
+  "noDeployment": true
+}

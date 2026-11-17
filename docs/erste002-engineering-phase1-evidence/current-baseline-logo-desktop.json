@@ -1,0 +1,81 @@
+{
+  "date": "2026-11-17T14:38:29.173Z",
+  "protectedPaths": [
+    "public/assets/archive-cassette.glb",
+    "public/assets/archive-assembly.glb",
+    ".audit/model-logo/models/draco-18.glb",
+    "src/boot-logo-tracks.ts",
+    "src/opening-timeline.ts",
+    "src/boot-motion.ts"
+  ],
+  "approvedVisualMatch": true,
+  "checks": [
+    {
+      "key": "Chrome-desktop",
+      "welcome": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "loader": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "inherited": {
+        "mode": "full",
+        "contour": "M295 73C295 41 273 15 240 15C221 15 207 23 192 38C186 43 181 47 176 52C127 96 103 128 70 128C38 128 15 101 15 70C15 39 37 15 70 15C103 15 127 48 156 75C182 99 208 128 240 128C273 128 295 105 295 73Z",
+        "animations": [
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          },
+          {
+            "state": "running",
+            "duration": 6400
+          }
+        ]
+      },
+      "registryOnlyNewProject": true,
+      "asynchronousReady": true,
+      "offscreenPaused": true,
+      "closed002RafStopped": true,
+      "language": true,
+      "lowReduced": true,
+      "reenter": true,
+      "overflow": true,
+      "errors": []
+    }
+  ],
+  "errors": []
+}

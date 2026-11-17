@@ -1,0 +1,8 @@
+{
+  "public/assets/archive-cassette.glb": "94fc471418156825cdbfa35d2202fad427c6b351f3aa6c0b99b4cbc5150820ee",
+  "public/assets/archive-assembly.glb": "d411170676f55a327c286e67e462f98b446667811c725318bab85657eaee06ec",
+  ".audit/model-logo/models/draco-18.glb": "94fc471418156825cdbfa35d2202fad427c6b351f3aa6c0b99b4cbc5150820ee",
+  "src/boot-logo-tracks.ts": "3311a6cf99edefa4175ecd3d89c80f21a40f56551b9980fac4b1e17f5bb0df90",
+  "src/opening-timeline.ts": "c1e408cfcb2106739c81608cc1a42ea302ca56138240d70a9dca3b286042633d",
+  "src/boot-motion.ts": "f67e582bd7b6963e58c9c3c8d81555e58914b0891f74794ec3ecb2915fdef200"
+}

@@ -1,0 +1,26 @@
+{
+  "date": "2026-11-17",
+  "build": {
+    "command": "npm run build",
+    "exitCode": 0,
+    "release": "68ff57abd9718635",
+    "note": "TypeScript, Vite, shared case runtime and PWA generation completed. Existing main bundle size warning remains. No deployment was run."
+  },
+  "defaultLogoAudit": {
+    "command": "node scripts/audit-logo-unification.mjs",
+    "exitCode": 1,
+    "reason": "Historical baseline mismatch for public/assets/archive-cassette.glb",
+    "expectedSha256": "dda42b9b3b471d11c69820a64084d254a64b27761287ab0e35dd8387ec0a0bed",
+    "actualSha256": "94fc471418156825cdbfa35d2202fad427c6b351f3aa6c0b99b4cbc5150820ee",
+    "scope": "No cassette asset or legacy audit source was edited in this phase."
+  },
+  "currentBaselineFullAudit": {
+    "command": "LOGO_AUDIT_BASELINE=<preserved 2026-11-17 baseline> node scripts/audit-logo-unification.mjs",
+    "exitCode": 1,
+    "passed": ["Chrome-desktop", "Edge-desktop"],
+    "failed": ["Chrome-mobile", "Edge-mobile"],
+    "reason": "The existing ERSTE001 mobile host test tries to click a hidden .project-case [data-terminal-language=en] control and times out.",
+    "evidence": "legacy-logo-audit-current-baseline.json",
+    "note": "This was a diagnostic run of the unchanged legacy audit using the existing current baseline; it is not an all-platform pass."
+  }
+}
