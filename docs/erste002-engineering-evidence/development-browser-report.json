@@ -1,0 +1,294 @@
+{
+  "browser": "Microsoft Edge / Chromium, real headless browser",
+  "origin": "http://127.0.0.1:5207",
+  "started": "2026-11-17T05:45:01.131Z",
+  "checks": [
+    {
+      "name": "Shared opening and both route entrances",
+      "pass": true,
+      "openingBounds": {
+        "caption": {
+          "x": 96,
+          "y": 704.546875,
+          "width": 850,
+          "height": 259.453125,
+          "top": 704.546875,
+          "right": 946,
+          "bottom": 964,
+          "left": 96
+        },
+        "entrance": {
+          "x": 1304,
+          "y": 884.5,
+          "width": 520,
+          "height": 78.5,
+          "top": 884.5,
+          "right": 1824,
+          "bottom": 963,
+          "left": 1304
+        },
+        "overlap": false
+      }
+    },
+    {
+      "name": "All 11 product → exact engineering topics → related product shots",
+      "pass": true,
+      "modelLoads": 1,
+      "reusedCanvas": true
+    },
+    {
+      "name": "Explore Product continues at shot 02; product restart returns to shot 01",
+      "pass": true
+    },
+    {
+      "name": "All 15 engineering topics link to their configured product shot",
+      "pass": true
+    },
+    {
+      "name": "Browser Back / Forward restores engineering topic and scroll; active mapping overrides saved history",
+      "pass": true
+    },
+    {
+      "name": "Refresh restores the current engineering topic",
+      "pass": true
+    },
+    {
+      "name": "Independent saved route positions and explicit resume",
+      "pass": true
+    },
+    {
+      "name": "Four chapters browse linearly forward and backward with correct bounds and progress",
+      "pass": true
+    },
+    {
+      "name": "Photo enlargement, sequence, arrow keys, Escape and focus restoration",
+      "pass": true
+    },
+    {
+      "name": "Four archival CAD packages compare with traceable provisional identities",
+      "pass": true
+    },
+    {
+      "name": "English body copy, controls and image metadata; all archive images decode",
+      "pass": true,
+      "images": 9
+    },
+    {
+      "name": "desktop-1440 layout, chapter navigation, photo dialog and cross-route controls",
+      "pass": true,
+      "viewport": 1440,
+      "document": 1440,
+      "content": 1440,
+      "root": 1440,
+      "band": {
+        "x": 72,
+        "y": 90,
+        "width": 1296,
+        "height": 41,
+        "top": 90,
+        "right": 1368,
+        "bottom": 131,
+        "left": 72
+      },
+      "footer": {
+        "x": 72,
+        "y": 832,
+        "width": 1296,
+        "height": 68,
+        "top": 832,
+        "right": 1368,
+        "bottom": 900,
+        "left": 72
+      }
+    },
+    {
+      "name": "laptop-1366 layout, chapter navigation, photo dialog and cross-route controls",
+      "pass": true,
+      "viewport": 1366,
+      "document": 1366,
+      "content": 1366,
+      "root": 1366,
+      "band": {
+        "x": 68.296875,
+        "y": 90,
+        "width": 1229.40625,
+        "height": 41,
+        "top": 90,
+        "right": 1297.703125,
+        "bottom": 131,
+        "left": 68.296875
+      },
+      "footer": {
+        "x": 68.296875,
+        "y": 700,
+        "width": 1229.40625,
+        "height": 68,
+        "top": 700,
+        "right": 1297.703125,
+        "bottom": 768,
+        "left": 68.296875
+      }
+    },
+    {
+      "name": "mobile-390 layout, chapter navigation, photo dialog and cross-route controls",
+      "pass": true,
+      "viewport": 390,
+      "document": 390,
+      "content": 390,
+      "root": 390,
+      "band": {
+        "x": 16,
+        "y": 82,
+        "width": 358,
+        "height": 41,
+        "top": 82,
+        "right": 374,
+        "bottom": 123,
+        "left": 16
+      },
+      "footer": {
+        "x": 16,
+        "y": 780,
+        "width": 358,
+        "height": 64,
+        "top": 780,
+        "right": 374,
+        "bottom": 844,
+        "left": 16
+      }
+    },
+    {
+      "name": "mobile-320 layout, chapter navigation, photo dialog and cross-route controls",
+      "pass": true,
+      "viewport": 320,
+      "document": 320,
+      "content": 320,
+      "root": 320,
+      "band": {
+        "x": 16,
+        "y": 82,
+        "width": 288,
+        "height": 41,
+        "top": 82,
+        "right": 304,
+        "bottom": 123,
+        "left": 16
+      },
+      "footer": {
+        "x": 16,
+        "y": 504,
+        "width": 288,
+        "height": 64,
+        "top": 504,
+        "right": 304,
+        "bottom": 568,
+        "left": 16
+      }
+    },
+    {
+      "name": "mobile-landscape layout, chapter navigation, photo dialog and cross-route controls",
+      "pass": true,
+      "viewport": 844,
+      "document": 844,
+      "content": 844,
+      "root": 844,
+      "band": {
+        "x": 42.1875,
+        "y": 68,
+        "width": 759.625,
+        "height": 41,
+        "top": 68,
+        "right": 801.8125,
+        "bottom": 109,
+        "left": 42.1875
+      },
+      "footer": {
+        "x": 42.1875,
+        "y": 322,
+        "width": 759.625,
+        "height": 68,
+        "top": 322,
+        "right": 801.8125,
+        "bottom": 390,
+        "left": 42.1875
+      }
+    },
+    {
+      "name": "Normal-motion auto-play advances linearly and pauses on engineering entry",
+      "pass": true
+    },
+    {
+      "name": "Image-index failure shows retry and recovers without reloading",
+      "pass": true
+    },
+    {
+      "name": "Browser Back / Forward also works inside the terminal iframe",
+      "pass": true
+    },
+    {
+      "name": "Host toolbar inset, language sync, image Escape isolation and return to terminal",
+      "pass": true
+    },
+    {
+      "name": "ERSTE001 browser reference: numbered chapters, photo grid, annotations and technical reading rhythm",
+      "pass": true
+    },
+    {
+      "name": "Touch-enabled mobile host: toolbar, entrance, chapters, photo dialog and related product",
+      "pass": true
+    },
+    {
+      "name": "Engineering remains browsable when WebGL is unavailable",
+      "pass": true
+    },
+    {
+      "name": "Route switching still works with browser storage disabled",
+      "pass": true
+    },
+    {
+      "name": "Local resource load and first physical photograph performance recorded",
+      "pass": true,
+      "localReadyAndFirstImageMs": 287,
+      "domNodes": 978,
+      "resourceCount": 35,
+      "transferredBytes": 9514023,
+      "navigationMs": 74.29999999701977,
+      "archiveScrollWidth": 1920,
+      "viewport": 1920
+    }
+  ],
+  "errors": [],
+  "screenshots": [
+    "desktop-product-opening.jpg",
+    "desktop-chapter-01.jpg",
+    "desktop-chapter-02.jpg",
+    "desktop-chapter-03.jpg",
+    "desktop-chapter-04.jpg",
+    "desktop-three-prototypes.jpg",
+    "desktop-cad-comparison.jpg",
+    "desktop-english.jpg",
+    "desktop-1440.jpg",
+    "laptop-1366.jpg",
+    "mobile-390.jpg",
+    "mobile-390-opening.jpg",
+    "mobile-320.jpg",
+    "mobile-320-opening.jpg",
+    "mobile-landscape.jpg",
+    "mobile-landscape-opening.jpg",
+    "hosted-desktop.jpg",
+    "reference-erste001.jpg",
+    "hosted-touch-opening.jpg",
+    "hosted-touch-engineering.jpg"
+  ],
+  "status": "passed",
+  "performance": {
+    "localReadyAndFirstImageMs": 287,
+    "domNodes": 978,
+    "resourceCount": 35,
+    "transferredBytes": 9514023,
+    "navigationMs": 74.29999999701977,
+    "archiveScrollWidth": 1920,
+    "viewport": 1920
+  },
+  "finished": "2026-11-17T05:45:21.546Z"
+}

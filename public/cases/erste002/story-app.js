@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { createEngineeringArchive } from "./engineering-app.js";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import {
@@ -26,6 +27,7 @@ import { StoryInterfaceMotion } from "./story-interface-motion.js";
 const $ = (s) => document.querySelector(s);
 const host = $("#scene-root");
 const body = document.body;
+let archive;
 const loading = $("#loading");
 const loadingCopy = $("#loading-copy");
 const retry = $("#retry");
@@ -192,6 +194,7 @@ function reducedMotion() {
   return motion.matches || parentReduced;
 }
 function updateNavigation() {
+  archive?.update();
   const selected = shots[shotIndex]?.chapter;
   const number = (value) => String(value).padStart(2, "0");
   interfaceMotion.readout(chapterNumber, number(shotIndex + 1) + " / " + number(shots.length || 1));
@@ -268,6 +271,7 @@ function setLanguage(value, notify = false) {
   updateNavigation();
   updateCaption();
   invalidate();
+  archive?.language();
   if (notify && parent !== window)
     parent.postMessage(
       { type: "design-terminal:case-language", language: value },
@@ -392,7 +396,7 @@ function startPresentation() {
   if (!presented || openingPlayed || body.dataset.projectReady === "loading") return;
   openingPlayed = true;
   body.dataset.presented = "true";
-  if (!new URLSearchParams(location.search).has("editor")) playToShot(0);
+  if (!new URLSearchParams(location.search).has("editor") && !archive?.opening()) playToShot(0);
 }
 function playToShot(index) {
   const shot = shots[index];
@@ -426,6 +430,8 @@ restart.onclick = () => {
 };
 addEventListener("keydown", (event) => {
   if (
+    archive?.isEngineering() ||
+    document.querySelector(".archive-dialog[open]") ||
     event.altKey ||
     event.ctrlKey ||
     event.metaKey ||
@@ -643,7 +649,7 @@ const resizeObserver = new ResizeObserver(resize);
 resizeObserver.observe(host);
 addEventListener("resize", resize);
 function canRender() {
-  return visible && !parentPaused && !document.hidden && !lifetime.signal.aborted;
+  return !archive?.isEngineering() && visible && !parentPaused && !document.hidden && !lifetime.signal.aborted;
 }
 function invalidate() {
   dirty = true;
@@ -1105,6 +1111,13 @@ async function start() {
     startPresentation();
   }
 }
+archive = createEngineeringArchive({
+  state: () => ({shot:shotIndex + 1, language:lang ? "en" : "zh", busy:Boolean(playback), loaded:body.dataset.projectReady !== "loading", auto, free}),
+  stopAuto: () => setAuto(false),
+  pause,
+  resume: () => { resize(); invalidate(); },
+  seekShot: (number) => { if (shots[number - 1]) seek(shots[number - 1].hold); },
+});
 body.dataset.mode = "chapter";
 setLanguage("zh");
 start();

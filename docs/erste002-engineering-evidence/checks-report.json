@@ -1,0 +1,82 @@
+{
+  "date": "2026-11-17T05:42:33.667Z",
+  "logoBaseline": "Current local baseline; default historical audit separately failed because archive-cassette.glb differs from its old snapshot. This file was already unchanged relative to HEAD before this task.",
+  "results": [
+    {
+      "command": [
+        "node",
+        "scripts/check-002-routes.mjs"
+      ],
+      "pass": true,
+      "durationMs": 32,
+      "output": "PASS: linked content graph, 11 shot targets, 15 topics, bilingual metadata, 8 sourced photos and safe route parsing\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/check-002-story.mjs"
+      ],
+      "pass": true,
+      "durationMs": 423,
+      "output": "✔ all authored chapters hold at a readable shot and are reversible (33.7262ms)\n✔ assembly hands off at full explosion and the last hero restores all five groups (0.2863ms)\n✔ lights interpolate across named rigs, and both authored cues have two isolated pulses (0.3363ms)\n✔ captions enter during the shot while reduced motion samples the held view (0.7788ms)\n✔ opening, section reveal and assembly return stage their motion and lighting separately (0.3382ms)\n✔ the studio reflection moves at a held camera and edits independently of direct lighting (9.8615ms)\n✔ the authored shell cut generates a real cap, and extraction round-trips Rev 3 group transforms (101.84ms)\n✔ legacy manual tracks still import and optional cues have precisely two pulses (0.6347ms)\n✔ named segment edits and insertions leave other authored segments unchanged (21.5546ms)\n✔ invalid captions, section boundaries and keyframes cannot enter the renderer (21.703ms)\n✔ Rev 3 shell and buttons are closed, consistently wound volumes and have no bottom shell (119.602ms)\n✔ moving, rotating and disabling the section leaves source materials and geometry intact (1.764ms)\n✔ geometric caps fill the wall and keep enclosed holes open (6.9928ms)\n✔ independent lighting reveals preserve still cameras, pause, validation and editing (29.8291ms)\nℹ tests 14\nℹ suites 0\nℹ pass 14\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 353.301\n"
+    },
+    {
+      "command": [
+        "node",
+        "--experimental-strip-types",
+        "--test",
+        "scripts/check-opening-timeline.mjs"
+      ],
+      "pass": true,
+      "durationMs": 94,
+      "output": "✔ fast resources preserve every phase and the full continuous duration (2.0548ms)\n✔ slow or failed resources hold the exact A endpoint without consuming B/C (0.4853ms)\n✔ ready exactly at the loading boundary does not insert a pause (0.139ms)\n✔ replay resets the same clock to A and keeps B/C duration (0.5007ms)\n✔ background suspension excludes hidden time (0.0845ms)\n✔ a main-thread stall cannot jump over the authorization beat (0.0722ms)\n✔ reference camera and scan tracks are continuous across every phase boundary (0.4076ms)\n✔ welcome, the original low-lift hold, main rise and cover retain original speed (0.1047ms)\n✔ the distant raised-cover shot ends 650 ms after the cover wipe, not several seconds later (0.0941ms)\n✔ authorization stays readable before its final reversed blink (0.9428ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 64.6282\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/check-project-catalogue.mjs"
+      ],
+      "pass": true,
+      "durationMs": 61,
+      "output": "✔ gamingmouse contains every registered whole project; four other collections are reserved (0.7841ms)\n✔ the original five-column sea has valid project records across distant cells (4.0201ms)\n✔ up/down selection retains physical direction across project wraparound (0.2605ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 7.8474\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/check-project-presentation.mjs"
+      ],
+      "pass": true,
+      "durationMs": 56,
+      "output": "✔ the cassette faces the viewer before the scan clears it (0.5889ms)\n✔ portrait approach framing fits the complete cassette below the case bar (0.1176ms)\n✔ opening cover waits until reference extraction has cleared the sea (0.0642ms)\n✔ portrait, landscape and square hero plates stay inside the fixed picture area (0.1139ms)\n✔ return retraces the entry scan and camera, with UI after the cassette settles (0.7083ms)\nℹ tests 5\nℹ suites 0\nℹ pass 5\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 4.9101\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/check-logo-usage.mjs"
+      ],
+      "pass": true,
+      "durationMs": 35,
+      "output": "Shared project services and logo usage checked; future projects require no UI bootstrap.\n"
+    },
+    {
+      "command": [
+        "node",
+        "--test",
+        "scripts/check-project-defaults.mjs"
+      ],
+      "pass": true,
+      "durationMs": 69,
+      "output": "✔ a registry-only future project receives a real overview and export record (0.6916ms)\n✔ authored overviews and input arrays are preserved without duplicates (0.0873ms)\n✔ unsafe export identifiers and collisions fail before writing (0.2522ms)\nℹ tests 3\nℹ suites 0\nℹ pass 3\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 40.6044\n"
+    },
+    {
+      "command": [
+        "node",
+        "scripts/audit-logo-unification.mjs",
+        "--quick"
+      ],
+      "pass": true,
+      "durationMs": 38390,
+      "output": "Site-wide logo and unknown-project default services passed in Chrome/Edge desktop/mobile.\n"
+    }
+  ]
+}
