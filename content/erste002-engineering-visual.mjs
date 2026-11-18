@@ -1,10 +1,12 @@
 // The latest design record and the physical evidence have separate identities.
 export const chapters = [
   ['eng-overview', '00', ['概览', 'Overview'], 'ENGINEERING OVERVIEW'],
-  ['eng-form', '01', ['外形', 'Form'], 'FORM DEVELOPMENT'],
-  ['eng-evolution', '02', ['迭代', 'Evolution'], 'PROTOTYPE EVOLUTION'],
-  ['eng-decisions', '03', ['工程决策', 'Decisions'], 'ENGINEERING DECISIONS'],
-  ['eng-current', '04', ['当前设计', 'Current design'], 'CURRENT DESIGN'],
+  ['eng-form', 'A', ['外形', 'Form'], 'GRIP STUDY'],
+  ['eng-evolution', 'B', ['首轮结构', 'Early structure'], 'FIRST MECHANICAL BUILD'],
+  ['eng-support', 'C', ['支撑与装配', 'Supports and fit'], 'SUPPORT ITERATION'],
+  ['eng-built', 'D', ['整机装配', 'Physical assembly'], 'ASSEMBLED PROTOTYPE'],
+  ['eng-decisions', 'E', ['最新修改', 'CAD revisions'], 'CURRENT CAD REVISIONS'],
+  ['eng-current', '06', ['验证边界', 'Validation'], 'VALIDATION BOUNDARY'],
 ];
 
 export const cases = [
@@ -14,22 +16,14 @@ export const cases = [
   { id: 'light', title: 'LIGHT BLOCKING', headline: ['处理漏光，保留按键行程。', 'Block the light path and preserve travel.'], short: ['缝隙遮光', 'Light blocking'], analysis: ['盖体缝隙是需要处理的透光路径，同时也是按键运动的空间。', 'The cover gap is both a possible light path and space for button travel.'], designed: ['新版加入遮光处理，设计要求保留运动间隙。', 'The new design adds light blocking while reserving motion clearance.'], state: ['缝隙遮光已入 CAD', 'Gap light blocking added in CAD'], validation: ['遮光效果、运动间隙与干涉', 'Light blocking, travel clearance and interference'] },
 ];
 
-export const prototypes = [
-  { id: 'fdm', stage: 'FDM', name: ['外形手感样件', 'Grip mock-up'], image: 'evo-fdm', goal: ['试握并确定外形方向', 'Evaluate the shape in hand'], change: ['打印未分件外壳', 'Print an unsplit shell'], finding: ['试握反馈促成一次外形修改', 'Trial handling prompted one form revision'], validation: ['已试握 · 定性反馈', 'Trial grip · Qualitative'], link: ['eng-form-handling', ['握持与改形', 'Grip and form revision']] },
-  { id: 'mjf', stage: 'EARLY MJF', name: ['早期结构样件', 'Early structural print'], image: 'first-mjf', goal: ['检查分件后的刚度与装配', 'Check stiffness and fit after splitting'], change: ['分件、初始内筋和安装结构', 'Split the shell, add ribs and mounting features'], finding: ['整体偏软，安装孔位不准', 'The assembly flexed and mounting holes were misaligned'], validation: ['已打印 · 初步装配检查', 'Printed · Initial fit check'] },
-  { id: 'support', stage: 'MJF ITERATION', name: ['支撑与装配迭代', 'Support and fit revision'], image: 'evo-support', goal: ['改善支撑并调整装配', 'Improve support and revise assembly fit'], change: ['增加支撑杆，调整内部装配关系', 'Add support rods and revise the internal fit'], finding: ['支撑杆与 PCB 干涉，按键盖及侧键装配受限', 'Rod/PCB interference and fit issues at the button covers and side board'], validation: ['已打印 · 装配检查', 'Printed · Assembly check'], extra: ['拆杆后曾完成装配，整机刚度仍不足。按键盖与上盖、微动存在配合问题，抬起限位缺失，电池固定不稳。', 'One assembly was completed after removing a rod, with stiffness still limited. The covers had fit issues at the shell and switches, lacked a lift stop, and battery retention remained unstable.'] },
-  { id: 'built', stage: 'ASSEMBLED', name: ['红滚轮装配样机', 'Red-wheel assembly'], image: 'evo-built', goal: ['检查完整装配与机构动作', 'Check full assembly and mechanism travel'], change: ['完成红滚轮版整机装配', 'Complete the red-wheel assembly'], finding: ['支撑杆偏弱，按压时盖体翘起，电池难装且固定不牢', 'Weak rod, button cover lift under press, and poor battery access and retention'], validation: ['已装配 · 实物观察', 'Assembled · Physical observations'] },
-  { id: 'cad', stage: 'CURRENT CAD', name: ['最新设计版', 'Current design'], image: 'evo-cad', goal: ['回应 V4 的刚度、按键与装配问题', 'Address V4 stiffness, press and fit issues'], change: ['调整支撑杆、折边与接点，改按键柔性区、电池卡口和缝隙遮光', 'Revise rods, flanges and joints, plus button flex, battery catch and light blocking'], finding: ['V4 整机偏软、盖体翘起与电池固定不牢', 'V4 assembly flex, cover lift and loose battery'], validation: ['CAD 已完成 · 待打样与验证', 'CAD complete · Build and validation pending'], link: ['eng-decisions', ['查看工程决策', 'See engineering decisions']] },
-];
-
 export const media = {
-  cover: { source: 'P4238', title: ['红滚轮实体装配版', 'Red-wheel physical build'], version: ['V4 · 实体装配', 'V4 · Assembled prototype'], sizes: '(max-width: 800px) 94vw, 65vw' },
+  cover: { source: 'P4238', title: ['红滚轮实体装配版', 'Red-wheel physical build'], version: ['红滚轮 · 实体装配', 'Red-wheel physical assembly'], sizes: '(max-width: 800px) 94vw, 65vw' },
   'form-fdm': { source: 'P4241', title: ['未分件的连续曲面与层纹', 'Continuous shell surface and FDM layers'], version: ['FDM 手感样件', 'FDM form sample'] },
   'form-generations': { source: 'P4237', title: ['A FDM · B 第二版 · C 红滚轮装配版', 'A FDM · B second prototype · C red-wheel build'], version: ['三个实物的分件与轮廓对照', 'Part boundaries and profiles across three objects'], marks: [['A', 75, 19], ['B', 53, 40], ['C', 25, 67]] },
   'form-profile': { source: 'P4242', title: ['低前缘与掌心隆起', 'Low nose and raised palm profile'], version: ['FDM 样件 · 侧视', 'FDM sample · side view'], sizes: '(max-width: 465px) 91vw, (max-width: 1360px) 44vw, 590px' },
   'evo-fdm': { source: 'P4244', title: ['FDM 样件俯视', 'FDM sample from above'], version: ['FDM 手感样件', 'FDM form sample'], sizes: '(max-width: 800px) 45vw, 18vw' },
-  'evo-built': { source: 'P4240', title: ['红滚轮样机居中', 'Red-wheel build at centre'], version: ['V4 · 实体装配', 'V4 · Assembled prototype'], sizes: '(max-width: 800px) 45vw, 18vw' },
-  'stiffness-photo': { source: 'P4236', title: ['A 筋板 · B 跨接杆 · C 安装柱', 'A Ribs · B Spanning rod · C Mounting posts'], version: ['V4 · 裸壳内侧', 'V4 · Shell interior'], marks: [['A', 69, 46], ['B', 73, 22], ['C', 35, 72]] },
+  'evo-built': { source: 'P4240', title: ['红滚轮样机居中', 'Red-wheel build at centre'], version: ['红滚轮 · 实体装配', 'Red-wheel physical assembly'], sizes: '(max-width: 800px) 45vw, 18vw' },
+  'stiffness-photo': { source: 'P4236', title: ['A 筋板 · B 跨接杆 · C 安装柱', 'A Ribs · B Spanning rod · C Mounting posts'], version: ['红滚轮样机 · 裸壳内侧', 'Red-wheel build · Shell interior'], marks: [['A', 69, 46], ['B', 73, 22], ['C', 35, 72]] },
   'cad-p01': { source: 'P01', title: ['P01 · 筋板布局', 'P01 · Rib layout'], version: ['历史 STL · 内侧轴测', 'Historical STL · interior axonometric'], kind: 'cad' },
   'cad-p04': { source: 'P04', title: ['P04 · 跨接构件', 'P04 · Spanning members'], version: ['历史 STL · 内侧轴测', 'Historical STL · interior axonometric'], kind: 'cad' },
   'button-cad': { source: 'M007', title: ['按键盖片体与后部连接', 'Cover panel and rear mounting'], version: ['P04 / M007 · 历史 STL', 'P04 / M007 · Historical STL'], kind: 'cad', file: 'm007-buttons.webp', width: 746, height: 475, provenance: '_archive/4.zip::新建文件夹/按键盖1.6.stl → _archive/ERSTE002/_derived/previews/M007-buttons.png' },
@@ -39,8 +33,8 @@ export const media = {
 export const requests = {
   R02: [['实物对比', 'Photo pair'], ['改形前后轮廓', 'Before / after the form change'], ['经核实的两件 FDM 样件', 'Two confirmed FDM stages'], ['同机位俯视与侧视', 'Matched overhead and side views'], ['分辨轮廓修改', 'Identify the form change']],
   R03: [['实物照片', 'Photo'], ['右手握持', 'Right-hand grip'], ['与 IMG-F03 同一 FDM 手感样件', 'Same FDM form sample as IMG-F03'], ['同 IMG-F03 的侧向机位为主，另拍三分之四视角', 'Main side view matched to IMG-F03, plus a three-quarter view'], ['指尖落点、掌心接触', 'Show fingertip and palm contact']],
-  R04: [['分件实拍或经归版的 CAD', 'Part photo or version-matched CAD'], ['早期 MJF 上盖与按键盖', 'Early MJF upper shell and button covers'], ['V2 · 确认对应首轮结构样件', 'V2 · Confirmed initial structural print'], ['内侧斜俯见初始筋位，另附同侧孔位近景', 'Underside oblique with initial ribs and a mounting-hole close-up from the same side'], ['说明分件、初始内筋与孔位检查的位置', 'Show part boundaries, initial ribs and the areas checked for fit']],
-  R06: [['CAD / 过程记录', 'CAD / process record'], ['支撑杆与 PCB 干涉', 'Support rod / PCB interference'], ['V3 · 实际发生干涉的 MJF 轮次', 'V3 · MJF build with observed interference'], ['同侧局部剖视或真实装配帧', 'Side section or actual assembly frame'], ['显示空间冲突、拆杆前后', 'Locate interference and show the effect of rod removal']],
+  R04: [['分件实拍或经归版的 CAD', 'Part photo or version-matched CAD'], ['早期 MJF 上盖与按键盖', 'Early MJF upper shell and button covers'], ['首轮 MJF 的样件或对应 CAD，正式版次待核', 'First MJF build or matching CAD, formal revision unconfirmed'], ['内侧斜俯见初始筋位，另附同侧孔位近景', 'Underside oblique with initial ribs and a mounting-hole close-up from the same side'], ['说明分件、初始内筋与孔位检查的位置', 'Show part boundaries, initial ribs and the areas checked for fit']],
+  R06: [['CAD / 过程记录', 'CAD / process record'], ['支撑杆与 PCB 干涉', 'Support rod / PCB interference'], ['实际发生干涉的加杆 MJF 轮次，正式版次待核', 'Rod MJF build with observed interference, formal revision unconfirmed'], ['同侧局部剖视或真实装配帧', 'Side section or actual assembly frame'], ['显示空间冲突、拆杆前后', 'Locate interference and show the effect of rod removal']],
   R07: [['实物过程图', 'Physical sequence'], ['按键倾斜与局部翘起', 'Button tilt and local lift'], ['红滚轮实体版', 'Red-wheel physical build'], ['侧向施压连续帧，注明施力点', 'Side-view press frames, noting force point'], ['对应观察到的异常运动', 'Document the observed motion']],
   R08: [['实物过程图', 'Physical sequence'], ['旧版电池装入与松动', 'Previous battery insertion and looseness'], ['有记录的旧版实体', 'Documented previous physical build'], ['底部装配帧与到位近景', 'Bottom insertion frames and seated close-up'], ['定位安装障碍与固定问题', 'Locate the access and retention problems']],
   R09: [['CAD 前后对比', 'CAD comparison'], ['整体支撑与前杆对照', 'Overall support and front rods'], ['修改前 CAD / 当前 CAD', 'Pre-revision / current CAD'], ['同机位底部内视及前部斜视', 'Matched bottom interior and front oblique views'], ['显示前杆位置、连接与支撑区变化', 'Compare front rods, joints and supported regions']],
@@ -56,7 +50,7 @@ export const requests = {
   R19: [['CAD 剖面对比', 'CAD section comparison'], ['厚度与弯折分区', 'Thickness and flex regions'], ['修改前 CAD / 当前 CAD', 'Pre-revision / current CAD'], ['同位置纵切；尺寸需可追溯', 'Matched lengthwise section; traceable dimensions'], ['标出固定、预期弯折、保形与减重区', 'Locate fixed, flex, shape-retaining and cutout regions']],
   R20: [['CAD 运动对比', 'CAD motion comparison'], ['施力、微动与限位', 'Press point, switch and stops'], ['修改前 CAD / 当前 CAD', 'Pre-revision / current CAD'], ['同角度按键机构侧剖面', 'Matched side section of the mechanism'], ['标注施力点、触点、间隙和实际限位；区分预期运动与实测', 'Locate force, contact, clearances and stops; distinguish intended and measured motion']],
   R21: [['CAD 局部截图', 'Local CAD view'], ['卡口、定位面及紧固', 'Catch, locating surfaces and fastening'], ['当前 CAD', 'Current CAD'], ['到位后局部三分之四视角或剖面', 'Seated local three-quarter view or section'], ['显示固定关系及防脱意图', 'Show retention relationship and intent']],
-  R22: [['CAD 总装截图', 'CAD assembly view'], ['V5 总装几何', 'V5 assembly geometry'], ['V5 · 最新完成设计的 CAD', 'V5 · Completed current CAD'], ['三分之四总装与底部内视', 'Three-quarter assembly and bottom interior'], ['识别 V5 的结构与装配关系', 'Identify the structure and assembly relationships of V5']],
+  R22: [['CAD 总装截图', 'CAD assembly view'], ['最新 CAD 总装几何', 'Current CAD assembly geometry'], ['已完成修改的最新 CAD', 'Completed current CAD'], ['三分之四总装与底部内视', 'Three-quarter assembly and bottom interior'], ['识别最新设计的结构与装配关系', 'Identify the structure and assembly relationships of the current design']],
 };
 
 export const structuralChanges = [

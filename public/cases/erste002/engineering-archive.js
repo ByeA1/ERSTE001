@@ -8,21 +8,22 @@ const previous = document.querySelector('[data-chapter-prev]');
 const next = document.querySelector('[data-chapter-next]');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const params = new URLSearchParams(location.search);
-const documentKey = 'erste002-engineering-visual';
+const documentKey = 'erste002-engineering-history';
 const aliases = {
   'eng-prologue': 'eng-overview',
   'eng-form-study': 'media-form-fdm',
+  'milestones': 'eng-evolution',
   'eng-structure': 'eng-evolution',
   'eng-structure-parts': 'milestone-mjf',
-  'eng-structure-ribs': 'media-stiffness-photo',
+  'eng-structure-ribs': 'media-early-ribs',
   'eng-structure-first-build': 'milestone-mjf',
-  'eng-assembly': 'eng-evolution',
+  'eng-assembly': 'eng-support',
   'eng-assembly-archive-geometry': 'media-cad-p01',
   'eng-assembly-conflicts': 'milestone-support',
-  'eng-challenges': 'eng-decisions',
-  'eng-challenge-stiffness': 'eng-case-stiffness',
-  'eng-challenge-button': 'eng-case-button',
-  'eng-challenge-battery': 'eng-case-battery',
+  'eng-challenges': 'eng-built',
+  'eng-challenge-stiffness': 'media-stiffness-load',
+  'eng-challenge-button': 'eng-built-button',
+  'eng-challenge-battery': 'media-battery-old',
   'eng-refinement': 'eng-decisions',
   'eng-refinement-structure': 'eng-case-stiffness',
   'eng-refinement-button': 'eng-case-button',

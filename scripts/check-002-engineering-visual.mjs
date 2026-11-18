@@ -4,6 +4,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { chapters, cases, media } from '../content/erste002-engineering-visual.mjs';
 import { mediaSpecs } from '../content/erste002-engineering-media-spec.mjs';
+import { historicalChapters, stages, threads } from '../content/erste002-engineering-history.mjs';
 
 const { chromium } = createRequire(import.meta.url)('../.audit/model-logo/tools/node_modules/playwright');
 const origin = process.env.ERSTE_ORIGIN || 'http://127.0.0.1:5210';
@@ -15,14 +16,22 @@ const doc = await readFile('docs/ERSTE002-engineering-final-media-spec.md', 'utf
 assert.deepEqual([...doc.matchAll(/^### (IMG-[A-Z]\d{2})｜/gm)].map(match => match[1]), specs.map(spec => spec.id));
 assert.deepEqual([...doc.matchAll(/\[查看页面图位 IMG-[A-Z]\d{2}\]\([^\n]+engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
 
+const trace = await readFile('docs/ERSTE002-engineering-traceability.md', 'utf8');
+const traceRows = trace.split('\n').filter(line=>/^\| [A-E]\d /.test(line));
+assert.equal(traceRows.length,24);
+for (const [event, figureIds] of traceRows.map(line=>[line.split('|')[1].trim(), [...line.matchAll(/IMG-[A-Z]\d{2}/g)].map(match=>match[0])])) {
+  assert.ok(figureIds.length && figureIds.every(id=>specs.some(spec=>spec.id === id)),event);
+}
+
 const featuredCards = [mediaSpecs['support-diagram'], mediaSpecs['button-diagram'], mediaSpecs['battery-diagram'], mediaSpecs['light-diagram']];
 assert.ok(featuredCards.every(card=>card.production[0] === 'NX 截图' && card.composition));
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
-const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, screenshots: [], errors: [] };
+const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, sectionHeights: {}, screenshots: [], errors: [] };
 const targets = [
   ...chapters.slice(0,2).map(([id]) => id), 'eng-form-handling',
-  ...chapters.slice(2,4).map(([id]) => id), ...cases.map(item => `eng-case-${item.id}`), chapters[4][0],
+  ...chapters.slice(2).map(([id]) => id), ...historicalChapters.flatMap(chapter=>chapter.studies.map(study=>study.id)),
+  'eng-tracks', ...cases.map(item => `eng-case-${item.id}`),
 ];
 const trackedPages = [];
 
@@ -69,7 +78,7 @@ try {
     page.on('request', request => { if (/\.glb\b|three\.module|story-(app|engine)/i.test(request.url())) unexpected.push(request.url()); });
     for (const id of targets) {
       await visit(page,lang,id);
-      assert.equal(await page.locator('[data-chapter]').count(), 5);
+      assert.equal(await page.locator('[data-chapter]').count(), chapters.length);
       assert.equal(await page.locator('.engineering-case').count(), 4);
       assert.equal(await page.locator('figure[data-media-id]').count(), specs.length);
       assert.equal(await page.locator('.material-card,.author-mode,[data-production]').count(), 0);
@@ -86,13 +95,15 @@ try {
       const [horizontal,vertical] = card.ratio.split(':').map(Number);
       assert.ok(Math.abs(frameWidth / frameHeight - horizontal / vertical) < .01,card.id);
     }
-    const photoFrame = await page.locator('#media-stiffness-photo .image-open').boundingBox();
-    const cadFrame = await page.locator('[data-media-id="IMG-S02"] .figure-plate').boundingBox();
-    assert.equal(photoFrame.y,cadFrame.y);
-    assert.ok(Math.abs(photoFrame.width - cadFrame.width) < .05);
-    assert.ok(Math.abs(photoFrame.height - cadFrame.height) < .05);
-    report.checks.push(`${width} × ${height} ${lang}: four numbered CAD positions match their specified aspect ratios, and S01/S02 align.`);
+    for (const ids of [['IMG-P04','IMG-S01'], ['IMG-S02','IMG-S05']]) {
+      const frames = await Promise.all(ids.map(id=>page.locator(`[data-media-id="${id}"] :is(.image-open,.figure-plate)`).boundingBox()));
+      assert.equal(frames[0].y,frames[1].y);
+      for (const dimension of ['width','height']) assert.ok(Math.abs(frames[0][dimension] - frames[1][dimension]) < .05,ids.join('/'));
+    }
+    report.checks.push(`${width} × ${height} ${lang}: the assembled/inside photo pair and current CAD/section pair have equal frames.`);
     const copy = await page.locator('#engineering-archive').textContent();
+    assert.doesNotMatch(copy,/\bV[1-5]\b/);
+    assert.deepEqual(await page.locator('.step-rail .step-index').allTextContents(), stages.map(stage=>stage.letter));
     assert.doesNotMatch(copy,/尚未提供|未提供|待提供|未收录|缺图|待补图|建议补充|技术素材卡|现有素材评估|最终素材要求|临时占位|待制作|明确占位|_archive[\\/]|image unavailable|not yet supplied|final media spec|temporary media review|awaiting production|placeholder/i);
     await visit(page,lang,'eng-form-handling');
     const grip = await page.locator('#eng-form-handling').evaluate(section=>{
@@ -124,12 +135,16 @@ try {
         assert.ok(Math.abs(measured[index].width-spec.width)<=5,`${spec.id}: measured ${measured[index].width}, spec ${spec.width}`);
       }
       await page.locator('.study-tray').evaluateAll(trays=>trays.forEach(tray=>{ tray.open = false; }));
-      report.checks.push('All 35 production widths match the 1920px layout within 5 CSS px.');
+      report.checks.push(`All ${specs.length} production widths match the 1920px layout within 5 CSS px.`);
     }
     await visit(page,lang);
+    const sectionHeights = await page.locator('[data-chapter]').evaluateAll(nodes=>Object.fromEntries(nodes.map(node=>[node.id,Math.round(node.getBoundingClientRect().height)])));
+    const historyHeight = ['eng-evolution','eng-support','eng-built'].reduce((total,id)=>total+sectionHeights[id],0);
+    assert.ok(historyHeight > sectionHeights['eng-decisions']);
+    report.sectionHeights[lang] = sectionHeights;
     report.metrics[lang] = await page.evaluate((language) => {
       const len = (value) => [...value.replace(/\s/g, '')].length;
-      const texts = [...document.querySelectorAll('main p')].filter(p => !p.closest('aside,figure,details') && getComputedStyle(p).display !== 'none').map(p => p.textContent.trim()).filter(Boolean);
+      const texts = [...document.querySelectorAll('main p, .history-notes dd')].filter(p => !p.closest('aside,figure,details') && getComputedStyle(p).display !== 'none').map(p => p.textContent.trim()).filter(Boolean);
       const long = texts.filter(value => len(value) >= (language === 'zh' ? 75 : 135));
       return { paragraphs:texts.length, bodyCharacters:texts.reduce((total,value)=>total+len(value),0), longParagraphs:long.length, longCharacters:long.reduce((total,value)=>total+len(value),0) };
     },lang);
@@ -139,33 +154,40 @@ try {
 
   const page = await browser.newPage({ viewport: {width:1440,height:900}, reducedMotion:'reduce', serviceWorkers:'block' });
   track(page);
-  await visit(page,'zh','eng-evolution');
-  assert.equal(await page.locator('.milestone-finding:visible').count(),5);
-  const versionCards = await page.locator('[data-version]').evaluateAll(cards=>cards.map(card=>({
-    version:card.dataset.version,
-    figure:card.querySelector('figure').dataset.mediaId,
-    hasPhoto:Boolean(card.querySelector('img')),
-    hasFields:card.querySelectorAll('.version-logic dd').length === 2 && Boolean(card.querySelector('.version-validation')?.textContent),
-  })));
-  assert.deepEqual(versionCards.map(card=>card.version),['V1','V2','V3','V4','V5']);
-  assert.deepEqual(versionCards.map(card=>card.figure),['IMG-P01','IMG-P02','IMG-P03','IMG-P04','IMG-P05']);
-  assert.deepEqual(versionCards.map(card=>card.hasPhoto),[true,false,false,true,false]);
-  assert.ok(versionCards.every(card=>card.hasFields));
-  assert.match(await page.locator('[data-version="V5"] .version-validation').innerText(),/CAD 已完成 · 待打样与验证/);
-  assert.equal(await page.locator('.milestone-notes p:visible').count(),0);
-  await page.locator('#milestone-support .milestone-notes summary').click();
-  assert.match(await page.locator('#milestone-support .milestone-notes p').innerText(),/拆杆后曾完成装配/);
+  for (const { id, studies } of historicalChapters) {
+    await visit(page,'zh',id);
+    const body = page.locator(`#${id}`);
+    assert.equal(await body.locator('.history-study:visible').count(),studies.length);
+    const mediaPlaced = await body.locator('.history-study figure:visible').evaluateAll(figures=>figures.map(figure=>figure.dataset.mediaSlot));
+    assert.deepEqual(mediaPlaced,studies.flatMap(study=>study.figures));
+    assert.equal(await body.locator('.history-study img').count(),id === 'eng-built' ? 2 : 0);
+  }
+  assert.match(await page.locator('#eng-support-checks').innerText(),/拆杆后完成装配/);
+  assert.match(await page.locator('#eng-built-button').innerText(),/后连接板减重过多/);
+  assert.match(await page.locator('#eng-current .chapter-lead').innerText(),/实体打样与性能验证尚待完成/);
+  for (const thread of threads) {
+    for (const [,target] of thread.links) {
+      await visit(page,'zh','eng-tracks');
+      await page.locator(`#eng-tracks a[href="#${target}"]`).click();
+      await page.waitForFunction(id=>{
+        const anchor = document.getElementById(id);
+        const target = anchor.matches('figcaption') ? anchor.closest('figure') : anchor;
+        const distance = target.getBoundingClientRect().top - document.querySelector('#scroller').getBoundingClientRect().top;
+        return location.hash === '#'+id && Math.abs(distance - 16) < 2;
+      },target);
+    }
+  }
   await visit(page,'en','eng-case-button');
   assert.ok(await page.locator('#eng-case-button .case-lead').isVisible());
   const rationale = page.locator('#eng-case-button .evidence-notes');
   assert.equal(await rationale.isVisible(),false);
   await page.locator('#eng-case-button .case-extras summary').first().click();
   assert.ok(await rationale.isVisible());
-  report.checks.push('V1–V5 have five dedicated media slots and independent goals, changes, findings and validation status. V4 is the last physical build, and V5 is CAD only.');
-  await visit(page,'zh','IMG-S05');
-  const placement = page.locator('#media-base-section');
+  report.checks.push(`${traceRows.length} traceability rows and 12 cross-stage links resolved. Seven visible history studies separated named observations, geometry and CAD evidence.`);
+  await visit(page,'zh','IMG-S03');
+  const placement = page.locator('#media-stiffness-compare');
   assert.ok(await placement.evaluate(figure=>figure.closest('details').open));
-  assert.equal(await placement.locator('.figure-plate').innerText(),'IMG-S05');
+  assert.equal(await placement.locator('.figure-plate').innerText(),'IMG-S03');
   await capture(page,'1440-zh-numbered-plates');
   const placements = await page.locator('figure[data-media-id]').evaluateAll(figures => figures.map(figure => ({
     id:figure.dataset.mediaId,
@@ -181,9 +203,9 @@ try {
     await visit(page,'zh',spec.id);
     assert.ok(await page.locator(`#${spec.id}`).evaluate(label=>label.getClientRects().length > 0));
   }
-  await page.goto(`${url}?lang=zh#IMG-S05`);
+  await page.goto(`${url}?lang=zh#IMG-S03`);
   await placement.locator('.figure-plate a').click();
-  assert.equal(new URL(page.url()).hash,'#IMG-S05');
+  assert.equal(new URL(page.url()).hash,'#IMG-S03');
   report.checks.push(`${placements.length} figure labels and Markdown links match; ${numberOfPlates} numbered frames contain only their IDs, and all direct links reveal their figures.`);
   await visit(page,'zh','eng-overview');
   await page.locator('#media-cover button').click();
@@ -220,7 +242,7 @@ try {
   const mobile = await browser.newPage({ viewport:{width:390,height:844}, isMobile:true, hasTouch:true, reducedMotion:'reduce', serviceWorkers:'block' });
   track(mobile);
   await visit(mobile,'zh','eng-evolution');
-  assert.equal(await mobile.locator('[data-version]').count(),5);
+  assert.equal(await mobile.locator('.history-study').count(),7);
   assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
   for (const card of featuredCards) {
     await visit(mobile,'zh',card.id);
@@ -228,7 +250,7 @@ try {
   }
   await visit(mobile,'en','eng-current');
   assert.ok(await mobile.locator('.status-wrap').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  report.checks.push('390px layout smoke test: five version cards, four numbered decision frames and status table.');
+  report.checks.push('390px layout smoke test: seven history studies, four numbered decision frames and status table.');
   assert.deepEqual(report.errors,[]);
   report.status = 'passed';
 } catch (error) {
