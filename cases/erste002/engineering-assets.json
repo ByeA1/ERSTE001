@@ -1,0 +1,331 @@
+{
+  "photos": [
+    {
+      "id": "P4235",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4235.jpeg",
+      "sha256": "168ee73abadce0cf58d4b4ba8c6485820a3e5700b8d5f92d6b758b78a35fa3da",
+      "title": [
+        "裸壳外侧与前部开口",
+        "Current shell / exterior"
+      ],
+      "caption": [
+        "单个黑色裸壳斜俯视：后部曲面连续，前部有矩形及异形开口，侧面有细长开口。画面没有按键盖、PCB、电池和滚轮。",
+        "Current MJF shell, without button cover or electronics. Openings and outer surface are visible."
+      ],
+      "versions": [
+        "V_CURRENT"
+      ],
+      "variants": [
+        {
+          "file": "p4235-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 93828
+        },
+        {
+          "file": "p4235-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 505568
+        }
+      ]
+    },
+    {
+      "id": "P4236",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4236.jpeg",
+      "sha256": "ed7fbb26338ea219b0e81350e0352fef32f1a2c6e90d583510bf46a4f42b52d7",
+      "title": [
+        "内部筋板、安装柱与跨接杆",
+        "Current shell / internal ribs and rods"
+      ],
+      "caption": [
+        "裸壳内侧朝上：可见多条弧形筋板、横向连接、带孔安装柱，以及跨越后部开放区的细长杆件。未装 PCB 和电池。",
+        "Current MJF shell, underside up. Ribs, mounting posts and spanning rods are visible; PCB and battery are absent."
+      ],
+      "versions": [
+        "V_CURRENT"
+      ],
+      "variants": [
+        {
+          "file": "p4236-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 100726
+        },
+        {
+          "file": "p4236-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 517616
+        }
+      ]
+    },
+    {
+      "id": "P4237",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4237.jpeg",
+      "sha256": "706d1cd3f6017feea9bd4134690cf3e9c33211813dd7f272ec159143f330a586",
+      "title": [
+        "三件样机斜俯视对照",
+        "Three prototypes / oblique comparison"
+      ],
+      "caption": [
+        "左下为红滚轮分件样机 C，中间为空滚轮槽分件样机 B，右上为无按键分缝外形样件 A；三件在同一画面中并列。",
+        "Lower left: current, red wheel. Centre: second version, empty wheel slot. Upper right: unsplit FDM form study."
+      ],
+      "versions": [
+        "V_FDM",
+        "V_SECOND",
+        "V_CURRENT"
+      ],
+      "variants": [
+        {
+          "file": "p4237-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 69326
+        },
+        {
+          "file": "p4237-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 418396
+        }
+      ]
+    },
+    {
+      "id": "P4238",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4238.jpeg",
+      "sha256": "c0921d9bbd04fba21f7926c0c62ae704b152129fff5e68a626b98e1869b19244",
+      "title": [
+        "三件样机侧向对照",
+        "Three prototypes / side comparison"
+      ],
+      "caption": [
+        "前景为红滚轮样机 C，可见两枚侧键及侧面曲线；中景为空滚轮槽样机 B，也可见两枚侧键；后景是无分缝外形样件 A。",
+        "Foreground: current, red wheel. Middle: second version. Background: unsplit FDM form study."
+      ],
+      "versions": [
+        "V_FDM",
+        "V_SECOND",
+        "V_CURRENT"
+      ],
+      "variants": [
+        {
+          "file": "p4238-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 58392
+        },
+        {
+          "file": "p4238-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 295492
+        }
+      ]
+    },
+    {
+      "id": "P4240",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4240.jpeg",
+      "sha256": "50d27842900209d83022ce9221505b4a72146493fd95e93304d197c93cba222f",
+      "title": [
+        "三件样机正面对照与确认锚点",
+        "Three prototypes / front comparison"
+      ],
+      "caption": [
+        "画面从左到右依次是：无按键分缝外形样件 A、装有红滚轮的分件样机 C、滚轮槽空置的分件样机 B。B/C 的前端开口和底缘形态可对照。",
+        "Left: FDM form study. Centre: current, red wheel. Right: second version, empty wheel slot."
+      ],
+      "versions": [
+        "V_FDM",
+        "V_SECOND",
+        "V_CURRENT"
+      ],
+      "variants": [
+        {
+          "file": "p4240-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 70520
+        },
+        {
+          "file": "p4240-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 372780
+        }
+      ]
+    },
+    {
+      "id": "P4241",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4241.jpeg",
+      "sha256": "e09b345579194cedda31639a24b5e988d13927d29056597645cf859149a933bb",
+      "title": [
+        "外形手感样件斜俯视",
+        "FDM form study / oblique"
+      ],
+      "caption": [
+        "单个黑色外形样件 A 斜放，顶部未见按键分缝、滚轮孔和侧键；受光处可见细密平行层纹及连续曲面。",
+        "Unsplit FDM form study with a continuous surface. Its position before or after the shape revision is unconfirmed."
+      ],
+      "versions": [
+        "V_FDM"
+      ],
+      "variants": [
+        {
+          "file": "p4241-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 77692
+        },
+        {
+          "file": "p4241-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 453504
+        }
+      ]
+    },
+    {
+      "id": "P4242",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4242.jpeg",
+      "sha256": "4a3c38f5c6ddee429b1b5dcae614951a839f10d36afbbd3a01039ebae93b483e",
+      "title": [
+        "外形手感样件侧轮廓",
+        "FDM form study / side profile"
+      ],
+      "caption": [
+        "外形样件 A 的侧向照片：前部较低、后部隆起，曲面连续，侧壁向桌面延伸；未见装配电子件。",
+        "FDM form study side profile. No shared scale or camera pose is available for dimensional comparison."
+      ],
+      "versions": [
+        "V_FDM"
+      ],
+      "variants": [
+        {
+          "file": "p4242-640.webp",
+          "width": 640,
+          "height": 480,
+          "bytes": 63500
+        },
+        {
+          "file": "p4242-1536.webp",
+          "width": 1536,
+          "height": 1152,
+          "bytes": 335632
+        }
+      ]
+    },
+    {
+      "id": "P4244",
+      "source": "00_原始附件/批次B_IMG4235-4244/IMG_4244.jpeg",
+      "sha256": "03293067a94eda019e8f8b1996159206103d2d2790aa206fe55c398b8301f9e5",
+      "title": [
+        "外形手感样件俯视轮廓",
+        "FDM form study / top profile"
+      ],
+      "caption": [
+        "竖幅俯视照片，样件 A 沿画面长轴放置，可见整体外轮廓、连续顶部曲面与细密层纹；未见功能件分缝。",
+        "FDM form study top profile and visible layer texture. The photograph does not establish an internal solid structure."
+      ],
+      "versions": [
+        "V_FDM"
+      ],
+      "variants": [
+        {
+          "file": "p4244-640.webp",
+          "width": 480,
+          "height": 640,
+          "bytes": 56320
+        },
+        {
+          "file": "p4244-1536.webp",
+          "width": 1152,
+          "height": 1536,
+          "bytes": 310018
+        }
+      ]
+    }
+  ],
+  "cad": [
+    {
+      "id": "P01",
+      "file": "p01-inside.webp",
+      "source": "_archive/ERSTE002/_derived/previews/P01-inside.png",
+      "sourceSha256": "f6773eabe2eaf640113304ca49b94a768e2787b7d0e615d3d4f8cd8145d918af",
+      "models": [
+        {
+          "id": "M001",
+          "name": "新建文件夹/上盖1.3.试打印.1.stl",
+          "locator": "_archive/1.zip::新建文件夹/上盖1.3.试打印.1.stl",
+          "sha256": "682a701464c9ff59296762c9443316489c7e955515fefcdc7bb5e108848128a6"
+        }
+      ]
+    },
+    {
+      "id": "P02",
+      "file": "p02-inside.webp",
+      "source": "_archive/ERSTE002/_derived/previews/P02-inside.png",
+      "sourceSha256": "d406e345c61a7ae156b96b56761a814958b33ceddaf465dc5558fa21509d9dce",
+      "models": [
+        {
+          "id": "M002",
+          "name": "试样2/上盖1.4.试打印.2.stl",
+          "locator": "_archive/2.zip::试样2/上盖1.4.试打印.2.stl",
+          "sha256": "985d5724a24f0a2ca5d761c3494ababbe8c4f4e8f32de346366f90932cbc3f57"
+        },
+        {
+          "id": "M003",
+          "name": "试样2/按键盖1.4.试打印.stl",
+          "locator": "_archive/2.zip::试样2/按键盖1.4.试打印.stl",
+          "sha256": "0f90a216e347f0646543abec1ce1ddfaa9eae93f6692cf04ce491a57c15afe34"
+        }
+      ]
+    },
+    {
+      "id": "P03",
+      "file": "p03-inside.webp",
+      "source": "_archive/ERSTE002/_derived/previews/P03-inside.png",
+      "sourceSha256": "6fffd0ecf6940213320eee713f1a20b66ea80504a53c4b7a3a13a97fb25fff16",
+      "models": [
+        {
+          "id": "M004",
+          "name": "新建文件夹/上盖1.5_1.stl",
+          "locator": "_archive/3.zip::新建文件夹/上盖1.5_1.stl",
+          "sha256": "62fec0b1c8e337b842098a2a0209b2ff4f43508e42feffa16bbe2ca947f5d719"
+        },
+        {
+          "id": "M005",
+          "name": "新建文件夹/按键盖1.5.stl",
+          "locator": "_archive/3.zip::新建文件夹/按键盖1.5.stl",
+          "sha256": "957a92aa9f34cf5b0be73805fa9f2db1b87f7642194a5d00360177fb598c751d"
+        }
+      ]
+    },
+    {
+      "id": "P04",
+      "file": "p04-inside.webp",
+      "source": "_archive/ERSTE002/_derived/previews/P04-inside.png",
+      "sourceSha256": "32a0b88949b391fd2a6e7d89e107a23c100a48a3180efd282474ee258a01f103",
+      "models": [
+        {
+          "id": "M006",
+          "name": "新建文件夹/上盖1.6.stl",
+          "locator": "_archive/4.zip::新建文件夹/上盖1.6.stl",
+          "sha256": "e021d685620d46c48b4d885b019b51d9f3f5e875002857dbfc88dd603d155898"
+        },
+        {
+          "id": "M007",
+          "name": "新建文件夹/按键盖1.6.stl",
+          "locator": "_archive/4.zip::新建文件夹/按键盖1.6.stl",
+          "sha256": "e1db3451d1aa7d3a2230ec9fd1ad8b0ae34eab1f3343c881670d9b47f618cfa2"
+        }
+      ]
+    }
+  ],
+  "limits": [
+    "Version identities are user-confirmed; historical print-round mapping remains unconfirmed.",
+    "Static photographs do not prove dynamic failure or a quantified mechanical property.",
+    "CAD package labels are provisional, not REV numbers. STL units remain unknown."
+  ]
+}

@@ -1,0 +1,50 @@
+/* Tinted frosted-glass commands shared by the host and standalone case pages. */
+.project-case .site-navigation[data-theme=light] {
+  --project-command-fill: #090909c2;
+  --project-command-hover: #080808d1;
+  --project-command-active: #050505d9;
+  --project-command-border: #17171399;
+  --project-command-emphasis: #171713;
+}
+.project-case .site-navigation[data-theme=dark],
+#story, .reading-progress {
+  --project-command-fill: #cf302eb3;
+  --project-command-hover: #e53b34c2;
+  --project-command-active: #b02523cc;
+  --project-command-border: #ff837bc7;
+  --project-command-emphasis: #ff5d57;
+}
+html .project-case .site-navigation[data-theme] button.project-case-close,
+html #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled),
+html .reading-progress [data-chapter-next]:not(:disabled) {
+  background-color: var(--project-command-fill);
+  border-color: var(--project-command-border);
+  color: #fff;
+  -webkit-backdrop-filter: blur(12px) saturate(135%);
+  backdrop-filter: blur(12px) saturate(135%);
+  box-shadow: inset 0 1px 0 #ffffff40, inset 0 -1px 0 #00000016;
+}
+html .project-case .site-navigation[data-theme] button.project-case-close > .action-icon {
+  color: inherit;
+}
+@media (hover:hover) {
+  html .project-case .site-navigation[data-theme] button.project-case-close:not(:disabled):hover,
+  html #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover,
+  html .reading-progress [data-chapter-next]:not(:disabled):hover {
+    background-color: var(--project-command-hover);
+    color: #fff;
+  }
+}
+html .project-case .site-navigation[data-theme] button.project-case-close:not(:disabled):active,
+html #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):active,
+html .reading-progress [data-chapter-next]:not(:disabled):active {
+  background-color: var(--project-command-active);
+  color: #fff;
+}
+html .reading-progress [data-chapter-prev]:not(:disabled) {
+  color: var(--project-command-emphasis);
+}
+html .specimen-key button[aria-pressed=true] {
+  border-color: #ed4540;
+  color: #ff6b65;
+}

@@ -1,3 +1,5 @@
+@import '../shared/project-command-colors.css';
+
 /* Command-study controls. Only local button surfaces blur the scene. */
 #story .chapter-controls :is(#next-chapter, #restart-story) {
   background-color: #231619b8;
