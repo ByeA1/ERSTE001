@@ -5,6 +5,7 @@ const photoStyle = ['柔和侧光或顶侧光，哑灰背景；保留真实表�
 const matchStyle = ['对照统一机位、正交投影或相同焦距、主体比例和裁切；使用一致中性底色。', 'Match camera, orthographic projection or focal length, subject scale and crop. Use the same neutral background.'];
 const nx = ['NX 截图', 'NX capture'];
 const photo = ['实物拍摄', 'Physical photography'];
+const historic = ['经归版的实拍或 NX 截图', 'Version-matched photo or NX capture'];
 
 // Slot, figure number, chapter, priority, production, ratio, display width, request ID, annotation.
 const entries = [
@@ -15,10 +16,10 @@ const entries = [
   ['grip', 'F04', '01', 'P1', photo, '16:10', 590, 'R03', ['以匹配 F03 的侧向机位为主。标指尖落点和掌心接触；补拍须注明重现。', 'Use the side view matched to F03 as the main frame. Mark fingertips and palm contact; label a recreated pose if applicable.']],
   ['matched-form', 'F05', '01', 'P2', photo, '4:3', 580, 'R02', ['标明哪件是改形前 / 后；保留相同方向与尺寸参照。', 'Identify before and after, with matched orientation and a scale reference.']],
   ['evo-fdm', 'P01', '02', 'P1', photo, '16:10', 260, 'R26', ['圈出未分件前缘；标注样件身份。', 'Mark the unsplit leading edge and sample identity.']],
-  ['first-mjf', 'P02', '02', 'P1', photo, '16:10', 260, 'R04', ['标出上盖、按键盖、内筋和检查过的孔位。', 'Label the upper shell, covers, ribs and inspected mounting hole.']],
-  ['evo-support', 'P03', '02', 'P1', photo, '16:10', 260, 'R27', ['标出新增跨接杆、上盖连接和安装空间。', 'Mark the added span, shell joint and assembly space.']],
+  ['first-mjf', 'P02', '02', 'P1', historic, '16:10', 260, 'R04', ['标出上盖、按键盖、初始内筋与安装孔。仅在有对应装配记录时标示实际孔位偏差。', 'Label the upper shell, covers, initial ribs and holes. Mark observed hole offsets only with matching assembly evidence.']],
+  ['evo-support', 'P03', '02', 'P1', historic, '16:10', 260, 'R27', ['标新增跨接杆、上盖连接和 PCB 安装位置；实际干涉记录放 P06。', 'Mark the added span, shell joint and PCB location. Put interference evidence in P06.']],
   ['evo-built', 'P04', '02', 'P1', photo, '16:10', 260, 'R28', ['标出红滚轮与分件；以完成装配状态拍摄。', 'Identify the red wheel and part divisions in the assembled state.']],
-  ['evo-cad', 'P05', '02', 'P0', nx, '16:10', 260, 'R22', ['标出已改的四个区域，避免与实物节点混淆。', 'Mark the four revised areas; distinguish this from the physical milestone.']],
+  ['evo-cad', 'P05', '02', 'P0', nx, '16:10', 260, 'R22', ['标 V5 / CAD。用四个短标注定位支撑、按键、电池与遮光；保留未标注原图。', 'Label V5 / CAD. Use four short marks for support, button, battery and light blocking, and retain the unmarked original.']],
   ['interference', 'P06', '02', 'P1', ['历史记录 / NX 截图', 'Historical record / NX capture'], '16:9', 710, 'R06', ['用同色标示 PCB，红圈标干涉；若无当时记录则使用已核实的历史 CAD。', 'Use a consistent PCB colour and red interference circle. If no original record exists, use confirmed historical CAD.']],
   ['stiffness-photo', 'S01', '03.01', 'P1', photo, '4:3', 725, 'R29', ['A 筋板、B 跨接杆、C 安装柱；标记仅指静态可见区域。', 'A ribs, B spanning rod, C mounting posts. Label visible static features only.']],
   ['support-diagram', 'S02', '03.01', 'P0', nx, '4:3', 725, 'R30', ['在原截图的实际位置标 01 前部支撑杆、02 片体折边筋、03 开口折边、04 主杆接点。结构遮挡时补一个局部同向截图。', 'Mark 01 front rod, 02 panel flange, 03 open-edge flange and 04 main joint on the actual geometry. Add a detail from the same direction if occluded.']],
@@ -50,9 +51,9 @@ const extra = {
   R23: [['实物摄影', 'Physical photography'], ['初始未分件 FDM 和连续表面', 'Unsplit FDM shell and continuous surface'], ['可确认的 FDM 手感样件', 'Confirmed FDM form sample'], ['前左斜俯，光线擦过层纹', 'Front-left oblique overhead, grazing light on layers'], ['解释为何先用未分件外形试握', 'Show why handling preceded functional splits']],
   R24: [['实物组照', 'Physical comparison'], ['FDM、第二版、红滚轮样机并列', 'FDM, second prototype and red-wheel build together'], ['三件已确认身份的实物', 'Three objects with confirmed identities'], ['同朝向、同距离，三分之四俯看', 'Same orientation and distance, three-quarter overhead'], ['同时说明轮廓、分件和实体装配演进', 'Compare form, part division and assembly in one frame']],
   R25: [['实物摄影', 'Physical photography'], ['未分件 FDM 的侧向轮廓', 'Side profile of the unsplit FDM shell'], ['已确认的 FDM 样件', 'Confirmed FDM form sample'], ['侧面平视，光线扫过顶部', 'Level side view with grazing top light'], ['表现非对称造型演进中的前后轮廓', 'Read the profile in the evolution toward an asymmetric form']],
-  R26: [['实物摄影', 'Physical photography'], ['独立 FDM 样件俯视', 'Overhead FDM sample'], ['已确认的 FDM 样件', 'Confirmed FDM form sample'], ['正俯视，纵轴沿画面长边', 'True overhead, align long axis with frame'], ['快速辨认演进起点', 'Identify the starting point at a glance']],
-  R27: [['实物摄影', 'Physical photography'], ['带支撑杆的裸壳、杆件与安装区', 'Bare shell with rods and mount area'], ['经确认的历史加杆 MJF 轮次', 'Confirmed historical MJF build with rods'], ['底部斜俯，柔光照入内部', 'Oblique bottom view with soft interior fill'], ['建立杆件加入及装配空间关系', 'Show added supports in the available assembly space']],
-  R28: [['实物摄影', 'Physical photography'], ['红滚轮实体总装，包括侧键与按键盖', 'Red-wheel assembly with side buttons and covers'], ['最近红滚轮实体装配版', 'Latest red-wheel physical build'], ['前方略偏侧，夹留暗色背景', 'Slightly off-centre front view on dark matte background'], ['确立实体里程碑与新版 CAD 的界线', 'Distinguish the physical milestone from the current CAD']],
+  R26: [['实物摄影', 'Physical photography'], ['独立 FDM 样件俯视', 'Overhead FDM sample'], ['V1 · 初始 FDM 手感样件', 'V1 · Initial FDM grip sample'], ['正俯视，纵轴沿画面长边', 'True overhead, align long axis with frame'], ['说明实体握持和外形迭代的起点', 'Show where physical handling and form iteration began']],
+  R27: [['实物或 CAD 内部视图', 'Physical or CAD interior view'], ['加杆后的裸壳内侧、跨接杆与 PCB 安装区', 'Shell interior with rods and PCB mounting area'], ['V3 · 确认对应加杆的后续 MJF 轮次', 'V3 · Confirmed later MJF build with support rods'], ['从底部正交斜视，杆端、安装面与 PCB 区域同时入镜', 'Orthographic underside oblique showing rod ends, mounts and PCB area'], ['说明引入支撑杆后装配空间如何变化', 'Show how adding rods changed the available assembly space']],
+  R28: [['实物摄影', 'Physical photography'], ['红滚轮实体总装，包括侧键与按键盖', 'Red-wheel assembly with side buttons and covers'], ['V4 · 红滚轮实体装配版', 'V4 · Red-wheel physical assembly'], ['前方略偏侧，暗色哑光背景', 'Slightly off-centre front view on dark matte background'], ['记录 V4 实体的完整装配状态', 'Document V4 as a completed physical assembly']],
   R29: [['工程标注实拍', 'Annotated physical photo'], ['红滚轮版裸上盖内侧', 'Interior of the red-wheel shell'], ['最近实体装配版裸壳', 'Bare shell from latest physical build'], ['底部内视，与 S02 统一头尾朝向；斜俯光照亮内杆和筋板', 'Interior view oriented like S02; light the rods and ribs'], ['定位前版筋、杆和安装柱，与当前 CAD 支撑布局并读', 'Locate earlier ribs, rods and posts alongside the current CAD support layout']],
   R30: [['CAD 总览截图', 'CAD overview capture'], ['当前上盖内侧与完整开口边缘', 'Current shell interior and complete open edge'], ['当前完成设计的 CAD', 'Completed current CAD'], ['底部内侧正交斜视，前杆与主杆接点同时入镜；朝向同 S01', 'Orthographic underside oblique showing front rod and main joint, oriented like S01'], ['从同一张总览定位四处支撑修改', 'Locate all four support revisions in one view']],
   R31: [['历史几何对比', 'Historical geometry comparison'], ['P01 上盖、内筋和安装区', 'P01 shell, ribs and mounting area'], ['P01 / M001，正式 REV 待核', 'P01 / M001, formal REV unconfirmed'], ['统一正交内侧斜视，水平一致', 'Matched orthographic interior oblique, level horizon'], ['作为历史形态对照的一侧', 'Provide one side of the historical geometry comparison']],
@@ -114,8 +115,7 @@ const temporaryReview = {
   'form-generations': ['三件身份可辨，但朝向不同。统一朝向和机位后，外形与分件才可直接比较。', 'All three identities are visible. Match their orientation and camera to compare shape and part boundaries.'],
   'form-profile': ['能看见掌心隆起，背景较杂。正式图统一水平基准与焦距，留出完整底缘。', 'The palm rise reads clearly. Use a level datum and fixed focal length, with the entire lower edge in frame.'],
   'evo-fdm': ['现有俯视可辨样件，竖图在横向节点会裁掉端部。正式图保留完整轮廓。', 'The overhead identifies the sample, but the portrait crops the ends in a landscape tile. Keep the entire outline.'],
-  'evo-support': ['较晚裸壳可说明分件。加杆里程碑需要归属明确的历史样件和可见杆件。', 'The later shell illustrates part division. Use the confirmed rod-stage sample and show its supports.'],
-  'evo-built': ['红滚轮实体可辨，三件同框占用主体空间。单独拍完整总装，表现侧键及分缝。', 'The red-wheel build is identifiable in the group. Isolate the assembled build to show its seams and side buttons.'],
+  'evo-built': ['用组照中央的 V4 做暂用裁切，放大时可查看整张归档照片。正式拍摄用 V4 单独总装照，保留侧键及分缝。', 'The temporary crop shows V4 at the centre of the group, with the full archive photo available in the viewer. Photograph V4 on its own for the final image, preserving the side buttons and seams.'],
   'stiffness-photo': ['可定位筋、杆和安装柱。以低反光布光补拍内侧，保留完整底缘。', 'Ribs, rods and posts can be located. Use low-glare lighting and retain the entire lower edge.'],
   'cad-p01': ['能看出该收件包的内筋布局。正式对比需先确认文件归属，另按统一机位出图。', 'The ribs are visible. Confirm file identity, then capture from the matched comparison camera.'],
   'cad-p04': ['可见历史跨接杆。正式图需与 S07 使用相同正交机位、缩放及显示范围。', 'The historical spans are visible. Match S07 in orthographic camera, scale and crop.'],

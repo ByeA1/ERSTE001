@@ -168,15 +168,21 @@ html[data-project-hosted] .archive-local-header { display: none; }
 .milestone-heading h3 { font-size: clamp(14px,1.35vw,20px); margin: 5px 0 11px; line-height: 1.22; }
 .milestone-grid .image-open, .milestone-grid .figure-plate { aspect-ratio: 16 / 10; }
 .milestone-grid #media-evo-fdm img { object-fit: contain; background: #202123; }
-.milestone-grid #media-evo-built img { object-position: 50% 56%; }
-.milestone-grid .archive-media figcaption > strong { display: none; }
-.milestone-finding { display: grid; gap: 5px; align-content: start; padding: 12px 0 9px; }
-.milestone-finding > span, .milestone-notes dt { color: var(--dim); font: 10px/1.3 var(--mono); }
+#media-evo-built img[src$="/p4240-1536.webp"] { width: 256%; height: auto; inset: -82.7% auto auto -74.7%; }
+.milestone-body { padding: 12px 0 10px; }
+.milestone-finding { display: grid; gap: 5px; align-content: start; }
+.milestone-finding > span, .version-logic dt { color: var(--dim); font: 10px/1.4 var(--mono); }
 .milestone-finding strong { color: var(--ink); font-size: 14px; line-height: 1.36; }
-.milestone-notes { border-top: 1px solid var(--line); padding-top: 6px; color: var(--muted); }
-.milestone-notes summary { cursor: pointer; font-size: 12px; line-height: 1.45; padding-block: 4px; }
-.milestone-notes dd { color: var(--muted); font-size: 12px; line-height: 1.45; margin-top: 2px; }
-.milestone-notes dl { display: grid; gap: 8px; margin-top: 5px; }
+.version-logic { display: grid; gap: 4px; margin-top: 10px; color: var(--muted); font-size: 12px; line-height: 1.45; }
+.version-logic div { display: grid; grid-template-columns: 5ch minmax(0,1fr); align-items: baseline; gap: 5px; }
+.milestone-status { display: grid; gap: 5px; align-content: start; padding-top: 8px; border-top: 1px solid var(--line); }
+.version-validation { color: var(--ink); font: 11px/1.4 var(--mono); }
+[data-version=V5] .version-validation { color: #ff8c84; }
+.version-link, .milestone-notes { color: var(--muted); font-size: 12px; line-height: 1.45; }
+.version-link { width: fit-content; }
+.version-link span:last-child { color: var(--red); }
+.milestone-notes summary { cursor: pointer; }
+.milestone-notes p { padding-top: 5px; }
 
 .case-jumps { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); border-block: 1px solid var(--line); margin-bottom: 5px; }
 .case-jumps a { display: flex; align-items: center; gap: 7px; padding: 9px 12px; border-inline-start: 1px solid var(--line); font-size: 13px; }

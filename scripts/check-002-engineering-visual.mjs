@@ -141,16 +141,27 @@ try {
   track(page);
   await visit(page,'zh','eng-evolution');
   assert.equal(await page.locator('.milestone-finding:visible').count(),5);
-  assert.equal(await page.locator('.milestone-notes dl:visible').count(),0);
-  await page.locator('#milestone-mjf .milestone-notes summary').click();
-  assert.ok(await page.locator('#milestone-mjf .milestone-notes dd').first().isVisible());
+  const versionCards = await page.locator('[data-version]').evaluateAll(cards=>cards.map(card=>({
+    version:card.dataset.version,
+    figure:card.querySelector('figure').dataset.mediaId,
+    hasPhoto:Boolean(card.querySelector('img')),
+    hasFields:card.querySelectorAll('.version-logic dd').length === 2 && Boolean(card.querySelector('.version-validation')?.textContent),
+  })));
+  assert.deepEqual(versionCards.map(card=>card.version),['V1','V2','V3','V4','V5']);
+  assert.deepEqual(versionCards.map(card=>card.figure),['IMG-P01','IMG-P02','IMG-P03','IMG-P04','IMG-P05']);
+  assert.deepEqual(versionCards.map(card=>card.hasPhoto),[true,false,false,true,false]);
+  assert.ok(versionCards.every(card=>card.hasFields));
+  assert.match(await page.locator('[data-version="V5"] .version-validation').innerText(),/CAD 已完成 · 待打样与验证/);
+  assert.equal(await page.locator('.milestone-notes p:visible').count(),0);
+  await page.locator('#milestone-support .milestone-notes summary').click();
+  assert.match(await page.locator('#milestone-support .milestone-notes p').innerText(),/拆杆后曾完成装配/);
   await visit(page,'en','eng-case-button');
   assert.ok(await page.locator('#eng-case-button .case-lead').isVisible());
   const rationale = page.locator('#eng-case-button .evidence-notes');
   assert.equal(await rationale.isVisible(),false);
   await page.locator('#eng-case-button .case-extras summary').first().click();
   assert.ok(await rationale.isVisible());
-  report.checks.push('Five key findings and four design decisions lead their sections; build notes and observed rationale are available on expansion.');
+  report.checks.push('V1–V5 have five dedicated media slots and independent goals, changes, findings and validation status. V4 is the last physical build, and V5 is CAD only.');
   await visit(page,'zh','IMG-S05');
   const placement = page.locator('#media-base-section');
   assert.ok(await placement.evaluate(figure=>figure.closest('details').open));
@@ -208,13 +219,16 @@ try {
 
   const mobile = await browser.newPage({ viewport:{width:390,height:844}, isMobile:true, hasTouch:true, reducedMotion:'reduce', serviceWorkers:'block' });
   track(mobile);
+  await visit(mobile,'zh','eng-evolution');
+  assert.equal(await mobile.locator('[data-version]').count(),5);
+  assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
   for (const card of featuredCards) {
     await visit(mobile,'zh',card.id);
     assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
   }
   await visit(mobile,'en','eng-current');
   assert.ok(await mobile.locator('.status-wrap').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  report.checks.push('390px layout smoke test: four numbered frames and status table.');
+  report.checks.push('390px layout smoke test: five version cards, four numbered decision frames and status table.');
   assert.deepEqual(report.errors,[]);
   report.status = 'passed';
 } catch (error) {
