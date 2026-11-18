@@ -3,11 +3,11 @@
 - [PC 访客预览](http://127.0.0.1:5210/cases/erste002/engineering.html)
 - [握持对照](http://127.0.0.1:5210/cases/erste002/engineering.html?lang=zh#eng-form-handling)
 - [35 张逐图制作卡与摄影、NX 最简执行清单](ERSTE002-engineering-final-media-spec.md)
-- [桌面版式、图号与访客文案复核](erste002-engineering-visual-evidence/grip-layout-report.json)
+- [桌面版式、图号与访客文案复核](erste002-engineering-visual-evidence/final-media-layout-report.json)
 
-工程页统一使用正式编排。版面上保留图号、图题和工程图注，细节图按工程主题折叠。35 个图位中，11 处使用临时照片或几何预览，4 处使用临时功能图解，20 处以图号保留对应画幅。素材状态与制作要求集中在逐图规格文件。
+工程页统一使用正式编排。版面上保留图号、图题和工程图注，细节图按工程主题折叠。35 个图位中，11 处使用临时档案照片或几何预览，24 处以图号保留对应画幅。正式版素材采用设计者提供的实拍、对应版本的 CAD 截图或经设计者确认的标注稿。制作要求集中在逐图规格文件。
 
-清单中的每个 `IMG-*` 链接直达正式页面中的同编号图位，并展开对应专题。15 处临时素材均有逐图评估，35 处展示宽度按 1920 桌面版面更新。[底部折边剖面图位示例](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S05)
+清单中的每个 `IMG-*` 链接直达正式页面中的同编号图位，并展开对应专题。11 处临时素材均有逐图评估，35 处展示宽度按 1920 桌面版面更新。[底部折边剖面图位示例](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S05)
 
 握持段先呈现试握结论，再并排展示 `IMG-F03` 侧轮廓与 `IMG-F04` 握持。两图同为 16∶10，1920 × 1080 与 1440 × 900 下每张约 589 × 368 CSS px。图下各保留一行短图题，样件信息标在实物图上。改形前后的补充对照 `IMG-F05` 可独立展开。[1920 中文](erste002-engineering-visual-evidence/grip-1920-zh.jpg) · [1440 English](erste002-engineering-visual-evidence/grip-1440-en.jpg)
 
@@ -23,7 +23,7 @@
 | 03 Engineering Decisions | 结构、按键、电池和遮光优先展示各自的设计结论及主图，实物观察和取舍按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-decisions.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-decisions.jpg) |
 | 04 Current Design | 一张四行表并列 CAD 状态和实体验证边界 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-current.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-current.jpg) |
 
-重点画面：[结构刚度](erste002-engineering-visual-evidence/1920-zh-case-stiffness.jpg)、[按键机构](erste002-engineering-visual-evidence/1920-zh-case-button.jpg)、[电池装配](erste002-engineering-visual-evidence/1920-zh-case-battery.jpg)、[缝隙遮光](erste002-engineering-visual-evidence/1920-zh-case-light.jpg)。
+四张主图的正式画幅见[结构刚度](erste002-engineering-visual-evidence/final-media-stiffness.jpg)、[按键机构](erste002-engineering-visual-evidence/final-media-button.jpg)、[电池装配](erste002-engineering-visual-evidence/final-media-battery.jpg)与[缝隙遮光](erste002-engineering-visual-evidence/final-media-light.jpg)。
 
 ## 实际使用的临时图片
 
@@ -43,7 +43,7 @@
 | IMG-S08 | `p04-inside.webp` | P04 / M006、M007 历史 STL 内侧统一机位预览 |
 | IMG-K02 | `m007-buttons.webp` | 裁切压缩自 `_archive/ERSTE002/_derived/previews/M007-buttons.png`。源 STL 为 `_archive/4.zip::新建文件夹/按键盖1.6.stl` |
 
-IMG-K02 依据 M007 在原归档投影中的可见边界描边，标示盖体和后连接。它保留历史几何的来源与版本限制。独立功能线图为 IMG-S02 支撑及折边原理、IMG-K01 按键功能区与厚薄关系、IMG-B01 三步电池装入、IMG-L01 光路与行程。其形状和箭头服务于设计解释，图下标有功能图解性质。待制作任务及每张图的版本、画面与标注规格见制作清单。
+IMG-K02 显示实际 M007 历史网格预览。四张主图按 IMG-S02 当前支撑总览、IMG-K01 按键纵剖前后对比、IMG-B01 电池三帧装入及 IMG-L01 遮光双状态横剖预留画幅。早期自绘草图可从历史提交和当时截图查阅。最终原图的版本、截面和标注规格见制作清单。
 
 ## 文字压缩
 
@@ -54,7 +54,7 @@ IMG-K02 依据 M007 在原归档投影中的可见边界描边，标示盖体和
 | 中文 | 81 → 23 | 3446 → 450 | 86.9% | 9 → 0 |
 | English | 74 → 23 | 9777 → 952 | 90.3% | 35 → 0 |
 
-同一口径结果见 [旧页面统计](erste002-engineering-visual-evidence/text-before.json) 和 [本轮复核](erste002-engineering-visual-evidence/grip-layout-report.json)。
+同一口径结果见 [旧页面统计](erste002-engineering-visual-evidence/text-before.json) 和 [本轮复核](erste002-engineering-visual-evidence/final-media-layout-report.json)。
 
 ## 当前技术边界
 

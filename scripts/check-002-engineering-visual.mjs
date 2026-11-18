@@ -13,7 +13,10 @@ await mkdir(out, { recursive: true });
 const specs = Object.values(mediaSpecs);
 const doc = await readFile('docs/ERSTE002-engineering-final-media-spec.md', 'utf8');
 assert.deepEqual([...doc.matchAll(/^### (IMG-[A-Z]\d{2})｜/gm)].map(match => match[1]), specs.map(spec => spec.id));
-assert.deepEqual([...doc.matchAll(/engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
+assert.deepEqual([...doc.matchAll(/\[查看页面图位 IMG-[A-Z]\d{2}\]\([^\n]+engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
+
+const featuredCards = [mediaSpecs['support-diagram'], mediaSpecs['button-diagram'], mediaSpecs['battery-diagram'], mediaSpecs['light-diagram']];
+assert.ok(featuredCards.every(card=>card.production[0] === 'NX 截图' && card.composition));
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, screenshots: [], errors: [] };
@@ -74,6 +77,21 @@ try {
       await capture(page, `${width}-${lang}-${id.replace('eng-', '')}`);
     }
     assert.deepEqual(unexpected,[]);
+    assert.equal(await page.locator('#engineering-archive figure svg').count(),0);
+    for (const card of featuredCards) {
+      const frame = page.locator(`[data-media-id="${card.id}"] .figure-plate`);
+      assert.equal(await frame.innerText(),card.id);
+      assert.equal(Number(await frame.getAttribute('data-columns')) || 1,card.composition.columns);
+      const { width:frameWidth, height:frameHeight } = await frame.boundingBox();
+      const [horizontal,vertical] = card.ratio.split(':').map(Number);
+      assert.ok(Math.abs(frameWidth / frameHeight - horizontal / vertical) < .01,card.id);
+    }
+    const photoFrame = await page.locator('#media-stiffness-photo .image-open').boundingBox();
+    const cadFrame = await page.locator('[data-media-id="IMG-S02"] .figure-plate').boundingBox();
+    assert.equal(photoFrame.y,cadFrame.y);
+    assert.ok(Math.abs(photoFrame.width - cadFrame.width) < .05);
+    assert.ok(Math.abs(photoFrame.height - cadFrame.height) < .05);
+    report.checks.push(`${width} × ${height} ${lang}: four numbered CAD positions match their specified aspect ratios, and S01/S02 align.`);
     const copy = await page.locator('#engineering-archive').textContent();
     assert.doesNotMatch(copy,/尚未提供|未提供|待提供|未收录|缺图|待补图|建议补充|技术素材卡|现有素材评估|最终素材要求|临时占位|待制作|明确占位|_archive[\\/]|image unavailable|not yet supplied|final media spec|temporary media review|awaiting production|placeholder/i);
     await visit(page,lang,'eng-form-handling');
@@ -146,7 +164,8 @@ try {
   })));
   assert.deepEqual(placements.map(item=>item.id),specs.map(spec=>spec.id));
   assert.ok(placements.every(item=>item.id===item.anchor && item.id===item.label && (!item.plate || item.id===item.plate)));
-  assert.equal(placements.filter(item=>item.plate).length,20);
+  const numberOfPlates = specs.length - Object.keys(media).length;
+  assert.equal(placements.filter(item=>item.plate).length,numberOfPlates);
   for (const spec of specs) {
     await visit(page,'zh',spec.id);
     assert.ok(await page.locator(`#${spec.id}`).evaluate(label=>label.getClientRects().length > 0));
@@ -154,7 +173,7 @@ try {
   await page.goto(`${url}?lang=zh#IMG-S05`);
   await placement.locator('.figure-plate a').click();
   assert.equal(new URL(page.url()).hash,'#IMG-S05');
-  report.checks.push(`${placements.length} figure labels and Markdown links match; 20 numbered frames contain only their IDs, and all direct links reveal their figures.`);
+  report.checks.push(`${placements.length} figure labels and Markdown links match; ${numberOfPlates} numbered frames contain only their IDs, and all direct links reveal their figures.`);
   await visit(page,'zh','eng-overview');
   await page.locator('#media-cover button').click();
   assert.ok(await page.locator('.media-dialog').isVisible());
@@ -173,7 +192,7 @@ try {
   await page.reload();
   await page.waitForFunction(()=>document.body.dataset.archiveSection === 'eng-form');
   await visit(page,'zh','media-button-cad');
-  assert.ok(await page.locator('#media-button-cad .geometry-trace').isVisible());
+  assert.equal(await page.locator('#media-button-cad svg').count(),0);
   await capture(page,'1440-zh-button-cad');
   for (const slot of Object.keys(media)) {
     const image = page.locator(`#media-${slot} img`);
@@ -189,11 +208,13 @@ try {
 
   const mobile = await browser.newPage({ viewport:{width:390,height:844}, isMobile:true, hasTouch:true, reducedMotion:'reduce', serviceWorkers:'block' });
   track(mobile);
-  await visit(mobile,'zh','eng-case-button');
-  assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+  for (const card of featuredCards) {
+    await visit(mobile,'zh',card.id);
+    assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
+  }
   await visit(mobile,'en','eng-current');
   assert.ok(await mobile.locator('.status-wrap').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  report.checks.push('390px layout smoke test: diagram and status table; full mobile review not in scope.');
+  report.checks.push('390px layout smoke test: four numbered frames and status table.');
   assert.deepEqual(report.errors,[]);
   report.status = 'passed';
 } catch (error) {

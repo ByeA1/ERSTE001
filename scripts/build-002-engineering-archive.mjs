@@ -1,7 +1,6 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { chapters, cases, steps, media, structuralChanges } from '../content/erste002-engineering-visual.mjs';
 import { mediaSpecs } from '../content/erste002-engineering-media-spec.mjs';
-import { diagrams } from './erste002-engineering-diagrams.mjs';
 
 const repo = new URL('../', import.meta.url);
 const manifest = JSON.parse(await readFile(new URL('public/cases/erste002/engineering-assets.json', repo), 'utf8'));
@@ -23,9 +22,6 @@ function fileFor(slot) {
     : { file: source.file, width: 1200, height: 900, provenance: source.source };
 }
 
-const schematicSlots = new Set(['support-diagram', 'button-diagram', 'battery-diagram', 'light-diagram']);
-const materialStatus = (slot) => media[slot] || schematicSlots.has(slot)
-  ? ['临时占位', 'Temporary'] : ['待制作', 'Awaiting production'];
 const pageUrl = 'http://127.0.0.1:5210/cases/erste002/engineering.html';
 
 function materialChapter(code) {
@@ -47,23 +43,24 @@ function photo(slot, options = {}) {
   const source = media[slot];
   const asset = fileFor(slot);
   const kind = source.kind || 'photo';
+  const title = options.title || source.title;
   const marks = source.marks?.map(([name,x,y])=>`<b class="photo-pin" style="--pin-x:${x}%;--pin-y:${y}%">${name}</b>`).join('') || '';
-  const trace = source.trace ? `<svg class="geometry-trace" viewBox="0 0 ${asset.width} ${asset.height}" preserveAspectRatio="none" aria-hidden="true"><path d="${source.trace}"/></svg>` : '';
   const responsive = asset.small ? `srcset="${assetRoot}${asset.small.file} ${asset.small.width}w, ${assetRoot}${asset.file} ${asset.width}w" sizes="${source.sizes || '(max-width: 800px) 94vw, 50vw'}"` : '';
-  const visual = `<button type="button" class="image-open${marks ? ' has-pins' : ''}" data-open-media data-full="${assetRoot}${asset.file}" ${aria('放大：'+source.title[0], 'Enlarge: '+source.title[1])}>
-    <img width="${asset.width}" height="${asset.height}" src="${assetRoot}${asset.file}" ${responsive} ${slot === 'cover' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" alt="${escape(source.title[0])}" data-alt-zh="${escape(source.title[0])}" data-alt-en="${escape(source.title[1])}">
-    ${trace}<span class="kind-label">${localized(source.version)}</span><span class="photo-pins" aria-hidden="true">${marks}</span><span class="zoom-mark" aria-hidden="true">↗</span></button>`;
-  return figure(slot, visual, source.title, kind, options);
+  const frame = options.ratio ? `style="--plate-ratio:${options.ratio}"` : '';
+  const visual = `<button type="button" class="image-open${options.ratio ? ' framed-image' : ''}" ${frame} data-open-media data-full="${assetRoot}${asset.file}" ${aria('放大：'+title[0], 'Enlarge: '+title[1])}>
+    <img width="${asset.width}" height="${asset.height}" src="${assetRoot}${asset.file}" ${responsive} ${slot === 'cover' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" alt="${escape(title[0])}" data-alt-zh="${escape(title[0])}" data-alt-en="${escape(title[1])}">
+    <span class="kind-label">${localized(source.version)}</span><span class="photo-pins" aria-hidden="true">${marks}</span><span class="zoom-mark" aria-hidden="true">↗</span></button>`;
+  return figure(slot, visual, title, kind, options);
 }
 
 function plate(slot, title) {
   const spec = mediaSpecs[slot];
-  const visual = `<div class="figure-plate" style="--plate-ratio:${spec.ratio.replace(':',' / ')}"><a href="#${spec.id}">${spec.id}</a></div>`;
+  const ratio = spec.ratio.replace(':',' / ');
+  if (media[slot]) return photo(slot, { ratio, title });
+  const columns = spec.composition?.columns || 1;
+  const subdivisions = columns > 1 ? ` data-columns="${columns}"` : '';
+  const visual = `<div class="figure-plate" style="--plate-ratio:${ratio}"${subdivisions}><a href="#${spec.id}">${spec.id}</a></div>`;
   return figure(slot, visual, title || spec.object, 'plate');
-}
-
-function diagram(slot, title, structure, detail) {
-  return figure(slot, `<div class="diagram-sheet" ${aria(...title)} role="group">${structure}</div>`, detail.map((text, i) => `${i ? 'Functional diagram' : '功能图解'} · ${text}`), 'diagram');
 }
 
 function sectionTitle(index, headline, lead) {
@@ -92,7 +89,6 @@ function tray(title, children) {
   return `<details class="study-tray"><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
 }
 const plateGrid = (...slots) => `<div class="plate-grid">${slots.map(slot=>plate(slot)).join('')}</div>`;
-const drawings = diagrams({t, diagram});
 
 const stepRail = steps.map((step, i)=>`<li><a href="#milestone-${step.id}"><span class="step-index">0${i+1}</span><strong>${localized(step.name)}</strong></a></li>`).join('');
 
@@ -136,8 +132,7 @@ const body = `
   ${sectionTitle(3,['四个工程决策。','Four engineering decisions.'])}
   <nav class="case-jumps" ${aria('工程专题','Engineering topics')}>${cases.map((record,i)=>`<a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↘</span></a>`).join('')}</nav>
   <article class="engineering-case" id="eng-case-stiffness" data-topic>${caseTitle(0)}
-    <div class="case-split">${photo('stiffness-photo')}${drawings.support()}</div>
-    <div class="photo-key">${t('A 筋板　 B 跨接杆　 C 安装柱','A Ribs · B Spanning rod · C Mounting posts')}</div>
+    <div class="case-split">${photo('stiffness-photo')}${plate('support-diagram',['当前支撑布局与四处改动','Current support layout and four revisions'])}</div>
     <ol class="change-grid">${structuralChanges.map(([number,title,caption])=>`<li><b>${number}</b><div><strong>${localized(title)}</strong><span>${localized(caption)}</span></div></li>`).join('')}</ol>
     <div class="case-extras">${evidenceNotes(cases[0])}
     ${tray(['新版支撑与截面','Revised supports and sections'],plateGrid('stiffness-compare','functional-fold','base-section','main-joint'))}
@@ -145,16 +140,16 @@ const body = `
     ${tray(['壳体受力观察','Shell under load'],plateGrid('stiffness-load'))}</div>
   </article>
   <article class="engineering-case" id="eng-case-button" data-topic>${caseTitle(1)}
-    ${drawings.button()}
+    ${plate('button-diagram',['连接与弯折区：修改前 / 当前设计','Mounting and flex zones: previous / current design'])}
     <div class="case-extras">${evidenceNotes(cases[1])}
-    ${tray(['按键盖几何对照','Compare button geometry'],`<div class="case-split">${photo('button-cad')}${plate('button-new',['新版按键盖与固定区','Revised cover and mounting zone'])}</div><p class="photo-key">${t('M007 历史几何　A 盖体片体　B 后部连接','M007 historical geometry · A cover panel · B rear connection')}</p>`)}
+    ${tray(['按键盖几何对照','Compare button geometry'],`<div class="case-split">${photo('button-cad')}${plate('button-new',['新版按键盖与固定区','Revised cover and mounting zone'])}</div>`)}
     ${tray(['片体截面与按压路径','Cover sections and press travel'],plateGrid('button-edge','button-thickness','button-motion','button-observed'))}</div>
   </article>
   <article class="engineering-case" id="eng-case-battery" data-topic>${caseTitle(2)}
-    ${drawings.battery()}<div class="case-extras">${evidenceNotes(cases[2])}${tray(['卡口与装配过程','Catch and assembly sequence'],plateGrid('battery-catch','battery-old'))}</div>
+    ${plate('battery-diagram',['装入前 → 向上装入 → 卡口就位','Before insertion → Insert upward → Seated at catch'])}<div class="case-extras">${evidenceNotes(cases[2])}${tray(['卡口与装配过程','Catch and assembly sequence'],plateGrid('battery-catch','battery-old'))}</div>
   </article>
   <article class="engineering-case light-case" id="eng-case-light" data-topic>
-    <div class="light-split">${caseTitle(3)}${drawings.light()}</div><div class="case-extras">${evidenceNotes(cases[3])}${tray(['按键盖缝隙剖面','Button cover gap section'],plateGrid('light-section'))}</div>
+    <div class="light-split">${caseTitle(3)}${plate('light-diagram',['缝隙剖面：静止 / 按下','Gap section: at rest / pressed'])}</div><div class="case-extras">${evidenceNotes(cases[3])}${tray(['按键盖缝隙剖面','Button cover gap section'],plateGrid('light-section'))}</div>
   </article>
 </section>
 
@@ -187,10 +182,10 @@ ${body}
 const specDoc = [
   '# ERSTE002 ENGINEERING 最终图片素材规格',
   '',
-  '本文件集中维护素材要求。工程页面以正式结构呈现图位与图号。档案照片、STL 预览和功能线图目前作为临时排版素材；当前仅显示图号的位置标为待制作。',
+  '正式版采用设计者提供的实物照片、对应版本的 CAD 截图或经设计者确认的标注稿。现有档案照片和 STL 预览为临时排版素材。图号定位到网页上的实际图框。',
   '',
-  '点击制作卡末尾的图号链接可定位到正式页面中的对应图位。P0 为新版核心结构与图解，P1 为主叙事及关键历史证据，P2 为补充对照。',
-  '比例用于规划取景。原稿可按主体与工程细节取景并保留裁切余量，网页按图位选取构图。实物对比与带标注的几何图需保留关键边界和标注位置。',
+  '点击制作卡末尾的图号链接可定位到正式页面中的对应图位。P0 为新版核心结构与装配视图，P1 为主叙事及关键历史证据，P2 为补充对照。',
+  '比例指网页图框。拍摄或截图时优先保留完整的零件边界和标注余量。多状态原图可以分开提供，网页负责对齐、拼版和双语图注。',
   '素材状态分为待制作、临时占位、最终素材已提供和已验收。拿到符合对应版本的成品可标为已提供。核对版本、机位、必见细节及展示尺寸后才标为已验收。',
   '',
   '## 最简执行清单',
@@ -198,10 +193,18 @@ const specDoc = [
   '1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯和三件同朝向合照（F01、F02、P01）。锁定侧向机位，依次拍同一件 FDM 的空手侧视和右手握持（F03、F04）；握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。',
   '2. 历史零件另成一组。核对首轮 MJF、加杆版、红滚轮版裸上盖的身份。以同一光线拍分件摊开、孔位近景、底部内视（P02、P03、S01）。能追溯时再补 PCB 干涉、按压、电池松动和整体偏软的过程证据（P06、K07、B03、S09）。',
   '3. NX 总装先完成 P05、C01。当前 CAD 保存三分之四总装视图和底部内视。同一组截图供两个图位使用，P05 裁成节点图，C01 保留全景及四处标注。统一背景、投影、缩放与坐标轴，保留文件版本。',
-  '4. NX 结构一次截取 S02–S06。前后版锁同一正交相机。先截整壳底视及前杆，再截功能片体、开口边缘法向剖面、主杆与上盖接点。S07–S08 单独用经核实的历史文件复现，不用新版代替。',
-  '5. NX 按键一次截取 K01–K06。前后版同机位内侧轴测，并在同位置纵切捕捉连接、厚薄和弯折分区。保留微动位置及限位，画施力和预期运动箭头；如某项不存在，用标注说明。',
-  '6. NX 电池和遮光分别截 B01–B02、L01–L02。电池保持固定侧剖面拍装入前、路径、到位，另截图卡口。遮光局部同剖面抓静止与按下两状态，标光路及剩余间隙。L01 图解从 L02 取所需截面，复用同一组 NX 视图。',
+  '4. NX 结构一次截取 S02–S06。先从当前总装导出一张朝向与 S01 一致的底部内侧总览（S02）；再锁定同一正交相机做前后对比（S03）。同场截功能片体、开口边缘法向剖面和主杆与上盖接点。S07–S08 采用经核实的历史文件。',
+  '5. NX 按键一次截取 K01–K06。先导出两版同位置纵剖（K01），再导出两版同机位内侧轴测（K02、K03）。保留连接板、厚薄变化、微动及限位实际位置，另截边缘、厚度和行程局部。',
+  '6. NX 电池和遮光分别截 B01–B02、L01–L02。电池按固定侧剖面导出装入前、路径中、到位三帧，另截卡口。遮光先导出当前设计静止与按下状态（L01），再在相同剖切位置导出修改前的局部，供 L02 对读。',
   '7. 按图号交付。实拍保留原图，NX 提供无标注 PNG。标注副本可选，文件名示例为 `IMG-S05_before.png`、`IMG-S05_after.png`、`IMG-S05_after_annotated.png`。每组附简短的文件版本或样件身份及视图说明。按下方比例留裁切边距，推荐原稿宽度为桌面展示宽度的两倍。C02 等对应实物测试完成后再补。',
+  '',
+  '## 四张工程主图排版',
+  '',
+  '| 图号 | 网页画幅 | 原图与排版 |',
+  '| --- | --- | --- |',
+  ...Object.values(mediaSpecs).filter(row=>row.composition).map(row=>`| [${row.id}](${pageUrl}#${row.id}) | ${row.ratio}，约 ${row.width} CSS px 宽 | ${row.composition.layout} |`),
+  '',
+  '可依次命名为 `IMG-S02_current.png`、`IMG-K01_before.png` / `IMG-K01_current.png`、`IMG-B01_01.png` 至 `IMG-B01_03.png`、`IMG-L01_rest.png` / `IMG-L01_pressed.png`。宽图的建议分辨率按拼版总宽计算。',
   '',
   '## 逐图制作卡',
 ];
@@ -217,11 +220,12 @@ for (const slot of usedSlots) {
     `- 必须可见：${row.details[0]}。`,
     `- 建议标注：${row.marks[0]}`,
     `- 布置：${row.setup[0]}`,
+    ...(row.composition ? [`- 网页排版：${row.composition.layout}`] : []),
     `- 取景比例与展示宽度参考：${row.ratio}，1920 桌面视口约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
     `- 用途：${row.purpose[0]}。`,
-    `- 当前占位：${source ? `\`public/cases/erste002/assets/engineering/${source.file}\`，来源 \`${source.provenance}\`` : schematicSlots.has(slot) ? '页面内联功能图解，待以对应版本几何核对或制图。' : '无。'}`,
+    `- 当前页面素材：${source ? `\`public/cases/erste002/assets/engineering/${source.file}\`，来源 \`${source.provenance}\`` : '仅显示图号。'}`,
     ...(row.review ? [`- 现有素材评估：${row.review[0]}`] : []),
-    `- 素材状态：${materialStatus(slot)[0]}。`,
+    `- 素材状态：${media[slot]?.status || (source ? '临时占位' : '待制作')}。`,
     `- [查看页面图位 ${row.id}](${pageUrl}#${row.id})`);
 }
 

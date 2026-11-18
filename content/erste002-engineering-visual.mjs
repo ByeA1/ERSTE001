@@ -30,10 +30,10 @@ export const media = {
   'evo-fdm': { source: 'P4244', title: ['FDM 样件俯视', 'FDM sample from above'], version: ['FDM 手感样件', 'FDM form sample'], sizes: '(max-width: 800px) 45vw, 18vw' },
   'evo-support': { source: 'P4235', title: ['后续裸壳作结构参照', 'Later shell as a structural reference'], version: ['红滚轮装配版裸壳', 'Bare shell from red-wheel build'], sizes: '(max-width: 800px) 45vw, 18vw' },
   'evo-built': { source: 'P4240', title: ['红滚轮样机居中', 'Red-wheel build at centre'], version: ['三件样机实物对照', 'Three physical prototypes'], sizes: '(max-width: 800px) 45vw, 18vw' },
-  'stiffness-photo': { source: 'P4236', title: ['旧样机内侧：筋板、跨接杆、安装柱', 'Earlier shell interior: ribs, rods and posts'], version: ['红滚轮装配版裸壳 · 静态', 'Bare shell from red-wheel build · static'], marks: [['A', 69, 46], ['B', 73, 22], ['C', 35, 72]] },
+  'stiffness-photo': { source: 'P4236', title: ['A 筋板 · B 跨接杆 · C 安装柱', 'A Ribs · B Spanning rod · C Mounting posts'], version: ['红滚轮装配版裸壳 · 静态', 'Bare shell from red-wheel build · static'], marks: [['A', 69, 46], ['B', 73, 22], ['C', 35, 72]] },
   'cad-p01': { source: 'P01', title: ['P01 · 筋板布局', 'P01 · Rib layout'], version: ['历史 STL · 内侧轴测', 'Historical STL · interior axonometric'], kind: 'cad' },
   'cad-p04': { source: 'P04', title: ['P04 · 跨接构件', 'P04 · Spanning members'], version: ['历史 STL · 内侧轴测', 'Historical STL · interior axonometric'], kind: 'cad' },
-  'button-cad': { source: 'M007', title: ['按键盖片体与后部连接几何', 'Cover panel and rear mounting geometry'], version: ['P04 / M007 · 历史 STL', 'P04 / M007 · Historical STL'], kind: 'cad', file: 'm007-buttons.webp', width: 746, height: 475, provenance: '_archive/4.zip::新建文件夹/按键盖1.6.stl → _archive/ERSTE002/_derived/previews/M007-buttons.png', marks: [['A', 23, 61], ['B', 74, 69]], trace: 'M54 318Q59 271 163 173L392 236Q432 195 474 196M219 140Q328 82 386 69Q471 46 690 191M431 350L502 283Q517 322 550 305L611 254L668 291L486 399Z' },
+  'button-cad': { source: 'M007', title: ['按键盖片体与后部连接', 'Cover panel and rear mounting'], version: ['P04 / M007 · 历史 STL', 'P04 / M007 · Historical STL'], kind: 'cad', file: 'm007-buttons.webp', width: 746, height: 475, provenance: '_archive/4.zip::新建文件夹/按键盖1.6.stl → _archive/ERSTE002/_derived/previews/M007-buttons.png' },
 };
 
 // ID, image format, subject, required version, angle, and question it should answer.
