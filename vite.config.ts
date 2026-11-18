@@ -21,6 +21,11 @@ export default defineConfig(({ mode }) => ({
   plugins: [{
     name: "versioned-model-assets", apply: "build",
     buildStart() { for (const model of models) this.emitFile({type:"asset",fileName:model.fileName,source:model.source}); },
+    transformIndexHtml() {
+      if(mode==='wallpaper'||mode==='model-review')return [];
+      return [{tag:'link',attrs:{rel:'preload',as:'fetch',crossorigin:'anonymous',
+        href:`/${models[0].fileName}`},injectTo:'head' as const}];
+    },
   }, ...(mode === "wallpaper" ? [{
     name: "wallpaper-host",
     transformIndexHtml(html: string) {

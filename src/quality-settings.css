@@ -121,3 +121,37 @@
   outline: 2px solid #a67d48;
   outline-offset: 4px;
 }
+
+/* Four automatic levels remain visible; the fifth slot is always user-owned. */
+.quality-recommendation {border:1px solid #93836c;background:#80634416;color:#55432e;padding:10px 14px;font:inherit;font-size:12px;cursor:pointer;}
+.quality-recommendation[aria-pressed="true"] {background:#644a2f29;border-color:#7d654a;}
+.quality-tiers {display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:18px;}
+.quality-tiers button {position:relative;text-align:left;padding:14px 12px;border:1px solid #b7ac9a;background:#ffffff16;color:#5d5548;font:inherit;cursor:pointer;transition:background .2s,border-color .2s,transform .2s;}
+.quality-tiers button:hover {background:#8261401a;transform:translateY(-2px);}
+.quality-tiers button[aria-pressed="true"] {background:#73543529;border-color:#72563b;color:#372b20;box-shadow:inset 0 -2px #72563b;}
+.quality-tier-index {display:block;font:11px Consolas,monospace;letter-spacing:.12em;color:#877762;margin-bottom:8px;}
+.quality-tiers strong {display:block;font-size:14px;font-weight:550;}
+.quality-tiers small {display:block;font-size:10px;line-height:1.5;margin-top:5px;}
+.quality-selection {font-size:12px;line-height:1.7;color:#65533e;min-height:1.7em;margin:14px 0 0;}
+.quality-settings button:focus-visible {outline:2px solid #a67d48;outline-offset:3px;}
+@media(max-width:600px) {.quality-tiers {grid-template-columns:repeat(2,minmax(0,1fr));}.quality-tiers button:last-child {grid-column:1/-1;}.quality-heading {gap:12px;}.quality-heading h3 span {display:block;margin:5px 0 0;}}
+@media(prefers-reduced-motion:reduce) {.quality-tiers button {transition:none;}.quality-tiers button:hover {transform:none;}}
+
+/* Leave room for the shared click confirmation without transient scrollbars. */
+.quality-tiers {padding:6px;margin-inline:-6px;overflow:clip;}
+
+.quality-tiers [data-recommended-label] {display:block;min-height:1.4em;margin-top:6px;font-size:10px;font-style:normal;color:#7d6042;}
+.quality-tiers button[data-quality-mode="custom"]::after {content:"";display:block;height:1.4em;margin-top:6px;font-size:10px;}
+.quality-recommendation {max-width:100%;text-align:left;line-height:1.5;}
+
+/* Language remains reachable inside the modal while the terminal is inert. */
+.modal-top-actions {display:flex;align-items:center;justify-content:flex-end;gap:20px;flex-shrink:0;}
+.settings-modal .modal-top > span {min-width:0;overflow-wrap:anywhere;}
+.settings-modal .modal-top .terminal-language {gap:4px;}
+.settings-modal .modal-top .terminal-language button {justify-content:center;gap:0;min-width:36px;min-height:44px;font-size:11px;}
+@media(max-width:600px) {
+ .settings-modal > .modal-top {flex-wrap:wrap;gap:4px;}
+ .settings-modal > .modal-top > span {flex-basis:100%;}
+ .settings-modal .modal-top-actions {width:100%;gap:18px;}
+ .settings-modal .modal-top .terminal-language button {min-width:44px;}
+}

@@ -195,7 +195,11 @@ async function prepareProject(frame: HTMLIFrameElement, signal: AbortSignal) {
       ...images.map(image => image.decode().catch(() => undefined)),
       doc.body.hasAttribute('data-project-ready') ? Promise.resolve() : waitForModel(doc, work.signal),
       waitForProjectReady(doc, work.signal),
-    ]), work.signal);
+    ]), work.signal, () => {
+      const progress=doc.body.dataset.projectLoadProgress;
+      loading.progress(progress);
+      return progress;
+    });
     if (signal.aborted || frame !== activeFrame) return;
     await loading.reveal(signal);
     presentFrame(frame, signal);
@@ -210,6 +214,10 @@ async function prepareProject(frame: HTMLIFrameElement, signal: AbortSignal) {
 function presentFrame(frame: HTMLIFrameElement, signal: AbortSignal) {
   if (signal.aborted || frame !== activeFrame) return;
   frame.inert = false;
+  interfaces.get(frame)?.present();
+  // The host may now attach before a slow module finishes evaluating. Re-send
+  // visibility at presentation, when the project's message listeners exist.
+  tellCase('resume');
   frame.contentWindow?.postMessage({ type: 'design-terminal:case-presented' }, location.origin);
   if (panel?.contains(document.activeElement) === false || document.activeElement === panel)
     siteNavigation.focus();
@@ -228,6 +236,7 @@ function waitForDocument(frame: HTMLIFrameElement, signal: AbortSignal) {
   if (frame.dataset.loaded === 'true') return Promise.resolve();
   return new Promise<void>((resolve, reject) => {
     const cleanup = () => {
+      clearInterval(poll);
       frame.removeEventListener('load', loaded);
       frame.removeEventListener('error', failed);
       signal.removeEventListener('abort', aborted);
@@ -235,6 +244,14 @@ function waitForDocument(frame: HTMLIFrameElement, signal: AbortSignal) {
     const loaded = () => { cleanup(); resolve(); };
     const failed = () => { cleanup(); reject(new Error('项目页面载入失败，请重试。')); };
     const aborted = () => { cleanup(); reject(new DOMException('Cancelled', 'AbortError')); };
+    // A model preload delays window.load. Attach the host as soon as the DOM
+    // exists so a slow model can report progress instead of timing out unseen.
+    const poll = window.setInterval(() => {
+      try {
+        const doc = frame.contentDocument;
+        if (doc?.body && doc.URL !== 'about:blank' && doc.readyState !== 'loading') loaded();
+      } catch { /* The load/error events handle a non-local response. */ }
+    }, 100);
     frame.addEventListener('load', loaded, { once: true });
     frame.addEventListener('error', failed, { once: true });
     signal.addEventListener('abort', aborted, { once: true });
@@ -264,11 +281,19 @@ function waitForModel(doc: Document, signal: AbortSignal) {
   });
 }
 
-function bounded<T>(work: Promise<T>, signal: AbortSignal): Promise<T> {
+function bounded<T>(work: Promise<T>, signal: AbortSignal, progress?: () => string | undefined): Promise<T> {
   return new Promise((resolve, reject) => {
-    const cleanup = () => { clearTimeout(timer); signal.removeEventListener('abort', aborted); };
+    const started = performance.now();
+    let updated = started, previous = progress?.();
+    const cleanup = () => { clearInterval(timer); signal.removeEventListener('abort', aborted); };
     const aborted = () => { cleanup(); reject(new DOMException('Cancelled', 'AbortError')); };
-    const timer = window.setTimeout(() => { cleanup(); reject(new Error('载入用时较长，请重试或返回项目选择。')); }, 25000);
+    const timer = window.setInterval(() => {
+      const now = performance.now(), current = progress?.();
+      if (current !== previous) { previous = current; updated = now; }
+      // Preserve the stalled-resource guard, but let an active download finish.
+      if (now - updated < 25000 && now - started < 120000) return;
+      cleanup(); reject(new Error('载入用时较长，请重试或返回项目选择。'));
+    }, 500);
     signal.addEventListener('abort', aborted, { once: true });
     work.then(value => { cleanup(); resolve(value); }, error => { cleanup(); reject(error); });
     if (signal.aborted) aborted();

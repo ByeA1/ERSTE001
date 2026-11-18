@@ -103,7 +103,7 @@ html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powe
 
 /* Keep the existing shared navigation layout; emphasize its always-visible exit. */
 .project-case .site-navigation button.project-case-close {
-  background: #171713a8;
+  background-color: #171713a8;
   border: 1px solid #17171355;
   color: #ffffff;
   box-shadow: inset 0 1px 0 #ffffff1c;
@@ -114,13 +114,13 @@ html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powe
 .project-case .site-navigation button.project-case-close > [aria-hidden] { color: inherit; }
 .project-case .site-navigation[data-theme=dark] button.project-case-close > [aria-hidden] { color: var(--nav-accent); }
 .project-case .site-navigation[data-theme=dark] button.project-case-close {
-  background: #f4f0ef17;
+  background-color: #f4f0ef17;
   border-color: #f4f0ef6b;
   color: #f4f0ef;
 }
 @media (hover: hover) {
-  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background: #343430bf; color: #ffffff; }
-  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background: #f4f0ef2e; color: #f4f0ef; }
+  .project-case .site-navigation button.project-case-close:not(:disabled):hover { background-color: #343430bf; color: #ffffff; }
+  .project-case .site-navigation[data-theme=dark] button.project-case-close:not(:disabled):hover { background-color: #f4f0ef2e; color: #f4f0ef; }
 }
 .project-case .site-navigation button.project-case-close:not(:disabled):active { translate: 0 1px; }
 @media (max-width: 540px) {
@@ -129,4 +129,64 @@ html:not([data-wallpaper]) #stage[data-layout=desktop][data-mode=detail] > .powe
 @media (prefers-reduced-motion: reduce) {
   html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button, .project-step, .detail-project-step, .viewer-open),
   .project-case .site-navigation button.project-case-close { transition: none; animation: none; }
+}
+
+/* One command layout: centered text slot, separate arrow, diagonal hairlines.
+   Tea belongs to the terminal; project commands inherit their own palette. */
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button),
+.project-case .site-navigation button.project-case-close {
+ --command-corner: currentColor;
+ display:inline-grid;grid-template-columns:minmax(0,1fr) 33px;align-items:stretch;
+ column-gap:0;padding:5px;gap:0;text-align:center;
+ background-image:linear-gradient(var(--command-corner),var(--command-corner)),linear-gradient(var(--command-corner),var(--command-corner)),linear-gradient(var(--command-corner),var(--command-corner)),linear-gradient(var(--command-corner),var(--command-corner));
+ background-size:15px 1px,1px 11px,15px 1px,1px 11px;
+ background-position:5px 5px,5px 5px,calc(100% - 5px) calc(100% - 5px),calc(100% - 5px) calc(100% - 5px);
+ background-repeat:no-repeat;
+}
+html:not([data-wallpaper]) #stage[data-layout] button.back-button {background-color:var(--action-command-fill,#37271cba);grid-template-columns:33px minmax(0,1fr) auto;}
+.project-case .site-navigation button.project-case-close {grid-template-columns:26px minmax(0,1fr);}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button)::before,
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button)::after {content:none;}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button) > .action-label,
+.project-case .site-navigation button.project-case-close > .action-label {
+ display:grid;align-self:stretch;place-items:center;padding-inline:16px;
+ text-align:center;min-width:0;line-height:1.35;translate:none;border:0;
+}
+html:not([data-wallpaper]) #stage[data-layout] button:is(.read-file, .showcase-open, .back-button) > .action-icon,
+.project-case .site-navigation button.project-case-close > .action-icon {
+ display:grid;align-self:stretch;place-items:center;min-width:0;padding:0;
+ border:0;border-inline-start:1px solid #f4ead740;font:18px/1 Consolas,monospace;
+}
+html:not([data-wallpaper]) #stage[data-layout] button.back-button > .action-icon,
+.project-case .site-navigation button.project-case-close > .action-icon {border-inline-start:0;border-inline-end:1px solid #f4ead740;}
+html:not([data-wallpaper]) #stage[data-layout] button.back-button small {align-self:center;margin-inline:0 5px;color:inherit;opacity:.7;}
+/* The desktop detail uses lighter tea glass, retaining legible warm-white
+   labels while allowing the archive scene to show through the command. */
+html:not([data-wallpaper]) #stage[data-detail-actions=desktop][data-mode=detail] {
+ --action-command-fill:#37271ca3;
+ --action-command-hover:#37271cb5;
+ --action-command-active:#302317bf;
+ --action-glass-paper:#fff9ed;
+}
+html:not([data-wallpaper]) #stage[data-detail-actions=desktop] #detail-ui button:is(.showcase-open,.back-button,.viewer-open) {
+ -webkit-backdrop-filter:blur(10px) saturate(115%);
+ backdrop-filter:blur(10px) saturate(115%);
+}
+@media (hover:hover) {
+ html:not([data-wallpaper]) #stage[data-layout] button.back-button:not(:disabled):hover {background-color:var(--action-command-hover,#37271cd1);}
+}
+@media(max-width:540px) {
+ .project-case .site-navigation button.project-case-close {padding:5px;}
+ .project-case .site-navigation button.project-case-close > .action-label {padding-inline:6px;font-size:10px;}
+}
+/* Mobile return is a quiet, direct exit within the compact shared bar. */
+@media (max-width:640px), (pointer:coarse) and (orientation:portrait) and (max-width:1000px) {
+ .project-case .site-navigation[data-theme] button.project-case-close {
+  grid-template-columns:20px minmax(0,1fr);padding:0 5px 0 0;gap:0;
+  border:0;background:transparent;box-shadow:none;color:var(--nav-ink);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+ }
+ .project-case .site-navigation[data-theme] button.project-case-close > .action-label {padding:0 2px;font-size:11px;font-weight:550;line-height:1.25;}
+ .project-case .site-navigation[data-theme] button.project-case-close > .action-icon {border:0;font-size:17px;}
+ .project-case .site-navigation[data-theme] button.project-case-close:not(:disabled):hover {background:transparent;color:var(--nav-accent);}
 }

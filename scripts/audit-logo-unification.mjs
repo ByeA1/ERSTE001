@@ -12,9 +12,10 @@ const require = createRequire(
 );
 const { chromium } = require("playwright");
 const out = path.resolve(".audit/logo-unification");
+const baseline = path.resolve(process.env.LOGO_AUDIT_BASELINE || out);
 await fs.mkdir(out + "/screenshots", { recursive: true });
 const before = JSON.parse(
-  await fs.readFile(out + "/before.json", "utf8").catch(() => "null"),
+  await fs.readFile(baseline + "/before.json", "utf8").catch(() => "null"),
 );
 const protectedPaths = [
   "public/assets/archive-cassette.glb",
@@ -23,7 +24,6 @@ const protectedPaths = [
   "src/boot-logo-tracks.ts",
   "src/opening-timeline.ts",
   "src/boot-motion.ts",
-  "scripts/pwa-worker.js",
 ];
 for (const file of before ? protectedPaths : [])
   assert.equal(
@@ -35,7 +35,7 @@ for (const file of before ? protectedPaths : [])
   );
 let approvedVisualMatch = null;
 if (before) {
-  const original = await fs.readFile(out + "/before/src/rhine-logo.ts", "utf8");
+  const original = await fs.readFile(baseline + "/before/src/rhine-logo.ts", "utf8");
   const current = await fs.readFile("src/rhine-logo.ts", "utf8");
   const svg = (source) =>
     source.match(/export const loopingMarkSvg\s*=\s*(`[^`]+`)/)[1];
@@ -253,6 +253,10 @@ try {
 
           // Only the registry gets a virtual new entry, before the app starts.
           // No archive record, per-project JS or host ID branch is added.
+          await page.route('**/cases/_template/index.html',async route=>{
+            const response=await route.fetch();
+            await route.fulfill({response,body:(await response.text()).replace('<main>','<main style="min-height:3000px">')});
+          });
           assert.equal(
             await page
               .locator(
@@ -284,11 +288,24 @@ try {
           const inherited = await future
             .locator("[data-rhine-logo] svg")
             .evaluate(logo);
+          await page.mouse.move(mobile?180:600,500);
+          await page.mouse.wheel(0,300);
+          await future.waitForFunction(()=>document.querySelector('#scroller').scrollTop>100);
+          await future.evaluate(()=>document.querySelector('#scroller').scrollTo(0,0));
+          await future.waitForFunction(()=>document.querySelector('#scroller').scrollTop===0);
           assert.equal(inherited.contour, welcome.contour);
           assert.ok(inherited.animations.every((a) => a.duration === 6400));
+          // Automatic rendering quality must not change any logo's animation.
+          const modesBefore=await page.locator('svg.rhine-logo').evaluateAll(svgs=>svgs.map(svg=>svg.dataset.logoMode));
+          await page.evaluate(()=>{document.getElementById('three-scene').dataset.adaptiveTier='low';});
+          await page.waitForTimeout(100);
+          assert.equal(await future.locator('[data-rhine-logo] svg').getAttribute('data-logo-mode'),'full');
+          assert.deepEqual(await page.locator('svg.rhine-logo').evaluateAll(svgs=>svgs.map(svg=>svg.dataset.logoMode)),modesBefore);
+          await page.evaluate(()=>{document.getElementById('three-scene').dataset.adaptiveTier='high';});
           await future.evaluate(() => {
-            document.body.style.minHeight = "3000px";
-            window.scrollTo(0, 1200);
+            const scroller=document.querySelector('#scroller')??document.scrollingElement;
+            (scroller===document.scrollingElement?document.body:scroller.firstElementChild).style.minHeight='3000px';
+            scroller.scrollTo(0,1200);
           });
           await future.waitForFunction(() =>
             document
@@ -297,8 +314,9 @@ try {
               .every((a) => a.playState === "paused"),
           );
           await future.evaluate(() => {
-            window.scrollTo(0, 0);
-            document.body.style.minHeight = "";
+            const scroller=document.querySelector('#scroller')??document.scrollingElement;
+            scroller.scrollTo(0,0);
+            (scroller===document.scrollingElement?document.body:scroller.firstElementChild).style.minHeight='';
           });
           await future.waitForFunction(() =>
             document
@@ -354,7 +372,7 @@ try {
           await future
             .locator("[data-rhine-logo]")
             .screenshot({ path: out + `/screenshots/${key}-future.png` });
-          await future.locator("[data-project-close]").click();
+          await page.locator(".project-case-close").click();
           await page.waitForFunction(
             () => !document.querySelector(".project-case").open,
           );
@@ -418,6 +436,7 @@ try {
             () => document.body.dataset.ready === "true",
           );
           await second.locator("#mode").click();
+          await second.locator("#free-tools > summary").click();
           await second.locator("#part").selectOption("shell_top");
           await second.locator("#explode").click();
           await page.waitForTimeout(250);
@@ -433,13 +452,15 @@ try {
             () => !document.querySelector(".project-case").open,
           );
           await page.waitForTimeout(150);
-          const rafBefore = await second.evaluate(() => window.__auditRafTicks);
-          await page.waitForTimeout(400);
-          assert.equal(
-            await second.evaluate(() => window.__auditRafTicks),
-            rafBefore,
-            "Closed 002 must stop its animation loop",
-          );
+          if(second.isDetached()){
+            assert.equal(await page.locator('iframe[data-project-id="erste002"]').count(),0,
+              'A releaseOnClose case must release its renderer and frame');
+          }else{
+            const rafBefore = await second.evaluate(() => window.__auditRafTicks);
+            await page.waitForTimeout(400);
+            assert.equal(await second.evaluate(() => window.__auditRafTicks),rafBefore,
+              'A retained case must pause its animation loop');
+          }
           const overflow = await page.evaluate(
             () =>
               document.documentElement.scrollWidth <=

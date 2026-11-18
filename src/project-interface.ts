@@ -113,7 +113,7 @@ export class ProjectInterface {
       this.quality = new MutationObserver(this.policyChanged);
       this.quality.observe(qualityHost, {
         attributes: true,
-        attributeFilter: ["data-adaptive-tier"],
+        attributeFilter: ["data-adaptive-tier", "data-performance-mode"],
       });
     }
     window.addEventListener(
@@ -188,16 +188,20 @@ export class ProjectInterface {
       ? "low"
       : (document.getElementById("three-scene")?.dataset.adaptiveTier ??
         "high");
-    this.logos.forEach((player) => player.setLow(tier === "low"));
-    const signature = `${reduced}:${tier}`;
+    // Automatic WebGL quality only changes rendering controls. SVG timing is
+    // governed by the user's existing motion/low-power preference, not FPS.
+    this.logos.forEach((player) => player.setLow(policy.low));
+    const performanceMode=document.getElementById('three-scene')?.dataset.performanceMode??'auto';
+    const signature = `${reduced}:${tier}:${performanceMode}`;
     if (signature === this.lastPolicy) return;
     this.lastPolicy = signature;
     this.document.documentElement.dataset.terminalMotion = reduced
       ? "reduced"
       : "full";
     this.document.documentElement.dataset.terminalQuality = tier;
+    this.document.documentElement.dataset.terminalPerformanceMode = performanceMode;
     this.frame.contentWindow?.postMessage(
-      { type: "design-terminal:case-policy", reduced, tier },
+      { type: "design-terminal:case-policy", reduced, tier, performanceMode },
       location.origin,
     );
   }
@@ -217,6 +221,23 @@ export class ProjectInterface {
       this.localize();
       this.applyPolicy();
     }
+  }
+  present() {
+    const scroller=this.document.getElementById('scroller');
+    if(!scroller)return;
+    // Chromium can retain a non-scrollable input region when an iframe was
+    // laid out while inert. Rebuild this scroll node after inert is cleared,
+    // preserving the reading position and the authored scrolling behavior.
+    const {scrollTop:top,scrollLeft:left}=scroller;
+    const overflow=['overflow-x','overflow-y'].map(property=>({property,
+      value:scroller.style.getPropertyValue(property),priority:scroller.style.getPropertyPriority(property)}));
+    overflow.forEach(({property})=>scroller.style.setProperty(property,'clip','important'));
+    void scroller.offsetHeight;
+    overflow.forEach(({property,value,priority})=>{
+      if(value)scroller.style.setProperty(property,value,priority);
+      else scroller.style.removeProperty(property);
+    });
+    scroller.scrollTo({top,left,behavior:'instant'});
   }
   destroy() {
     this.events.abort();

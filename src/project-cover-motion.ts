@@ -24,6 +24,10 @@ export class ProjectCoverMotion {
     }
     this.settleClosed();
   }
+  /** Replace only the print, keeping an in-flight physical open/close pose. */
+  replace(id: string) {
+    this.activeId = this.requestedId = id;
+  }
   reveal(animate = true) {
     if (this.requestedId) this.select(this.requestedId, true, animate);
   }

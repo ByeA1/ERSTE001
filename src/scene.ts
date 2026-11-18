@@ -6,6 +6,10 @@ import { ArchiveVisibility } from "./archive-visibility";
 import { ArchiveDrawCoverage, ArchiveShadowCoverage } from "./archive-draw-coverage";
 import { InstanceUpdates } from "./instance-updates";
 import { RenderState } from "./render-state";
+import {StartupFrameTimer} from './startup-frame-timer';
+import {adaptiveRenderQuality, type PerformanceTier} from './adaptive-quality';
+import type {StartupQualityProbe,StartupTierProbe} from './quality-recommendation';
+import {qualityPresets} from './render-quality';
 import { SharedDepthAO, SharedDepthBokeh } from "./shared-depth";
 import { disposeThreeTree } from "./three-resources";
 import { ThemeWave } from "./theme-motion";
@@ -65,6 +69,7 @@ const ease = (t: number) => {
 /** The cassette ships Draco-compressed; the decoder is the copy already used by the 002 case. */
 function dracoLoader(): GLTFLoader {
   const draco = new DRACOLoader().setDecoderPath(publicAsset("cases/erste002/vendor/draco/")).setWorkerLimit(2);
+  draco.preload();
   return new GLTFLoader().setDRACOLoader(draco);
 }
 
@@ -86,6 +91,7 @@ export class ArchiveScene {
   dispose() {
     this.inputEvents.abort();
     this.cancelPointer();
+    this.projectPanel?.dispose();
     disposeThreeTree(this.scene);
     this.appearance.disposeSources();
     this.model.clear();
@@ -394,10 +400,10 @@ export class ArchiveScene {
   }
   async load(assetUrl = publicAsset("assets/archive-cassette.glb"), loader: Pick<GLTFLoader, "loadAsync"> = dracoLoader()) {
     this.labelMark.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(labelMarkSvg)}`;
-    await this.labelMark.decode();
-    const gltf = await loader.loadAsync(
-      assetUrl,
-    );
+    const model = loader.loadAsync(assetUrl).finally(() => {
+      if (loader instanceof GLTFLoader) loader.dracoLoader?.dispose();
+    });
+    const [,gltf] = await Promise.all([this.labelMark.decode(),model]);
     gltf.scene.updateMatrixWorld(true);
     const meshes: THREE.Mesh[] = [];
     gltf.scene.traverse((o) => {
@@ -562,11 +568,148 @@ export class ArchiveScene {
   }
 
   private assemblyTemplate?: Promise<THREE.Group>;
+  startupQualityProbe:StartupQualityProbe={frameMs:[],source:'archive browse probe not yet run'};
   async prepareShaders() {
+    this.projectPanel?.warmTextures(this.renderer);
     const panel=this.projectPanel?.mesh,visible=panel?.visible;
+    const target=this.renderer.getRenderTarget();
+    const quadGeometry=new THREE.PlaneGeometry(2,2);
+    const quad=new THREE.Mesh(quadGeometry);
+    const screenCamera=new THREE.OrthographicCamera(-1,1,1,-1,0,1);
     if(panel)panel.visible=true;
-    try { await this.renderer.compileAsync(this.scene,this.camera); }
-    finally { if(panel)panel.visible=Boolean(visible); }
+    try {
+      // The beauty pass renders into the composer's HalfFloat target. Warming
+      // only the default framebuffer misses those variants and all AO/DOF shaders.
+      this.renderer.setRenderTarget(this.superPerformance?null:this.composer.readBuffer);
+      await this.renderer.compileAsync(this.scene,this.camera);
+      const screens: [THREE.Material,THREE.WebGLRenderTarget][]=[];
+      if(!this.superPerformance&&this.ao.enabled){
+        const normals=new THREE.Group();
+        this.scene.traverse(object=>{
+          if(!(object instanceof THREE.Mesh))return;
+          const mesh=object.clone(false);mesh.material=this.ao.normalMaterial;
+          normals.add(mesh);
+        });
+        this.renderer.setRenderTarget(this.ao.normalRenderTarget);
+        await this.renderer.compileAsync(normals,this.camera,this.scene);
+        screens.push([this.ao.ssaoMaterial,this.ao.ssaoRenderTarget],
+          [this.ao.blurMaterial,this.ao.blurRenderTarget],
+          [this.ao.copyMaterial,this.composer.readBuffer]);
+      }
+      if(!this.superPerformance&&this.bokeh.enabled)screens.push(
+        [this.bokeh.materialBokeh,this.composer.writeBuffer]);
+      if(!this.superPerformance&&this.smaa.enabled)screens.push(
+        [this.smaa.materialEdges,this.smaa.edgesRT],
+        [this.smaa.materialWeights,this.smaa.weightsRT],
+        [this.smaa.materialBlend,this.composer.writeBuffer],
+      );
+      for(const [material,buffer] of screens){
+        this.renderer.setRenderTarget(buffer);quad.material=material;
+        await this.renderer.compileAsync(quad,screenCamera);
+      }
+      // Drivers can defer uniform/shadow/transmission setup until the first
+      // draw even after compileAsync. Exercise every variant behind the opaque
+      // 2D opening, with one instance per surface, then restore authored state.
+      const objects: {object:THREE.Object3D;visible:boolean;culled:boolean;count?:number}[]=[];
+      this.scene.traverse(object=>{
+        objects.push({object,visible:object.visible,culled:object.frustumCulled,
+          count:object instanceof THREE.InstancedMesh?object.count:undefined});
+        object.visible=true;object.frustumCulled=false;
+        if(object instanceof THREE.InstancedMesh)object.count=1;
+      });
+      try {
+        this.scene.updateMatrixWorld(true);
+        this.renderer.shadowMap.needsUpdate=true;
+        if(this.superPerformance)this.renderer.render(this.scene,this.camera);
+        else this.composer.render();
+
+      } finally {
+        for(const {object,visible,culled,count} of objects){
+          object.visible=visible;object.frustumCulled=culled;
+          if(object instanceof THREE.InstancedMesh)object.count=count!;
+        }
+        this.renderState.invalidate();this.shadowState.invalidate();
+      }
+    } finally {
+      this.renderer.setRenderTarget(target);quadGeometry.dispose();
+      if(panel)panel.visible=Boolean(visible);
+    }
+  }
+  /** One bounded pre-opening test of the real archive browsing pipeline. */
+  async measureStartupQuality() {
+    const probe:StartupQualityProbe={frameMs:[],tiers:{},complete:false,
+      source:'Archive browse v2: real sea camera, pan and six returning cassettes, full pipeline, CPU + GPU timing; six frames per preset before opening'};
+    this.startupQualityProbe=probe;
+    if(document.hidden||this.renderer.getContext().isContextLost()){
+      delete probe.tiers;probe.source='Startup test unavailable; balanced fallback';return;
+    }
+    const originalQuality=this.quality,originalMotion=this.motion;
+    const originalVisibility=this.renderer.domElement.style.visibility;
+    const project=this.projectPanel?.frame.id,initialIndex=fileAtCell(this.selectedCell);
+    const started=performance.now(),deadline=started+2400;
+    const gl=this.renderer.getContext() as WebGL2RenderingContext;
+    const timer=new StartupFrameTimer(gl);
+    this.renderer.domElement.style.visibility='hidden';
+    // The test runs behind the loading surface, without consuming film time or
+    // dispatching input. Snap to the normal sea camera rather than its edge-on
+    // opening pose, then exercise the same rail used by pointer dragging.
+    this.setMode('archive');this.setProjectDisplay(undefined);
+    this.motion={...originalMotion,selectionTransition:false,detailTransition:false,surfaceTransitions:false};
+    this.reveal=1;this.detail=0;this.scanBlend=0;this.lift={value:.4,velocity:0};
+    // A real drag has several returning files, each with its own glass,
+    // transmission and print draws. Testing the instanced sea alone misses
+    // the dominant cost observed on the laptop. Reuse the actual return path.
+    for(let step=0;step<6;step++){
+      const cell={lane:this.selectedCell.lane,row:this.selectedCell.row+1};
+      this.lift={value:.4,velocity:0};
+      this.select(fileAtCell(cell),{cell});
+    }
+    let tick=0;
+    const center=this.cellPosition(this.selectedCell);
+    const draw=(sample:number)=>{
+      for(const returning of this.outgoing){returning.lift.value=.4;returning.lift.velocity=0;}
+      this.dragTrack={lane:center.x+Math.sin(sample*.7)*COLUMN_SPACING*.7,
+        row:-2.17-center.z+Math.cos(sample*.65)*ROW_SPACING*.8};
+      this.renderState.invalidate();this.shadowState.invalidate();
+      const drew=this.update((++tick)/60)===true;
+      return drew&&this.renderer.info.render.calls>0&&this.renderer.info.render.triangles>0;
+    };
+    try {
+      // Always test the lightweight fallback first, so a slow GPU still has
+      // measured evidence within the total startup budget.
+      for(const tier of ['low','medium','standard','high'] as PerformanceTier[]){
+        if(performance.now()>=deadline||document.hidden||gl.isContextLost())break;
+        this.setQuality(adaptiveRenderQuality(qualityPresets.original,tier));
+        draw(-1);gl.finish(); // Untimed shader, target allocation and upload warmup.
+        const size=this.renderer.getDrawingBufferSize(new THREE.Vector2());
+        const run:StartupTierProbe={frameMs:[],cpuMs:[],gpuMs:[],method:'',drawCalls:0,triangles:0,width:size.x,height:size.y};
+        probe.tiers![tier]=run;
+        for(let sample=0;sample<6&&performance.now()<deadline&&!document.hidden;sample++){
+          const cost=await timer.measure(()=>draw(sample),deadline);
+          if(!cost)continue;
+          run.frameMs.push(cost.frameMs);run.cpuMs.push(cost.cpuMs);
+          if(cost.gpuMs!==undefined)run.gpuMs.push(cost.gpuMs);
+          run.method=cost.method;run.drawCalls=this.renderer.info.render.calls;run.triangles=this.renderer.info.render.triangles;
+        }
+      }
+      const reference=probe.tiers!.high??Object.values(probe.tiers!).at(-1);
+      probe.frameMs=reference?.frameMs??[];
+      probe.drawCalls=reference?.drawCalls;probe.triangles=reference?.triangles;
+      probe.complete=Object.values(probe.tiers!).every(run=>run.frameMs.length===6)&&Object.keys(probe.tiers!).length===4;
+    } catch {
+      // A timer/driver failure must not discard an otherwise usable 3D scene.
+      delete probe.tiers;probe.frameMs=[];
+      probe.source='Startup measurement unavailable; balanced fallback';
+    } finally {
+      probe.elapsedMs=performance.now()-started;
+      this.dragTrack=null;this.motion=originalMotion;
+      this.setMode('hidden');this.select(initialIndex);this.pulses=[];this.pendingPulse=null;
+      this.setProjectDisplay(project,false);
+      this.setQuality(originalQuality);
+      this.update(0,{reveal:0,lift:0,zoom:0,time:0});
+      this.renderer.domElement.style.visibility=originalVisibility;
+      this.renderState.invalidate();this.shadowState.invalidate();
+    }
   }
   async createAssemblyModel() {
     this.assemblyTemplate ??= dracoLoader()
@@ -580,6 +723,7 @@ export class ArchiveScene {
         throw error;
       });
     const template = await this.assemblyTemplate;
+    const projectPrint = await this.projectPanel?.createAssemblyPrint();
     const model = new THREE.Group();
     const meshes: THREE.Mesh[] = [];
     template.traverse((object) => {
@@ -597,6 +741,7 @@ export class ArchiveScene {
       model.add(mesh);
       meshes.push(mesh);
     });
+    if(projectPrint){model.add(projectPrint);meshes.push(projectPrint);}
     this.appearance.prepare(model);
     this.appearance.apply(model, 1);
     this.appearance.setClarity(model, this.modelClarity());
@@ -632,6 +777,7 @@ export class ArchiveScene {
           (mesh.material as THREE.Material).dispose();
         }
         texture.dispose();
+        projectPrint?.material.map?.dispose();
       },
     };
   }
@@ -796,7 +942,7 @@ export class ArchiveScene {
       this.pendingPulse.row -= shift.row;
     }
   }
-  select(index: number, navigation?: ArchiveNavigation) {
+  select(index: number, navigation?: ArchiveNavigation, retainDetail = false) {
     if (!this.navigatingDrag) this.cancelPointer();
     this.setHover(null);
     this.lastInteraction = this.clock;
@@ -843,9 +989,19 @@ export class ArchiveScene {
       this.lift.value = 0;
       this.lift.velocity = 0;
     }
+    if (retainDetail && changed) {
+      // Transfer the rail origin with the selected cell. The raised cassette
+      // remains at the same screen position; leaving detail still returns to
+      // the correct physical archive cell for the newly selected project.
+      const from = this.cellPosition(this.selectedCell), to = this.cellPosition(cell);
+      this.columnCamera.value += to.x - from.x;
+      this.rail.value -= to.z - from.z;
+      this.shoulder.value += cell.row - this.selectedCell.row;
+      this.laneFocus.value += cell.lane - this.selectedCell.lane;
+    }
     this.selectedSlot = next;
     this.selectedCell = cell;
-    if (changed) {
+    if (changed && !retainDetail) {
       this.decryption.select();
       this.rotation = 0;
       this.returnY = null;
@@ -861,11 +1017,14 @@ export class ArchiveScene {
       this.appearance.dispose(o.group);
       this.outgoing.splice(returning, 1);
     }
-    if (this.deferSelectionPulse) {
+    if (retainDetail) {
+      this.pendingPulse = null;
+    } else if (this.deferSelectionPulse) {
       this.pendingPulse = this.looping ? { ...cell } : null;
     } else this.emitPulse(cell);
-    this.targetRotation = 0;
+    if (!retainDetail) this.targetRotation = 0;
     this.drawLabel(index);
+    this.renderState.invalidate();
   }
   private emitPulse(cell: ArchiveCell) {
     this.pulses.push({ ...cell, time: this.clock });

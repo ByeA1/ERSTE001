@@ -9,6 +9,7 @@ export class ProjectLoading {
   private started = 0;
   private slowTimer = 0;
   private entryFrame = 0;
+  private lastProgress = '';
   private run = new AbortController();
   private logoPlayer: RhineLogoPlayer;
   constructor(private panel: HTMLDialogElement, retry: () => void, proceed: () => void, back: () => void) {
@@ -37,6 +38,7 @@ export class ProjectLoading {
     this.cancel();
     this.run = new AbortController();
     this.started = performance.now();
+    this.lastProgress = '';
     this.root.hidden = false;
     this.logoPlayer.setActive(!approach);
     this.root.style.removeProperty('opacity');
@@ -71,11 +73,26 @@ export class ProjectLoading {
     this.slowTimer = window.setTimeout(() => {
       if (!this.run.signal.aborted && this.root.dataset.phase !== 'failed') {
         this.status('资源仍在载入，准备完成后将自动进入。');
+        this.root.querySelector<HTMLButtonElement>('[data-loading-back]')!.hidden = false;
       }
     }, 8000);
     return this.run.signal;
   }
   preparing() { this.setPhase('assets', '档案已连接，正在准备首屏内容。'); }
+  progress(value?:string) {
+    if(!value || value===this.lastProgress || this.root.hidden)return;
+    this.lastProgress=value;
+    const [phase,received,total]=value.split(':');
+    if(phase==='download' && Number(received)>0){
+      const size=(bytes:string)=>(Number(bytes)/1024/1024).toFixed(1)+' MB';
+      const amount=size(received)+(Number(total)>0?' / '+size(total):'');
+      this.status(`正在读取三维模型 · ${amount}`,`Loading the 3D model · ${amount}`);
+    }else if(phase==='decompress'||phase==='parse'){
+      this.status('模型已下载，正在准备三维展示。','Model downloaded. Preparing the 3D view.');
+    }else if(phase==='initialize'){
+      this.status('正在准备模型材质与灯光。','Preparing model materials and lighting.');
+    }
+  }
   async reveal(signal: AbortSignal, partial = false) {
     clearTimeout(this.slowTimer);
     // A brief scan remains visible on cached opens; never invent a percentage.
@@ -125,7 +142,7 @@ export class ProjectLoading {
     translatedText(this.root.querySelector('h2')!,phase === 'ready' ? 'ACCESS CONFIRMED' : phase === 'failed' ? '档案载入未完成' : '正在读取项目档案',phase === 'ready' ? 'ACCESS CONFIRMED' : phase === 'failed' ? 'ARCHIVE NOT READY' : 'READING PROJECT ARCHIVE');
     this.status(text);
   }
-  private status(text: string) {
+  private status(text: string, englishText?: string) {
     const english: Record<string,string>={
       '正在连接项目档案，请稍候。':'Connecting to the project archive.',
       '档案已连接，正在准备首屏内容。':'Archive connected. Preparing the first view.',
@@ -137,7 +154,7 @@ export class ProjectLoading {
       '项目页面暂时无法打开，请重试。':'The project page could not open. Please retry.',
       '项目页面载入失败，请重试。':'The project page failed to load. Please retry.',
     };
-    translatedText(this.root.querySelector('.case-loading-status')!,text,english[text]??'The archive is not ready. Please retry.');
+    translatedText(this.root.querySelector('.case-loading-status')!,text,englishText??english[text]??'The archive is not ready. Please retry.');
   }
 }
 

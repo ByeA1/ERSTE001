@@ -22,6 +22,7 @@ import { createStudioEnvironment } from "./studio-environment.js";
 import { createSurfaceGeometry } from "./surface-normals.js";
 import { createEditor } from "./story-editor.js";
 import { RenderFrameLimiter } from "../shared/render-frame.js";
+
 import { StoryInterfaceMotion } from "./story-interface-motion.js";
 
 const $ = (s) => document.querySelector(s);
@@ -32,6 +33,9 @@ const loading = $("#loading");
 const loadingCopy = $("#loading-copy");
 const retry = $("#retry");
 const modeButton = $("#mode");
+const initialAssembly = $("#initial-assembly");
+const freePanel = $("#free-controls");
+const freeTools = $("#free-tools");
 const autoButton = $("#auto");
 const previous = $("#prev-chapter");
 const next = $("#next-chapter");
@@ -43,6 +47,8 @@ const capIndex = $("#cap-index");
 const progress = $("#progress");
 const chapterNumber = $("#chapter-number");
 const chapterTitle = $("#chapter-title");
+const shotMeter = $(".meter-track");
+const shotAnnouncement = $("#shot-announcement");
 const partSelect = $("#part");
 const assembly = $("#assembly");
 const extractButton = $("#extract-part"),
@@ -128,6 +134,10 @@ const partLabels = [
   ["电池", "Battery"],
 ];
 const renderLimit = new RenderFrameLimiter();
+function qualityTier() {
+  const tier=document.documentElement.dataset.terminalQuality;
+  return ['high','standard','medium','low'].includes(tier)?tier:'high';
+}
 const motion = matchMedia("(prefers-reduced-motion: reduce)");
 const meshes = [],
   parts = new Map();
@@ -183,6 +193,7 @@ let shadowCut = "";
 const shadowPlane = new THREE.Plane();
 const lifetime = new AbortController();
 let raf = 0,
+  lastCallback = 0,
   dirty = false,
   lastTime = 0,
   pixelRatio = 0,
@@ -193,6 +204,7 @@ let editor = { update() {} };
 function reducedMotion() {
   return motion.matches || parentReduced;
 }
+let keyboardShotControl;
 function updateNavigation() {
   archive?.update();
   const selected = shots[shotIndex]?.chapter;
@@ -206,7 +218,22 @@ function updateNavigation() {
   next.disabled = busy || shotIndex >= shots.length - 1;
   next.hidden = last && !busy;
   restart.hidden = !last || busy;
+  if (busy) next.setAttribute("aria-busy", "true");
+  else next.removeAttribute("aria-busy");
+  shotMeter.style.setProperty("--cue-count", Math.max(1, shots.length));
+  if (!busy && body.dataset.projectReady === "ready") {
+    const announcement = (lang ? "Shot " : "镜头 ") + chapterNumber.textContent;
+    if (shotAnnouncement.textContent !== announcement) shotAnnouncement.textContent = announcement;
+  }
+  if (!busy && keyboardShotControl) {
+    if ([body, keyboardShotControl].includes(document.activeElement)) {
+      const target = [keyboardShotControl, restart, next, previous].find(control => !control.hidden && !control.disabled);
+      target?.focus({ preventScroll: true });
+    }
+    keyboardShotControl = undefined;
+  }
   autoButton.disabled = body.dataset.projectReady !== "ready" || free || shots.length < 2;
+  initialAssembly.disabled = !ready || !shots.length;
   autoButton.setAttribute("aria-pressed", String(auto));
   autoButton.textContent = auto ? (lang ? "Stop auto" : "停止自动") : (lang ? "Auto play" : "自动观看");
   for (const [index, button] of Array.from(chapterNav.children).entries()) {
@@ -236,8 +263,10 @@ function setLanguage(value, notify = false) {
   previous.lastElementChild.textContent = lang ? "Previous" : "上一镜";
   next.firstElementChild.textContent = lang ? "Next" : "下一镜";
   restart.lastElementChild.textContent = lang ? "Back to start" : "回到开头";
+  initialAssembly.textContent = lang ? "Initial assembly" : "初始总装";
   $("#part-label").textContent = lang ? "Part" : "部件";
   $("#assembly-label").textContent = lang ? "Assembly" : "装配";
+  $("#free-tools-label").textContent = lang ? "More tools" : "更多操作";
   $("#explode").textContent = lang ? "Explode" : "展开";
   $("#reset").textContent = lang ? "Reset" : "复位";
   $("#assembly-link").textContent = lang ? "Assembly ↗" : "装配图 ↗";
@@ -306,6 +335,7 @@ addEventListener("message", (event) => {
   }
   if (type === "design-terminal:case-policy") {
     parentReduced = Boolean(reduced);
+
     resize();
     invalidate();
   }
@@ -420,13 +450,22 @@ function playToShot(index) {
   updateNavigation();
   invalidate();
 }
-previous.onclick = () => navigate(-1);
-next.onclick = () => navigate(1);
+for (const [control, direction] of [[previous, -1], [next, 1]]) {
+  control.onclick = (event) => {
+    if (event.detail === 0 && document.activeElement === control) keyboardShotControl = control;
+    navigate(direction);
+    if (!playback) keyboardShotControl = undefined;
+  };
+}
 restart.onclick = () => {
   setAuto(false);
   seek(0);
   playToShot(0);
   chapterNav.firstElementChild?.focus();
+};
+initialAssembly.onclick = () => {
+  setAuto(false);
+  seek(shots[0].hold);
 };
 addEventListener("keydown", (event) => {
   if (
@@ -453,6 +492,7 @@ function setFree(value) {
   } else freeRest = clone(draft.assembly);
   body.dataset.mode = free ? "free" : "chapter";
   interfaceMotion.presence($("#free-controls"), free);
+  if (!free) freeTools.open = false;
   modeButton.setAttribute("aria-pressed", String(free));
   if (controls) {
     controls.enabled = free;
@@ -626,12 +666,12 @@ function resize() {
   const w = host.clientWidth,
     h = host.clientHeight;
   if (w < 1 || h < 1) return;
-  const tier = document.documentElement.dataset.terminalQuality;
+  const tier = qualityTier();
   const mobile = portrait.matches;
   const ratio = Math.min(
     devicePixelRatio,
     tier === "low" ? 1 : mobile ? 1.35 : 1.65,
-    Math.sqrt(1_450_000 / (w * h)),
+    Math.sqrt((tier === 'high' ? 1_450_000 : tier === 'standard' ? 1_250_000 : tier === 'medium' ? 1_050_000 : 750_000) / (w * h)),
   );
   if (pixelRatio !== ratio) {
     renderer.setPixelRatio(ratio);
@@ -643,6 +683,7 @@ function resize() {
     renderHeight = h;
   }
   camera.aspect = w / h;
+  host.dataset.adaptiveTier = tier;
   invalidate();
 }
 const resizeObserver = new ResizeObserver(resize);
@@ -665,6 +706,8 @@ function pause() {
   autoTimer = 0;
   raf = 0;
   lastTime = 0;
+  lastCallback = 0;
+
 }
 document.addEventListener("visibilitychange", () =>
   document.hidden ? pause() : invalidate(),
@@ -860,9 +903,14 @@ function apply(value) {
 function tick(now) {
   raf = 0;
   if (!canRender() || !dirty) return;
+  // Also read the persistent policy after a late script start: the first host
+  // message can precede module evaluation while the DOM is already available.
+
+  const callbackInterval = lastCallback ? now - lastCallback : undefined;
+  lastCallback = now;
   const previousTime = lastTime;
   if (!previousTime || now - previousTime > 250) renderLimit.reset();
-  const tier = document.documentElement.dataset.terminalQuality ?? "high";
+  const tier = qualityTier();
   if (!renderLimit.admit(now, tier === "high")) {
     raf = requestAnimationFrame(tick);
     return;
@@ -898,10 +946,15 @@ function tick(now) {
     apply(draft || sampleStory(story, p));
     renderer.render(scene, camera);
     renderLimit.recordFrame(performance.now() - renderStart);
+
     host.dataset.fpsLimit = renderLimit.fpsLimit;
+    host.dataset.performance = JSON.stringify({mode:document.documentElement.dataset.terminalPerformanceMode??'high',tier:qualityTier(),locked:true,source:'fixed preset'});
   }
   if ((playback && !free) || (free && assemblyMove)) invalidate();
   else scheduleAuto();
+  // A held shot deliberately stops RAF. Its idle duration is not a slow
+  // rendered frame and must not influence the next quality observation window.
+
 }
 function setReady(value) {
   ready = value;

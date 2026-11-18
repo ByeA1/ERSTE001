@@ -9,18 +9,21 @@ class SiteNavigation {
   private readonly close: HTMLButtonElement;
   private readonly projectLinks: HTMLElement;
   private timer = 0;
+  private compact = matchMedia('(max-width:640px), (pointer:coarse) and (orientation:portrait) and (max-width:1000px)');
   private switchProject?: (id: string) => void;
   private back?: () => void;
 
   constructor() {
     this.root.className = 'site-navigation';
+    this.root.tabIndex = -1;
     this.root.innerHTML = `<div class="site-nav-profile"><strong>albert_z0413@hotmail.com</strong><span>Product Design · 2026</span></div>
+      <strong class="site-nav-project"></strong>
       <div class="site-nav-meta"><span>Product Design</span><span>2026</span></div>
       <button class="site-nav-toggle" type="button" aria-controls="site-nav-menu"><span aria-hidden="true" class="site-nav-glyph">☰</span><b></b></button>
       <div class="site-nav-language">${languageControls()}</div>
-      <button type="button" class="project-case-close"><span aria-hidden="true">←</span><span data-zh="返回终端" data-en="Back to terminal">返回终端</span></button>
+      <button type="button" class="project-case-close"><span class="action-icon" aria-hidden="true">←</span><span class="action-label" data-zh="返回终端" data-en="Back to terminal">返回终端</span></button>
       <div id="site-nav-menu" class="site-nav-menu" hidden>
-        <div class="site-nav-links"></div>
+        <div class="site-nav-links"></div><div class="site-nav-menu-meta"></div>
       </div>`;
     this.toggle = this.root.querySelector('.site-nav-toggle')!;
     this.menu = this.root.querySelector('.site-nav-menu')!;
@@ -48,7 +51,16 @@ class SiteNavigation {
       this.toggle.focus({ preventScroll: true });
     });
     window.addEventListener('design-terminal:language', () => this.localize());
+    this.compact.addEventListener('change',()=>{this.syncLayout();this.expand(false);});
+    this.syncLayout();
     this.expand(false);
+  }
+
+  private syncLayout() {
+    const profile=this.root.querySelector<HTMLElement>('.site-nav-profile')!;
+    const language=this.root.querySelector<HTMLElement>('.site-nav-language')!;
+    if(this.compact.matches)this.root.querySelector('.site-nav-menu-meta')!.append(profile,language);
+    else {this.root.prepend(profile);this.root.insertBefore(language,this.close);}
   }
 
   hideProject() {
@@ -60,6 +72,7 @@ class SiteNavigation {
     this.switchProject = select;
     this.back = back;
     this.root.dataset.theme = project.navigationTheme ?? 'light';
+    this.root.querySelector('.site-nav-project')!.textContent=project.title;
     this.projectLinks.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
       const current = button.dataset.navProject === project.id;
       button.disabled = current;
@@ -70,7 +83,7 @@ class SiteNavigation {
     this.expand(false);
   }
 
-  focus() { this.close.focus({ preventScroll: true }); }
+  focus() { this.root.focus({ preventScroll: true }); }
 
   private expand(open: boolean) {
     this.menu.hidden = !open;

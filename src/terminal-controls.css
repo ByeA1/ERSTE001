@@ -76,3 +76,209 @@ html #viewport > #skip.opening-skip:not([hidden]){display:block!important;}
 html #stage[data-layout=portrait] .back-button{top:calc(var(--top-edge) + 100px);width:calc(100% - 192px);max-width:220px;gap:8px;padding:10px 12px;}
 html #stage[data-layout=portrait] .back-button>span{white-space:normal;font-size:9px;line-height:1.5;}
 @media(max-width:900px){html .opening-skip{right:20px;bottom:max(16px,env(safe-area-inset-bottom));font-size:11px;}}
+
+/* Warm translucent access keys. Keep selectors inside the terminal body. */
+:where(html:not([data-wallpaper]) #stage, .case-loading) {
+  --access-ink: #292d24;
+  --access-paper: #f3f1e514;
+  --access-hover: #e3e8dc29;
+  --access-rule: #787e6d;
+  --access-signal: #a55522;
+  --access-target: 44px;
+}
+html:not([data-wallpaper]) #stage[data-layout=desktop] {
+  --access-target: 54px;
+}
+@supports (width: calc(44px * (1080px / 100dvh))) {
+  html:not([data-wallpaper]) #stage[data-layout=desktop] { --access-target: max(44px, calc(44px * (1080px / 100dvh))); }
+}
+
+html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open) {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr) 33px;
+  align-items: center;
+  column-gap: 20px;
+  position: relative;
+  min-height: max(50px, var(--access-target, 50px));
+  padding: 4px 7px 4px 18px;
+  border: 1px solid var(--access-rule);
+  border-inline-start: 3px solid var(--access-ink);
+  border-radius: 0;
+  background: var(--access-paper);
+  color: var(--access-ink);
+  text-align: start;
+  font-weight: 650;
+  letter-spacing: .07em;
+  scale: none;
+  filter: none;
+  transition: background-color 160ms, border-color 160ms, translate 110ms;
+}
+html:not([data-wallpaper]) #stage .read-file { min-width: 208px; }
+html:not([data-wallpaper]) #stage .showcase-open { min-width: 164px; flex: 0 0 auto; font-size: 13px; }
+html:not([data-wallpaper]) #stage .read-file::before,
+html:not([data-wallpaper]) #stage .showcase-open::before {
+  position: absolute;
+  content: "";
+  top: 7px;
+  left: 5px;
+  width: 4px;
+  height: 4px;
+  background: var(--access-signal);
+}
+html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open) > span:last-child {
+  display: grid;
+  align-self: stretch;
+  place-items: center;
+  border-inline-start: 1px solid #787e6d70;
+  color: var(--access-ink);
+  font: 18px/1 Consolas, monospace;
+  transition: color 160ms;
+}
+html:not([data-wallpaper]) #stage .archive-ui .read-file-label { font-size: 14px; }
+
+html:not([data-wallpaper]) #stage :is(.project-step, .column-navigation > button, .detail-project-step,
+  .back-button, .directory-back, .detail-actions .export-button, .viewer-open) {
+  border: 1px solid #787e6d85;
+  border-radius: 0;
+  background: #eeede30f;
+  color: var(--access-ink);
+  min-height: var(--access-target);
+  scale: none;
+  filter: none;
+  transition: background-color 160ms, border-color 160ms, translate 110ms;
+}
+html:not([data-wallpaper]) #stage[data-layout=desktop] :is(.project-title-row > .project-step, .column-navigation > button, .directory-items button) {
+  width: var(--access-target);
+  min-height: var(--access-target);
+}
+html:not([data-wallpaper]) #stage[data-layout=desktop] .detail-project-navigation .detail-project-step { min-height: var(--access-target); }
+html:not([data-wallpaper]) #stage .directory-back { padding-inline: 9px; }
+html:not([data-wallpaper]) #stage .viewer-open { padding-inline: 10px; }
+html:not([data-wallpaper]) #stage .detail-actions .export-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  width: auto;
+  padding-inline: 12px;
+  white-space: nowrap;
+}
+html:not([data-wallpaper]) #stage .file-title { scale: none; filter: none; min-height: 44px; }
+html:not([data-wallpaper]) #stage .detail-actions { flex-wrap: wrap; justify-content: start; gap: 10px; }
+html:not([data-wallpaper]) #stage .directory-items button[aria-current] { background: #eeede31a; }
+html:not([data-wallpaper]) #stage .directory-number {
+  display: grid;
+  place-items: center;
+  min-width: 26px;
+  min-height: 20px;
+  border-block: 1px solid transparent;
+  transform: none;
+}
+html:not([data-wallpaper]) #stage .directory-items button[aria-current] .directory-number {
+  color: var(--access-ink);
+  border-block-color: var(--access-rule);
+  transform: none;
+}
+html:not([data-wallpaper]) #stage .directory-items button[aria-current] .directory-number::before {
+  content: "";
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  margin: -22px 0 0 24px;
+  background: var(--access-signal);
+}
+html:not([data-wallpaper]) #stage .directory-reserved .directory-number { text-decoration: underline dotted; text-underline-offset: 4px; }
+html:not([data-wallpaper]) #stage .detail-tabs button { min-height: 44px; scale: none; filter: none; }
+html:not([data-wallpaper]) #stage .detail-tabs button[aria-selected="true"] { color: var(--access-ink); }
+html:not([data-wallpaper]) #stage .detail-tabs button[aria-selected="true"]::before {
+  content: "";
+  display: inline-block;
+  width: 4px;
+  height: 4px;
+  margin-inline-end: 5px;
+  background: var(--access-signal);
+  vertical-align: middle;
+}
+html:not([data-wallpaper]) #stage .archive-counter > div { font-variant-numeric: tabular-nums; }
+
+html .case-loading-actions > button {
+  border-color: var(--access-rule);
+  background: var(--access-paper);
+  color: var(--access-ink);
+  scale: none;
+  filter: none;
+}
+html .case-loading-actions > :is([data-retry], [data-proceed]) { border-inline-start: 3px solid var(--access-ink); }
+html .case-loading-track > i { background-color: var(--access-signal); }
+@media (hover: hover) {
+  html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open, .project-step, .column-navigation > button,
+    .detail-project-step, .back-button, .directory-back, .detail-actions .export-button, .viewer-open):not(:disabled):hover {
+    border-color: var(--access-ink);
+    background-color: var(--access-hover);
+    color: var(--access-ink);
+    scale: none;
+    filter: none;
+  }
+  html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open):not(:disabled):hover > span:last-child { color: var(--access-signal); }
+  html .case-loading-actions > button:not(:disabled):hover { background: var(--access-hover); scale: none; filter: none; }
+}
+html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open, .project-step, .column-navigation > button,
+  .detail-project-step, .back-button, .directory-back, .detail-actions .export-button, .viewer-open):not(:disabled):active {
+  translate: 0 1px;
+  scale: none;
+  background-color: #d3d9ca36;
+}
+html:not([data-wallpaper]) #stage :is(.read-file, .project-step, .detail-project-step):disabled {
+  opacity: 1;
+  color: #61655b;
+  border-color: #8b8f82;
+  background: #e9e8df18;
+}
+html:not([data-wallpaper]) #stage .read-file:disabled::before { background: #7e8276; }
+html:not([data-wallpaper]) #stage .read-file:disabled > span:last-child { font-size: 0; }
+html:not([data-wallpaper]) #stage .read-file:disabled > span:last-child::after { content: "—"; font-size: 15px; }
+@media (prefers-reduced-motion: reduce) {
+  html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open, .project-step, .detail-project-step, .back-button, .directory-back, .directory-number) { transition: none; }
+}
+/* A warm glass substrate keeps moving cassette edges behind the control. */
+html:not([data-wallpaper]) #stage :is(.read-file, .showcase-open, .project-step,
+  .column-navigation > button, .detail-project-step, .back-button, .directory-back,
+  .detail-actions .export-button, .viewer-open, .file-title, .directory-items),
+.case-loading-actions > button {
+  -webkit-backdrop-filter: blur(6px) saturate(105%);
+  backdrop-filter: blur(6px) saturate(105%);
+}
+html:not([data-wallpaper]) #stage :is(.file-title, .directory-items) { background: transparent; }
+html:not([data-wallpaper]) #stage .detail-tabs {
+  background: #f2efe612;
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
+}
+
+/* Utility symbols share one drawing system, independent of font fallback. */
+#stage .system-nav .utility-icon {display:inline-grid;place-items:center;flex:0 0 20px;width:20px;height:20px;line-height:0;}
+#stage .system-nav .utility-icon svg {display:block;width:20px;height:20px;}
+/* Footer utilities have no backing plate, including selected/pressed states. */
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-footer {align-items:center;color:#625442;}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-footer .terminal-utilities {
+ gap:0;padding:0;min-height:44px;border:0;background:transparent;
+ backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none;color:inherit;
+}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-footer .terminal-utilities > button {
+ width:44px;height:44px;min-height:44px;min-width:44px;display:grid;place-items:center;padding:0;gap:0;scale:none;filter:none;
+}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .terminal-utilities .terminal-language-site {margin-inline-start:0;padding-inline-start:0;border:0;}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .terminal-utilities .terminal-language button {
+ min-width:32px;height:44px;min-height:44px;padding:0;font-size:11px;font-weight:500;line-height:1;scale:none;color:inherit;
+ border:0;border-bottom:1px solid transparent;box-shadow:none;
+}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .terminal-utilities .terminal-language button[aria-pressed=true] {border-bottom-color:currentColor;}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-footer .terminal-utilities,
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-footer .terminal-utilities button {
+ background:transparent;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+}
+html #stage:is([data-layout=compact],[data-layout=portrait]) .system-footer > button[data-action=replay] {
+ min-height:44px;height:44px;display:flex;align-items:center;justify-content:center;padding-block:0;font-size:11px;font-weight:500;color:inherit;
+}
+@media(max-width:380px) {
+ html #stage[data-layout=portrait] .system-footer > button[data-action=replay] {max-width:70px;white-space:normal;line-height:1.35;text-align:right;}
+}

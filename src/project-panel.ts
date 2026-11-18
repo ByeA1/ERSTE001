@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { projects } from './projects';
 import {drawProjectCover,PROJECT_COVER} from './project-cover';
 import {projectCollections} from './project-collections';
@@ -10,7 +9,24 @@ export class ProjectPanel {
   mesh: THREE.Mesh;
   private textures = new Map<string, THREE.CanvasTexture>();
   private revealUniform = { value: 0 };
+  private nextMap = { value: null as THREE.Texture | null };
+  private blendUniform = { value: 0 };
+  private swap?: { from: string; to: string; progress: number; queued?: string };
+  private fontSignature = '';
+  private renderer?: THREE.WebGLRenderer;
   private motion = new ProjectCoverMotion();
+  private pending = new Set<HTMLImageElement>();
+  private disposed = false;
+  private repaint = new Set<() => void>();
+  private refreshFonts = () => {
+    // These cards contain Latin glyphs only. Loading another Chinese font
+    // shard must not repaint and re-upload both full-resolution cover maps.
+    const signature = ['19px MiSans','bold 83px MiSans','20px MiSans'].map(font=>document.fonts.check(font,'ERSTE001 DESIGN ARCHIVE')).join();
+    if (signature === this.fontSignature) return;
+    this.fontSignature = signature;
+    this.repaint.forEach(paint=>paint());
+    if (this.renderer) this.warmTextures(this.renderer);
+  };
   constructor() {
     this.mesh = new THREE.Mesh(new THREE.PlaneGeometry(4.36, 2.48),new THREE.MeshBasicMaterial({transparent:false,toneMapped:false,depthWrite:true}));
     this.mesh.position.set(0,1.55,.171);
@@ -22,9 +38,16 @@ export class ProjectPanel {
     const material=this.mesh.material as THREE.MeshBasicMaterial;
     material.onBeforeCompile=shader=>{
       shader.uniforms.projectReveal=this.revealUniform;
+      shader.uniforms.projectNextMap=this.nextMap;
+      shader.uniforms.projectBlend=this.blendUniform;
       shader.vertexShader='varying vec2 vProjectUV;\n'+shader.vertexShader;
       shader.vertexShader=shader.vertexShader.replace('#include <begin_vertex>','#include <begin_vertex>\nvProjectUV=uv;');
-      shader.fragmentShader='uniform float projectReveal; varying vec2 vProjectUV;\n'+shader.fragmentShader;
+      shader.fragmentShader='uniform float projectReveal; uniform sampler2D projectNextMap; uniform float projectBlend; varying vec2 vProjectUV;\n'+shader.fragmentShader;
+      shader.fragmentShader=shader.fragmentShader.replace('#include <map_fragment>',`#include <map_fragment>
+        #ifdef USE_MAP
+          // Canvas textures share the renderer's sRGB-to-linear texture decode.
+          diffuseColor.rgb=mix(diffuseColor.rgb,texture2D(projectNextMap,vMapUv).rgb,projectBlend);
+        #endif`);
       shader.fragmentShader=shader.fragmentShader.replace('#include <color_fragment>',`#include <color_fragment>
         float front=projectReveal*1.10;
         float depth=1.0-vProjectUV.y;
@@ -32,37 +55,76 @@ export class ProjectPanel {
         float settle=smoothstep(0.0,0.10,front-depth);
         diffuseColor.rgb=mix(vec3(0.918,0.898,0.882),diffuseColor.rgb,settle);`);
     };
-    material.customProgramCacheKey=()=> 'project-panel-reveal-v1';
+    material.customProgramCacheKey=()=> 'project-panel-reveal-blend-v2';
   }
   async load() {
-    const images=new Map<string,CanvasImageSource>();
-    await Promise.all(projects.map(async project=>{
-      if(project.cover){
-        const image=new Image();image.src=project.cover;
-        try{await image.decode();images.set(project.id,image);}catch{}
-      }else if(project.id==='erste002'){
-        try{images.set(project.id,await this.renderMouse());}catch{}
-      }
-    }));
+    const decoded: Promise<unknown>[] = [];
+    document.fonts.addEventListener('loadingdone',this.refreshFonts);
     for(const project of projects){
       const canvas=document.createElement('canvas');canvas.width=PROJECT_COVER.width;canvas.height=PROJECT_COVER.height;
       const c=canvas.getContext('2d')!;
       const collection=projectCollections.find(collection=>collection.projectIds.includes(project.id));
-      drawProjectCover(c,project,images.get(project.id),collection?.title);
+      drawProjectCover(c,project,undefined,collection?.title);
       const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
       this.textures.set(project.id,texture);
+      let cover:HTMLImageElement|undefined;
+      const paint=()=>{
+        if(this.disposed)return;
+        drawProjectCover(c,project,cover,collection?.title);texture.needsUpdate=true;
+      };
+      this.repaint.add(paint);
+      if(project.cover){
+        const image=new Image();image.decoding='async';
+        this.pending.add(image);image.src=project.cover;
+        decoded.push(image.decode().then(()=>{
+          if(this.disposed)return;
+          cover=image;paint();
+        }).catch(()=>{}).finally(()=>this.pending.delete(image)));
+      }
     }
+    await Promise.allSettled(decoded);
+    this.refreshFonts();
+  }
+  warmTextures(renderer: THREE.WebGLRenderer) {
+    this.renderer=renderer;
+    this.textures.forEach(texture=>renderer.initTexture(texture));
   }
   select(id?:string, show=true, animate=true){
-    this.motion.select(id,show,animate);
+    const active=this.motion.activeId;
+    if (animate && show && id && active && (this.motion.frame.phase==='open'||this.motion.frame.phase==='opening') && id!==active) {
+      if (this.swap) {
+        if (id===this.swap.from) {
+          // Reverse the current blend without jumping on rapid previous/next.
+          const {from,to,progress}=this.swap;
+          this.swap={from:to,to:from,progress:1-progress};
+          this.motion.replace(id);
+        } else this.swap.queued=id;
+      } else {
+        this.swap={from:active,to:id,progress:0};
+        this.motion.replace(id);
+      }
+    } else {
+      // A return midway through a blend must not replace the print abruptly.
+      // Continue its blend underneath the original physical closing wipe.
+      if (!animate || (id && !show)) this.swap=undefined;
+      else if (this.swap) this.swap.queued=undefined;
+      this.motion.select(id,show,animate);
+    }
     this.sync();
   }
   private sync(){
     const id=this.motion.activeId;
     this.mesh.visible=Boolean(id)&&this.motion.amount>0;
     const material=this.mesh.material as THREE.MeshBasicMaterial;
-    const map=id?this.textures.get(id)??null:material.map;
-    if(material.map!==map){material.map=map;material.needsUpdate=true;}
+    const map=this.swap?this.textures.get(this.swap.from)!:id?this.textures.get(id)??null:material.map;
+    if(material.map!==map){
+      const needsProgram = !material.map !== !map;
+      material.map=map;
+      if(needsProgram)material.needsUpdate=true;
+    }
+    this.nextMap.value=this.swap?this.textures.get(this.swap.to)!:map;
+    const p=this.swap?.progress??0;
+    this.blendUniform.value=p*p*(3-2*p);
     this.revealUniform.value=this.motion.amount;
   }
   reveal(animate=true){
@@ -70,29 +132,40 @@ export class ProjectPanel {
     this.sync();
   }
   update(dt:number){
-    if(!this.motion.update(dt))return false;
+    const changed=this.motion.update(dt);
+    if(this.swap){
+      this.swap.progress=Math.min(1,this.swap.progress+Math.max(0,dt)/.32);
+      if(this.swap.progress===1){
+        const queued=this.swap.queued;
+        this.swap=undefined;
+        if(queued && queued!==this.motion.activeId)this.select(queued,true,true);
+      }
+    } else if(!changed)return false;
     this.sync();
     return true;
   }
+  /** Independent texture for the viewer's WebGL context; same authored card. */
+  async createAssemblyPrint(){
+    await Promise.allSettled([...this.pending].map(image=>image.decode()));
+    if(this.disposed)return;
+    const id=this.motion.activeId,source=id?this.textures.get(id):undefined;
+    if(!source)return;
+    const canvas=document.createElement('canvas');canvas.width=PROJECT_COVER.width;canvas.height=PROJECT_COVER.height;
+    canvas.getContext('2d')!.drawImage(source.image,0,0);
+    const map=new THREE.CanvasTexture(canvas);map.colorSpace=THREE.SRGBColorSpace;
+    const print=new THREE.Mesh(this.mesh.geometry.clone(),new THREE.MeshBasicMaterial({map,toneMapped:false,side:THREE.DoubleSide}));
+    print.position.copy(this.mesh.position);print.userData.surface='Project_Print';
+    print.userData.assemblyPart='cover';print.userData.excludeFromAO=true;
+    return print;
+  }
   get hasCover(){return Boolean(this.motion.activeId);}
   get revealAmount(){return this.motion.amount;}
-  get frame(){return this.motion.frame;}
-  private async renderMouse():Promise<HTMLCanvasElement>{
-    const gltf=await new GLTFLoader().loadAsync('/cases/erste002/assets/models/shell-v6.glb');
-    const scene=new THREE.Scene();
-    const group=gltf.scene;
-    const size=new THREE.Box3().setFromObject(group).getSize(new THREE.Vector3());
-    group.scale.setScalar(3/Math.max(size.x,size.y,size.z));
-    group.updateMatrixWorld(true);
-    const center=new THREE.Box3().setFromObject(group).getCenter(new THREE.Vector3());group.position.sub(center);
-    group.traverse(object=>{if(object instanceof THREE.Mesh)object.material=new THREE.MeshStandardMaterial({color:'#20242a',metalness:.08,roughness:.36});});
-    scene.add(group,new THREE.HemisphereLight('#ffffff','#85877a',2));
-    const key=new THREE.DirectionalLight('#ffffff',3);key.position.set(-3,5,4);scene.add(key);
-    const rim=new THREE.DirectionalLight('#c8d6ed',2);rim.position.set(4,3,-3);scene.add(rim);
-    const camera=new THREE.PerspectiveCamera(30,1080/660,.1,100);camera.position.set(4,3.8,5);camera.lookAt(0,0,0);
-    const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.setSize(1080,660);renderer.setClearColor('#e8e4da',0);renderer.render(scene,camera);
-    const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=660;canvas.getContext('2d')!.drawImage(renderer.domElement,0,0);
-    group.traverse(object=>{if(object instanceof THREE.Mesh){object.geometry.dispose();(object.material as THREE.Material).dispose();}});renderer.dispose();renderer.forceContextLoss();
-    return canvas;
+  get frame(){return {...this.motion.frame,phase:this.swap?'crossfading':this.motion.frame.phase};}
+  dispose(){
+    this.disposed=true;
+    this.renderer=undefined;
+    document.fonts.removeEventListener('loadingdone',this.refreshFonts);this.repaint.clear();
+    this.pending.forEach(image=>image.removeAttribute('src'));this.pending.clear();
+    this.textures.forEach(texture=>texture.dispose());this.textures.clear();
   }
 }

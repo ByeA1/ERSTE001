@@ -2,6 +2,22 @@ import { currentLanguage } from './terminal-language';
 
 // Explicit UI copy only. Never walk scene labels, rolling glyphs or project prose.
 const pairs: readonly (readonly [string, string])[] = [
+  ['已启用此动画','Animation enabled'], ['已关闭此动画','Animation disabled'],
+  ['开场设置将在下次重播时生效','Opening settings apply on the next replay'],
+  ['请通过浏览器菜单添加到主屏幕','Use the browser menu to add this site to your home screen'],
+  ['请使用浏览器的全屏快捷键 F11','Use the browser fullscreen shortcut F11'],
+  ['系统设置','SYSTEM SETTINGS'], ['会话已授权','SESSION AUTHORIZED'],
+  ['超级性能','SUPER PERFORMANCE'], ['动效控制','ANIMATION CONTROLS'],
+  ['开场演出','BOOT SEQUENCE'], ['选档波浪','SELECTION WAVE'],
+  ['待机起伏','IDLE MOTION'], ['指针视差','POINTER PARALLAX'],
+  ['拖动惯性','DRAG MOMENTUM'], ['档案切换','SELECTION TRANSITION'],
+  ['详情过渡','DETAIL TRANSITION'], ['模型解密','MODEL DECRYPTION'],
+  ['正文揭示','DOCUMENT REVEAL'], ['文字滚动','ROLLING TEXT'],
+  ['数字滚动','ROLLING NUMBERS'], ['界面过渡','SURFACE TRANSITIONS'],
+  ['查看器运镜','VIEWER NAVIGATION'], ['查看器模型过渡','VIEWER MODEL TRANSITION'],
+  ['键盘操作','KEYBOARD CONTROLS'], ['桌面操作','DESKTOP CONTROLS'],
+
+  ['盖板与封面','Cover and print'],
   ['终端偏好设置', 'Terminal preferences'],
   ['降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质', 'Reduce 3D quality and resolution while retaining animations; turn off to restore your quality settings'],
   ['切列', 'Collections'], ['选档', 'Projects'], ['读取', 'Open'], ['检索', 'Search'], ['返回', 'Back'],
@@ -29,6 +45,8 @@ const pairs: readonly (readonly [string, string])[] = [
   ['360° 旋转、平移、缩放与复位阻尼', 'Damping for rotation, pan, zoom and reset'],
   ['拆解、重组与清晰度变化', 'Explode, reassemble and change clarity'],
   ['画质设置', 'Quality settings'], ['渲染画质', 'Rendering quality'], ['画质预设', 'Quality preset'],
+  ['画质调节','Quality control'],['自动以接近 60 FPS 为目标；只调整下方画质项','Auto targets close to 60 FPS; changes only the quality controls below'],
+  ['自动 / 流畅优先','Auto / Smooth interaction'],['手动 / 自定画质','Manual / Custom quality'],
   ['性能', 'Performance'], ['原始', 'Original'], ['高', 'High'], ['极高', 'Ultra'],
   ['清晰度 / 材质 / 阴影', 'Resolution / Materials / Shadows'],
   ['渲染比例', 'Render scale'], ['相对屏幕像素，受密度上限限制；高比例改善细线', 'Relative to screen pixels, capped by pixel ratio; higher scales sharpen fine lines'],

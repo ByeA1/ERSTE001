@@ -1,8 +1,9 @@
+import {terminalIcon} from "./terminal-icons";
 import {createProjectDirectory} from './project-directory';
 import { createRollingClock } from "./rolling-clock";
 import { openProject, caseIsOpen, caseIsApproaching } from "./project-viewer";
 import {collectionAtLane, collectionLane, collectionNumberAtLane, projectCollections} from './project-collections';
-import {t, localize, currentLanguage} from './terminal-language';
+import {t, localize, currentLanguage, languageControls} from './terminal-language';
 import { terminalMarkup, localizeTerminalCopy } from './terminal-ui-copy';
 import {projectSubtitle,projectSummary,projectFindings} from './project-copy';
 import { ProjectCopyMotion } from './project-copy-motion';
@@ -38,7 +39,8 @@ import {
 import { ArchiveScene } from "./scene";
 import { ModelViewer } from "./model-viewer";
 import { ContentTransition, SurfaceTransition } from "./ui-transitions";
-import { AdaptiveQuality, adaptiveRenderQuality } from "./adaptive-quality";
+import { FixedQualitySelection, detailQuality } from "./quality-recommendation";
+import { selectedQuality, normalizePerformanceMode, type PerformanceMode } from "./adaptive-quality";
 import { RenderFrameLimiter } from "../public/cases/shared/render-frame.js";
 import { BootSequence } from "./boot";
 import { OpeningStatus } from "./opening-status";
@@ -103,9 +105,9 @@ $("#stage").innerHTML = `
   <div id="boot-background" class="boot-background"><svg viewBox="0 0 1920 1080" preserveAspectRatio="none"><g fill="none" stroke="#fff" stroke-width="3"><path d="M-210 705C-45 705 182 704 247 567C337 377 99 306 4 435S27 680 169 631C309 584 227 314 279 111S568-113 568-113"/><path d="M1560-80C1374 114 1671 168 1601 323S1371 367 1431 480S1692 666 1559 787S1329 886 1498 1130"/><circle cx="1450" cy="648" r="346"/><circle cx="1450" cy="648" r="348"/></g></svg></div>
   <header class="brand">${brandHeading}</header>
   <nav class="system-nav${isWallpaper ? '' : ' terminal-utilities'}" aria-label="系统导航">${isWallpaper ? projects.filter(project => project.shortcut).map(project => project.page ? `<button class="project-shortcut" data-showcase-project="${escapeHtml(project.id)}">${escapeHtml(project.title)}</button>` : project.externalUrl ? `<a class="project-shortcut" href="${escapeHtml(project.externalUrl)}">${escapeHtml(project.title)} ↗</a>` : '').join('') : ''}
-    <button data-action="search"><span class="nav-glyph" aria-hidden="true">⌕</span><span data-zh="档案索引" data-en="Archive index">档案索引</span><span class="key" aria-hidden="true">/</span></button>
-    <button data-action="saved"><span aria-hidden="true">＋</span><span data-zh="收藏档案" data-en="Saved archives">收藏档案</span><span id="saved-count">00</span></button>
-    <button class="settings-button" data-action="settings"><span class="settings-glyph" aria-hidden="true">◷</span><span class="settings-label" data-zh="终端设置" data-en="Terminal settings">终端设置</span></button>
+    <button data-action="search">${terminalIcon("search")}<span data-zh="档案索引" data-en="Archive index">档案索引</span><span class="key" aria-hidden="true">/</span></button>
+    <button data-action="saved">${terminalIcon("tag")}<span data-zh="收藏档案" data-en="Saved archives">收藏档案</span><span id="saved-count">00</span></button>
+    <button class="settings-button" data-action="settings">${terminalIcon("settings")}<span class="settings-label" data-zh="终端设置" data-en="Terminal settings">终端设置</span></button>
   </nav>
   ${!isWallpaper ? `<nav class="archive-directory" data-scope="collections" aria-label="档案集目录" inert>
     <div data-directory-list="collections"><div class="directory-heading" data-zh="档案集" data-en="Collections">档案集</div><div class="directory-items"></div></div>
@@ -122,7 +124,7 @@ $("#stage").innerHTML = `
   <svg id="inspection-marks" viewBox="0 0 1920 1080" aria-hidden="true"><path id="inspection-lines"/><g id="inspection-corners"></g><circle id="inspection-point" r="1.8"/></svg>
   <div id="inspection-text" aria-hidden="true">CONFIDENTIALITY:<strong>GENERAL BUSINESS USE</strong></div>
   <section id="archive-ui" class="archive-ui" aria-label="档案选择" data-portfolio="${!isWallpaper}">
-    <div class="archive-callout"><div class="eyebrow"><span class="collection-kicker">PROJECT COLLECTION</span> <span>／</span> <span id="archive-category">GAMING MOUSE</span></div><div class="project-title-row"><button type="button" class="project-step" data-action="prev" aria-label="上一个项目">←</button><button class="file-title" data-action="open"><span class="legacy-file-prefix">FILE NUMBER: </span><span id="selected-id">X-<span id="selected-code">001</span></span><span class="catalogue-project-title">ERSTE001</span><span class="file-open">↗</span></button><button type="button" class="project-step" data-action="next" aria-label="下一个项目">→</button></div><div class="callout-rule"><i></i></div><div class="file-summary"><span id="selected-title">FPS GAMING MOUSE</span><span id="selected-clearance">PROTOTYPED / 2026</span></div><button class="read-file" data-action="open"><span class="read-file-label">查看项目展示</span><span>→</span></button></div>
+    <div class="archive-callout"><div class="eyebrow"><span class="collection-kicker">PROJECT COLLECTION</span> <span>／</span> <span id="archive-category">GAMING MOUSE</span></div><div class="project-title-row"><button type="button" class="project-step" data-action="prev" aria-label="上一个项目">←</button><button class="file-title" data-action="open"><span class="legacy-file-prefix">FILE NUMBER: </span><span id="selected-id">X-<span id="selected-code">001</span></span><span class="catalogue-project-title">ERSTE001</span><span class="file-open">↗</span></button><button type="button" class="project-step" data-action="next" aria-label="下一个项目">→</button></div><div class="callout-rule"><i></i></div><div class="file-summary"><span id="selected-title">FPS GAMING MOUSE</span><span id="selected-clearance">PROTOTYPED / 2026</span></div><button class="read-file" data-action="open"><span class="read-file-label action-label">查看项目展示</span><span class="action-icon" aria-hidden="true">→</span></button></div>
     <div id="hover-label" class="hover-label" hidden>X-<span id="hover-code">001</span> / <span id="hover-title"></span></div>
     <div class="archive-counter"><span class="tiny-label">PROJECT / SELECT</span><div><span id="selected-number">01</span><i>/</i><span class="count-total">02</span></div></div>
     ${isWallpaper?`<div class="archive-navigation"><button data-action="prev" aria-label="上一个档案">↑</button><div id="file-ticks" class="file-ticks"></div><button data-action="next" aria-label="下一个档案">↓</button></div>`:""}
@@ -131,7 +133,7 @@ $("#stage").innerHTML = `
     ${isWallpaper?`<div class="archive-hint"><kbd>←</kbd> <kbd>→</kbd> 切换列 <span>／</span> <kbd>↑</kbd> <kbd>↓</kbd> 前后档案 <span>／</span> <kbd>ENTER</kbd> 读取</div>`:""}
   </section>
   <section id="detail-ui" class="detail-ui" data-aria-zh="档案内容" data-aria-en="Archive content" aria-label="档案内容" hidden>
-    <button class="back-button" data-action="back">← <span>ARCHIVE OVERVIEW</span><small>ESC</small></button>
+    <button class="back-button" data-action="back"><span class="action-icon" aria-hidden="true">←</span><span class="action-label">ARCHIVE OVERVIEW</span><small>ESC</small></button>
     <div class="object-caption"><span id="object-id">NO.001</span><div>DESIGN ARCHIVE</div><button class="viewer-open" data-action="model-viewer">360° 查看档案装置 <span>↗</span></button></div>
     <article id="detail-content" class="detail-content"></article>
   </section>
@@ -238,6 +240,9 @@ const storedPrefs = readLocal<
     quality: boolean;
     rendering: RenderQuality;
     superPerformance: boolean;
+    performanceMode: PerformanceMode;
+    qualityModeVersion: number;
+    qualityOrigin: "system" | "user";
     colorTheme: "light" | "dark";
     motion: StoredMotion;
     motionPreset: MotionPreset;
@@ -254,12 +259,20 @@ const prefs = {
   motionPreset: initialMotionPreset,
   quality: storedPrefs.quality ?? true,
   superPerformance: storedPrefs.superPerformance ?? false,
+  qualityModeVersion: 3,
+  qualityOrigin: storedPrefs.qualityOrigin??(normalizePerformanceMode(storedPrefs.performanceMode)==="recommended"?"system":"user"),
+  performanceMode: (storedPrefs.qualityModeVersion??0)>=2 ? normalizePerformanceMode(storedPrefs.performanceMode) : normalizePerformanceMode(storedPrefs.performanceMode)==='recommended'?'recommended' as const:'custom' as const,
   rendering: normalizeQuality(
     storedPrefs.rendering,
     storedPrefs.quality !== false,
   ),
   colorTheme: isWallpaper && storedPrefs.colorTheme === "dark" ? "dark" : "light",
 };
+const qualitySelection = new FixedQualitySelection(() => {
+  applyRenderQuality();
+  syncQualityUI(effectiveRenderQuality(),prefs.performanceMode,qualityUIState());
+  updateQualitySummary();
+});
 const motionActive = (key: MotionKey) => motionEnabled(prefs.motion, key);
 const projectCopyMotion = new ProjectCopyMotion();
 const motionIsReduced = () =>
@@ -374,7 +387,24 @@ function superPerformanceEnabled() {
     : prefs.superPerformance;
 }
 function effectiveRenderQuality() {
-  return superPerformanceEnabled() ? superPerformanceQuality : prefs.rendering;
+  return superPerformanceEnabled() ? superPerformanceQuality : isWallpaper ? prefs.rendering
+    : detailQuality(selectedQuality(qualityPresets.original,prefs.rendering,prefs.performanceMode,qualitySelection.tier),qualitySelection.tier,mode==='detail'&&prefs.qualityOrigin==='system');
+}
+function applyRenderQuality() {
+  const host=document.getElementById('three-scene');
+  if(host){
+    host.dataset.adaptiveTier=superPerformanceEnabled()?'low':prefs.performanceMode==='recommended'?qualitySelection.tier:prefs.performanceMode==='custom'?'high':prefs.performanceMode;
+    host.dataset.performanceMode=prefs.performanceMode;
+    host.dataset.recommendedTier=qualitySelection.recommendedTier;
+    host.dataset.qualityOrigin=prefs.qualityOrigin;
+    host.dataset.qualityContext=mode==='detail'&&prefs.qualityOrigin==='system'?'detail':'base';
+  }
+  scene?.setQuality(effectiveRenderQuality());
+  viewer?.setQuality(effectiveRenderQuality());
+}
+function qualityUIState() {
+  return {tier:qualitySelection.tier,recommended:qualitySelection.recommendedTier,
+    origin:prefs.qualityOrigin,detail:mode==='detail' && prefs.qualityOrigin==='system'};
 }
 function savePrefs() {
   setRhineLogoPolicy(superPerformanceEnabled(), motionIsReduced());
@@ -407,10 +437,10 @@ function savePrefs() {
     );
   scene?.setSuperPerformance(superPerformanceEnabled());
   viewer?.setSuperPerformance(superPerformanceEnabled());
-  scene?.setQuality(effectiveRenderQuality());
-  viewer?.setQuality(effectiveRenderQuality());
+  qualitySelection.setMode(prefs.performanceMode);
+  applyRenderQuality();
   viewer?.setMotion(prefs.motion);
-  syncQualityUI(prefs.rendering);
+  syncQualityUI(effectiveRenderQuality(),prefs.performanceMode,qualityUIState());
   updateQualitySummary();
   fileCounter.update({
     animated: motionActive("rollingNumbers") && mode === "archive",
@@ -459,6 +489,11 @@ function fit() {
   stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
   stage.dataset.layout = kind;
   stage.dataset.touch = String(coarse);
+  // Only the mobile detail layout exchanges entry and inspection. A compact
+  // desktop window keeps the desktop action order as well.
+  stage.dataset.detailActions = kind !== "desktop" && (coarse || viewport.clientWidth <= 640)
+    ? "mobile" : "desktop";
+  syncProjectDetailActions();
   viewport.dataset.mobileBoot = String(
     mode === "boot" && (coarse || viewport.clientWidth < 1100),
   );
@@ -597,11 +632,17 @@ function setMode(next: Mode) {
   }
   if (next === "detail" && mode !== "detail") recordAccess();
   mode = next;
+  if(!isWallpaper)applyRenderQuality();
   if (next !== "boot") {
     fadeOpeningOverlay();
     if (!pwaStarted && !lightweight && import.meta.env.MODE !== "model-review") {
       pwaStarted = true;
-      setTimeout(() => void initPwa(notify), 1500);
+      setTimeout(() => {
+        const prepareOffline = () => void initPwa(notify);
+        if (typeof window.requestIdleCallback === "function") {
+          window.requestIdleCallback(prepareOffline, { timeout: 8000 });
+        } else prepareOffline();
+      }, 3500);
     }
   }
   updateLightPreview();
@@ -687,13 +728,21 @@ window.addEventListener('design-terminal:project-overview',()=>{
   setMode('archive');
   requestAnimationFrame(()=>document.querySelector<HTMLButtonElement>('.read-file')?.focus({preventScroll:true}));
 });
-function select(index: number, navigation?: ArchiveNavigation) {
+function select(index: number, navigation?: ArchiveNavigation, retainDetail = false) {
   selected = (index + records.length) % records.length;
-  if (mode === "detail") setMode("archive");
+  const inPlace = retainDetail && mode === "detail" && !isWallpaper;
+  if (mode === "detail" && !inPlace) setMode("archive");
   activeTab = "overview";
-  scene?.select(selected, navigation);
+  scene?.select(selected, navigation, inPlace);
   columnMemory[isWallpaper ? fileLocation(selected).lane : wrap(scene?.selectedArchiveCell.lane ?? fileLocation(selected).lane,archiveColumns.length)] = selected;
   updateSelection(navigation);
+  if (inPlace) {
+    recordAccess();
+    showProjectShowcase(records[selected].projectId, false);
+    scene?.setProjectDisplay(records[selected].projectId, true);
+    renderDetail();
+    $('#detail-content').scrollTo({top:0,behavior:'instant'});
+  }
   const columnMove =
     navigation && "axis" in navigation && navigation.axis === "lane";
   audio.play(
@@ -727,8 +776,8 @@ const projectDirectory = !isWallpaper ? createProjectDirectory($('.archive-direc
   }
   const index = columnFiles(fileLocation(selected).lane).find(index => records[index].projectId === id);
   if (index === undefined || selected === index) return;
-  select(index);
-  setMode('detail');
+  select(index, undefined, true);
+  if (mode !== 'detail') setMode('detail');
   if (open) projectDirectory?.focus();
 }) : undefined;
 // Rolling glyphs use a single line. Keep longer localized copy readable instead.
@@ -846,6 +895,7 @@ function updateSelection(navigation?: ArchiveNavigation) {
   }
 }
 window.addEventListener('design-terminal:language',()=>{
+  localizeTerminalCopy($('#toast'));
   updateSelection();
   if(mode==='detail') renderDetail();
   if(modal) {
@@ -853,10 +903,13 @@ window.addEventListener('design-terminal:language',()=>{
     const panel = root.querySelector<HTMLElement>('.terminal-modal');
     const scrollTop = panel?.scrollTop ?? 0;
     const openDetails = [...root.querySelectorAll<HTMLDetailsElement>('details')].map(el => el.open);
-    renderModal();
+    const controls=[...root.querySelectorAll<HTMLElement>('button,input,select,summary,a')];
+    const focusIndex=controls.indexOf(document.activeElement as HTMLElement);
+    renderModal(true);
     root.querySelectorAll<HTMLDetailsElement>('details').forEach((el, i) => el.open = openDetails[i] ?? false);
     const nextPanel = root.querySelector<HTMLElement>('.terminal-modal');
     if(nextPanel) nextPanel.scrollTop = scrollTop;
+    if(focusIndex>=0)root.querySelectorAll<HTMLElement>('button,input,select,summary,a')[focusIndex]?.focus({preventScroll:true});
     const search = root.querySelector<HTMLInputElement>('#archive-search');
     if(search) search.value = searchQuery;
   }
@@ -957,8 +1010,27 @@ function renderDetail() {
   );
   setTab(activeTab, false);
 }
+function syncProjectDetailActions() {
+  if (isWallpaper) return;
+  const caption = document.querySelector<HTMLElement>('.object-caption');
+  const actions = document.querySelector<HTMLElement>('#detail-content .detail-actions');
+  const entry = document.querySelector<HTMLButtonElement>('#detail-ui .showcase-open');
+  const inspect = document.querySelector<HTMLButtonElement>('#detail-ui .viewer-open');
+  if (!caption || !actions || !entry || !inspect) return;
+  const mobile = $('#stage').dataset.detailActions === 'mobile';
+  const previewAction = mobile ? entry : inspect;
+  const documentAction = mobile ? inspect : entry;
+  // Move the existing controls, preserving handlers, labels and project IDs.
+  if (previewAction.parentElement !== caption) caption.append(previewAction);
+  if (documentAction.parentElement !== actions) actions.prepend(documentAction);
+}
 function renderProjectDetail() {
   const r=records[selected], project=getProject(r.projectId)!;
+  // Preserve the actual inspection control while replacing the document.
+  // Render the desktop order first, then exchange controls only on mobile.
+  const inspect=document.querySelector<HTMLButtonElement>('.viewer-open')!;
+  inspect.remove();
+  document.querySelector('.object-caption > .showcase-open')?.remove();
   const collectionProjects=columnFiles(fileLocation(selected).lane).map(index=>records[index]).filter(record=>!record.placeholder && record.projectId && !record.section);
   const projectIndex=collectionProjects.findIndex(record=>record.projectId===project.id);
   const projectStep=(direction:number)=>{
@@ -968,18 +1040,20 @@ function renderProjectDetail() {
   };
   const status=r.projectId==='erste001'?t('已打样 · 可读取','PROTOTYPED · READABLE'):t('结构迭代中 · 可读取','IN PROGRESS · READABLE');
   $('#object-id').textContent=`NO.${project.number}`;
-  $('.back-button span').textContent=t('返回项目集','BACK TO COLLECTIONS');
+  $('.back-button .action-label').textContent=t('返回项目集','BACK TO COLLECTIONS');
   $('.back-button').setAttribute('aria-label',t('返回项目集','Back to collections'));
   $('.object-caption>div').textContent=t('游戏鼠标 / 设计档案','GAMING MOUSE / DESIGN ARCHIVE');
-  $('.viewer-open').innerHTML=`${t('360° 查看档案装置','360° INSPECT ARCHIVE')} <span>↗</span>`;
+  inspect.innerHTML=`<span class="action-label">${t('360° 查看档案装置','360° INSPECT ARCHIVE')}</span><span class="action-icon" aria-hidden="true">↗</span>`;
   $('#detail-content').innerHTML=`<div class="detail-kicker"><span>${t("设计档案","DESIGN ARCHIVE")}</span><span>${escapeHtml(project.title)}</span></div>
     <div class="project-detail-title-row"><h2 class="project-detail-heading">${escapeHtml(project.title)}</h2><nav class="detail-project-navigation" aria-label="${t('切换项目','Project selection')}">${projectStep(-1)}${projectStep(1)}</nav></div><div class="detail-title-cn"><div class="detail-project-subtitle">${escapeHtml(r.projectId==='erste001'?t('FPS 游戏鼠标','FPS Gaming Mouse'):t(project.subtitleZh ?? project.subtitle ?? '', project.subtitle ?? ''))}</div><span>${t("游戏鼠标","GAMING MOUSE")}</span></div>
     <div class="detail-rule"></div>
     <dl class="metadata"><div><dt>${t('DISCIPLINE / 设计方向','DISCIPLINE')}</dt><dd>${t('独立产品设计','Independent product design')}</dd></div><div><dt>${t('COLLECTION / 项目集','COLLECTION')}</dt><dd>${t("游戏鼠标","GAMING MOUSE")}</dd></div><div><dt>${t('DESIGNER / 设计师','DESIGNER')}</dt><dd>${escapeHtml(r.lead)}</dd></div><div><dt>${t('STATUS / 状态','STATUS')}</dt><dd><i></i>${status}</dd></div></dl>
     <div class="detail-tabs" role="tablist"><button id="tab-overview" role="tab" aria-controls="tab-panel" data-tab="overview">01 <span>${t('概述','Overview')}</span></button><button id="tab-notes" role="tab" aria-controls="tab-panel" data-tab="notes">02 <span>${t('研究记录','Research')}</span></button><button id="tab-history" role="tab" aria-controls="tab-panel" data-tab="history">03 <span>${t('访问记录','Access log')}</span></button><i class="tab-indicator" aria-hidden="true"></i></div>
     <div id="tab-panel" class="tab-panel" role="tabpanel"></div>
-    <div class="detail-actions"><button class="solid-button showcase-open" data-project="${escapeHtml(project.id)}">${t('进入项目','ENTER PROJECT')}<span>↗</span></button><button class="export-button" data-action="bookmark" aria-pressed="${saved.has(r.id)}">${saved.has(r.id)?t('已保存','SAVED'):t('保存档案','SAVE')}<span>${saved.has(r.id)?'−':'+'}</span></button></div>
+    <div class="detail-actions"><button class="solid-button showcase-open" data-project="${escapeHtml(project.id)}"><span class="action-label">${t('进入项目','ENTER PROJECT')}</span><span class="action-icon" aria-hidden="true">↗</span></button><button class="export-button" data-action="bookmark" aria-pressed="${saved.has(r.id)}">${saved.has(r.id)?t('已保存','SAVED'):t('保存档案','SAVE')}<span>${saved.has(r.id)?'−':'+'}</span></button></div>
     <div class="detail-footnote"><span>${escapeHtml(projectSubtitle(r.projectId))}</span><span>${project.number} / 002</span></div>`;
+  $('.object-caption').append(inspect);
+  syncProjectDetailActions();
   $('#detail-content').setAttribute('tabindex','-1');
   documentDecryption.reset($('#detail-content'),!motionActive('documentReveal')||!scene||scene.decryptionFrame.phase==='clear');
   setTab(activeTab,false);
@@ -1091,26 +1165,27 @@ function archiveDiscipline(department: string) {
     ? t(department, archiveDisciplineEnglish)
     : department;
 }
-function renderModal() {
+function renderModal(languageChange=false) {
   if (!modal) return;
   const savedOnly = modal === "saved";
   const title = modal === "settings" ? t("系统设置", "Terminal settings")
     : savedOnly ? t("收藏档案", "Saved archives") : t("档案检索", "Archive search");
   modalTransition?.dispose();
   $("#modal-root").innerHTML =
-    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${title}"><div class="modal-top"><span>albert_z0413@hotmail.com / ${modal === "settings" ? "SYSTEM PREFERENCES" : "ARCHIVE DIRECTORY"}</span><button data-action="close-modal" aria-label="${t("关闭窗口", "Close dialog")}">${t("关闭", "CLOSE")} <span>×</span></button></div>${modal === "settings" ? settingsMarkup() : `<h2>${savedOnly ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${savedOnly ? t("收藏档案", "Your saved records") : t("内部档案检索", "Search internal records")}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="${t("搜索项目、结构或原型", "Search projects, structures or prototypes")}" aria-label="${t("检索档案", "Search archives")}"/><span class="key">ESC</span></div><div class="category-filters">${categories.map(c => `<button data-filter="${escapeHtml(c)}" class="${c === filter ? "active" : ""}">${escapeHtml(t(c, archiveCategoryEnglish[c] ?? c))}</button>`).join("")}</div><div class="result-header"><span>${t("档案", "FILE")}</span><span>${t("方向", "DISCIPLINE")}</span><span>${t("权限", "ACCESS")}</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>${t("设计档案", "DESIGN ARCHIVE")} <i>●</i> ${t("已连接", "CONNECTED")}</span></div>`}</section></div>`;
+    `<div class="modal-backdrop"><section class="terminal-modal ${modal === "settings" ? "settings-modal" : ""}" role="dialog" aria-modal="true" aria-label="${title}"><div class="modal-top"><span>albert_z0413@hotmail.com / ${modal === "settings" ? t("终端偏好","SYSTEM PREFERENCES") : "ARCHIVE DIRECTORY"}</span><div class="modal-top-actions">${modal === "settings" ? languageControls() : ""}<button data-action="close-modal" aria-label="${t("关闭窗口", "Close dialog")}">${t("关闭", "CLOSE")} <span>×</span></button></div></div>${modal === "settings" ? settingsMarkup() : `<h2>${savedOnly ? "SAVED ARCHIVES" : "ARCHIVE INDEX"}<small>${savedOnly ? t("收藏档案", "Your saved records") : t("内部档案检索", "Search internal records")}</small></h2><div class="search-field"><span>⌕</span><input id="archive-search" type="search" autocomplete="off" placeholder="${t("搜索项目、结构或原型", "Search projects, structures or prototypes")}" aria-label="${t("检索档案", "Search archives")}"/><span class="key">ESC</span></div><div class="category-filters">${categories.map(c => `<button data-filter="${escapeHtml(c)}" class="${c === filter ? "active" : ""}">${escapeHtml(t(c, archiveCategoryEnglish[c] ?? c))}</button>`).join("")}</div><div class="result-header"><span>${t("档案", "FILE")}</span><span>${t("方向", "DISCIPLINE")}</span><span>${t("权限", "ACCESS")}</span></div><div id="search-results" class="search-results"></div><div class="modal-bottom"><span id="result-count"></span><span>${t("设计档案", "DESIGN ARCHIVE")} <i>●</i> ${t("已连接", "CONNECTED")}</span></div>`}</section></div>`;
   localizeTerminalCopy($("#modal-root"));
+  localize($("#modal-root"));
   const backdrop = $(".modal-backdrop");
   backdrop.hidden = true;
   modalTransition = new SurfaceTransition(backdrop, $(".terminal-modal"));
-  modalTransition.show(!motionActive("surfaceTransitions"));
+  modalTransition.show(languageChange||!motionActive("surfaceTransitions"));
   if (modal === "settings") updateQualitySummary();
   if (modal !== "settings") {
     renderResults();
     requestAnimationFrame(() => {
       if (backdrop.isConnected && !modalClosing) $("#archive-search").focus();
     });
-  } else
+  } else if(!languageChange)
     requestAnimationFrame(() => {
       if (backdrop.isConnected && !modalClosing)
         $('[data-action="close-modal"]').focus();
@@ -1146,6 +1221,7 @@ function renderResults() {
 function updateQualitySummary() {
   const summary = document.querySelector("#quality-summary");
   if (!summary) return;
+  syncQualityUI(effectiveRenderQuality(),prefs.performanceMode,qualityUIState());
   if (!scene) {
     summary.textContent = t("3D 已关闭 · 三维模型与渲染资源已释放", "3D disabled · Model and rendering resources released");
     return;
@@ -1162,7 +1238,7 @@ function motionPreferenceNoteMarkup() {
   return `<div id="motion-preference-note" class="motion-preference-note"><p>${motionSummary(prefs.motion, currentLanguage())}</p><span>${t("预设：", "Preset: ")}${preset === "full" ? t("完整动画","Full") : preset === "reduced" ? t("减少动画","Reduced") : t("自定义","Custom")}${t(" · 选择会保存在本站", " · Saved on this site")}</span>${allEnabled ? "" : `<button data-action="enable-motion">${t('启用完整动画并重播 ↻','Enable full animation and replay ↻')}</button>`}</div>`;
 }
 function settingsMarkup() {
-  return `<h2>SYSTEM SETTINGS<small>终端偏好设置</small></h2><p class="settings-intro">albert_z0413@hotmail.com <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${isWallpaper ? themeSettingsMarkup(prefs.colorTheme === "dark") : ""}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${isWallpaper ? audioSettingsMarkup(prefs) : ""}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(prefs.rendering)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? "<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>" : "<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>"}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? `<button data-action="fullscreen">${t('全屏显示','FULLSCREEN')} <span>↗</span></button>` : ""}<button data-action="restart">${t("重启终端","REINITIALIZE SYSTEM")} <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>界面基于 <a href="https://github.com/LBEILC/RhineLabUI" target="_blank" rel="noopener">RhineLabUI</a></span></div>`;
+  return `<h2>${t("系统设置","SYSTEM SETTINGS")}<small>${t("终端偏好设置","Terminal preferences")}</small></h2><p class="settings-intro">albert_z0413@hotmail.com <span>·</span> SESSION AUTHORIZED</p>${isWallpaper ? '<p class="wallpaper-settings-note">每次启动都会读取 Wallpaper Engine 中的设置。在此修改仅对当前运行生效，无法持久保存；如需保留，请在 Wallpaper Engine 的壁纸属性中调整。</p>' : ""}<div class="settings-list">${isWallpaper ? themeSettingsMarkup(prefs.colorTheme === "dark") : ""}${!isWallpaper ? `<label><div><strong>SUPER PERFORMANCE</strong><span>降低三维画质和渲染分辨率，保留完整动效；关闭后恢复原画质</span></div><input type="checkbox" data-pref="superPerformance" ${prefs.superPerformance ? "checked" : ""}/><i class="toggle"></i></label>` : ""}${workbench?.settingsMarkup() ?? ""}${isWallpaper ? audioSettingsMarkup(prefs) : ""}</div>${motionPreferenceNoteMarkup()}${motionSettingsMarkup(prefs.motion, prefs.motionPreset)}${qualityMarkup(effectiveRenderQuality(), prefs.performanceMode)}${pwaSettingsMarkup()}<div class="settings-shortcuts">${isWallpaper ? "<span>DESKTOP CONTROLS</span><p>拖动阵列或点击界面按钮浏览档案。桌面模式下，方向键与滚轮可能无法传入壁纸。</p>" : "<span>KEYBOARD CONTROLS</span><p><kbd>←</kbd><kbd>→</kbd> 切列 <kbd>↑</kbd><kbd>↓</kbd> 选档 <kbd>ENTER</kbd> 读取 <kbd>/</kbd> 检索 <kbd>ESC</kbd> 返回</p>"}</div><div class="settings-bottom">${!isWallpaper && document.fullscreenEnabled ? `<button data-action="fullscreen">${t('全屏显示','FULLSCREEN')} <span>↗</span></button>` : ""}<button data-action="restart">${t("重启终端","REINITIALIZE SYSTEM")} <span>↻</span></button></div><div class="modal-bottom"><span>ANALYSIS OS / 1.0 · 使用 MiSans 字体（小米） <a href="${assetUrl("fonts/MiSans-license.pdf")}" target="_blank" rel="noopener">字体许可</a></span><span>界面基于 <a href="https://github.com/LBEILC/RhineLabUI" target="_blank" rel="noopener">RhineLabUI</a></span></div>`;
 }
 
 document.addEventListener("input", (e) => {
@@ -1192,10 +1268,21 @@ document.addEventListener("input", (e) => {
 });
 document.addEventListener("change", (e) => {
   const el = e.target as HTMLInputElement;
-  if (el.id === "quality-preset" && Object.hasOwn(qualityPresets, el.value)) {
+  if(el.id==='quality-mode'){
+    const selectedMode=normalizePerformanceMode(el.value);
+    prefs.performanceMode=selectedMode==='recommended'?qualitySelection.recommendedTier:selectedMode;
+    prefs.qualityOrigin=selectedMode==='recommended'?'system':'user';
+    savePrefs();
+  } else if (el.id === "quality-preset" && Object.hasOwn(qualityPresets, el.value)) {
+    if(!isWallpaper){prefs.performanceMode='custom';prefs.qualityOrigin='user';}
     prefs.rendering = { ...qualityPresets[el.value as QualityPreset] };
     savePrefs();
   } else if (el.dataset.quality) {
+    if(!isWallpaper){
+      // Keep the values the user is looking at when leaving automatic mode.
+      if(prefs.performanceMode!=='custom')prefs.rendering={...effectiveRenderQuality()};
+      prefs.performanceMode='custom';prefs.qualityOrigin='user';
+    }
     const key = el.dataset.quality as keyof RenderQuality;
     prefs.rendering = normalizeQuality({
       ...prefs.rendering,
@@ -1315,7 +1402,7 @@ document.addEventListener("click", (e) => {
     const index=records.findIndex(r=>r.projectId===el.dataset.showcaseProject && !r.section && r.title===getProject(r.projectId)?.title);
     if(index>=0){
       const direction=el.dataset.detailDirection;
-      select(index);setMode('detail');
+      select(index, undefined, true);if(mode!=='detail')setMode('detail');
       if(direction)document.querySelector<HTMLButtonElement>(`.detail-project-step[data-detail-direction="${direction}"]`)?.focus({preventScroll:true});
     }
     return;
@@ -1403,7 +1490,21 @@ document.addEventListener("click", (e) => {
   }
 });
 document.addEventListener("keydown", (e) => {
-  if (caseIsOpen()) return;
+  if (e.defaultPrevented || caseIsOpen()) return;
+  const target = e.target instanceof HTMLElement ? e.target : undefined;
+  const tab = target?.closest<HTMLButtonElement>('[data-tab]');
+  if (tab && ready && !modal && !viewer?.isOpen && ["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) {
+    e.preventDefault();
+    const tabs = [...tab.closest('[role="tablist"]')!.querySelectorAll<HTMLButtonElement>('[data-tab]')];
+    const index = tabs.indexOf(tab);
+    const next = e.key === "Home" ? tabs[0] : e.key === "End" ? tabs.at(-1)
+      : tabs[wrap(index + (e.key === "ArrowRight" ? 1 : -1), tabs.length)];
+    if (next?.dataset.tab) {
+      setTab(next.dataset.tab);
+      next.focus();
+    }
+    return;
+  }
   if (showcaseVisible() && !modal && !viewer?.isOpen) {
     if(e.key==='Escape' && mode==='detail'){
       e.preventDefault();
@@ -1425,7 +1526,8 @@ document.addEventListener("keydown", (e) => {
   }
   if (!started) return;
   if (mode === "boot" && !isWallpaper) {
-    if (["Enter", "Escape", " "].includes(e.key)) e.preventDefault();
+    const nativeControl = target?.closest('button, a[href], input, select, textarea, summary, [contenteditable]');
+    if (e.key === "Escape" || (!nativeControl && ["Enter", " "].includes(e.key))) e.preventDefault();
     return;
   }
   if (viewer?.isOpen) return;
@@ -1485,18 +1587,6 @@ document.addEventListener("keydown", (e) => {
     return;
   }
   if (typing || modal || !ready) return;
-  if (
-    (e.target as HTMLElement).dataset.tab &&
-    ["ArrowLeft", "ArrowRight"].includes(e.key)
-  ) {
-    e.preventDefault();
-    const tabs = ["overview", "notes", "history"];
-    setTab(
-      tabs[(tabs.indexOf(activeTab) + (e.key === "ArrowRight" ? 1 : 2)) % 3],
-    );
-    $<HTMLButtonElement>(`[data-tab="${activeTab}"]`).focus();
-    return;
-  }
   if (e.key === "/") {
     if (showcaseVisible()) return;
     e.preventDefault();
@@ -1635,22 +1725,21 @@ let lastTime = 0,
   frameCount = 0,
   frameStart = performance.now(),
   fps = 0;
-const adaptiveQuality = new AdaptiveQuality((tier) => {
-  const host = document.getElementById("three-scene");
-  if (host) host.dataset.adaptiveTier = tier;
-  if (!scene || isWallpaper) return;
-  scene.setQuality(adaptiveRenderQuality(prefs.rendering, tier));
-});
 
 function frame(ms: number) {
   terminalFrame = 0;
+  if(!started){
+    openingStatus.update();
+    if(openingStatus.forcedMode){enterLightweightMode();qualitySelection.complete({frameMs:[],source:'lightweight mode'});if(prefs.qualityOrigin==='system')prefs.performanceMode=qualitySelection.recommendedTier;savePrefs();completeStartup(false);}
+    scheduleTerminalFrame();return;
+  }
   const callbackInterval = previousCallback === undefined ? undefined : ms - previousCallback;
   previousCallback = ms;
   if (isWallpaper) setRhineLogoSuspended(Boolean(wallpaperHost()?.paused));
   if (document.hidden || (caseIsOpen() && !caseIsApproaching())) {
     lastTime = ms / 1000;
     webRenderLimit.reset();
-    adaptiveQuality.observe(ms, 0, false);
+
     fps = frameCount = 0;
     frameStart = ms;
     if ($("#three-scene").dataset.fps !== "0") $("#three-scene").dataset.fps = "0";
@@ -1689,7 +1778,7 @@ function frame(ms: number) {
     openingTrace.push({phase:opening.phase, time:Number(opening.time.toFixed(3)), label});
     $("#stage").dataset.openingTrace = JSON.stringify(openingTrace);
   }
-  const frameCostStart = performance.now();
+
   wallpaperEffects?.update(
     time,
     motionIsReduced(),
@@ -1702,7 +1791,7 @@ function frame(ms: number) {
     webRenderLimit.reset();
   }
   const hasSceneFrame = viewerOpen || Boolean(scene && (!cinema || cinema.time >= 21.9));
-  const allowHighRefresh = adaptiveQuality.tier === "high" && !superPerformanceEnabled();
+  const allowHighRefresh = qualitySelection.tier === "high" && !superPerformanceEnabled();
   const renderFrame = hasSceneFrame && (isWallpaper || webRenderLimit.admit(ms, allowHighRefresh));
   let drew = false;
   if (renderFrame) {
@@ -1771,14 +1860,11 @@ function frame(ms: number) {
     frameStart = ms;
     frameCount = 0;
     $("#three-scene").dataset.fps = String(Math.round(fps));
-    $("#three-scene").dataset.adaptiveTier = adaptiveQuality.tier;
+    $("#three-scene").dataset.adaptiveTier = superPerformanceEnabled()?'low':qualitySelection.tier;
+    $("#three-scene").dataset.performanceStats=JSON.stringify(qualitySelection.stats());
     $("#three-scene").dataset.renderStats = JSON.stringify(
       scene?.getStats() ?? { loaded: false, drawCalls: 0, triangles: 0 },
     );
-  }
-  const cpuMs = performance.now() - frameCostStart;
-  if (!hasSceneFrame || renderFrame) {
-    adaptiveQuality.observe(ms, cpuMs, drew && !viewer?.isOpen && !caseIsOpen() && !isWallpaper, callbackInterval);
   }
   scheduleTerminalFrame();
 }
@@ -1916,7 +2002,7 @@ async function toggleThree() {
 
 async function start() {
   if (isWallpaper) await window.rhineWallpaperPropertiesReady;
-  if (!isWallpaper) completeStartup(false);
+
   let candidate: ArchiveScene | undefined;
   const archive = (async () => {
     try {
@@ -1929,11 +2015,30 @@ async function start() {
           await (await import("./cassette-review")).loadReviewedCassette(candidate, reviewParams.get("cassetteReview"));
         else await candidate.load();
         if (!lightweight) {
+          candidate.setSuperPerformance(isWallpaper?superPerformanceEnabled():false);
+          candidate.setQuality(isWallpaper?effectiveRenderQuality():qualityPresets.original);
           bindScene(candidate);
           candidate.setMode(mode === "boot" ? "hidden" : mode);
           candidate.setProjectDisplay(records[selected].projectId, mode !== "boot");
           // Keep GPU program compilation inside the archive resource group.
+          if(!isWallpaper)candidate.update(0,{reveal:1,lift:0,zoom:0,time:22.5});
           await candidate.prepareShaders();
+          if(!isWallpaper)await candidate.measureStartupQuality();
+          if(!isWallpaper)candidate.update(0,{reveal:0,lift:0,zoom:0,time:0});
+          if(!isWallpaper){
+            qualitySelection.complete(candidate.startupQualityProbe);
+            if(prefs.qualityOrigin==='system')prefs.performanceMode=qualitySelection.recommendedTier;
+            qualitySelection.setMode(prefs.performanceMode);
+            candidate.setSuperPerformance(superPerformanceEnabled());
+            const base=effectiveRenderQuality();
+            const warm=[detailQuality(base,qualitySelection.tier,prefs.qualityOrigin==='system'),base];
+            const compiled=new Set([JSON.stringify(qualityPresets.original)]);
+            for(const quality of warm){
+              const key=JSON.stringify(quality);candidate.setQuality(quality);
+              if(!compiled.has(key)){await candidate.prepareShaders();compiled.add(key);}
+            }
+            candidate.setQuality(base);
+          }
         }
       } else threeState = "off";
       cachedOpeningGroups.set("archive", "loaded");
@@ -1947,21 +2052,32 @@ async function start() {
       if (lightweight || cachedOpeningGroups.get("archive") === "failed") candidate?.dispose();
     }
   })();
-  const fonts = Promise.all([
+  const fontLoads = Promise.all([
     loadBootWebfonts(),
     document.fonts.load("300 20px MiSans", "LOADING ARCHIVE PERMISSION AUTHORIZED WELCOME, PROFESSOR LIGHTWEIGHT MODE"),
     document.fonts.load("400 20px MiSans", "三维档案开屏字体资源已就绪项正在准备载入加载失败可先进入轻量模式选择等待秒0123456789 albert_z0413@hotmail.com"),
     document.fonts.load("600 20px MiSans", "INDEPENDENT PRODUCT DESIGN ANALYSIS OS"),
     document.fonts.load("700 20px MiSans", "albert_z0413@hotmail.com WELCOME, PROFESSOR DESIGN ARCHIVE"),
-  ]).then(() => {
+  ]).catch(error => {
+    console.warn('Opening fonts unavailable; using readable system fonts and phrase artwork.', error);
+  });
+  // Fixed opening lettering has an authored SVG fallback. Slow font shards or
+  // a missing optional kit must not hold an otherwise ready 3D archive forever.
+  const fonts = new Promise<void>(resolve => {
+    const timer = setTimeout(resolve, 2500);
+    void fontLoads.then(() => { clearTimeout(timer); resolve(); });
+  }).then(() => {
     cachedOpeningGroups.set("fonts", "loaded"); openingStatus.complete("fonts");
-  }).catch(error => {
-    console.error(error); cachedOpeningGroups.set("fonts", "failed"); openingStatus.fail("fonts");
   });
   await Promise.all([archive, fonts]);
   ready = openingStatus.isReady;
   savePrefs();
-  if (isWallpaper) completeStartup(false);
+  if(!isWallpaper&&qualitySelection.completedAt===null){
+    qualitySelection.complete({frameMs:[],source:'3D unavailable; preserve original default'});
+    if(prefs.qualityOrigin==='system')prefs.performanceMode=qualitySelection.recommendedTier;
+    savePrefs();
+  }
+  completeStartup(false);
 }
 function completeStartup(silent: boolean) {
   if (started) return;
@@ -2116,6 +2232,7 @@ if (isWallpaper) {
       });
   });
 }
+scheduleTerminalFrame();
 void start();
 enableGamepad();
 const ARCHIVE_HINT: Record<"keyboard" | "gamepad", string> = {
@@ -2159,12 +2276,14 @@ Object.assign(window, {
       threeState,
       fps: Math.round(fps),
       fpsLimit: isWallpaper ? wallpaperHost()?.fps ?? 30 : webRenderLimit.fpsLimit,
+      performance: qualitySelection.stats(),
       mode,
       ready,
       startup: started ? "started" : "loading",
       opening: openingTimeline.state,
       lightweight,
       motion: { reduced: motionIsReduced(), preset: prefs.motionPreset },
+      openingStartedAt: bootStart*1000,
       bootTime: mode === "boot" ? isWallpaper ? (frozenTime ?? performance.now()/1000 - bootStart) + 5 : openingTimeline.state.time : null,
       selected: records[selected].id,
       saved: [...saved],

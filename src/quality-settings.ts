@@ -7,6 +7,8 @@ import {
 } from "./render-quality";
 import { isWallpaper } from "./wallpaper";
 import { escapeHtml } from "./html";
+import {automaticTiers,tierNames,type PerformanceMode,type PerformanceTier} from './adaptive-quality';
+import {t} from './terminal-language';
 
 function choiceControl(attributes: string, label: string, value: string | number, choices: (readonly [string | number, string])[]) {
   if (isWallpaper) {
@@ -46,10 +48,23 @@ function range(
 ) {
   return `<label class="quality-control quality-range"><span>${label}<small>${hint}</small></span><div><input type="range" data-quality="${key}" aria-label="${terminalCopy(label)}" min="${min}" max="${max}" step="5" value="${quality[key]}"/><output data-quality-output="${key}">${quality[key]}%</output></div></label>`;
 }
-export function qualityMarkup(quality: RenderQuality) {
+document.addEventListener('click',event=>{
+  const button=(event.target as Element).closest<HTMLButtonElement>('[data-quality-mode]');
+  const control=document.querySelector<HTMLInputElement>('#quality-mode');
+  if(!button||!control)return;
+  control.value=button.dataset.qualityMode!;
+  control.dispatchEvent(new Event('change',{bubbles:true}));
+  if(control.value==='custom')document.querySelector<HTMLDetailsElement>('.quality-advanced')!.open=true;
+});
+const pair=(words:readonly [string,string])=>t(words[0],words[1]);
+function tierMarkup(){
+  return `<div class="quality-tiers" role="group" aria-label="${t('四档画质与自定义','Four quality tiers and custom')}">${automaticTiers.map((tier,i)=>`<button type="button" data-quality-mode="${tier}"><span class="quality-tier-index">0${i+1}</span><strong>${pair(tierNames[tier])}</strong><small>${pair(({low:['轻量效果','Light effects'],medium:['精简后处理','Lean postprocessing'],standard:['细节与性能','Detail and performance'],high:['原始完整效果','Original full effects']} as const)[tier])}</small><em data-recommended-label></em></button>`).join('')}<button type="button" data-quality-mode="custom"><span class="quality-tier-index">C</span><strong>${t('自定义','Custom')}</strong><small>${t('保存个人参数','Saved personal settings')}</small></button></div>`;
+}
+export function qualityMarkup(quality: RenderQuality, performanceMode: PerformanceMode = 'recommended') {
   const preset = matchingPreset(quality);
   return terminalMarkup(`<section class="quality-settings" aria-label="画质设置">
-    <div class="quality-heading"><h3>RENDER QUALITY <span>渲染画质</span></h3>${choiceControl('id="quality-preset"', "画质预设", preset, (Object.keys(presetLabels) as QualityPreset[]).map(key => [key, presetLabels[key]]))}</div>
+    <div class="quality-heading"><h3>${t("渲染画质","RENDER QUALITY")}</h3>${isWallpaper?choiceControl('id="quality-preset"', "画质预设", preset, (Object.keys(presetLabels) as QualityPreset[]).map(key => [key, presetLabels[key]])):`<button type="button" class="quality-recommendation" data-quality-mode="recommended">${t('系统推荐','System recommendation')}</button>`}</div>
+    ${!isWallpaper?`<input type="hidden" id="quality-mode" value="${performanceMode}">${tierMarkup()}<p class="quality-selection" id="quality-selection" aria-live="polite"></p>`:''}
     <p class="quality-summary" id="quality-summary" aria-live="polite"></p>
     <details class="quality-advanced"><summary>精细设置 <span>清晰度 / 材质 / 阴影</span></summary><div class="quality-grid">
     ${range(quality, "scale", "渲染比例", "相对屏幕像素，受密度上限限制；高比例改善细线", 50, 200)}
@@ -114,9 +129,36 @@ export function qualityMarkup(quality: RenderQuality) {
   </section>`);
 }
 
-export function syncQualityUI(quality: RenderQuality) {
+type QualityUIState = {tier:PerformanceTier;recommended:PerformanceTier;origin:'system'|'user';detail:boolean};
+export function syncQualityUI(quality: RenderQuality, performanceMode: PerformanceMode = 'recommended', state?:QualityUIState) {
+  const mode=document.querySelector<HTMLSelectElement>('#quality-mode');
+  if(mode)mode.value=performanceMode;
+  const tier=state?.tier??'high';
+  const recommended=state?.recommended??tier;
+  const system=state?.origin==='system';
+  const selected=system?recommended:performanceMode==='auto'||performanceMode==='recommended'?tier:performanceMode;
+  document.querySelectorAll<HTMLButtonElement>('[data-quality-mode]').forEach(button=>{
+    if(button.dataset.qualityMode==='recommended'){
+      button.textContent=system?t(`系统推荐 · ${pair(tierNames[recommended])}`,`System recommendation · ${pair(tierNames[recommended])}`):t(`使用系统推荐 · ${pair(tierNames[recommended])}`,`Use recommendation · ${pair(tierNames[recommended])}`);
+      button.removeAttribute('aria-pressed');return;
+    }
+    button.setAttribute('aria-pressed',String(button.dataset.qualityMode===selected));
+    button.dataset.recommended=String(system && button.dataset.qualityMode===selected);
+    const badge=button.querySelector('[data-recommended-label]');
+    if(badge)badge.textContent=button.dataset.qualityMode===selected?(system?t('推荐','Recommended'):t('已选择','Selected')):'';
+  });
+  const selection=document.getElementById('quality-selection');
+  if(selection){
+    const name=selected==='custom'?t('自定义','Custom'):pair(tierNames[selected]);
+    const detail=state?.detail===true;
+    const next=automaticTiers[Math.min(3,automaticTiers.indexOf(tier)+1)];
+    selection.textContent=performanceMode==='custom'?t('自定义参数已保存并锁定，不会自动切换。','Custom settings are saved and locked. No automatic switching.'):
+      !system?t(`手动选择：${name} · 已保存，系统不会替你切换。`,`Manual selection: ${name} · Saved; the system will not switch it.`):
+      detail&&tier!=='high'?t(`系统预设：${name} · 详情临时使用${pair(tierNames[next])}，保持封面清晰；返回后恢复。`,`System preset: ${name} · Details temporarily use ${pair(tierNames[next])} with a clear cover; restored on return.`):
+      t(`当前：${name} · 开场前完成系统推荐，选定后保持固定。`,`Current: ${name} · Recommended before opening; your selection stays fixed.`);
+  }
   const preset = document.querySelector<HTMLSelectElement | HTMLButtonElement>("#quality-preset");
-  if (!preset) return;
+
   const value = matchingPreset(quality);
   if (preset instanceof HTMLSelectElement) {
     let custom = preset.querySelector<HTMLOptionElement>('option[value="custom"]');
@@ -128,7 +170,7 @@ export function syncQualityUI(quality: RenderQuality) {
       custom?.remove();
     }
   }
-  preset.value = value;
+  if(preset)preset.value = value;
   document
     .querySelectorAll<HTMLInputElement | HTMLSelectElement | HTMLButtonElement>("[data-quality]")
     .forEach((control) => {

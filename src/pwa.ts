@@ -36,14 +36,14 @@ export function pwaSettingsMarkup() {
     : !window.isSecureContext ? t("使用 HTTPS 地址后可保存离线副本。", "Use HTTPS to save an offline copy.")
     : !("serviceWorker" in navigator) ? t("当前浏览器支持在线使用。", "This browser can use the site online.")
     : failed ? t("离线副本未能保存，可联网后重试。", "The offline copy could not be saved. Reconnect and retry.")
-    : ready ? t("基础离线资源已就绪。大型模型与案例图片按访问保存。", "Core offline resources are ready. Large models and case images are saved as you visit.")
+    : ready ? t("基础离线资源已就绪。大型模型、案例图片与音频按访问保存。", "Core offline resources are ready. Large models, case images and audio are saved as you visit.")
     : t("正在准备离线资源，首次需要保持联网。", "Preparing offline resources. Stay connected during the first visit.");
   const guidance = installed() ? t("已从主屏幕打开。", "Opened from the home screen.")
     : ios() ? t("在 Safari 中轻点“分享”→“添加到主屏幕”，然后从主屏幕图标打开。", "In Safari, choose Share, then Add to Home Screen. Open the site from its home screen icon.")
     : installPrompt ? t("安装后可在独立窗口中打开档案。", "Install to open the archive in its own window.")
     : t("可通过浏览器菜单安装或添加到主屏幕。", "Use the browser menu to install or add to your home screen.");
   const busy = checking || reloading || Boolean(registration?.installing);
-  return `<section id="pwa-settings" class="pwa-settings" aria-label="${t('主屏幕与网站更新','Home screen and site updates')}"><h3>${t('APP / 主屏幕与离线','APP / HOME SCREEN & OFFLINE')}</h3><p>${guidance}</p><p class="pwa-status" role="status">${status}</p><h3>${t('UPDATE / 网站更新','UPDATE / SITE UPDATES')}</h3><p class="pwa-update-status" role="status" aria-live="polite">${updateStatus()}</p><div class="pwa-actions"><button data-pwa-action="check" ${!updatesSupported() || busy ? 'disabled' : ''} aria-busy="${checking}">${checking ? t('正在检查…','Checking…') : t('检查更新 ↻','Check for updates ↻')}</button>${registration?.waiting ? `<button data-pwa-action="update" ${reloading ? 'disabled' : ''}>${reloading ? t('正在更新…','Updating…') : t('更新并重新载入 ↻','Update and reload ↻')}</button>` : ''}${installPrompt && !installed() ? `<button data-pwa-action="install">${t('安装到设备 ↗','Install on device ↗')}</button>` : ""}${failed ? `<button data-pwa-action="retry">${t('重试保存离线资源 ↻','Retry offline setup ↻')}</button>` : ""}</div></section>`;
+  return `<section id="pwa-settings" class="pwa-settings" aria-label="${t('主屏幕与网站更新','Home screen and site updates')}"><h3>${t('主屏幕与离线','HOME SCREEN & OFFLINE')}</h3><p>${guidance}</p><p class="pwa-status" role="status">${status}</p><h3>${t('网站更新','SITE UPDATES')}</h3><p class="pwa-update-status" role="status" aria-live="polite">${updateStatus()}</p><div class="pwa-actions"><button data-pwa-action="check" ${!updatesSupported() || busy ? 'disabled' : ''} aria-busy="${checking}">${checking ? t('正在检查…','Checking…') : t('检查更新 ↻','Check for updates ↻')}</button>${registration?.waiting ? `<button data-pwa-action="update" ${reloading ? 'disabled' : ''}>${reloading ? t('正在更新…','Updating…') : t('更新并重新载入 ↻','Update and reload ↻')}</button>` : ''}${installPrompt && !installed() ? `<button data-pwa-action="install">${t('安装到设备 ↗','Install on device ↗')}</button>` : ""}${failed ? `<button data-pwa-action="retry">${t('重试保存离线资源 ↻','Retry offline setup ↻')}</button>` : ""}</div></section>`;
 }
 function refresh() {
   const current = document.querySelector("#pwa-settings");
@@ -137,6 +137,14 @@ export async function initPwa(notify: (message: string) => void) {
   tell = notify;
   if (started || !import.meta.env.PROD || !window.isSecureContext || !("serviceWorker" in navigator)) return;
   started = true;
+  // The first startup fonts can finish before an installing worker controls
+  // this page. Reuse those HTTP-cached shards for the first offline reload.
+  const initialFonts = new Set(
+    navigator.serviceWorker.controller ? [] : performance.getEntriesByType("resource")
+      .map(entry => new URL(entry.name))
+      .filter(url => url.origin === location.origin && /\/fonts\/.*\.woff2$/.test(url.pathname))
+      .map(url => url.href),
+  );
   try {
     registrationRequest = navigator.serviceWorker.register(assetUrl("sw.js"), {
       scope: import.meta.env.BASE_URL, updateViaCache: "none",
@@ -160,7 +168,17 @@ export async function initPwa(notify: (message: string) => void) {
     registration.addEventListener("updatefound", watch);
     watch();
     refresh();
-    void navigator.serviceWorker.ready.then(() => { ready = true; failed = false; refresh(); });
+    void navigator.serviceWorker.ready.then(async () => {
+      if (initialFonts.size && !navigator.serviceWorker.controller) {
+        await new Promise<void>(resolve => {
+          navigator.serviceWorker.addEventListener("controllerchange", () => resolve(), { once: true });
+        });
+      }
+      await Promise.allSettled([...initialFonts].map(url => fetch(url, { cache: "force-cache" })));
+      ready = true;
+      failed = false;
+      refresh();
+    });
     void checkForUpdates(false);
   } catch { failed = true; started = false; }
 
@@ -181,7 +199,7 @@ document.addEventListener("click", async event => {
   if (button.dataset.pwaAction === "check") { await checkForUpdates(); return; }
   if (button.dataset.pwaAction === "install" && installPrompt) {
     const prompt = installPrompt; installPrompt = undefined;
-    try { await prompt.prompt(); await prompt.userChoice; } catch { tell("请通过浏览器菜单添加到主屏幕"); }
+    try { await prompt.prompt(); await prompt.userChoice; } catch { tell(t("请通过浏览器菜单添加到主屏幕","Use the browser menu to add this site to your home screen")); }
     refresh();
   }
   if (button.dataset.pwaAction === "update" && registration?.waiting) {

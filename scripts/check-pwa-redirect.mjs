@@ -14,6 +14,8 @@ test('Pages redirects remain compatible with cached homepage navigation', async 
       res.writeHead(308, { Location: '/app/' }).end();
     } else if (req.url === '/app/') {
       res.writeHead(200, { 'Content-Type': 'text/html', 'X-Release': 'fixture' }).end('<h1>Release</h1>');
+    } else if (req.url === '/app/cases/model.glb.bin') {
+      res.writeHead(200, { 'Content-Type': 'application/octet-stream' }).end('model data');
     } else {
       res.writeHead(404).end();
     }
@@ -30,10 +32,11 @@ test('Pages redirects remain compatible with cached homepage navigation', async 
       add: async request => { throw new Error(`Unexpected cache.add: ${request.url}`); },
     };
     let offline = false;
-    runInNewContext(template.replace('__CACHE_VERSION__', '"fixture"').replace('__PRECACHE_FILES__', '["index.html"]'), {
+    runInNewContext(template.replace('__CACHE_VERSION__', '"fixture"').replace('__PRECACHE_FILES__', '["index.html"]')
+      .replace('__DEFERRED_FILES__', '["cases/model.glb.bin"]'), {
       URL, Request, Response, Set,
       fetch: request => { if (offline) throw new Error('offline'); return fetch(request); },
-      caches: { open: async () => cache, delete: async () => {} },
+      caches: { open: async () => cache, match: cache.match, delete: async () => {} },
       self: { registration: { scope }, location: { origin: new URL(scope).origin }, addEventListener: (name, handler) => { listeners[name] = handler; } },
     });
     let installed;
@@ -47,7 +50,19 @@ test('Pages redirects remain compatible with cached homepage navigation', async 
       listeners.fetch({ request: { method: 'GET', mode: 'navigate', redirect: 'manual', url }, respondWith: promise => { response = promise; } });
       return response;
     }
+    async function loadModel() {
+      let response;
+      listeners.fetch({
+        waitUntil: () => {},
+        request: new Request(`${scope}cases/model.glb.bin`),
+        respondWith: promise => { response = promise; },
+      });
+      return (await response).text();
+    }
+    assert.equal(await loadModel(), 'model data');
+    assert.deepEqual(requests, ['/app/', '/app/cases/model.glb.bin'], 'The model is downloaded only when requested');
     offline = true;
+    assert.equal(await loadModel(), 'model data', 'A model used online must remain available offline');
     for (const url of [scope, index, `${scope}?scene=archive`]) {
       const response = await navigate(url);
       assert.equal(response.redirected, false);

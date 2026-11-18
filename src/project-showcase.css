@@ -19,3 +19,19 @@ html #stage:is([data-layout=compact],[data-layout=portrait]) .detail-project-ste
 .project-detail-status{font-size:inherit;}
 .detail-actions .export-button{background:none;border:0;color:inherit;font:inherit;min-height:44px;cursor:pointer;}
 @media(prefers-reduced-motion:reduce){.case-approaching #detail-ui{transition:none;}}
+/* Desktop retains inspection beside the preview and entry below the document.
+   Mobile alone exchanges the same controls; resize never duplicates buttons. */
+html:not([data-wallpaper]) #stage .detail-actions {display:grid;grid-template-columns:minmax(0,1fr) auto;justify-content:start;align-items:stretch;gap:12px;width:100%;}
+html:not([data-wallpaper]) #stage .detail-actions > .showcase-open {width:100%;min-width:0;}
+html:not([data-wallpaper]) #stage .viewer-open {
+ display:grid;grid-template-columns:minmax(0,1fr) 28px;gap:0;align-items:stretch;
+ min-height:48px;min-width:0;padding:4px 6px 4px 14px;
+ font-size:12px;line-height:1.35;text-align:center;
+}
+html:not([data-wallpaper]) #stage .viewer-open .action-label {display:grid;place-items:center;min-width:0;padding-inline:8px;font:inherit;}
+html:not([data-wallpaper]) #stage .viewer-open .action-icon {display:grid;place-items:center;border-inline-start:1px solid #82674e50;padding:0;margin:0;font-size:18px;}
+html:not([data-wallpaper]) #stage .object-caption > .viewer-open {display:inline-grid;margin-top:25px;font-size:14px;}
+html:not([data-wallpaper]) #stage[data-detail-actions=mobile] .object-caption > .showcase-open {pointer-events:auto;margin:0;min-width:156px;min-height:48px;font-size:12px;}
+html:not([data-wallpaper]) #stage[data-detail-actions=mobile] .detail-actions {gap:10px;}
+html:not([data-wallpaper]) #stage[data-detail-actions=mobile] .detail-actions > .viewer-open {margin:0;padding-inline:8px 4px;min-height:48px;font-size:11px;}
+html:not([data-wallpaper]) #stage[data-detail-actions=mobile] .detail-actions > .export-button {margin:0;min-height:48px;padding-inline:10px;}

@@ -1,6 +1,7 @@
 /* The build replaces both tokens; this file is never registered in development. */
 const VERSION = __CACHE_VERSION__;
 const FILES = __PRECACHE_FILES__;
+const DEFERRED = __DEFERRED_FILES__;
 const PREFIX = `rhine-lab:${new URL(self.registration.scope).pathname}:`;
 const CACHE = PREFIX + VERSION;
 // MiSans ships 753 unicode-range shards (23 MB). They are cached the first time
@@ -8,6 +9,9 @@ const CACHE = PREFIX + VERSION;
 const FONT_CACHE = PREFIX + "fonts";
 const urls = FILES.map(path => new URL(path, self.registration.scope).href);
 const allowed = new Set(urls);
+const deferred = DEFERRED.map(path => new URL(path, self.registration.scope).href);
+const deferredModels = deferred.filter(url => /\.(?:glb|glb\.bin)$/.test(url));
+const onDemand = new Set(deferred);
 const index = new URL("index.html", self.registration.scope).href;
 const rawCaseModel = new URL("cases/erste002/assets/shell-full.glb", self.registration.scope).href;
 
@@ -37,6 +41,14 @@ self.addEventListener("install", event => {
       const results = await Promise.allSettled(workers);
       const failure = results.find(result => result.status === "rejected");
       if (failure) throw failure.reason;
+      // Keep previously used, content-addressed models available after an update.
+      // A fresh install never downloads them.
+      await Promise.all(deferredModels.map(async url => {
+        try {
+          const cached = await caches.match(url);
+          if (cached?.ok) await cache.put(url, cached);
+        } catch {}
+      }));
     } catch (error) {
       await caches.delete(CACHE);
       throw error;
@@ -61,10 +73,11 @@ self.addEventListener("fetch", event => {
   if (/\/fonts\/.*\.woff2$/.test(url.pathname)) {
     event.respondWith((async () => {
       const cache = await caches.open(FONT_CACHE);
-      const hit = await cache.match(event.request);
+      // A CSS font request and its same-origin warm-up may send different Origin headers.
+      const hit = await cache.match(event.request, { ignoreVary: true });
       if (hit) return hit;
       const response = await fetch(event.request);
-      if (response.ok) cache.put(event.request, response.clone());
+      if (response.ok) event.waitUntil(cache.put(event.request, response.clone()).catch(() => {}));
       return response;
     })());
     return;
@@ -74,14 +87,17 @@ self.addEventListener("fetch", event => {
   const navigation = event.request.mode === "navigate" &&
     (url.href === self.registration.scope || url.href === index);
   const key = navigation ? index : url.href;
-  if (key === rawCaseModel && !allowed.has(key)) {
-    // Older browsers request the raw GLB. Store it only if it is used.
+  if (onDemand.has(key) || key === rawCaseModel) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE);
       const hit = await cache.match(key);
       if (hit) return hit;
       const response = await fetch(event.request);
-      if (response.ok) await cache.put(key, response.clone());
+      if (response.ok && response.status !== 206) {
+        // Return headers/body immediately. Awaiting cache.put buffers the entire
+        // model before the page sees any progress and can trip its stall timer.
+        event.waitUntil(cache.put(key, response.clone()).catch(() => {}));
+      }
       return response;
     })());
     return;

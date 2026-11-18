@@ -17,7 +17,7 @@ import { inputDevice, onInputDevice } from "./gamepad";
 
 const PARTS = [
   { id: "fasteners", label: "紧固件", en: "FASTENERS", depth: 2.75 },
-  { id: "cover", label: "透明盖板", en: "OPTICAL COVER", depth: 1.85 },
+  { id: "cover", label: "盖板与封面", en: "COVER / PRINT", depth: 1.85 },
   {
     id: "optical-lenses",
     label: "折射环组",
@@ -285,6 +285,7 @@ export class ModelViewer {
         return;
       }
       this.source = source;
+      this.root.dataset.projectPrint=String(source.model.children.some(child=>child.userData.surface==='Project_Print'));
       for (const part of PARTS) {
         const group = new THREE.Group();
         group.name = part.id;

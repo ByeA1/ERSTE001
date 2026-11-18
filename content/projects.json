@@ -13,7 +13,13 @@
       "subtitle": "FPS GAMING MOUSE / SENSOR SPINE",
       "subtitleZh": "FPS 游戏鼠标 / SENSOR SPINE",
       "status": "PROTOTYPED / 2026",
-      "summary": "从握持体验到内部架构，完成设计、建模与实体打样。"
+      "summary": "从握持体验到内部架构，完成设计、建模与实体打样。",
+      "coverFrame": {
+        "x": 0.33,
+        "y": 0.245,
+        "width": 0.325,
+        "height": 0.69
+      }
     },
     {
       "id": "erste002",
@@ -29,7 +35,13 @@
       "summary": "右手非对称曲面与一体式结构强化。无传统底壳、无独立中央龙骨，约 33 g 为设计目标；电子件为装配参考模型。",
       "cover": "/cases/erste002/assets/erste002-hero-front-right-v01.webp",
       "subtitleZh": "右手人体工学 / 结构强化",
-      "summaryEn": "Right-hand asymmetric surfaces and integral structural reinforcement. No conventional bottom shell or separate central spine. Approximately 33 g is a design target; electronics are assembly reference models."
+      "summaryEn": "Right-hand asymmetric surfaces and integral structural reinforcement. No conventional bottom shell or separate central spine. Approximately 33 g is a design target; electronics are assembly reference models.",
+      "coverFrame": {
+        "x": 0.33,
+        "y": 0.245,
+        "width": 0.325,
+        "height": 0.69
+      }
     }
   ]
 }

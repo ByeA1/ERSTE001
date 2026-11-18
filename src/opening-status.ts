@@ -1,7 +1,7 @@
 /** Real resource feedback; authorization and welcome belong to the timeline. */
 import {t,translatedText} from './terminal-language';
 export type OpeningGroup = 'archive' | 'fonts';
-const LABEL: Record<OpeningGroup,string> = { archive:'三维档案', fonts:'开屏字体' };
+const LABEL: Record<OpeningGroup,string> = { archive:'三维档案', fonts:'开屏文字' };
 const GROUP_COUNT = Object.keys(LABEL).length;
 export class OpeningStatus {
   private done = new Set<OpeningGroup>();
@@ -31,7 +31,7 @@ export class OpeningStatus {
     const pending=(Object.keys(LABEL) as OpeningGroup[]).filter(g=>!this.done.has(g));
     const failed=pending.filter(g=>this.failed.has(g));
     const elapsed=Math.floor(this.elapsedSeconds);
-    const labels=(groups:OpeningGroup[])=>groups.map(g=>t(LABEL[g],g==='archive'?'3D archive':'fonts')).join(t('、',', '));
+    const labels=(groups:OpeningGroup[])=>groups.map(g=>t(LABEL[g],g==='archive'?'3D archive':'opening text')).join(t('、',', '));
     const text=this.forced?t('已选择轻量模式','LIGHTWEIGHT MODE'):failed.length?t(`${labels(failed)}加载失败 · 可先进入轻量模式`,`${labels(failed)} unavailable · Lightweight mode is available`):this.isReady?t('档案资源已就绪','ARCHIVE RESOURCES READY'):elapsed>=3?t(`正在载入${labels(pending)}`,`Loading ${labels(pending)}`):t('正在准备档案','Preparing archive');
     if(text!==this.lastText){task.textContent=text;this.lastText=text;}
     this.root.querySelector('[data-count]')!.textContent=t(`资源已就绪 ${this.done.size}/${GROUP_COUNT} 项`,`Resources ready ${this.done.size}/${GROUP_COUNT}`);

@@ -137,7 +137,7 @@ export class RhineLogoPlayer {
       this.media.matches || this.reduced
         ? "still"
         : (this.requestedMode ??
-            (this.low || this.qualityHost?.dataset.adaptiveTier === "low"
+            (this.low
               ? "light"
               : "full")),
     );

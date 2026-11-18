@@ -58,12 +58,11 @@
 }
 .directory-items .terminal-clicked { animation: none; }
 .directory-number {
-  color: var(--theme-muted, #6c6a5e);
-  opacity: .76;
+  color: var(--theme-ink, #252b20);
+  opacity: .88;
   letter-spacing: .12em;
   transition: color 180ms ease, opacity 180ms ease, transform 180ms ease;
 }
-.directory-reserved .directory-number { opacity: .68; }
 .directory-label {
   position: absolute;
   inset-inline-end: 100%;

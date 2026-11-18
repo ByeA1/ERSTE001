@@ -8,6 +8,8 @@ export interface ProjectDefinition {
   shortcut?: boolean;
   externalUrl?: string;
   cover?: string;
+  /** Normalized source crop, including silhouette and contact shadow. */
+  coverFrame?: { x: number; y: number; width: number; height: number };
   preview?: string;
   subtitle?: string;
   subtitleZh?: string;
