@@ -1,115 +1,229 @@
-import {readFile,writeFile} from 'node:fs/promises';
-import {copy,sections,media,requests} from '../content/erste002-engineering-phase1.mjs';
-const repo=new URL('../',import.meta.url);
-const assets=JSON.parse(await readFile(new URL('public/cases/erste002/engineering-assets.json',repo),'utf8'));
-const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
-const pair=(value,tag='span',attrs='')=>`<${tag} data-zh="${esc(value[0])}" data-en="${esc(value[1])}" ${attrs}>${esc(value[0])}</${tag}>`;
-const text=(key,tag='p',attrs='')=>pair(copy[key],tag,`${attrs} data-copy="${key}"`);
-const ui=(zh,en,tag='span',attrs='')=>pair([zh,en],tag,attrs);
-const kindLabels={physical:['实物记录','PHYSICAL RECORD'],reference:['相关结构参考','RELATED STRUCTURE'],cad:['历史 CAD 参考','HISTORICAL CAD'],missing:['待补图 / 明确占位','REQUESTED VIEW / PLACEHOLDER'],schematic:['设计逻辑示意 / 非实际几何','DESIGN LOGIC / NOT ACTUAL GEOMETRY']};
-const byId=new Map(media.map(m=>[m.id,m]));
-function diagram(id){
- if(id==='refinement-edge-principle')return `<div class="logic-diagram edge-principle" role="img" data-aria-zh="通用截面原理：平边与折边，非本产品实际剖面" data-aria-en="Generic flat and folded edge sections, not actual product geometry" aria-label="通用截面原理"><p class="diagram-kicker mono">${ui('通用原理示意 / 不按比例','GENERIC PRINCIPLE / NOT TO SCALE')}</p><div class="section-principles"><div>${ui('原平面内的边缘','Edge in the original plane','h4')}<svg viewBox="0 0 360 110" aria-hidden="true"><path class="section-base" d="M24 85H330"/></svg></div><div>${ui('折边改变局部截面','A fold changes the local section','h4')}<svg viewBox="0 0 360 110" aria-hidden="true"><path class="section-base" d="M24 85H270"/><path class="section-fold" d="M270 85V25"/></svg></div></div>${text('refinement.edge.principle','p','class="diagram-description"')}</div>`;
- if(id==='refinement-button-logic')return `<div class="logic-diagram button-principle" role="img" data-aria-zh="按键结构功能分区示意，不是 CAD 几何或实测位移场" data-aria-en="Button functional regions, not CAD geometry or measured displacement" aria-label="按键功能分区示意"><p class="diagram-kicker mono">${ui('功能关系 / 不按比例 / 非实测位移场','FUNCTIONAL RELATIONSHIPS / NOT TO SCALE / NO MEASURED DISPLACEMENT')}</p><div class="logic-strip"><span class="logic-label mono">${ui('原版 / 结构回顾','ORIGINAL / DESIGNER REVIEW')}</span><div><strong>${ui('前部按键盖片体','Front button-cover panel')}</strong><span>${ui('较薄，发生非预期变形','Thinner, with unwanted deformation')}</span></div><div><strong>${ui('预期弯折区域','Intended bending region')}</strong><span>${ui('原设计反而较厚','Thicker in the original design')}</span></div><div><strong>${ui('后部连接与安装','Rear connection and mounting')}</strong><span>${ui('连接板后半段过度削减','Excessive removal from the rear plate')}</span></div></div><p class="deformation-recall">← ${ui('设计者回顾：柔性变形向前扩展到片体','Designer’s review: flexure spread forward into the panel')}</p><div class="logic-strip revised"><span class="logic-label mono">${ui('新版 / 设计意图','REVISED / DESIGN INTENT')}</span><div><strong>${ui('片体保持形状','Panel holds its shape')}</strong><span>${ui('边缘折边加强','Reinforced by edge flanges')}</span></div><div class="intended-flex"><strong>${ui('弯折集中在预期区域','Flexure in the intended region')}</strong><span>${ui('调整弯折区与非弯折区厚度','Redistributed thickness')}</span></div><div><strong>${ui('连接与安装恢复','Connection and mounting restored')}</strong><span>${ui('同时保留必要镂空','Necessary cutouts retained')}</span></div></div>${text('refinement.button.intent','p','class="diagram-description"')}</div>`;
- if(id==='refinement-battery-logic')return `<div class="logic-diagram battery-principle" role="img" data-aria-zh="电池从下方向上安装的空间关系示意，不表示与桌面直接接触" data-aria-en="Battery installs upward from below; this spatial diagram does not imply contact with the desk" aria-label="电池空间关系示意"><p class="diagram-kicker mono">${ui('空间方位示意 / 非实际 CAD','SPATIAL ORIENTATION / NOT ACTUAL CAD')}</p><div class="battery-space"><div class="upward-direction"><span aria-hidden="true">↑</span>${ui('自下而上装入','INSERT FROM BELOW')}</div><div class="battery-stack"><div class="support-node">${ui('上盖内部支撑','Internal upper-shell support')}</div><div class="battery-node">${ui('电池','Battery')}</div><div class="desk-reference">${ui('桌面 / 方位参考','DESK / ORIENTATION REFERENCE')}</div></div><div class="retention-intent">${ui('卡口定位 + 紧固','LOCATION + FASTENING','strong')}${ui('示意间距没有尺寸含义，不代表电池直接接触桌面。','Spacing is not dimensional and does not show the battery touching the desk.','p')}</div></div></div>`;
- throw Error('Unknown schematic '+id);
+import { readFile, writeFile } from 'node:fs/promises';
+import { chapters, cases, steps, media, structuralChanges } from '../content/erste002-engineering-visual.mjs';
+import { mediaSpecs } from '../content/erste002-engineering-media-spec.mjs';
+import { diagrams } from './erste002-engineering-diagrams.mjs';
+
+const repo = new URL('../', import.meta.url);
+const manifest = JSON.parse(await readFile(new URL('public/cases/erste002/engineering-assets.json', repo), 'utf8'));
+const assetRoot = './assets/engineering/';
+const usedSlots = [];
+const escape = (s) => String(s).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('"', '&quot;');
+const t = (zh, en, tag = 'span', attrs = '') => `<${tag}${attrs ? ' '+attrs : ''} data-zh="${escape(zh)}" data-en="${escape(en)}">${escape(zh)}</${tag}>`;
+const localized = (pair, tag) => t(...pair, tag);
+const aria = (zh, en) => `aria-label="${escape(zh)}" data-aria-zh="${escape(zh)}" data-aria-en="${escape(en)}"`;
+
+function fileFor(slot) {
+  const asset = media[slot];
+  if (!asset) return null;
+  if (asset.file) return { file: asset.file, width: asset.width, height: asset.height, provenance: asset.provenance };
+  const source = [...manifest.photos, ...manifest.cad].find((record) => record.id === asset.source);
+  if (!source) throw new Error(`Unmapped image: ${asset.source}`);
+  return source.variants
+    ? { ...source.variants.at(-1), small: source.variants[0], provenance: source.source }
+    : { file: source.file, width: 1200, height: 900, provenance: source.source };
 }
-function figure(id,className=''){
- const slot=byId.get(id);if(!slot)throw Error('Unknown slot '+id);
- const request=requests.find(r=>r.id===slot.request);
- let visual='';
- if(slot.kind==='schematic')visual=diagram(id);
- else if(slot.kind==='missing')visual=`<div class="missing-view" role="img" data-aria-zh="${esc(slot.shown[0])}" data-aria-en="${esc(slot.shown[1])}" aria-label="${esc(slot.shown[0])}"><span class="view-index mono">${request.id} / ${request.priority} / ${request.priority==='P0'?'CAD VIEW':'PHOTO RECORD'}</span><span class="view-cross" aria-hidden="true">＋</span>${pair(request.title,'strong')}${ui('对应图像待提供','CORRESPONDING IMAGE NOT SUPPLIED','span','class="view-status mono"')}</div>`;
- else{
-  const source=slot.kind==='cad'?assets.cad.find(p=>p.id===slot.source):assets.photos.find(p=>p.id===slot.source);
-  if(!source)throw Error('Missing source '+slot.source);
-  const large=source.variants?.at(-1),small=source.variants?.[0],file=large?.file||source.file;
-  const responsive=small?`srcset="./assets/engineering/${small.file} ${small.width}w, ./assets/engineering/${large.file} ${large.width}w" sizes="(max-width:900px) 90vw, 75vw"`:'';
-  visual=`<button class="image-open" type="button" data-open-media="${id}" data-full="./assets/engineering/${file}" aria-label="放大图片" data-aria-zh="放大：${esc(slot.shown[0])}" data-aria-en="Enlarge: ${esc(slot.shown[1])}"><img src="./assets/engineering/${file}" ${responsive} width="${large?.width||1200}" height="${large?.height||900}" alt="${esc(slot.shown[0])}" data-alt-zh="${esc(slot.shown[0])}" data-alt-en="${esc(slot.shown[1])}" loading="${id==='cover-built'?'eager':'lazy'}" ${id==='cover-built'?'fetchpriority="high"':''} decoding="async"><span class="image-enlarge" aria-hidden="true">↗</span></button>`;
- }
- const requestText=request?request.view:['现有画面足以说明本项内容，无需专门替换。','The existing image explains this item; no replacement is specifically required.'];
- const chapter=sections.find(s=>s.id===slot.chapter),index=media.filter(m=>m.chapter===slot.chapter).findIndex(m=>m.id===id)+1;
- return `<figure class="archive-media ${className} ${slot.kind==='missing'?'is-missing':''}" id="media-${id}" data-media-slot="${id}" data-media-kind="${slot.kind}">${visual}<figcaption><div class="media-caption-bar"><span class="mono">FIG ${chapter.number}.${String(index).padStart(2,'0')} / ${slot.source?.replace(/^P(\d{4})$/,'IMG_$1')||request.id}</span>${pair(kindLabels[slot.kind],'span','class="media-kind mono"')}</div><dl class="media-facts"><div><dt>${ui('当前画面','CURRENT IMAGE')}</dt><dd>${pair(slot.shown)}</dd></div><div><dt>${ui('对应版本','VERSION')}</dt><dd>${pair(slot.version)}</dd></div><div><dt>${ui('阅读重点','READING THE IMAGE')}</dt><dd>${pair(slot.purpose)}</dd></div><div class="media-request"><dt>${ui(request?'【建议补充】':'图像安排',request?'SUGGESTED IMAGE':'IMAGE NOTE')}${request?` <a href="#request-${request.id}" class="request-ref">${request.priority} / ${request.id} ↗</a>`:''}</dt><dd>${pair(requestText)}</dd></div></dl></figcaption></figure>`;
+
+const schematicSlots = new Set(['support-diagram', 'button-diagram', 'battery-diagram', 'light-diagram']);
+const materialStatus = (slot) => media[slot] || schematicSlots.has(slot)
+  ? ['临时占位', 'Temporary'] : ['待制作', 'Awaiting production'];
+
+function specCard(slot) {
+  const spec = mediaSpecs[slot];
+  const asset = fileFor(slot);
+  const fields = [
+    [['类型 / 制作', 'Type / production'], spec.type.map((value, i) => `${value} / ${spec.production[i]}`)],
+    [['版本', 'Version'], spec.version], [['对象', 'Subject'], spec.object], [['视角', 'Camera'], spec.view],
+    [['必须可见', 'Must show'], spec.details], [['建议标注', 'Annotations'], spec.marks], [['布置', 'Setup'], spec.setup],
+    [['比例 / 展示宽度', 'Ratio / display width'], [`${spec.ratio} · PC 约 ${spec.width} px`, `${spec.ratio} · about ${spec.width} px on desktop`]],
+    [['用途', 'Purpose'], spec.purpose],
+    [['当前占位', 'Temporary source'], asset ? [asset.file, asset.file] : schematicSlots.has(slot) ? ['页面线图 · 功能示意', 'Inline functional sketch'] : ['无', 'None']],
+  ];
+  return `<details class="material-card" data-production><summary><span>${spec.id} / ${spec.priority}</span> ${t('最终素材要求','Final media spec')} <span class="material-state">${localized(materialStatus(slot))}</span></summary><dl>${fields.map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></details>`;
 }
-function heading(id,key){const s=sections.find(s=>s.id===id);return `<header class="section-heading reveal"><div class="section-kicker mono"><span>${s.number} / ENGINEERING ARCHIVE</span><span>ERSTE002</span></div><h2>${s.title}</h2>${pair([s.zh,''],'p','class="section-translation"')}${text(key,'p','class="section-deck"')}</header>`;}
-const analysis=(prefix)=>`<div class="analysis-grid"><div><h4>${ui('实际现象','OBSERVATION')}</h4>${text(prefix+'.observation')}</div><div><h4>${ui('工程分析','ENGINEERING ANALYSIS')}</h4>${text(prefix+'.analysis')}</div><div><h4>${ui('使用与装配影响','IMPLICATION')}</h4>${text(prefix+'.impact')}</div></div>`;
-const resultHeader=(index,key,english)=>`<div class="result-heading"><span class="result-index mono">${index}</span><div><p class="mono overline">${english}</p>${text('refinement.'+key+'.title','h3')}</div>${ui('设计改进完成','DESIGN REVISED','span','class="completion-tag mono"')}</div>`;
-const structureCards=[['front','refinement-structure-after'],['panels','refinement-functional-flanges'],['edge','refinement-bottom-flange'],['joint','refinement-main-joint']].map(([key,slot],i)=>`<article class="structure-change" id="eng-refinement-structure-${key}" data-topic><span class="change-number mono">01.${i+1}</span>${text(`refinement.structure.${key}.title`,'h4','class="change-title"')}<div class="change-reason"><div><span class="mono">${ui('原有局限','PREVIOUS LIMITATION')}</span>${text(`refinement.structure.${key}.before`)}</div><div><span class="mono">${ui('已完成修改','COMPLETED CHANGE')}</span>${text(`refinement.structure.${key}.done`)}</div>${text(`refinement.structure.${key}.why`,'p','class="change-logic"')}</div>${figure(slot,'detail-view')}</article>`).join('');
-const buttonCauses=[1,2,3].map((n)=>`<article><span class="mono cause-index">0${n} / DESIGNER REVIEW</span>${text(`refinement.button.cause${n}.title`,'h4')}${text(`refinement.button.cause${n}.body`)}</article>`).join('');
-const buttonCorrections=['panel','connection','cutouts','thickness'].map((key,n)=>`<article><span class="mono">0${n+1}</span><div>${text(`refinement.button.${key}.title`,'h4')}${text(`refinement.button.${key}.body`)}</div></article>`).join('');
-const requestRegister=sections.map(section=>{
- const rows=requests.filter(r=>r.chapter===section.id).sort((a,b)=>a.priority.localeCompare(b.priority));
- if(!rows.length)return '';
- return `<div class="request-group"><h3 class="request-group-title mono">${section.number} / ${pair([section.zh,section.title])}</h3>${rows.map(r=>`<article id="request-${r.id}" class="request-row"><span class="mono request-priority">${r.priority}</span><span class="mono request-code">${r.id}</span><div>${pair(r.title,'h4')}${pair(r.view,'p')}</div><a href="#${r.chapter}" aria-label="Back to chapter" data-aria-zh="返回对应章节" data-aria-en="Back to chapter">↗</a></article>`).join('')}</div>`;
-}).join('');
-const html=`<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101011"><meta name="description" content="ERSTE002 工程档案：从 FDM 手感样件、MJF 制造与装配验证，到已完成的最新 CAD 设计改进。"><title>ERSTE002 / THE COST OF LIGHTNESS.</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./engineering-archive.css"></head>
+
+function figure(slot, visual, title, caption, kind, options = {}) {
+  const spec = mediaSpecs[slot];
+  if (!spec) throw new Error(`Missing media spec: ${slot}`);
+  usedSlots.push(slot);
+  return `<figure class="archive-media ${options.className || ''}" id="media-${slot}" data-media-slot="${slot}" data-media-id="${spec.id}" data-media-kind="${kind}" style="--spec-width:${spec.width}px"${options.authorOnly ? ' data-production' : ''}>
+    ${visual}<figcaption><div class="caption-meta"><span>${spec.id}</span>${localized(caption)}</div><strong>${localized(title)}</strong></figcaption>${specCard(slot)}
+  </figure>`;
+}
+
+function photo(slot, options = {}) {
+  const source = media[slot];
+  const asset = fileFor(slot);
+  const kind = source.kind || 'photo';
+  const versions = kind === 'cad' ? ['CAD / 历史网格', 'CAD / HISTORICAL MESH'] : ['实物', 'PHYSICAL'];
+  const marks = source.marks?.map(([name,x,y])=>`<b class="photo-pin" style="--pin-x:${x}%;--pin-y:${y}%">${name}</b>`).join('') || '';
+  const trace = source.trace ? `<svg class="geometry-trace" viewBox="0 0 ${asset.width} ${asset.height}" preserveAspectRatio="none" aria-hidden="true"><path d="${source.trace}"/></svg>` : '';
+  const responsive = asset.small ? `srcset="${assetRoot}${asset.small.file} ${asset.small.width}w, ${assetRoot}${asset.file} ${asset.width}w" sizes="${source.sizes || '(max-width: 800px) 94vw, 50vw'}"` : '';
+  const visual = `<button type="button" class="image-open${marks ? ' has-pins' : ''}" data-open-media data-full="${assetRoot}${asset.file}" ${aria('放大：'+source.title[0], 'Enlarge: '+source.title[1])}>
+    <img width="${asset.width}" height="${asset.height}" src="${assetRoot}${asset.file}" ${responsive} ${slot === 'cover' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" alt="${escape(source.title[0])}" data-alt-zh="${escape(source.title[0])}" data-alt-en="${escape(source.title[1])}">
+    ${trace}<span class="kind-label">${localized(versions)}</span><span class="photo-pins" aria-hidden="true">${marks}</span><span class="zoom-mark" aria-hidden="true">↗</span></button>`;
+  return figure(slot, visual, source.title, source.version, kind, options);
+}
+
+function missing(slot, { authorOnly = false } = {}) {
+  const spec = mediaSpecs[slot];
+  const visual = `<div class="reserved-frame" style="--reserved-ratio:${spec.ratio.replace(':',' / ')}"><span class="frame-corner" aria-hidden="true"></span><span class="kind-label">${localized(spec.type)}</span><b>${localized(spec.object)}</b><small>${t('图像未收录','Image unavailable')}</small></div>`;
+  return figure(slot, visual, spec.object, spec.version, 'missing', { authorOnly });
+}
+
+function diagram(slot, title, structure, detail) {
+  return figure(slot, `<div class="diagram-sheet" ${aria(...title)} role="group">${structure}</div>`, detail, ['功能图解 · 非实际几何', 'Functional diagram · illustrative geometry'], 'diagram');
+}
+
+function sectionTitle(index, headline, lead) {
+  const [, number, , name] = chapters[index];
+  return `<header class="chapter-title"><div class="chapter-number">${number}</div><div><p class="eyebrow">${name}</p><h2>${localized(headline)}</h2></div>${lead ? localized(lead,'p') : ''}</header>`;
+}
+
+const evidenceLabels = {
+  observed: ['实物观察', 'Observed'], analysis: ['设计者判断', 'Analysis'], designed: ['设计已完成', 'Designed'], waiting: ['尚无对应实测', 'Not validated'],
+};
+function evidenceLabel(kind) {
+  const [zh,en] = evidenceLabels[kind];
+  const label = kind === 'waiting' ? 'NOT VALIDATED' : en.toUpperCase();
+  return `<span class="evidence-label ${kind}" title="${zh} / ${en}"><i aria-hidden="true"></i>${label}</span>`;
+}
+function evidenceRows(record) {
+  return `<div class="evidence-strip">${['observed','analysis','designed'].filter((key)=>record[key]).map((key)=>`<div>${evidenceLabel(key)}<p>${localized(record[key])}</p></div>`).join('')}</div>`;
+}
+function caseTitle(index) {
+  const record = cases[index];
+  return `<header class="case-title"><span class="case-counter">CASE 0${index+1}</span><div><p class="eyebrow">${record.title}</p><h3>${localized(record.headline)}</h3></div></header>`;
+}
+function tray(title, children, authorOnly = false) {
+  return `<details class="study-tray"${authorOnly ? ' data-production' : ''}><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
+}
+const missingGroup = (...slots) => `<div class="placeholder-grid">${slots.map(slot=>missing(slot)).join('')}</div>`;
+const authorTray = (...slots) => tray(['补充图位 · 最终素材卡','Additional placements / final media specs'], missingGroup(...slots), true);
+const drawings = diagrams({t, diagram});
+
+const stepRail = steps.map((step, i)=>`<li><a href="#milestone-${step.id}"><span class="step-index">0${i+1} / ${step.stage}</span><strong>${localized(step.name)}</strong><span class="step-summary">${localized(step.summary)}</span></a></li>`).join('');
+
+const body = `
+<section class="overview chapter" data-chapter id="eng-overview">
+  <div class="hero-grid"><div class="hero-copy">
+    <p class="eyebrow">00 / ENGINEERING OVERVIEW</p>
+    <h1>THE COST OF<br><em>LIGHTNESS.</em></h1>
+    ${t('轻量化的结构代价','An open-base right-hand gaming mouse','h2')}
+    ${t('无底壳的右手工学鼠标。从手感样件到四项工程设计修改。','From the grip mock-up to four mechanical design decisions.','p')}
+    <nav class="hero-cases" ${aria('工程专题','Engineering topics')}>${cases.map(record=>`<a href="#eng-case-${record.id}">${localized(record.short)}</a>`).join('')}</nav>
+    <a class="hero-action" href="#eng-current">${t('查看当前设计状态','See current design status')} <span aria-hidden="true">↗</span></a>
+  </div>${photo('cover', {className:'cover-image'})}</div>
+  <ol class="step-rail" ${aria('五个工程里程碑','Five engineering milestones')}>${stepRail}</ol>
+</section>
+
+<section class="chapter form-chapter" data-chapter id="eng-form">
+  ${sectionTitle(1,['先确定手里的曲面。','Find the shape in the hand.'],['一次实际试握后的改形，定下右手非对称曲面。','One revision after hands-on feedback established the direction for the asymmetric right-hand form.'])}
+  <div class="form-gallery" id="eng-form-comparison" data-topic>${photo('form-fdm')}${photo('form-generations')}</div>
+  <div class="profile-row" id="eng-form-handling" data-topic>${photo('form-profile')}
+    <div class="grip-note"><p class="eyebrow">HANDLING INPUT</p><h3>${t('指尖落点与掌心支撑。','Fingertip landing and palm support.')}</h3>${t('握持反馈用于改形；现存 FDM 样件的改形前后归属未细分。','Handling informed the revision. The archived FDM sample is not assigned to the before or after stage.','p')}</div>
+    ${missing('grip',{authorOnly:true})}${missing('matched-form',{authorOnly:true})}
+  </div>
+</section>
+
+<section class="chapter evolution-chapter" data-chapter id="eng-evolution">
+  ${sectionTitle(2,['五个工程里程碑。','Five engineering milestones.'],['阶段顺序来自设计记录。历史照片和 STL 不能逐一对应打印轮次。','The design record establishes the stages. Photographs and STL packages do not map one-to-one to print rounds.'])}
+  <ol class="milestone-grid" id="milestones">${steps.map((step,i)=>{
+    const image = step.image ? photo(step.image) : missing(step.id === 'mjf' ? 'first-mjf' : 'evo-cad');
+    return `<li id="milestone-${step.id}" data-topic><div class="milestone-heading"><span>0${i+1} / ${step.stage}</span><h3>${localized(step.name)}</h3></div>${image}<dl>${[[['做了什么','Built'],step.action],[['发现','Found'],step.finding],[['下一步','Next'],step.next]].map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></li>`;
+  }).join('')}</ol>
+  ${authorTray('interference')}
+</section>
+
+<section class="chapter decisions-chapter" data-chapter id="eng-decisions">
+  ${sectionTitle(3,['四个工程决策。','Four engineering decisions.'])}
+  <nav class="case-jumps" ${aria('工程专题','Engineering topics')}>${cases.map((record,i)=>`<a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↘</span></a>`).join('')}</nav>
+  <div class="evidence-legend" ${aria('工程证据图例','Engineering evidence legend')}>${Object.entries(evidenceLabels).map(([kind,[zh,en]])=>`<span>${evidenceLabel(kind)}${t(zh,en)}</span>`).join('')}<span class="line-legend"><i></i>${t('支撑 / 作用方向','Support / action')}</span><span class="line-legend dashed"><i></i>${t('装配 / 运动','Assembly / travel')}</span></div>
+  <article class="engineering-case" id="eng-case-stiffness" data-topic>${caseTitle(0)}${evidenceRows(cases[0])}
+    <div class="case-split">${photo('stiffness-photo')}${drawings.support()}</div>
+    <div class="photo-key">${t('A 筋板　 B 跨接杆　 C 安装柱','A Ribs · B Spanning rod · C Mounting posts')}</div>
+    <ol class="change-grid">${structuralChanges.map(([number,title,caption])=>`<li><b>${number}</b><div><strong>${localized(title)}</strong><span>${localized(caption)}</span></div></li>`).join('')}</ol>
+    ${authorTray('stiffness-compare','functional-fold','base-section','main-joint')}
+    ${tray(['对照历史 CAD 几何','Compare historical CAD geometry'],`<div class="case-split cad-pair">${photo('cad-p01')}${photo('cad-p04')}</div>${t('同机位查看归档 STL。收件包号不是 REV，不能用于判断强度。','Matched views of archived STL meshes. Package IDs do not establish revision or strength.','p','class="small-note"')}`)}
+    ${authorTray('stiffness-load')}
+  </article>
+  <article class="engineering-case" id="eng-case-button" data-topic>${caseTitle(1)}${evidenceRows(cases[1])}
+    ${drawings.button()}
+    ${tray(['查看按键盖历史几何','Inspect historical button-cover geometry'],`<div class="case-split">${photo('button-cad')}${missing('button-new',{authorOnly:true})}</div>${t('按实际网格预览描边。A 盖体片体，B 后部连接。M007 尚未与异常按压样机对应。','Outline traced from the historical mesh view. A cover panel, B rear connection. M007 is not matched to the observed failure.','p','class="small-note"')}`)}
+    ${authorTray('button-edge','button-thickness','button-motion','button-observed')}
+  </article>
+  <article class="engineering-case" id="eng-case-battery" data-topic>${caseTitle(2)}${evidenceRows(cases[2])}
+    ${drawings.battery()}${authorTray('battery-catch','battery-old')}
+  </article>
+  <article class="engineering-case light-case" id="eng-case-light" data-topic>${caseTitle(3)}
+    <div class="light-split">${evidenceRows(cases[3])}${drawings.light()}</div>${authorTray('light-section')}
+  </article>
+</section>
+
+<section class="chapter current-chapter" data-chapter id="eng-current">
+  ${sectionTitle(4,['设计已改，实物待复核。','Design revised. Physical checks pending.'])}
+  <div class="status-intro"><span class="cad-status">${t('当前 CAD / 设计完成','CURRENT CAD / DESIGN COMPLETE')}</span>${t('最近实物是红滚轮装配版。下表记录其后的设计修改。','The red-wheel build is the latest physical prototype. The table covers the subsequent CAD changes.')}</div>
+  <div class="status-wrap"><table><thead><tr><th scope="col">${t('系统','System')}</th><th scope="col">${evidenceLabel('designed')}</th><th scope="col">${evidenceLabel('waiting')}</th></tr></thead><tbody>${cases.map((record,i)=>`<tr><th scope="row"><a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↗</span></a></th><td>${localized(record.state)}</td><td>${localized(record.validation)}</td></tr>`).join('')}</tbody></table></div>
+  ${authorTray('current-overview','validation')}
+  <div class="finish"><span>ERSTE002 / ENGINEERING ARCHIVE</span><a href="#eng-overview">${t('回到概览','Back to overview')} ↑</a></div>
+</section>`;
+
+if (Object.keys(mediaSpecs).join('|') !== usedSlots.join('|')) {
+  throw new Error(`Media pages and production register must match in order.\nPage: ${usedSlots.join(', ')}`);
+}
+if (new Set(Object.values(mediaSpecs).map(({id})=>id)).size !== usedSlots.length) throw new Error('Duplicate media ID');
+
+const html = `<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#111213"><meta name="description" content="ERSTE002 ENGINEERING｜外形、实物迭代、工程决策与当前设计"><title>ERSTE002 / Engineering Archive</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./engineering-archive.css"></head>
 <body>
-<header class="archive-local-header" data-project-local-navigation><a href="/" data-project-close>ERSTE / <b>ERSTE002</b></a><span class="mono">ENGINEERING ARCHIVE</span><nav aria-label="Language"><button type="button" data-archive-language="zh" aria-pressed="true">中</button><span>/</span><button type="button" data-archive-language="en" aria-pressed="false">EN</button></nav></header>
-<a class="skip-archive" href="#eng-prologue">${ui('跳至正文','Skip to content')}</a>
-<nav class="archive-rail" aria-label="Engineering chapters" data-aria-zh="工程章节" data-aria-en="Engineering chapters">${sections.map(s=>`<a href="#${s.id}" data-section-link><span>${s.number}</span>${pair(s.nav,'span','class="rail-label"')}</a>`).join('')}</nav>
-<div id="scroller" tabindex="0" aria-label="ERSTE002 Engineering Archive" data-aria-zh="ERSTE002 工程档案滚动区域" data-aria-en="ERSTE002 engineering archive scrolling area">
-<main id="engineering-archive">
-<section class="prologue chapter" id="eng-prologue" data-chapter tabindex="-1"><div class="cover-wrap"><div class="cover-line mono"><span>ERSTE002 / ENGINEERING ARCHIVE</span><span>DESIGN · BUILD · REFINE</span></div><div class="cover-spread"><div class="cover-copy"><p class="overline mono">OPEN STRUCTURE / REAL CONSEQUENCES</p><h1>THE COST<br>OF<br><span>LIGHTNESS.</span></h1>${ui('轻量化的结构代价','','p','class="cover-translation"')}${text('hero.deck','p','class="cover-deck"')}${text('hero.question','p','class="cover-question"')}</div>${figure('cover-built','cover-media')}</div><div class="cover-foot"><p class="mono">FROM A FORM STUDY<br>TO AN ENGINEERED ASSEMBLY.</p>${text('hero.body')}<a href="#eng-form" class="reading-link">${ui('从最初的样件开始','Begin with the first prototype')} ↓</a></div></div></section>
+<header class="archive-local-header" data-project-local-navigation><a href="/" data-project-close>ERSTE<span> / 002</span></a><span>ENGINEERING ARCHIVE</span><nav ${aria('语言','Language')}><button type="button" data-archive-language="zh" aria-pressed="true">中</button><span>/</span><button type="button" data-archive-language="en" aria-pressed="false">EN</button></nav></header>
+<a class="skip-archive" href="#eng-overview">${t('跳至正文','Skip to content')}</a>
+<nav class="archive-rail" ${aria('工程章节','Engineering chapters')}>${chapters.map(([id,number,name],i)=>`<a href="#${id}" data-section-link${i===0?' aria-current="location"':''}><span>${number}</span>${t(...name,'span','class="rail-label"')}</a>`).join('')}</nav>
+<div id="scroller" tabindex="0" ${aria('ERSTE002 工程档案','ERSTE002 engineering archive')}><main id="engineering-archive">
+<aside class="author-mode" data-production><span>MEDIA SPEC / ${usedSlots.length}</span>${t('展开各图下方的最终素材要求。','Expand the final media spec below each visual.')} <a href="./engineering.html">${t('访客模式','Visitor view')} ↗</a></aside>
+${body}
+</main></div>
+<footer class="reading-progress"><span class="current-section"><b>00</b><span>${t('概览','Overview')}</span></span><div class="reading-track" aria-hidden="true"><span></span></div><output>000%</output><button type="button" data-chapter-prev ${aria('上一章','Previous chapter')} disabled>←</button><button type="button" data-chapter-next ${aria('下一章','Next chapter')}>→</button></footer>
+<dialog class="media-dialog" aria-labelledby="media-dialog-title"><header><span id="media-dialog-title">ERSTE002 / ENGINEERING RECORD</span><button type="button" data-media-close>${t('关闭','Close')} ×</button></header><figure><img alt=""><figcaption></figcaption></figure><footer><button type="button" data-media-step="-1">← ${t('上一张','Previous')}</button><output></output><button type="button" data-media-step="1">${t('下一张','Next')} →</button></footer></dialog>
+<script type="module" src="./engineering-archive.js"></script></body></html>
+`;
 
-<section class="chapter form-chapter" id="eng-form" data-chapter tabindex="-1"><div class="section-inner">${heading('eng-form','form.deck')}
- <div class="form-origin reveal" id="eng-form-study" data-topic>${figure('form-fdm','form-study')}<div class="editorial-copy"><span class="overline mono">01.1 / FDM FORM STUDY</span>${text('form.start.title','h3')}${text('form.start.body')}</div></div>
- <div class="specimen-comparison reveal" id="eng-form-comparison" data-topic><div class="split-heading">${text('form.compare.title','h3')}${text('form.compare.body')}</div><div class="specimen-photo">${figure('form-generations','wide-comparison')}<div class="specimen-markers" aria-hidden="true"><span style="--x:75%;--y:24%" data-specimen-marker="A">A</span><span style="--x:53%;--y:40%" data-specimen-marker="B">B</span><span style="--x:25%;--y:67%" data-specimen-marker="C">C</span></div></div><div class="specimen-key" role="group" aria-label="Physical prototype identities" data-aria-zh="实物样件身份对照" data-aria-en="Physical prototype identities"><button type="button" data-specimen="A" aria-pressed="true"><b>A / FDM</b>${ui('未分件手感样件','Unsplit form study')}</button><button type="button" data-specimen="B" aria-pressed="false"><b>B / SECOND</b>${ui('第二版实体样机','Second physical prototype')}</button><button type="button" data-specimen="C" aria-pressed="false"><b>C / BUILT</b>${ui('CAD 改进前的装配版','Physical build before the CAD revision')}</button></div><p class="specimen-note">${ui('A 的改形前后尚未细分；B 不自动对应某次 MJF 打印；C 是当前最新 CAD 修改之前的实体装配样机。','A has not been assigned to before or after the form change. B is not automatically assigned to a particular MJF round. C is the physical assembly preceding the latest CAD revision.')}</p></div>
- <div class="handling-study reveal" id="eng-form-handling" data-topic><div class="handling-copy"><span class="overline mono">01.3 / PHYSICAL FEEDBACK</span>${text('form.grip.title','h3')}${text('form.grip.body')}</div><div class="handling-images">${figure('form-profile','side-study')}${figure('form-handling','handling-missing')}</div></div>
- <p class="chapter-transition">${ui('形态获得方向以后，下一步是让它成为能够连接的零件。','Once the form had a direction, it had to become parts that could be connected.')} <span aria-hidden="true">↘</span></p>
-</div></section>
+const specDoc = [
+  '# ERSTE002 ENGINEERING 最终图片素材规格',
+  '',
+  '访客页中的档案照片、STL 预览和功能线图均是临时排版素材。本清单列出每个图位的独立验收要求。当前无图的位置标为待制作。',
+  '',
+  '网页素材模式：`/cases/erste002/engineering.html?media=1`。图下素材卡与本文件使用相同编号。P0 为新版核心结构与图解，P1 为主叙事及关键历史证据，P2 为补充对照。',
+  '',
+  '## 最简执行清单',
+  '',
+  '1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯、侧视、握持和三件同朝向合照（F01–F04、P01）。握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。',
+  '2. 历史零件另成一组。核对首轮 MJF、加杆版、红滚轮版裸上盖的身份。以同一光线拍分件摊开、孔位近景、底部内视（P02、P03、S01）。能追溯时再补 PCB 干涉、按压、电池松动和整体偏软的过程证据（P06、K07、B03、S09）。',
+  '3. NX 总装先完成 P05、C01。当前 CAD 保存三分之四总装视图和底部内视。统一背景、投影、缩放与坐标轴；输出常规截图及无标注版。保留文件版本。',
+  '4. NX 结构一次截取 S02–S06。前后版锁同一正交相机。先截整壳底视及前杆，再截功能片体、开口边缘法向剖面、主杆与上盖接点。S07–S08 单独用经核实的历史文件复现，不用新版代替。',
+  '5. NX 按键一次截取 K01–K06。前后版同机位内侧轴测，并在同位置纵切捕捉连接、厚薄和弯折分区。保留微动位置及限位，画施力和预期运动箭头；如某项不存在，用标注说明。',
+  '6. NX 电池和遮光分别截 B01–B02、L01–L02。电池保持固定侧剖面拍装入前、路径、到位，另截图卡口。遮光局部同剖面抓静止与按下两状态，标光路及剩余间隙。',
+  '7. 输出建议。实拍图可交原图加简单标注副本。NX 交无标注和简单标注 PNG，桌面按下方图位比例提供至少约 2 倍展示宽度。C02 等对应实物测试完成后再补。',
+  '',
+  '## 逐图制作卡',
+];
 
-<section class="chapter structure-chapter" id="eng-structure" data-chapter tabindex="-1"><div class="section-inner">${heading('eng-structure','structure.deck')}
- <div class="split-heading reveal" id="eng-structure-parts" data-topic>${text('structure.split.title','h3')}${text('structure.split.body')}</div><div class="part-comparison reveal">${figure('structure-unsplit','unsplit-reference')}${figure('structure-split','split-reference')}</div>
- <div class="interior-study reveal" id="eng-structure-ribs" data-topic>${figure('structure-ribs','interior-media')}<div class="editorial-copy"><span class="overline mono">02.2 / LOCAL REINFORCEMENT</span>${text('structure.ribs.title','h3')}${text('structure.ribs.body')}<div class="technical-note">${ui('照片可见筋板、杆件与安装柱；这不是首次 MJF 的版本认定，也不是刚度试验照片。','The photograph shows ribs, rods and mounting posts. It does not identify the first MJF build or document a stiffness test.')}</div></div></div>
- <div class="first-build reveal" id="eng-structure-first-build" data-topic><div class="editorial-copy"><span class="overline mono">02.3 / FIRST MJF VALIDATION</span>${text('structure.feedback.title','h3')}${text('structure.feedback.body')}<div class="finding-pair"><span>${text('structure.feedback.stiff','span')}</span><span>${text('structure.feedback.fit','span')}</span></div></div>${figure('structure-first-print','first-print-missing')}</div>
- <p class="chapter-transition">${ui('为刚度增加的支撑，接下来又改变了装配空间。','The supports added for stiffness would then change the space available for assembly.')} <span aria-hidden="true">↘</span></p>
-</div></section>
+for (const slot of usedSlots) {
+  const row = mediaSpecs[slot];
+  const source = fileFor(slot);
+  specDoc.push('', `### ${row.id}｜${row.object[0]}`, '',
+    `- 章节及优先级：${row.chapter} / ${row.priority}`,
+    `- 图片类型及制作：${row.type[0]} / ${row.production[0]}`,
+    `- 对应版本：${row.version[0]}`,
+    `- 对象与视角：${row.object[0]}。${row.view[0]}。`,
+    `- 必须可见：${row.details[0]}。`,
+    `- 建议标注：${row.marks[0]}`,
+    `- 布置：${row.setup[0]}`,
+    `- 比例与展示尺寸：${row.ratio}，PC 最大约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
+    `- 用途：${row.purpose[0]}。`,
+    `- 当前占位：${source ? `\`public/cases/erste002/assets/engineering/${source.file}\`，来源 \`${source.provenance}\`` : schematicSlots.has(slot) ? '页面内联功能图解，待以对应版本几何核对或制图。' : '无。'}`,
+    `- 素材状态：${materialStatus(slot)[0]}。`);
+}
 
-<section class="chapter assembly-chapter" id="eng-assembly" data-chapter tabindex="-1"><div class="section-inner">${heading('eng-assembly','assembly.deck')}
- <div class="tradeoff-statement reveal">${text('assembly.quote','h3')}<div class="tradeoff-relation mono"><span>${ui('结构支撑','SUPPORT')}</span><span aria-hidden="true">↔</span><span>${ui('电子件空间','PACKAGING')}</span><span aria-hidden="true">↔</span><span>${ui('装配可达性','ASSEMBLY ACCESS')}</span></div></div>
- <div id="eng-assembly-archive-geometry" class="archive-geometry reveal" data-topic>${text('assembly.cad.body','p','class="geometry-intro"')}<div class="cad-comparison">${figure('assembly-p01','cad-reference')}${figure('assembly-p04','cad-reference')}</div><p class="technical-note">${ui('统一内侧视角，原始文件坐标；STL 单位未知。中性预览仅表示几何，不代表材料、工艺或新版 CAD。','Common interior view in original file coordinates; STL units are unknown. Neutral previews describe geometry, not material, manufacturing process or the latest CAD revision.')}</p></div>
- <div class="assembly-story reveal" id="eng-assembly-conflicts" data-topic><article><span class="mono event-index">I / ADD SUPPORT</span>${text('assembly.support.title','h3')}${text('assembly.support.body')}</article><article><span class="mono event-index">II / ENCOUNTER CONFLICT</span>${text('assembly.conflict.title','h3')}${text('assembly.conflict.body')}</article><article><span class="mono event-index">III / COMPLETE ASSEMBLY</span>${text('assembly.remove.title','h3')}${text('assembly.remove.body')}</article></div>
- ${figure('assembly-context','assembled-context reveal')}
- <p class="chapter-transition">${ui('装配完成，让按键、电池与整体结构的表现真正显现。','Completing assembly made the behavior of the buttons, battery and overall structure observable.')} <span aria-hidden="true">↘</span></p>
-</div></section>
-
-<section class="chapter challenges-chapter" id="eng-challenges" data-chapter tabindex="-1"><div class="section-inner">${heading('eng-challenges','challenges.deck')}
- <article class="challenge challenge-stiffness" id="eng-challenge-stiffness" data-topic><header class="challenge-heading reveal"><span class="challenge-letter">A</span><div><p class="mono overline">STRUCTURAL STIFFNESS</p>${text('stiff.title','h3')}</div></header><div class="reveal">${figure('challenge-stiffness','stiffness-context')}${analysis('stiff')}</div></article>
- <article class="challenge challenge-button" id="eng-challenge-button" data-topic><header class="challenge-heading reveal"><span class="challenge-letter">B</span><div><p class="mono overline">BUTTON MECHANISM</p>${text('button.title','h3')}</div></header><div class="button-investigation reveal">${figure('challenge-button','button-context')}<div class="button-reading"><div><h4>${ui('实际现象','OBSERVATION')}</h4>${text('button.observation')}</div><div><h4>${ui('工程分析','ENGINEERING ANALYSIS')}</h4>${text('button.analysis')}</div><div><h4>${ui('使用与装配影响','IMPLICATION')}</h4>${text('button.impact')}</div></div></div></article>
- <article class="challenge challenge-battery" id="eng-challenge-battery" data-topic><header class="challenge-heading reveal"><span class="challenge-letter">C</span><div><p class="mono overline">BATTERY INSTALLATION</p>${text('battery.title','h3')}</div></header><div class="battery-investigation reveal"><div class="battery-reading"><div><h4>${ui('实际现象','OBSERVATION')}</h4>${text('battery.observation')}</div><div><h4>${ui('工程分析','ENGINEERING ANALYSIS')}</h4>${text('battery.analysis')}</div><div><h4>${ui('使用与装配影响','IMPLICATION')}</h4>${text('battery.impact')}</div></div>${figure('challenge-battery','battery-missing')}</div></article>
- <p class="chapter-transition">${ui('这些实物现象，已经成为最新一轮 CAD 修改的设计输入。','These physical observations have since informed the completed CAD revision.')} <span aria-hidden="true">↘</span></p>
-</div></section>
-
-<section class="chapter refinement-chapter" id="eng-refinement" data-chapter tabindex="-1"><div class="section-inner">${heading('eng-refinement','refinement.deck')}
- <div class="design-status reveal" id="eng-design-validation-status"><span class="status-dot" aria-hidden="true"></span><div>${text('refinement.status.title','h3')}${text('refinement.status.body')}</div><span class="mono status-label">CURRENT DESIGN<br>CAD COMPLETE</span></div>
- <p class="technical-note view-boundary reveal">${text('refinement.viewnote','span')}</p>
- <article id="eng-refinement-structure" class="refinement-item refinement-detail reveal" data-topic>${resultHeader('01','structure','STRUCTURAL REFINEMENT')}${text('refinement.structure.body','p','class="refinement-introduction"')}<div class="structure-change-grid">${structureCards}</div><div class="edge-principle-study">${figure('refinement-edge-principle','detail-view')}</div>${text('refinement.structure.limit','p','class="design-limit"')}</article>
- <article id="eng-refinement-button" class="refinement-item refinement-detail reveal" data-topic>${resultHeader('02','button','BUTTON MECHANISM REFINEMENT')}${text('refinement.button.body','p','class="refinement-introduction"')}<div class="button-cause-grid">${buttonCauses}</div>${text('refinement.button.insight','p','class="mechanical-insight"')}${figure('refinement-button-logic','detail-view')}<div class="button-correction-grid">${buttonCorrections}</div><div class="cad-request-grid">${figure('refinement-button-after','detail-view')}${figure('refinement-button-flange','detail-view')}${figure('refinement-button-thickness','detail-view')}${figure('refinement-button-motion','detail-view')}</div></article>
- <article id="eng-refinement-battery" class="refinement-item refinement-detail reveal" data-topic>${resultHeader('03','battery','BATTERY MOUNTING')}<div class="battery-design-intro">${text('refinement.battery.body')}${text('refinement.battery.path')}</div>${figure('refinement-battery-logic','detail-view')}<div class="battery-location-copy">${text('refinement.battery.location.title','h4')}${text('refinement.battery.location.body')}</div><div class="cad-request-grid">${figure('refinement-battery-after','detail-view')}${figure('refinement-battery-locating','detail-view')}</div></article>
- <article id="eng-refinement-light-blocking" class="refinement-item refinement-detail reveal" data-topic>${resultHeader('04','light','LIGHT BLOCKING DETAIL')}<div class="light-design-detail">${text('refinement.light.body')}${figure('refinement-light-after','detail-view')}</div></article>
- <div class="refinement-outcome reveal"><div>${ui('机构与装配','MECHANISM & ASSEMBLY','span','class="mono"')}${ui('完成新一轮设计改进','A completed design revision','strong')}</div><div>${ui('开放式结构','OPEN ARCHITECTURE','span','class="mono"')}${ui('整体刚度仍有局限','A remaining global stiffness limitation','strong')}</div></div>
-</div></section>
-
-<section class="chapter conclusion" id="eng-conclusion" data-chapter tabindex="-1"><div class="section-inner"><p class="overline mono">ERSTE002 / ENGINEERING ARCHIVE</p><h2>A MORE RESOLVED DESIGN.<br><span>A CLEARER LIMIT.</span></h2>${ui('设计更完整，边界更清楚。','','p','class="closing-translation"')}<div class="closing-copy">${text('conclusion.body')}${text('conclusion.last')}</div><div class="closing-foot"><span class="mono">FORM → STRUCTURE → ASSEMBLY → REFINEMENT</span><a class="reading-link" href="#eng-prologue">${ui('回到序章','Back to prologue')} ↑</a></div></div></section>
-
-<aside class="image-register" id="eng-image-register" aria-label="补图清单" data-aria-zh="补图清单" data-aria-en="Image requests"><div class="section-inner"><div class="register-heading"><span class="mono overline">IMAGE REGISTER / EDITORIAL NOTES</span>${ui('补图清单','Requested images','h2')}${ui('优先级说明：P0 为第五章关键 CAD 视图；P1 为主要实物或验证证据；P2 为补充叙事资料。','Priority: P0 is essential current-design CAD; P1 is primary physical or validation evidence; P2 enriches the historical story.','p')}</div><div class="request-list">${requestRegister}</div><p class="archive-scope">${ui('照片范围：10 张原件、8 张精选、2 张备选；另一批 10 张未在本地归档中找到。实物照片的版本身份已确认，但不强行对应全部打印轮次。','Photo coverage: 10 originals, 8 selected and 2 alternates. Another batch of 10 is unavailable locally. Object identities are confirmed without forcing them into a complete print-round chronology.')}</p></div></aside>
-</main><footer class="page-end"><span class="mono">ERSTE002 / INDEPENDENT PRODUCT DESIGN</span><span>${ui('实体证据与设计成果，分别记录。','Physical evidence and design outcomes, recorded separately.')}</span></footer>
-</div>
-<footer class="reading-progress"><span class="current-section mono"><b>P</b><span>${ui('序章','Prologue')}</span></span><div class="reading-track" aria-hidden="true"><span></span></div><output class="mono">000%</output><button type="button" data-chapter-prev aria-label="上一章" data-aria-zh="上一章" data-aria-en="Previous chapter">←</button><button type="button" data-chapter-next aria-label="下一章" data-aria-zh="下一章" data-aria-en="Next chapter">→</button></footer>
-<dialog class="media-dialog" aria-labelledby="media-dialog-title"><header><span id="media-dialog-title" class="mono">ERSTE002 / ENGINEERING RECORD</span><button type="button" data-media-close>${ui('关闭','Close')} ×</button></header><figure><img alt=""><figcaption></figcaption></figure><footer><button type="button" data-media-step="-1">← ${ui('上一张','Previous')}</button><output class="mono"></output><button type="button" data-media-step="1">${ui('下一张','Next')} →</button></footer></dialog>
-<noscript><p class="no-script-note">所有工程正文与图片均可直接阅读。All engineering content remains readable without JavaScript.</p></noscript><script type="module" src="./engineering-archive.js"></script></body></html>`;
-await writeFile(new URL('public/cases/erste002/engineering.html',repo),html);
-const formal=['# ERSTE002 / THE COST OF LIGHTNESS.','正式中英文文案｜独立 ENGINEERING PC 页面','章节结构：序章 + 五章 + 简短结尾。最新 CAD 已完成设计修改，现有实物照片属于修改前装配版。'];
-for(const section of sections){formal.push(`\n## ${section.number} / ${section.title}\n\n${section.zh}`);const prefixes={'eng-prologue':['hero.'],'eng-form':['form.'],'eng-structure':['structure.'],'eng-assembly':['assembly.'],'eng-challenges':['challenges.','stiff.','button.','battery.'],'eng-refinement':['refinement.'],'eng-conclusion':['conclusion.']}[section.id];for(const[key,value]of Object.entries(copy))if(prefixes.some(p=>key.startsWith(p))){if(key.endsWith('.title'))formal.push(`\n### ${value[0]}\n\n**${value[1]}**`);else formal.push(`\n${value[0]}\n\n${value[1]}`);}}
-await writeFile(new URL('docs/2026-11-17-erste002-engineering-phase1-copy.md',repo),formal.join('\n'));
-const mediaDoc=['# ERSTE002｜图片、版本与补图清单','以下是独立工程页面的位置清单。实拍对应 CAD 改进前的实体装配版，不代表最新 CAD 的打印成果。'];
-mediaDoc.push('\n## 原件与线上副本来源\n\n原始照片位于 `D:/RhineTerminal/_archive/ERSTE002/ERSTE002_Engineering_Archive/`；以下仅引用已存在的优化副本，没有复制原件。原件校验值以 `photo-index.json` 及本轮 `integrity.json` 为准。\n\n| 资料 ID | 原始来源 | 使用的线上副本 | 位置 |\n| --- | --- | --- | --- |');
-for(const source of [...assets.photos,...assets.cad].filter(source=>media.some(m=>m.source===source.id))){const placements=media.filter(m=>m.source===source.id).map(m=>m.id).join(' / ');const files=(source.variants?.map(v=>v.file)||[source.file]).join(' / ');mediaDoc.push(`| ${source.id} | ${source.source} | public/cases/erste002/assets/engineering/${files} | ${placements} |`);}
-mediaDoc.push('\n历史 CAD 预览源文件索引：');
-for(const source of assets.cad.filter(source=>media.some(m=>m.source===source.id)))for(const model of source.models)mediaDoc.push(`\n- ${source.id} / ${model.id}：\`${model.locator}\`；SHA-256 \`${model.sha256}\`。`);
-for(const s of sections){const rows=media.filter(m=>m.chapter===s.id);if(!rows.length)continue;mediaDoc.push(`\n## ${s.number} / ${s.title}`);for(const m of rows){const r=requests.find(r=>r.id===m.request);mediaDoc.push(`\n### ${m.id}\n\n- 类型：${kindLabels[m.kind][0]}\n- 来源：${m.source||(m.kind==='schematic'?'本页原生功能原理图，依据设计者记录，非实际 CAD':'暂无图像，明确占位')}\n- 实际展示：${m.shown[0]}\n- 版本：${m.version[0]}\n- 阅读重点：${m.purpose[0]}\n- 理想补图：${r?`${r.priority} / ${r.id} / ${r.view[0]}`:'无需专门替换'}`);}}
-mediaDoc.push('\n## 按章节和优先级整理的补图清单\n\n| 章节 | 优先级 | 编号 | 所需图片 / 视图 |\n| --- | --- | --- | --- |');for(const s of sections)for(const r of requests.filter(r=>r.chapter===s.id).sort((a,b)=>a.priority.localeCompare(b.priority)))mediaDoc.push(`| ${s.number} | ${r.priority} | ${r.id} | ${r.title[0]}：${r.view[0]} |`);
-mediaDoc.push('\n## 目前未能由实物证据验证的设计结论\n\n最新版加强结构、按键机构、电池安装及缝隙遮光均为用户确认已经完成的 CAD 设计成果。未提供与最新版对应的 MJF 实物测试、按键功能与寿命、可靠固定或遮光测试记录；没有刚度提升百分比等量化结论。新版 CAD 文件暂未提供，前后几何、运动约束、固定细节及遮光截面当前不能独立复核。\n\n按键失效归因来自设计者对实际装配与结构的回顾，不是经测量或仿真得到的位移场。折边原理图不代表实际截面或整体抗扭结果；电池示意只表示方位与向上装入，不能据此判断桌面接触、实际间距或卡口几何。没有振动、跌落或遮光性能验证记录。遮光结构未提供几何，本页没有代画。\n\n本地 P01—P04 为四个历史 STL 收件包。它们与照片样件、历史打印轮次及最新版的对应关系未确认。演出 GLB 的电子件元数据标明为参考代理，不用它证明最终硬件配合或最新改进。\n\nIMG_4239 / IMG_4243 两张备选未使用；没有 AI 图像或虚构测试图像。原件与历史 CAD 保持原位，仅复用已有 WebP 衍生图。');
-await writeFile(new URL('docs/2026-11-17-erste002-engineering-phase1-media.md',repo),mediaDoc.join('\n'));
-console.log(`Generated independent archive: ${sections.length} sections, ${media.length} image slots, ${requests.length} image requests.`);
+await writeFile(new URL('public/cases/erste002/engineering.html', repo), html.replace(/[\t ]+$/gm, ''));
+await writeFile(new URL('docs/ERSTE002-engineering-final-media-spec.md', repo), specDoc.join('\n')+'\n');
+console.log(`Generated ${chapters.length} chapters, ${cases.length} decisions and ${usedSlots.length} media specs.`);

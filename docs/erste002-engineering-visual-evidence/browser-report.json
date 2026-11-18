@@ -1,0 +1,49 @@
+{
+  "preview": "http://127.0.0.1:5208/cases/erste002/engineering.html",
+  "browser": "157.0.4341.60",
+  "checks": [
+    "1920 × 1080 zh: 9 views, visitor mode, no horizontal overflow or product runtime.",
+    "1440 × 900 en: 9 views, visitor mode, no horizontal overflow or product runtime.",
+    "35 distinct production cards, one per placement, including the temporary photos, CAD and diagrams; Markdown matches in order.",
+    "11 images decoded; zoom, keyboard, focus, progress, browser history, old topic anchor and locale switch passed.",
+    "390px layout smoke test: diagram and status table; full mobile review not in scope."
+  ],
+  "metrics": {
+    "zh": {
+      "paragraphs": 24,
+      "bodyCharacters": 482,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    },
+    "en": {
+      "paragraphs": 24,
+      "bodyCharacters": 1127,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    }
+  },
+  "screenshots": [
+    "1920-zh-overview.jpg",
+    "1920-zh-form.jpg",
+    "1920-zh-evolution.jpg",
+    "1920-zh-decisions.jpg",
+    "1920-zh-case-stiffness.jpg",
+    "1920-zh-case-button.jpg",
+    "1920-zh-case-battery.jpg",
+    "1920-zh-case-light.jpg",
+    "1920-zh-current.jpg",
+    "1440-en-overview.jpg",
+    "1440-en-form.jpg",
+    "1440-en-evolution.jpg",
+    "1440-en-decisions.jpg",
+    "1440-en-case-stiffness.jpg",
+    "1440-en-case-button.jpg",
+    "1440-en-case-battery.jpg",
+    "1440-en-case-light.jpg",
+    "1440-en-current.jpg",
+    "1440-zh-media-spec.jpg",
+    "1440-zh-button-cad.jpg"
+  ],
+  "errors": [],
+  "status": "passed"
+}
