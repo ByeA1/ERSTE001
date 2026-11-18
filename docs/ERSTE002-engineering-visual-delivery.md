@@ -2,22 +2,22 @@
 
 - [PC 访客预览](http://127.0.0.1:5208/cases/erste002/engineering.html)
 - [35 张逐图制作卡与摄影、NX 最简执行清单](ERSTE002-engineering-final-media-spec.md)
-- [正式编排浏览器报告](erste002-engineering-visual-evidence/final-layout-report.json)
+- [章节层级与篇幅复核](erste002-engineering-visual-evidence/hierarchy-report.json)
 
 工程页统一使用正式编排。版面上保留图号、图题和工程图注，细节图按工程主题折叠。35 个图位中，11 处使用临时照片或几何预览，4 处使用临时功能图解，20 处以图号保留对应画幅。素材状态与制作要求集中在逐图规格文件。
 
 清单中的每个 `IMG-*` 链接直达正式页面中的同编号图位，并展开对应专题。15 处临时素材均有逐图评估，35 处展示宽度按 1920 桌面版面更新。[底部折边剖面图位示例](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S05)
 
-本轮画面：[里程碑](erste002-engineering-visual-evidence/final-1440-en-evolution.jpg)、[按键几何对照](erste002-engineering-visual-evidence/final-1440-zh-button-cad.jpg)、[编号图位](erste002-engineering-visual-evidence/final-1440-zh-numbered-plates.jpg)、[当前总装与状态表](erste002-engineering-visual-evidence/final-1920-zh-current.jpg)。下表链接保留了上轮视觉重构截图，供对照。
+当前画面可查看[外形演进](erste002-engineering-visual-evidence/hierarchy-1440-en-form.jpg)、[迭代里程碑](erste002-engineering-visual-evidence/hierarchy-1440-en-evolution.jpg)、[结构专题](erste002-engineering-visual-evidence/hierarchy-1920-zh-case-stiffness.jpg)和[按键专题](erste002-engineering-visual-evidence/hierarchy-1440-en-case-button.jpg)。下表保留首轮视觉重构截图供对照。
 
 ## 页面结构
 
 | 区段 | 主要视觉与阅读任务 | 截图 |
 | --- | --- | --- |
-| 00 Engineering Overview | 红滚轮实体首图、四个工程专题入口、五步演进图 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-overview.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-overview.jpg) |
-| 01 Form Development | FDM 连续曲面、三件实物 A/B/C、前后轮廓与实际握持反馈 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-form.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-form.jpg) |
-| 02 Prototype Evolution | 从 FDM 到当前 CAD 的五张里程碑卡，分别列出做过、发现和下一步 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-evolution.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-evolution.jpg) |
-| 03 Engineering Decisions | 结构、按键、电池和遮光。以实物观察、设计者分析、已做设计和未获验证的证据标识组织 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-decisions.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-decisions.jpg) |
+| 00 Engineering Overview | 红滚轮实体首图、工程决策与当前设计入口、单行里程碑导航 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-overview.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-overview.jpg) |
+| 01 Form Development | FDM 起点与三件实物并列，轮廓和握持细节按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-form.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-form.jpg) |
+| 02 Prototype Evolution | 五张里程碑卡默认展示关键发现，制作与后续按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-evolution.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-evolution.jpg) |
+| 03 Engineering Decisions | 结构、按键、电池和遮光优先展示各自的设计结论及主图，实物观察和取舍按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-decisions.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-decisions.jpg) |
 | 04 Current Design | 一张四行表并列 CAD 状态和实体验证边界 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-current.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-current.jpg) |
 
 重点画面：[结构刚度](erste002-engineering-visual-evidence/1920-zh-case-stiffness.jpg)、[按键机构](erste002-engineering-visual-evidence/1920-zh-case-button.jpg)、[电池装配](erste002-engineering-visual-evidence/1920-zh-case-battery.jpg)、[缝隙遮光](erste002-engineering-visual-evidence/1920-zh-case-light.jpg)。
@@ -48,10 +48,10 @@ IMG-K02 依据 M007 在原归档投影中的可见边界描边，标示盖体和
 
 | 语种 | 段落数 前 → 后 | 正文字数 前 → 后 | 正文压缩 | 长段数 前 → 后 |
 | --- | ---: | ---: | ---: | ---: |
-| 中文 | 81 → 22 | 3446 → 428 | 87.6% | 9 → 0 |
-| English | 74 → 22 | 9777 → 992 | 89.9% | 35 → 0 |
+| 中文 | 81 → 21 | 3446 → 412 | 88.0% | 9 → 0 |
+| English | 74 → 21 | 9777 → 868 | 91.1% | 35 → 0 |
 
-同一口径结果见 [旧页面统计](erste002-engineering-visual-evidence/text-before.json) 和 [正式编排浏览器报告](erste002-engineering-visual-evidence/final-layout-report.json)。减少的段落由演进节点、工程分区图、证据标签和状态表接替。
+同一口径结果见 [旧页面统计](erste002-engineering-visual-evidence/text-before.json) 和 [章节层级与篇幅复核](erste002-engineering-visual-evidence/hierarchy-report.json)。相对上轮正式编排，在 1440×900 且细节默认折叠的状态下，中文滚动高度从 7343 降到 5355 CSS px，英文从 7403 降到 5409 CSS px，均缩短约 27%。
 
 ## 当前技术边界
 
@@ -63,7 +63,7 @@ IMG-K02 依据 M007 在原归档投影中的可见边界描边，标示盖体和
 
 ## 验收与版本
 
-最终构建使用 Edge 检查 1920×1080 中文、1440×900 英文的五个区段与四个专题，另做 390px 本页布局抽查。实际解码 11 张图片，核对 35 个图号、直达链接及 1920px 版面宽度，同时检查双语、图片键盘操作、浏览器历史与刷新恢复。保存四张有变化的正式编排截图。确认独立页无 PRODUCT 运行时资源请求。原始照片与历史 CAD 包 14 件、现有 PRODUCT 与导航及参考文件 91 件对比原校验值一致。见 [完整性报告](erste002-engineering-visual-evidence/integrity.json)。
+最终构建使用 Edge 检查 1920×1080 中文、1440×900 英文的五个区段与四个专题，另抽查 1024px 和 390px 的里程碑卡。实际解码 11 张图片，核对 35 个图号、直达链接及 1920px 版面宽度，同时检查细节展开、双语、图片键盘操作、浏览器历史与刷新恢复。确认独立页无 PRODUCT 运行时资源请求。原始照片与历史 CAD 包 14 件、现有 PRODUCT 与导航及参考文件 91 件对比原校验值一致。见 [完整性报告](erste002-engineering-visual-evidence/integrity.json)。
 
 站点构建、开场、目录、项目展示、Logo 使用和公共能力检查通过。全站旧 Logo 审计的原始基线仍因历史档案盒模型哈希不一致退出，使用本轮前已有基线的 Chrome 桌面快速复查通过。
 

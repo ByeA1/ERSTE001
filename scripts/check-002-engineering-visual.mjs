@@ -96,6 +96,18 @@ try {
 
   const page = await browser.newPage({ viewport: {width:1440,height:900}, reducedMotion:'reduce', serviceWorkers:'block' });
   track(page);
+  await visit(page,'zh','eng-evolution');
+  assert.equal(await page.locator('.milestone-finding:visible').count(),5);
+  assert.equal(await page.locator('.milestone-notes dl:visible').count(),0);
+  await page.locator('#milestone-mjf .milestone-notes summary').click();
+  assert.ok(await page.locator('#milestone-mjf .milestone-notes dd').first().isVisible());
+  await visit(page,'en','eng-case-button');
+  assert.ok(await page.locator('#eng-case-button .case-lead').isVisible());
+  const rationale = page.locator('#eng-case-button .evidence-notes');
+  assert.equal(await rationale.isVisible(),false);
+  await page.locator('#eng-case-button .case-extras summary').first().click();
+  assert.ok(await rationale.isVisible());
+  report.checks.push('Five key findings and four design decisions lead their sections; build notes and observed rationale are available on expansion.');
   await visit(page,'zh','IMG-S05');
   const placement = page.locator('#media-base-section');
   assert.ok(await placement.evaluate(figure=>figure.closest('details').open));

@@ -15,11 +15,11 @@ export const cases = [
 ];
 
 export const steps = [
-  { id: 'fdm', stage: 'FDM', name: ['手感样件', 'Form sample'], summary: ['先确定握持曲面', 'Find the grip profile'], image: 'evo-fdm', action: ['打印未分件外形', 'Print the unsplit shell'], finding: ['实际握持反馈促成一次改形', 'Handling prompted a form revision'], next: ['转入分件与结构设计', 'Move to parts and structure'] },
-  { id: 'mjf', stage: 'MJF 01', name: ['分件与加筋', 'Parts and ribs'], summary: ['发现偏软与孔位问题', 'Flex and hole alignment'], request: 'R04', action: ['增加内筋并首次 MJF 打印', 'Add internal ribs and print in MJF'], finding: ['偏软，安装孔位有误', 'Flex and inaccurate mounting holes'], next: ['增加跨接支撑', 'Add spanning supports'] },
-  { id: 'support', stage: 'MJF / SUPPORT', name: ['支撑迭代', 'Support revision'], summary: ['杆件与装配空间冲突', 'Rods compete with assembly space'], image: 'evo-support', action: ['加杆并调整装配，再次打印', 'Add rods, revise fit and reprint'], finding: ['仍偏软，并与 PCB 干涉', 'Flex remains; rods interfere with PCB'], next: ['曾拆杆完成装配，再改布局', 'Assembly achieved once by removing rods; revise layout'] },
-  { id: 'built', stage: 'BUILT', name: ['最新实体装配', 'Latest physical build'], summary: ['观察按压与电池固定', 'Inspect the press and battery fit'], image: 'evo-built', action: ['完成红滚轮版装配', 'Assemble the red-wheel build'], finding: ['杆件偏弱、盖体翘起、电池松', 'Weak support, cover lift and loose battery'], next: ['分专题修改 CAD', 'Revise the CAD by subsystem'] },
-  { id: 'cad', stage: 'CURRENT CAD', name: ['当前设计版', 'Current CAD'], summary: ['四个系统完成设计修改', 'Four design areas revised'], request: 'R22', action: ['完成结构、按键、电池与遮光修改', 'Revise structure, button, battery and light blocking'], finding: ['开放底部保留，重新组织支撑', 'Retain the open base and reorganize the supports'], next: ['复核整机刚度与机构行程', 'Verify assembly stiffness and mechanism travel'] },
+  { id: 'fdm', stage: 'FDM', name: ['手感样件', 'Form sample'], image: 'evo-fdm', action: ['打印未分件外形', 'Print the unsplit shell'], finding: ['实际握持反馈促成一次改形', 'Handling prompted a form revision'], next: ['转入分件与结构设计', 'Move to parts and structure'] },
+  { id: 'mjf', stage: 'MJF 01', name: ['分件与加筋', 'Parts and ribs'], image: 'first-mjf', action: ['增加内筋并首次 MJF 打印', 'Add internal ribs and print in MJF'], finding: ['偏软，安装孔位有误', 'Flex and inaccurate mounting holes'], next: ['增加跨接支撑', 'Add spanning supports'] },
+  { id: 'support', stage: 'MJF / SUPPORT', name: ['支撑迭代', 'Support revision'], image: 'evo-support', action: ['加杆并调整装配，再次打印', 'Add rods, revise fit and reprint'], finding: ['仍偏软，并与 PCB 干涉', 'Flex remains; rods interfere with PCB'], next: ['曾拆杆完成装配，再改布局', 'Assembly achieved once by removing rods; revise layout'] },
+  { id: 'built', stage: 'BUILT', name: ['最新实体装配', 'Latest physical build'], image: 'evo-built', action: ['完成红滚轮版装配', 'Assemble the red-wheel build'], finding: ['杆件偏弱、盖体翘起、电池松', 'Weak support, cover lift and loose battery'], next: ['分专题修改 CAD', 'Revise the CAD by subsystem'] },
+  { id: 'cad', stage: 'CURRENT CAD', name: ['当前设计版', 'Current CAD'], image: 'evo-cad', action: ['完成结构、按键、电池与遮光修改', 'Revise structure, button, battery and light blocking'], finding: ['开放底部保留，重新组织支撑', 'Retain the open base and reorganize the supports'], next: ['复核整机刚度与机构行程', 'Verify assembly stiffness and mechanism travel'] },
 ];
 
 export const media = {

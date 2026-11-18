@@ -70,7 +70,7 @@ function diagram(slot, title, structure, detail) {
 
 function sectionTitle(index, headline, lead) {
   const [, number, , name] = chapters[index];
-  return `<header class="chapter-title"><div class="chapter-number">${number}</div><div><p class="eyebrow">${name}</p><h2>${localized(headline)}</h2></div>${lead ? localized(lead,'p') : ''}</header>`;
+  return `<header class="chapter-title"><p class="section-kicker"><b>${number}</b>${name}</p><h2>${localized(headline)}</h2>${lead ? t(...lead,'p','class="chapter-lead"') : ''}</header>`;
 }
 
 const evidenceLabels = {
@@ -81,20 +81,22 @@ function evidenceLabel(kind) {
   const label = kind === 'waiting' ? 'NOT VALIDATED' : en.toUpperCase();
   return `<span class="evidence-label ${kind}" title="${zh} / ${en}"><i aria-hidden="true"></i>${label}</span>`;
 }
-function evidenceRows(record) {
-  return `<div class="evidence-strip">${['observed','analysis','designed'].filter((key)=>record[key]).map((key)=>`<div>${evidenceLabel(key)}<p>${localized(record[key])}</p></div>`).join('')}</div>`;
+function evidenceNotes(record) {
+  const notes = ['observed','analysis'].filter(key=>record[key]);
+  const title = record.observed ? ['实物观察与取舍','Observations and trade-offs'] : ['设计考虑','Design rationale'];
+  return tray(title, `<div class="evidence-notes">${notes.map(key=>`<div>${evidenceLabel(key)}<p>${localized(record[key])}</p></div>`).join('')}</div>`);
 }
 function caseTitle(index) {
   const record = cases[index];
-  return `<header class="case-title"><span class="case-counter">CASE 0${index+1}</span><div><p class="eyebrow">${record.title}</p><h3>${localized(record.headline)}</h3></div></header>`;
+  return `<header class="case-title"><p class="section-kicker"><b>CASE 0${index+1}</b>${record.title}</p><h3>${localized(record.headline)}</h3><div class="case-lead">${evidenceLabel('designed')}<p>${localized(record.designed)}</p></div></header>`;
 }
-function tray(title, children) {
-  return `<details class="study-tray"><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
+function tray(title, children, id) {
+  return `<details class="study-tray"${id ? ` id="${id}" data-topic` : ''}><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
 }
 const plateGrid = (...slots) => `<div class="plate-grid">${slots.map(slot=>plate(slot)).join('')}</div>`;
 const drawings = diagrams({t, diagram});
 
-const stepRail = steps.map((step, i)=>`<li><a href="#milestone-${step.id}"><span class="step-index">0${i+1} / ${step.stage}</span><strong>${localized(step.name)}</strong><span class="step-summary">${localized(step.summary)}</span></a></li>`).join('');
+const stepRail = steps.map((step, i)=>`<li><a href="#milestone-${step.id}"><span class="step-index">0${i+1}</span><strong>${localized(step.name)}</strong></a></li>`).join('');
 
 const body = `
 <section class="overview chapter" data-chapter id="eng-overview">
@@ -103,26 +105,26 @@ const body = `
     <h1>THE COST OF<br><em>LIGHTNESS.</em></h1>
     ${t('轻量化的结构代价','An open-base right-hand gaming mouse','h2')}
     ${t('无底壳的右手工学鼠标。从手感样件到四项工程设计修改。','From the grip mock-up to four mechanical design decisions.','p')}
-    <nav class="hero-cases" ${aria('工程专题','Engineering topics')}>${cases.map(record=>`<a href="#eng-case-${record.id}">${localized(record.short)}</a>`).join('')}</nav>
-    <a class="hero-action" href="#eng-current">${t('查看当前设计状态','See current design status')} <span aria-hidden="true">↗</span></a>
+    <div class="hero-links"><a class="hero-action" href="#eng-decisions">${t('工程决策','Engineering decisions')} <span aria-hidden="true">↘</span></a><a class="hero-secondary" href="#eng-current">${t('当前设计','Current design')} ↗</a></div>
   </div>${photo('cover', {className:'cover-image'})}</div>
   <ol class="step-rail" ${aria('五个工程里程碑','Five engineering milestones')}>${stepRail}</ol>
 </section>
 
 <section class="chapter form-chapter" data-chapter id="eng-form">
-  ${sectionTitle(1,['先确定手里的曲面。','Find the shape in the hand.'],['一次实际试握后的改形，定下右手非对称曲面。','One revision after hands-on feedback established the direction for the asymmetric right-hand form.'])}
-  <div class="form-gallery" id="eng-form-comparison" data-topic>${photo('form-fdm')}${photo('form-generations')}</div>
-  <div class="form-detail" id="eng-form-handling" data-topic>
-    <h3>${t('指尖落点与掌心支撑','Fingertip landing and palm support')}</h3>
-    <div class="plate-grid form-detail-grid">${photo('form-profile')}${plate('grip')}${plate('matched-form')}</div>
+  <div class="form-gallery" id="eng-form-comparison" data-topic>
+    <div class="form-intro">${sectionTitle(1,['先确定手里的曲面。','Find the shape in the hand.'],['一次试握后的改形定下右手非对称曲面。','A revision after trial handling set the direction of the asymmetric grip.'])}${photo('form-fdm')}</div>
+    ${photo('form-generations')}
   </div>
+  ${tray(['指尖落点与掌心支撑','Fingertip landing and palm support'],`<div class="plate-grid form-detail-grid">${photo('form-profile')}${plate('grip')}${plate('matched-form')}</div>`,'eng-form-handling')}
 </section>
 
 <section class="chapter evolution-chapter" data-chapter id="eng-evolution">
-  ${sectionTitle(2,['五个工程里程碑。','Five engineering milestones.'],['从手感验证、实物装配到结构定案。','From grip validation and physical assembly to the revised design.'])}
+  ${sectionTitle(2,['五个工程里程碑。','Five engineering milestones.'])}
   <ol class="milestone-grid" id="milestones">${steps.map((step,i)=>{
-    const image = step.image ? photo(step.image) : plate(step.id === 'mjf' ? 'first-mjf' : 'evo-cad');
-    return `<li id="milestone-${step.id}" data-topic><div class="milestone-heading"><span>0${i+1} / ${step.stage}</span><h3>${localized(step.name)}</h3></div>${image}<dl>${[[['做了什么','Built'],step.action],[['发现','Found'],step.finding],[['下一步','Next'],step.next]].map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></li>`;
+    const image = media[step.image] ? photo(step.image) : plate(step.image);
+    const noteTitle = step.id === 'cad' ? ['设计取舍','Design trade-off'] : ['关键发现','Key finding'];
+    const details = `<details class="milestone-notes"><summary>${t('制作与后续','Build and follow-up')}</summary><dl><div><dt>${t('制作','Built')}</dt><dd>${localized(step.action)}</dd></div><div><dt>${t('后续','Next')}</dt><dd>${localized(step.next)}</dd></div></dl></details>`;
+    return `<li id="milestone-${step.id}" data-topic><div class="milestone-heading"><span>0${i+1} / ${step.stage}</span><h3>${localized(step.name)}</h3></div>${image}<p class="milestone-finding"><span>${localized(noteTitle)}</span><strong>${localized(step.finding)}</strong></p>${details}</li>`;
   }).join('')}</ol>
   ${tray(['装配干涉','Assembly interference'],plateGrid('interference'))}
 </section>
@@ -130,32 +132,31 @@ const body = `
 <section class="chapter decisions-chapter" data-chapter id="eng-decisions">
   ${sectionTitle(3,['四个工程决策。','Four engineering decisions.'])}
   <nav class="case-jumps" ${aria('工程专题','Engineering topics')}>${cases.map((record,i)=>`<a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↘</span></a>`).join('')}</nav>
-  <div class="evidence-legend" ${aria('工程证据图例','Engineering evidence legend')}>${Object.entries(evidenceLabels).map(([kind,[zh,en]])=>`<span>${evidenceLabel(kind)}${t(zh,en)}</span>`).join('')}<span class="line-legend"><i></i>${t('支撑 / 作用方向','Support / action')}</span><span class="line-legend dashed"><i></i>${t('装配 / 运动','Assembly / travel')}</span></div>
-  <article class="engineering-case" id="eng-case-stiffness" data-topic>${caseTitle(0)}${evidenceRows(cases[0])}
+  <article class="engineering-case" id="eng-case-stiffness" data-topic>${caseTitle(0)}
     <div class="case-split">${photo('stiffness-photo')}${drawings.support()}</div>
     <div class="photo-key">${t('A 筋板　 B 跨接杆　 C 安装柱','A Ribs · B Spanning rod · C Mounting posts')}</div>
     <ol class="change-grid">${structuralChanges.map(([number,title,caption])=>`<li><b>${number}</b><div><strong>${localized(title)}</strong><span>${localized(caption)}</span></div></li>`).join('')}</ol>
+    <div class="case-extras">${evidenceNotes(cases[0])}
     ${tray(['新版支撑与截面','Revised supports and sections'],plateGrid('stiffness-compare','functional-fold','base-section','main-joint'))}
     ${tray(['历史 CAD 几何','Historical CAD geometry'],`<div class="case-split cad-pair">${photo('cad-p01')}${photo('cad-p04')}</div>${t('同机位对照内筋与跨接布局。P01、P04 为历史收件包编号。','Matched camera views of ribs and spanning members. P01 and P04 identify archive packages.','p','class="small-note"')}`)}
-    ${tray(['壳体受力观察','Shell under load'],plateGrid('stiffness-load'))}
+    ${tray(['壳体受力观察','Shell under load'],plateGrid('stiffness-load'))}</div>
   </article>
-  <article class="engineering-case" id="eng-case-button" data-topic>${caseTitle(1)}${evidenceRows(cases[1])}
+  <article class="engineering-case" id="eng-case-button" data-topic>${caseTitle(1)}
     ${drawings.button()}
-    <div class="case-split button-geometry">${photo('button-cad')}${plate('button-new',['新版按键盖与固定区','Revised cover and mounting zone'])}</div>
-    <div class="photo-key">${t('M007 历史几何　A 盖体片体　B 后部连接','M007 historical geometry · A cover panel · B rear connection')}</div>
-    ${tray(['片体截面与按压路径','Cover sections and press travel'],plateGrid('button-edge','button-thickness','button-motion','button-observed'))}
+    <div class="case-extras">${evidenceNotes(cases[1])}
+    ${tray(['按键盖几何对照','Compare button geometry'],`<div class="case-split">${photo('button-cad')}${plate('button-new',['新版按键盖与固定区','Revised cover and mounting zone'])}</div><p class="photo-key">${t('M007 历史几何　A 盖体片体　B 后部连接','M007 historical geometry · A cover panel · B rear connection')}</p>`)}
+    ${tray(['片体截面与按压路径','Cover sections and press travel'],plateGrid('button-edge','button-thickness','button-motion','button-observed'))}</div>
   </article>
-  <article class="engineering-case" id="eng-case-battery" data-topic>${caseTitle(2)}${evidenceRows(cases[2])}
-    ${drawings.battery()}${tray(['卡口与装配过程','Catch and assembly sequence'],plateGrid('battery-catch','battery-old'))}
+  <article class="engineering-case" id="eng-case-battery" data-topic>${caseTitle(2)}
+    ${drawings.battery()}<div class="case-extras">${evidenceNotes(cases[2])}${tray(['卡口与装配过程','Catch and assembly sequence'],plateGrid('battery-catch','battery-old'))}</div>
   </article>
-  <article class="engineering-case light-case" id="eng-case-light" data-topic>${caseTitle(3)}
-    <div class="light-split">${evidenceRows(cases[3])}${drawings.light()}</div>${tray(['按键盖缝隙剖面','Button cover gap section'],plateGrid('light-section'))}
+  <article class="engineering-case light-case" id="eng-case-light" data-topic>
+    <div class="light-split">${caseTitle(3)}${drawings.light()}</div><div class="case-extras">${evidenceNotes(cases[3])}${tray(['按键盖缝隙剖面','Button cover gap section'],plateGrid('light-section'))}</div>
   </article>
 </section>
 
 <section class="chapter current-chapter" data-chapter id="eng-current">
-  ${sectionTitle(4,['当前设计与工程边界。','Current design and engineering limits.'])}
-  <div class="status-intro"><span class="cad-status">${t('当前 CAD / 设计完成','CURRENT CAD / DESIGN COMPLETE')}</span>${t('最近实物是红滚轮装配版。下表记录其后的设计修改。','The red-wheel build is the latest physical prototype. The table covers the subsequent CAD changes.')}</div>
+  ${sectionTitle(4,['当前设计与工程边界。','Current design and engineering limits.'],['四个系统已完成 CAD 修改。红滚轮版是最近的实体样机。','Revisions to four systems are complete in CAD. The red-wheel version is the latest physical build.'])}
   <div class="current-layout"><div class="status-wrap"><table><thead><tr><th scope="col">${t('系统','System')}</th><th scope="col">${evidenceLabel('designed')}</th><th scope="col">${evidenceLabel('waiting')}</th></tr></thead><tbody>${cases.map((record,i)=>`<tr><th scope="row"><a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↗</span></a></th><td>${localized(record.state)}</td><td>${localized(record.validation)}</td></tr>`).join('')}</tbody></table></div>${plate('current-overview')}</div>
   ${tray(['实物验证项目','Physical checks'],plateGrid('validation'))}
   <div class="finish"><span>ERSTE002 / ENGINEERING ARCHIVE</span><a href="#eng-overview">${t('回到概览','Back to overview')} ↑</a></div>
@@ -186,6 +187,7 @@ const specDoc = [
   '本文件集中维护素材要求。工程页面以正式结构呈现图位与图号。档案照片、STL 预览和功能线图目前作为临时排版素材；当前仅显示图号的位置标为待制作。',
   '',
   '点击制作卡末尾的图号链接可定位到正式页面中的对应图位。P0 为新版核心结构与图解，P1 为主叙事及关键历史证据，P2 为补充对照。',
+  '比例用于规划取景。原稿可按主体与工程细节取景并保留裁切余量，网页按图位选取构图。实物对比与带标注的几何图需保留关键边界和标注位置。',
   '素材状态分为待制作、临时占位、最终素材已提供和已验收。拿到符合对应版本的成品可标为已提供。核对版本、机位、必见细节及展示尺寸后才标为已验收。',
   '',
   '## 最简执行清单',
@@ -212,7 +214,7 @@ for (const slot of usedSlots) {
     `- 必须可见：${row.details[0]}。`,
     `- 建议标注：${row.marks[0]}`,
     `- 布置：${row.setup[0]}`,
-    `- 比例与展示尺寸：${row.ratio}，1920 桌面视口约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
+    `- 取景比例与展示宽度参考：${row.ratio}，1920 桌面视口约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
     `- 用途：${row.purpose[0]}。`,
     `- 当前占位：${source ? `\`public/cases/erste002/assets/engineering/${source.file}\`，来源 \`${source.provenance}\`` : schematicSlots.has(slot) ? '页面内联功能图解，待以对应版本几何核对或制图。' : '无。'}`,
     ...(row.review ? [`- 现有素材评估：${row.review[0]}`] : []),
