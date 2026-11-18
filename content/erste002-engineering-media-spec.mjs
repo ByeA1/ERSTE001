@@ -100,8 +100,27 @@ const requiredDetails = {
   validation: ['可追溯样件、测试条件及对应系统实际表现', 'Traceable specimen, conditions and observed subsystem behaviour'],
 };
 
+// What each available placement demonstrates, and what the final capture must add.
+const temporaryReview = {
+  cover: ['可见已装配的红滚轮版与轮廓，开口底缘不清楚。正式图需降低机位并补足底缘。', 'The red-wheel build and outline read clearly, but the lower opening needs a lower camera angle.'],
+  'form-fdm': ['连续顶面可辨。正式图用擦侧光让 FDM 层纹清晰，并去除背景杂物。', 'The unsplit top is visible. Use grazing light to reveal FDM layers and clear the backdrop.'],
+  'form-generations': ['三件身份可辨，但朝向不同。统一朝向和机位后，外形与分件才可直接比较。', 'All three identities are visible. Match their orientation and camera to compare shape and part boundaries.'],
+  'form-profile': ['能看见掌心隆起，背景较杂。正式图统一水平基准与焦距，留出完整底缘。', 'The palm rise reads clearly. Use a level datum and fixed focal length, with the entire lower edge in frame.'],
+  'evo-fdm': ['现有俯视可辨样件，竖图在横向节点会裁掉端部。正式图保留完整轮廓。', 'The overhead identifies the sample, but the portrait crops the ends in a landscape tile. Keep the entire outline.'],
+  'evo-support': ['较晚裸壳可说明分件。加杆里程碑需要归属明确的历史样件和可见杆件。', 'The later shell illustrates part division. Use the confirmed rod-stage sample and show its supports.'],
+  'evo-built': ['红滚轮实体可辨，三件同框占用主体空间。单独拍完整总装，表现侧键及分缝。', 'The red-wheel build is identifiable in the group. Isolate the assembled build to show its seams and side buttons.'],
+  'stiffness-photo': ['可定位筋、杆和安装柱。以低反光布光补拍内侧，保留完整底缘。', 'Ribs, rods and posts can be located. Use low-glare lighting and retain the entire lower edge.'],
+  'support-diagram': ['可说明支撑概念。正式图以正确版本的底视和折边剖面重绘。', 'The sketch explains support intent. Rebuild it over the version-matched underside view and flange section.'],
+  'cad-p01': ['能看出该收件包的内筋布局。正式对比需先确认文件归属，另按统一机位出图。', 'The ribs are visible. Confirm file identity, then capture from the matched comparison camera.'],
+  'cad-p04': ['可见历史跨接杆。正式图需与 S07 使用相同正交机位、缩放及显示范围。', 'The historical spans are visible. Match S07 in orthographic camera, scale and crop.'],
+  'button-diagram': ['可解释弯折前移与重新分区。接触和限位点须用对应 CAD 侧剖核对后再定。', 'The sketch explains flex relocation. Confirm contact and stop locations in the matching CAD section.'],
+  'button-cad': ['M007 可见后部连接，版本尚未与异常运动对应。正式图使用经确认的失效样机对应 CAD。', 'M007 shows the rear connection. Use CAD matched to the physical build with the observed failure.'],
+  'battery-diagram': ['可看懂向上进件。正式三步图需从同一 CAD 剖切平面取得电池、上盖支撑和卡口关系。', 'Upward insertion reads clearly. Use the same CAD section plane for the battery, upper supports and catch across all three steps.'],
+  'light-diagram': ['可区分光路与行程。正式图依据实际静止及按下剖面定位遮光特征和剩余间隙。', 'The sketch separates light path and travel. Use actual sections at rest and pressed to locate the feature and remaining gap.'],
+};
+
 export const mediaSpecs = Object.fromEntries(entries.map(([slot, id, chapter, priority, production, ratio, width, request, marks]) => {
   const [type, object, version, view, purpose] = requests[request] || extra[request];
   return [slot, { id: `IMG-${id}`, chapter, priority, production, ratio, width, request, type, object, version, view, details: requiredDetails[slot], marks, purpose,
-    setup: production === photo ? photoStyle : matchStyle }];
+    setup: production === photo ? photoStyle : matchStyle, review: temporaryReview[slot] }];
 }));

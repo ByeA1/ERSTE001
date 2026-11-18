@@ -96,7 +96,7 @@ function go(id, { push = true, scroll, focus = true } = {}) {
     store();
     history.pushState({ ...history.state, archiveRead: { document: documentKey, target: target.id } }, '', `#${target.id}`);
   }
-  for (let node = target.parentElement; node && node !== scroller; node = node.parentElement) {
+  for (let node = target; node && node !== scroller; node = node.parentElement) {
     if (node instanceof HTMLDetailsElement) node.open = true;
   }
   const top = Number.isFinite(scroll) ? scroll : scroller.scrollTop + target.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 16;

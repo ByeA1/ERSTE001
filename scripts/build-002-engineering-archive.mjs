@@ -26,11 +26,19 @@ function fileFor(slot) {
 const schematicSlots = new Set(['support-diagram', 'button-diagram', 'battery-diagram', 'light-diagram']);
 const materialStatus = (slot) => media[slot] || schematicSlots.has(slot)
   ? ['临时占位', 'Temporary'] : ['待制作', 'Awaiting production'];
+const specUrl = 'http://127.0.0.1:5208/cases/erste002/engineering.html?media=1';
+
+function materialChapter(code) {
+  const [part, topic] = code.split('.');
+  const [, , label] = chapters.find(([,number]) => number === part);
+  return label.map((name, i) => `${code} / ${name}${topic ? ` · ${cases[Number(topic) - 1].short[i]}` : ''}`);
+}
 
 function specCard(slot) {
   const spec = mediaSpecs[slot];
   const asset = fileFor(slot);
   const fields = [
+    [['所属章节', 'Chapter / topic'], materialChapter(spec.chapter)],
     [['类型 / 制作', 'Type / production'], spec.type.map((value, i) => `${value} / ${spec.production[i]}`)],
     [['版本', 'Version'], spec.version], [['对象', 'Subject'], spec.object], [['视角', 'Camera'], spec.view],
     [['必须可见', 'Must show'], spec.details], [['建议标注', 'Annotations'], spec.marks], [['布置', 'Setup'], spec.setup],
@@ -38,7 +46,8 @@ function specCard(slot) {
     [['用途', 'Purpose'], spec.purpose],
     [['当前占位', 'Temporary source'], asset ? [asset.file, asset.file] : schematicSlots.has(slot) ? ['页面线图 · 功能示意', 'Inline functional sketch'] : ['无', 'None']],
   ];
-  return `<details class="material-card" data-production><summary><span>${spec.id} / ${spec.priority}</span> ${t('最终素材要求','Final media spec')} <span class="material-state">${localized(materialStatus(slot))}</span></summary><dl>${fields.map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></details>`;
+  if (spec.review) fields.push([['现有素材评估', 'Temporary media review'], spec.review]);
+  return `<details class="material-card" id="${spec.id}" data-production><summary><span>${spec.id} / ${spec.priority}</span> ${t('最终素材要求','Final media spec')} <span class="material-state">${localized(materialStatus(slot))}</span></summary><dl>${fields.map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></details>`;
 }
 
 function figure(slot, visual, title, caption, kind, options = {}) {
@@ -193,16 +202,17 @@ const specDoc = [
   '访客页中的档案照片、STL 预览和功能线图均是临时排版素材。本清单列出每个图位的独立验收要求。当前无图的位置标为待制作。',
   '',
   '网页素材模式：`/cases/erste002/engineering.html?media=1`。图下素材卡与本文件使用相同编号。P0 为新版核心结构与图解，P1 为主叙事及关键历史证据，P2 为补充对照。',
+  '素材状态分为待制作、临时占位、最终素材已提供和已验收。拿到符合对应版本的成品可标为已提供。核对版本、机位、必见细节及展示尺寸后才标为已验收。',
   '',
   '## 最简执行清单',
   '',
   '1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯、侧视、握持和三件同朝向合照（F01–F04、P01）。握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。',
   '2. 历史零件另成一组。核对首轮 MJF、加杆版、红滚轮版裸上盖的身份。以同一光线拍分件摊开、孔位近景、底部内视（P02、P03、S01）。能追溯时再补 PCB 干涉、按压、电池松动和整体偏软的过程证据（P06、K07、B03、S09）。',
-  '3. NX 总装先完成 P05、C01。当前 CAD 保存三分之四总装视图和底部内视。统一背景、投影、缩放与坐标轴；输出常规截图及无标注版。保留文件版本。',
+  '3. NX 总装先完成 P05、C01。当前 CAD 保存三分之四总装视图和底部内视。同一组截图供两个图位使用，P05 裁成节点图，C01 保留全景及四处标注。统一背景、投影、缩放与坐标轴，保留文件版本。',
   '4. NX 结构一次截取 S02–S06。前后版锁同一正交相机。先截整壳底视及前杆，再截功能片体、开口边缘法向剖面、主杆与上盖接点。S07–S08 单独用经核实的历史文件复现，不用新版代替。',
   '5. NX 按键一次截取 K01–K06。前后版同机位内侧轴测，并在同位置纵切捕捉连接、厚薄和弯折分区。保留微动位置及限位，画施力和预期运动箭头；如某项不存在，用标注说明。',
-  '6. NX 电池和遮光分别截 B01–B02、L01–L02。电池保持固定侧剖面拍装入前、路径、到位，另截图卡口。遮光局部同剖面抓静止与按下两状态，标光路及剩余间隙。',
-  '7. 输出建议。实拍图可交原图加简单标注副本。NX 交无标注和简单标注 PNG，桌面按下方图位比例提供至少约 2 倍展示宽度。C02 等对应实物测试完成后再补。',
+  '6. NX 电池和遮光分别截 B01–B02、L01–L02。电池保持固定侧剖面拍装入前、路径、到位，另截图卡口。遮光局部同剖面抓静止与按下两状态，标光路及剩余间隙。L01 图解从 L02 取所需截面，复用同一组 NX 视图。',
+  '7. 按图号交付。实拍保留原图，NX 提供无标注 PNG。标注副本可选，文件名示例为 `IMG-S05_before.png`、`IMG-S05_after.png`、`IMG-S05_after_annotated.png`。每组附简短的文件版本或样件身份及视图说明。按下方比例留裁切边距，推荐原稿宽度为桌面展示宽度的两倍。C02 等对应实物测试完成后再补。',
   '',
   '## 逐图制作卡',
 ];
@@ -211,7 +221,7 @@ for (const slot of usedSlots) {
   const row = mediaSpecs[slot];
   const source = fileFor(slot);
   specDoc.push('', `### ${row.id}｜${row.object[0]}`, '',
-    `- 章节及优先级：${row.chapter} / ${row.priority}`,
+    `- 章节及优先级：${materialChapter(row.chapter)[0]} / ${row.priority}`,
     `- 图片类型及制作：${row.type[0]} / ${row.production[0]}`,
     `- 对应版本：${row.version[0]}`,
     `- 对象与视角：${row.object[0]}。${row.view[0]}。`,
@@ -221,7 +231,9 @@ for (const slot of usedSlots) {
     `- 比例与展示尺寸：${row.ratio}，PC 最大约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
     `- 用途：${row.purpose[0]}。`,
     `- 当前占位：${source ? `\`public/cases/erste002/assets/engineering/${source.file}\`，来源 \`${source.provenance}\`` : schematicSlots.has(slot) ? '页面内联功能图解，待以对应版本几何核对或制图。' : '无。'}`,
-    `- 素材状态：${materialStatus(slot)[0]}。`);
+    ...(row.review ? [`- 现有素材评估：${row.review[0]}`] : []),
+    `- 素材状态：${materialStatus(slot)[0]}。`,
+    `- [在页面图位打开 ${row.id} 制作卡](${specUrl}#${row.id})`);
 }
 
 await writeFile(new URL('public/cases/erste002/engineering.html', repo), html.replace(/[\t ]+$/gm, ''));

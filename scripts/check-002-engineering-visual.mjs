@@ -13,6 +13,7 @@ await mkdir(out, { recursive: true });
 const specs = Object.values(mediaSpecs);
 const doc = await readFile('docs/ERSTE002-engineering-final-media-spec.md', 'utf8');
 assert.deepEqual([...doc.matchAll(/^### (IMG-[A-Z]\d{2})｜/gm)].map(match => match[1]), specs.map(spec => spec.id));
+assert.deepEqual([...doc.matchAll(/engineering\.html\?media=1#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, screenshots: [], errors: [] };
@@ -83,19 +84,36 @@ try {
 
   const page = await browser.newPage({ viewport: {width:1440,height:900}, reducedMotion:'reduce', serviceWorkers:'block' });
   track(page);
-  await visit(page,'zh','media-base-section',true);
+  await visit(page,'zh','IMG-S05',true);
   const placement = page.locator('#media-base-section');
-  await placement.locator('summary').click();
+  assert.ok(await placement.locator('details').evaluate(card=>card.open));
+  assert.ok(await placement.getByText('所属章节',{exact:true}).isVisible());
   assert.ok(await placement.getByText('必须可见',{exact:true}).isVisible());
   assert.ok(await placement.getByText('建议标注',{exact:true}).isVisible());
+  await placement.evaluate(figure=>figure.scrollIntoView({block:'start'}));
   await capture(page,'1440-zh-media-spec');
-  const cards = await page.locator('figure[data-media-id]').evaluateAll(figures => figures.map(figure => ({id:figure.dataset.mediaId, fields:figure.querySelectorAll('.material-card dt').length, status:figure.querySelector('.material-state')?.textContent})));
+  const cards = await page.locator('figure[data-media-id]').evaluateAll(figures => figures.map(figure => ({
+    id:figure.dataset.mediaId,
+    anchor:figure.querySelector('.material-card').id,
+    fields:figure.querySelectorAll('.material-card dt').length,
+    status:figure.querySelector('.material-state')?.textContent,
+  })));
   assert.deepEqual(cards.map(card=>card.id),specs.map(spec=>spec.id));
-  assert.ok(cards.every(card=>card.fields===10 && ['待制作','临时占位'].includes(card.status)));
-  await visit(page,'zh','media-cover',true);
-  await page.locator('#media-cover summary').click();
+  assert.ok(cards.every(card=>card.id===card.anchor && card.fields===(card.status==='临时占位'?12:11)));
+  assert.equal(cards.filter(card=>card.status==='临时占位').length,15);
+  assert.equal(cards.filter(card=>card.status==='待制作').length,20);
+  await visit(page,'zh','IMG-O01',true);
   assert.ok(await page.locator('#media-cover .material-card dd').filter({hasText:'p4238-1536.webp'}).isVisible());
-  report.checks.push(`${cards.length} distinct production cards, one per placement, including the temporary photos, CAD and diagrams; Markdown matches in order.`);
+  assert.ok(await page.locator('#media-cover .material-card dt').filter({hasText:'现有素材评估'}).isVisible());
+  await visit(page,'en','IMG-K02',true);
+  assert.ok(await page.locator('#IMG-K02').getByText('Temporary media review',{exact:true}).isVisible());
+  for (const spec of specs) {
+    await visit(page,'zh',spec.id,true);
+    assert.ok(await page.locator(`#${spec.id}`).evaluate(card=>card.open && card.getClientRects().length > 0));
+  }
+  await page.goto(`${url}?lang=zh#IMG-S05`);
+  assert.equal(await page.locator('[data-production]:visible').count(),0);
+  report.checks.push(`${cards.length} distinct production cards, Markdown IDs and links match, with review notes for all 15 temporary placements and direct links opening both enclosing trays and cards.`);
   await visit(page,'zh','eng-overview');
   await page.locator('#media-cover button').click();
   assert.ok(await page.locator('.media-dialog').isVisible());
