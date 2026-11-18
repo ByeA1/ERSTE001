@@ -63,6 +63,6 @@ export function diagrams({ t, diagram }) {
     <div><header>${t('缝隙透光路径','GAP LIGHT PATH')}</header>${svg('0 0 290 137', '<path class="existing fill" d="M28 43h104v26H28zM161 57h104v26H161z"/><path class="ray" d="m123 122 34-106m-7 7 7-7 2 10"/>')}</div>
     <div><header>${t('遮光＋保留行程','BLOCK LIGHT + RESERVE TRAVEL')}</header>${svg('0 0 290 137', `<path class="existing fill" d="M28 43h104v26H28zM161 57h104v26H161z"/><path class="ray" d="m123 122 13-40m-11-2 22 6"/><path class="motion" d="M80 73v37m-6-7 6 7 6-7"/>${pin(155,95,'01')}`)}</div>
     </div><ul class="figure-key">${key('01','阻断光路的目标位置','Target area for light blocking')}${key('↓','预留盖体行程','Reserved cover travel')}</ul>`,
-    ['表达遮光约束；新结构的真实形状以局部 CAD 剖面为准。', 'The sketch explains the requirement. The actual feature belongs in the local CAD section.']);
+    ['实线为入射光路，虚线为盖体运动方向。', 'Solid line: incident light path. Dashed line: cover travel.']);
   return {support, button, battery, light};
 }

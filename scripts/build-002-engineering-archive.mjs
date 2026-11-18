@@ -26,7 +26,7 @@ function fileFor(slot) {
 const schematicSlots = new Set(['support-diagram', 'button-diagram', 'battery-diagram', 'light-diagram']);
 const materialStatus = (slot) => media[slot] || schematicSlots.has(slot)
   ? ['临时占位', 'Temporary'] : ['待制作', 'Awaiting production'];
-const specUrl = 'http://127.0.0.1:5208/cases/erste002/engineering.html?media=1';
+const pageUrl = 'http://127.0.0.1:5208/cases/erste002/engineering.html';
 
 function materialChapter(code) {
   const [part, topic] = code.split('.');
@@ -34,28 +34,13 @@ function materialChapter(code) {
   return label.map((name, i) => `${code} / ${name}${topic ? ` · ${cases[Number(topic) - 1].short[i]}` : ''}`);
 }
 
-function specCard(slot) {
-  const spec = mediaSpecs[slot];
-  const asset = fileFor(slot);
-  const fields = [
-    [['所属章节', 'Chapter / topic'], materialChapter(spec.chapter)],
-    [['类型 / 制作', 'Type / production'], spec.type.map((value, i) => `${value} / ${spec.production[i]}`)],
-    [['版本', 'Version'], spec.version], [['对象', 'Subject'], spec.object], [['视角', 'Camera'], spec.view],
-    [['必须可见', 'Must show'], spec.details], [['建议标注', 'Annotations'], spec.marks], [['布置', 'Setup'], spec.setup],
-    [['比例 / 展示宽度', 'Ratio / display width'], [`${spec.ratio} · PC 约 ${spec.width} px`, `${spec.ratio} · about ${spec.width} px on desktop`]],
-    [['用途', 'Purpose'], spec.purpose],
-    [['当前占位', 'Temporary source'], asset ? [asset.file, asset.file] : schematicSlots.has(slot) ? ['页面线图 · 功能示意', 'Inline functional sketch'] : ['无', 'None']],
-  ];
-  if (spec.review) fields.push([['现有素材评估', 'Temporary media review'], spec.review]);
-  return `<details class="material-card" id="${spec.id}" data-production><summary><span>${spec.id} / ${spec.priority}</span> ${t('最终素材要求','Final media spec')} <span class="material-state">${localized(materialStatus(slot))}</span></summary><dl>${fields.map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></details>`;
-}
-
 function figure(slot, visual, title, caption, kind, options = {}) {
   const spec = mediaSpecs[slot];
   if (!spec) throw new Error(`Missing media spec: ${slot}`);
   usedSlots.push(slot);
-  return `<figure class="archive-media ${options.className || ''}" id="media-${slot}" data-media-slot="${slot}" data-media-id="${spec.id}" data-media-kind="${kind}" style="--spec-width:${spec.width}px"${options.authorOnly ? ' data-production' : ''}>
-    ${visual}<figcaption><div class="caption-meta"><span>${spec.id}</span>${localized(caption)}</div><strong>${localized(title)}</strong></figcaption>${specCard(slot)}
+  const label = caption ? `<div class="caption-meta"><a href="#${spec.id}">${spec.id}</a>${localized(caption)}</div>` : '';
+  return `<figure class="archive-media ${options.className || ''}" id="media-${slot}" data-media-slot="${slot}" data-media-id="${spec.id}" data-media-kind="${kind}">
+    ${visual}<figcaption id="${spec.id}">${label}<strong>${localized(title)}</strong></figcaption>
   </figure>`;
 }
 
@@ -73,10 +58,10 @@ function photo(slot, options = {}) {
   return figure(slot, visual, source.title, source.version, kind, options);
 }
 
-function missing(slot, { authorOnly = false } = {}) {
+function plate(slot, title) {
   const spec = mediaSpecs[slot];
-  const visual = `<div class="reserved-frame" style="--reserved-ratio:${spec.ratio.replace(':',' / ')}"><span class="frame-corner" aria-hidden="true"></span><span class="kind-label">${localized(spec.type)}</span><b>${localized(spec.object)}</b><small>${t('图像未收录','Image unavailable')}</small></div>`;
-  return figure(slot, visual, spec.object, spec.version, 'missing', { authorOnly });
+  const visual = `<div class="figure-plate" style="--plate-ratio:${spec.ratio.replace(':',' / ')}"><a href="#${spec.id}">${spec.id}</a></div>`;
+  return figure(slot, visual, title || spec.object, null, 'plate');
 }
 
 function diagram(slot, title, structure, detail) {
@@ -103,11 +88,10 @@ function caseTitle(index) {
   const record = cases[index];
   return `<header class="case-title"><span class="case-counter">CASE 0${index+1}</span><div><p class="eyebrow">${record.title}</p><h3>${localized(record.headline)}</h3></div></header>`;
 }
-function tray(title, children, authorOnly = false) {
-  return `<details class="study-tray"${authorOnly ? ' data-production' : ''}><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
+function tray(title, children) {
+  return `<details class="study-tray"><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
 }
-const missingGroup = (...slots) => `<div class="placeholder-grid">${slots.map(slot=>missing(slot)).join('')}</div>`;
-const authorTray = (...slots) => tray(['补充图位 · 最终素材卡','Additional placements / final media specs'], missingGroup(...slots), true);
+const plateGrid = (...slots) => `<div class="plate-grid">${slots.map(slot=>plate(slot)).join('')}</div>`;
 const drawings = diagrams({t, diagram});
 
 const stepRail = steps.map((step, i)=>`<li><a href="#milestone-${step.id}"><span class="step-index">0${i+1} / ${step.stage}</span><strong>${localized(step.name)}</strong><span class="step-summary">${localized(step.summary)}</span></a></li>`).join('');
@@ -128,19 +112,19 @@ const body = `
 <section class="chapter form-chapter" data-chapter id="eng-form">
   ${sectionTitle(1,['先确定手里的曲面。','Find the shape in the hand.'],['一次实际试握后的改形，定下右手非对称曲面。','One revision after hands-on feedback established the direction for the asymmetric right-hand form.'])}
   <div class="form-gallery" id="eng-form-comparison" data-topic>${photo('form-fdm')}${photo('form-generations')}</div>
-  <div class="profile-row" id="eng-form-handling" data-topic>${photo('form-profile')}
-    <div class="grip-note"><p class="eyebrow">HANDLING INPUT</p><h3>${t('指尖落点与掌心支撑。','Fingertip landing and palm support.')}</h3>${t('握持反馈用于改形；现存 FDM 样件的改形前后归属未细分。','Handling informed the revision. The archived FDM sample is not assigned to the before or after stage.','p')}</div>
-    ${missing('grip',{authorOnly:true})}${missing('matched-form',{authorOnly:true})}
+  <div class="form-detail" id="eng-form-handling" data-topic>
+    <h3>${t('指尖落点与掌心支撑','Fingertip landing and palm support')}</h3>
+    <div class="plate-grid form-detail-grid">${photo('form-profile')}${plate('grip')}${plate('matched-form')}</div>
   </div>
 </section>
 
 <section class="chapter evolution-chapter" data-chapter id="eng-evolution">
-  ${sectionTitle(2,['五个工程里程碑。','Five engineering milestones.'],['阶段顺序来自设计记录。历史照片和 STL 不能逐一对应打印轮次。','The design record establishes the stages. Photographs and STL packages do not map one-to-one to print rounds.'])}
+  ${sectionTitle(2,['五个工程里程碑。','Five engineering milestones.'],['从手感验证、实物装配到结构定案。','From grip validation and physical assembly to the revised design.'])}
   <ol class="milestone-grid" id="milestones">${steps.map((step,i)=>{
-    const image = step.image ? photo(step.image) : missing(step.id === 'mjf' ? 'first-mjf' : 'evo-cad');
+    const image = step.image ? photo(step.image) : plate(step.id === 'mjf' ? 'first-mjf' : 'evo-cad');
     return `<li id="milestone-${step.id}" data-topic><div class="milestone-heading"><span>0${i+1} / ${step.stage}</span><h3>${localized(step.name)}</h3></div>${image}<dl>${[[['做了什么','Built'],step.action],[['发现','Found'],step.finding],[['下一步','Next'],step.next]].map(([label,value])=>`<div><dt>${localized(label)}</dt><dd>${localized(value)}</dd></div>`).join('')}</dl></li>`;
   }).join('')}</ol>
-  ${authorTray('interference')}
+  ${tray(['装配干涉','Assembly interference'],plateGrid('interference'))}
 </section>
 
 <section class="chapter decisions-chapter" data-chapter id="eng-decisions">
@@ -151,28 +135,29 @@ const body = `
     <div class="case-split">${photo('stiffness-photo')}${drawings.support()}</div>
     <div class="photo-key">${t('A 筋板　 B 跨接杆　 C 安装柱','A Ribs · B Spanning rod · C Mounting posts')}</div>
     <ol class="change-grid">${structuralChanges.map(([number,title,caption])=>`<li><b>${number}</b><div><strong>${localized(title)}</strong><span>${localized(caption)}</span></div></li>`).join('')}</ol>
-    ${authorTray('stiffness-compare','functional-fold','base-section','main-joint')}
-    ${tray(['对照历史 CAD 几何','Compare historical CAD geometry'],`<div class="case-split cad-pair">${photo('cad-p01')}${photo('cad-p04')}</div>${t('同机位查看归档 STL。收件包号不是 REV，不能用于判断强度。','Matched views of archived STL meshes. Package IDs do not establish revision or strength.','p','class="small-note"')}`)}
-    ${authorTray('stiffness-load')}
+    ${tray(['新版支撑与截面','Revised supports and sections'],plateGrid('stiffness-compare','functional-fold','base-section','main-joint'))}
+    ${tray(['历史 CAD 几何','Historical CAD geometry'],`<div class="case-split cad-pair">${photo('cad-p01')}${photo('cad-p04')}</div>${t('同机位对照内筋与跨接布局。P01、P04 为历史收件包编号。','Matched camera views of ribs and spanning members. P01 and P04 identify archive packages.','p','class="small-note"')}`)}
+    ${tray(['壳体受力观察','Shell under load'],plateGrid('stiffness-load'))}
   </article>
   <article class="engineering-case" id="eng-case-button" data-topic>${caseTitle(1)}${evidenceRows(cases[1])}
     ${drawings.button()}
-    ${tray(['查看按键盖历史几何','Inspect historical button-cover geometry'],`<div class="case-split">${photo('button-cad')}${missing('button-new',{authorOnly:true})}</div>${t('按实际网格预览描边。A 盖体片体，B 后部连接。M007 尚未与异常按压样机对应。','Outline traced from the historical mesh view. A cover panel, B rear connection. M007 is not matched to the observed failure.','p','class="small-note"')}`)}
-    ${authorTray('button-edge','button-thickness','button-motion','button-observed')}
+    <div class="case-split button-geometry">${photo('button-cad')}${plate('button-new',['新版按键盖与固定区','Revised cover and mounting zone'])}</div>
+    <div class="photo-key">${t('M007 历史几何　A 盖体片体　B 后部连接','M007 historical geometry · A cover panel · B rear connection')}</div>
+    ${tray(['片体截面与按压路径','Cover sections and press travel'],plateGrid('button-edge','button-thickness','button-motion','button-observed'))}
   </article>
   <article class="engineering-case" id="eng-case-battery" data-topic>${caseTitle(2)}${evidenceRows(cases[2])}
-    ${drawings.battery()}${authorTray('battery-catch','battery-old')}
+    ${drawings.battery()}${tray(['卡口与装配过程','Catch and assembly sequence'],plateGrid('battery-catch','battery-old'))}
   </article>
   <article class="engineering-case light-case" id="eng-case-light" data-topic>${caseTitle(3)}
-    <div class="light-split">${evidenceRows(cases[3])}${drawings.light()}</div>${authorTray('light-section')}
+    <div class="light-split">${evidenceRows(cases[3])}${drawings.light()}</div>${tray(['按键盖缝隙剖面','Button cover gap section'],plateGrid('light-section'))}
   </article>
 </section>
 
 <section class="chapter current-chapter" data-chapter id="eng-current">
-  ${sectionTitle(4,['设计已改，实物待复核。','Design revised. Physical checks pending.'])}
+  ${sectionTitle(4,['当前设计与工程边界。','Current design and engineering limits.'])}
   <div class="status-intro"><span class="cad-status">${t('当前 CAD / 设计完成','CURRENT CAD / DESIGN COMPLETE')}</span>${t('最近实物是红滚轮装配版。下表记录其后的设计修改。','The red-wheel build is the latest physical prototype. The table covers the subsequent CAD changes.')}</div>
-  <div class="status-wrap"><table><thead><tr><th scope="col">${t('系统','System')}</th><th scope="col">${evidenceLabel('designed')}</th><th scope="col">${evidenceLabel('waiting')}</th></tr></thead><tbody>${cases.map((record,i)=>`<tr><th scope="row"><a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↗</span></a></th><td>${localized(record.state)}</td><td>${localized(record.validation)}</td></tr>`).join('')}</tbody></table></div>
-  ${authorTray('current-overview','validation')}
+  <div class="current-layout"><div class="status-wrap"><table><thead><tr><th scope="col">${t('系统','System')}</th><th scope="col">${evidenceLabel('designed')}</th><th scope="col">${evidenceLabel('waiting')}</th></tr></thead><tbody>${cases.map((record,i)=>`<tr><th scope="row"><a href="#eng-case-${record.id}"><b>0${i+1}</b>${localized(record.short)} <span aria-hidden="true">↗</span></a></th><td>${localized(record.state)}</td><td>${localized(record.validation)}</td></tr>`).join('')}</tbody></table></div>${plate('current-overview')}</div>
+  ${tray(['实物验证项目','Physical checks'],plateGrid('validation'))}
   <div class="finish"><span>ERSTE002 / ENGINEERING ARCHIVE</span><a href="#eng-overview">${t('回到概览','Back to overview')} ↑</a></div>
 </section>`;
 
@@ -188,7 +173,6 @@ const html = `<!doctype html>
 <a class="skip-archive" href="#eng-overview">${t('跳至正文','Skip to content')}</a>
 <nav class="archive-rail" ${aria('工程章节','Engineering chapters')}>${chapters.map(([id,number,name],i)=>`<a href="#${id}" data-section-link${i===0?' aria-current="location"':''}><span>${number}</span>${t(...name,'span','class="rail-label"')}</a>`).join('')}</nav>
 <div id="scroller" tabindex="0" ${aria('ERSTE002 工程档案','ERSTE002 engineering archive')}><main id="engineering-archive">
-<aside class="author-mode" data-production><span>MEDIA SPEC / ${usedSlots.length}</span>${t('展开各图下方的最终素材要求。','Expand the final media spec below each visual.')} <a href="./engineering.html">${t('访客模式','Visitor view')} ↗</a></aside>
 ${body}
 </main></div>
 <footer class="reading-progress"><span class="current-section"><b>00</b><span>${t('概览','Overview')}</span></span><div class="reading-track" aria-hidden="true"><span></span></div><output>000%</output><button type="button" data-chapter-prev ${aria('上一章','Previous chapter')} disabled>←</button><button type="button" data-chapter-next ${aria('下一章','Next chapter')}>→</button></footer>
@@ -199,9 +183,9 @@ ${body}
 const specDoc = [
   '# ERSTE002 ENGINEERING 最终图片素材规格',
   '',
-  '访客页中的档案照片、STL 预览和功能线图均是临时排版素材。本清单列出每个图位的独立验收要求。当前无图的位置标为待制作。',
+  '本文件集中维护素材要求。工程页面以正式结构呈现图位与图号。档案照片、STL 预览和功能线图目前作为临时排版素材；当前仅显示图号的位置标为待制作。',
   '',
-  '网页素材模式：`/cases/erste002/engineering.html?media=1`。图下素材卡与本文件使用相同编号。P0 为新版核心结构与图解，P1 为主叙事及关键历史证据，P2 为补充对照。',
+  '点击制作卡末尾的图号链接可定位到正式页面中的对应图位。P0 为新版核心结构与图解，P1 为主叙事及关键历史证据，P2 为补充对照。',
   '素材状态分为待制作、临时占位、最终素材已提供和已验收。拿到符合对应版本的成品可标为已提供。核对版本、机位、必见细节及展示尺寸后才标为已验收。',
   '',
   '## 最简执行清单',
@@ -228,12 +212,12 @@ for (const slot of usedSlots) {
     `- 必须可见：${row.details[0]}。`,
     `- 建议标注：${row.marks[0]}`,
     `- 布置：${row.setup[0]}`,
-    `- 比例与展示尺寸：${row.ratio}，PC 最大约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
+    `- 比例与展示尺寸：${row.ratio}，1920 桌面视口约 ${row.width} CSS px 宽。像素原稿建议 ≥ ${row.width * 2} px 宽。`,
     `- 用途：${row.purpose[0]}。`,
     `- 当前占位：${source ? `\`public/cases/erste002/assets/engineering/${source.file}\`，来源 \`${source.provenance}\`` : schematicSlots.has(slot) ? '页面内联功能图解，待以对应版本几何核对或制图。' : '无。'}`,
     ...(row.review ? [`- 现有素材评估：${row.review[0]}`] : []),
     `- 素材状态：${materialStatus(slot)[0]}。`,
-    `- [在页面图位打开 ${row.id} 制作卡](${specUrl}#${row.id})`);
+    `- [查看页面图位 ${row.id}](${pageUrl}#${row.id})`);
 }
 
 await writeFile(new URL('public/cases/erste002/engineering.html', repo), html.replace(/[\t ]+$/gm, ''));

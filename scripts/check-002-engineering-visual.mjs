@@ -13,7 +13,7 @@ await mkdir(out, { recursive: true });
 const specs = Object.values(mediaSpecs);
 const doc = await readFile('docs/ERSTE002-engineering-final-media-spec.md', 'utf8');
 assert.deepEqual([...doc.matchAll(/^### (IMG-[A-Z]\d{2})｜/gm)].map(match => match[1]), specs.map(spec => spec.id));
-assert.deepEqual([...doc.matchAll(/engineering\.html\?media=1#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
+assert.deepEqual([...doc.matchAll(/engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, screenshots: [], errors: [] };
@@ -40,8 +40,8 @@ function track(page) {
   });
 }
 
-async function visit(page, lang, id, author = false) {
-  const address = `${url}?lang=${lang}${author ? '&media=1' : ''}${id ? '#'+id : ''}`;
+async function visit(page, lang, id) {
+  const address = `${url}?lang=${lang}${id ? '#'+id : ''}`;
   const response = await page.goto(address);
   assert.ok(!response || response.ok());
   await page.waitForFunction(([language, target]) => {
@@ -50,7 +50,7 @@ async function visit(page, lang, id, author = false) {
     const node = document.getElementById(target);
     const scroller = document.querySelector('#scroller');
     const host = scroller.getBoundingClientRect();
-    const rect = node.getBoundingClientRect();
+    const rect = (node.matches('figcaption') ? node.closest('figure') : node).getBoundingClientRect();
     return rect.top >= host.top - 1 && rect.top < host.top + host.height * .55;
   }, [lang, id]);
 }
@@ -66,11 +66,23 @@ try {
       assert.equal(await page.locator('[data-chapter]').count(), 5);
       assert.equal(await page.locator('.engineering-case').count(), 4);
       assert.equal(await page.locator('figure[data-media-id]').count(), specs.length);
-      assert.equal(await page.locator('[data-production]:visible').count(), 0);
+      assert.equal(await page.locator('.material-card,.author-mode,[data-production]').count(), 0);
       assert.ok(await page.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1 && window.scrollY === 0));
       await capture(page, `${width}-${lang}-${id.replace('eng-', '')}`);
     }
     assert.deepEqual(unexpected,[]);
+    if (width === 1920) {
+      const measured = await page.locator('figure[data-media-id]').evaluateAll(figures=>{
+        document.querySelectorAll('.study-tray').forEach(tray=>{ tray.open = true; });
+        return figures.map(figure=>({id:figure.dataset.mediaId, width:figure.getBoundingClientRect().width}));
+      });
+      for (const [index, spec] of specs.entries()) {
+        assert.equal(measured[index].id,spec.id);
+        assert.ok(Math.abs(measured[index].width-spec.width)<=5,`${spec.id}: measured ${measured[index].width}, spec ${spec.width}`);
+      }
+      await page.locator('.study-tray').evaluateAll(trays=>trays.forEach(tray=>{ tray.open = false; }));
+      report.checks.push('All 35 production widths match the 1920px layout within 5 CSS px.');
+    }
     await visit(page,lang);
     report.metrics[lang] = await page.evaluate((language) => {
       const len = (value) => [...value.replace(/\s/g, '')].length;
@@ -78,42 +90,38 @@ try {
       const long = texts.filter(value => len(value) >= (language === 'zh' ? 75 : 135));
       return { paragraphs:texts.length, bodyCharacters:texts.reduce((total,value)=>total+len(value),0), longParagraphs:long.length, longCharacters:long.reduce((total,value)=>total+len(value),0) };
     },lang);
-    report.checks.push(`${width} × ${height} ${lang}: ${targets.length} views, visitor mode, no horizontal overflow or product runtime.`);
+    report.checks.push(`${width} × ${height} ${lang}: ${targets.length} views, single public layout, no horizontal overflow or product runtime.`);
     await page.close();
   }
 
   const page = await browser.newPage({ viewport: {width:1440,height:900}, reducedMotion:'reduce', serviceWorkers:'block' });
   track(page);
-  await visit(page,'zh','IMG-S05',true);
+  await visit(page,'zh','IMG-S05');
   const placement = page.locator('#media-base-section');
-  assert.ok(await placement.locator('details').evaluate(card=>card.open));
-  assert.ok(await placement.getByText('所属章节',{exact:true}).isVisible());
-  assert.ok(await placement.getByText('必须可见',{exact:true}).isVisible());
-  assert.ok(await placement.getByText('建议标注',{exact:true}).isVisible());
-  await placement.evaluate(figure=>figure.scrollIntoView({block:'start'}));
-  await capture(page,'1440-zh-media-spec');
-  const cards = await page.locator('figure[data-media-id]').evaluateAll(figures => figures.map(figure => ({
+  assert.ok(await placement.evaluate(figure=>figure.closest('details').open));
+  assert.equal(await placement.locator('.figure-plate').innerText(),'IMG-S05');
+  await capture(page,'1440-zh-numbered-plates');
+  const placements = await page.locator('figure[data-media-id]').evaluateAll(figures => figures.map(figure => ({
     id:figure.dataset.mediaId,
-    anchor:figure.querySelector('.material-card').id,
-    fields:figure.querySelectorAll('.material-card dt').length,
-    status:figure.querySelector('.material-state')?.textContent,
+    anchor:figure.querySelector('figcaption').id,
+    label:figure.querySelector(`a[href="#${figure.dataset.mediaId}"]`)?.textContent,
+    plate:figure.querySelector('.figure-plate')?.textContent,
   })));
-  assert.deepEqual(cards.map(card=>card.id),specs.map(spec=>spec.id));
-  assert.ok(cards.every(card=>card.id===card.anchor && card.fields===(card.status==='临时占位'?12:11)));
-  assert.equal(cards.filter(card=>card.status==='临时占位').length,15);
-  assert.equal(cards.filter(card=>card.status==='待制作').length,20);
-  await visit(page,'zh','IMG-O01',true);
-  assert.ok(await page.locator('#media-cover .material-card dd').filter({hasText:'p4238-1536.webp'}).isVisible());
-  assert.ok(await page.locator('#media-cover .material-card dt').filter({hasText:'现有素材评估'}).isVisible());
-  await visit(page,'en','IMG-K02',true);
-  assert.ok(await page.locator('#IMG-K02').getByText('Temporary media review',{exact:true}).isVisible());
+  assert.deepEqual(placements.map(item=>item.id),specs.map(spec=>spec.id));
+  assert.ok(placements.every(item=>item.id===item.anchor && item.id===item.label && (!item.plate || item.id===item.plate)));
+  assert.equal(placements.filter(item=>item.plate).length,20);
+  const pageText = await page.locator('#engineering-archive').textContent();
+  assert.doesNotMatch(pageText,/图像未收录|技术素材卡|现有素材评估|最终素材要求|临时占位|待制作|_archive[\\/]/);
+  await visit(page,'en','IMG-K02');
+  assert.doesNotMatch(await page.locator('#engineering-archive').textContent(),/image unavailable|final media spec|temporary media review|awaiting production/i);
   for (const spec of specs) {
-    await visit(page,'zh',spec.id,true);
-    assert.ok(await page.locator(`#${spec.id}`).evaluate(card=>card.open && card.getClientRects().length > 0));
+    await visit(page,'zh',spec.id);
+    assert.ok(await page.locator(`#${spec.id}`).evaluate(label=>label.getClientRects().length > 0));
   }
   await page.goto(`${url}?lang=zh#IMG-S05`);
-  assert.equal(await page.locator('[data-production]:visible').count(),0);
-  report.checks.push(`${cards.length} distinct production cards, Markdown IDs and links match, with review notes for all 15 temporary placements and direct links opening both enclosing trays and cards.`);
+  await placement.locator('.figure-plate a').click();
+  assert.equal(new URL(page.url()).hash,'#IMG-S05');
+  report.checks.push(`${placements.length} figure labels and Markdown links match; 20 numbered frames contain only their IDs, and all direct links reveal their figures.`);
   await visit(page,'zh','eng-overview');
   await page.locator('#media-cover button').click();
   assert.ok(await page.locator('.media-dialog').isVisible());

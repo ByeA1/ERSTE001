@@ -19,7 +19,7 @@ export const steps = [
   { id: 'mjf', stage: 'MJF 01', name: ['分件与加筋', 'Parts and ribs'], summary: ['发现偏软与孔位问题', 'Flex and hole alignment'], request: 'R04', action: ['增加内筋并首次 MJF 打印', 'Add internal ribs and print in MJF'], finding: ['偏软，安装孔位有误', 'Flex and inaccurate mounting holes'], next: ['增加跨接支撑', 'Add spanning supports'] },
   { id: 'support', stage: 'MJF / SUPPORT', name: ['支撑迭代', 'Support revision'], summary: ['杆件与装配空间冲突', 'Rods compete with assembly space'], image: 'evo-support', action: ['加杆并调整装配，再次打印', 'Add rods, revise fit and reprint'], finding: ['仍偏软，并与 PCB 干涉', 'Flex remains; rods interfere with PCB'], next: ['曾拆杆完成装配，再改布局', 'Assembly achieved once by removing rods; revise layout'] },
   { id: 'built', stage: 'BUILT', name: ['最新实体装配', 'Latest physical build'], summary: ['观察按压与电池固定', 'Inspect the press and battery fit'], image: 'evo-built', action: ['完成红滚轮版装配', 'Assemble the red-wheel build'], finding: ['杆件偏弱、盖体翘起、电池松', 'Weak support, cover lift and loose battery'], next: ['分专题修改 CAD', 'Revise the CAD by subsystem'] },
-  { id: 'cad', stage: 'CURRENT CAD', name: ['当前设计版', 'Current CAD'], summary: ['四个系统完成设计修改', 'Four design areas revised'], request: 'R22', action: ['完成结构、按键、电池与遮光修改', 'Revise structure, button, battery and light blocking'], finding: ['没有对应新版样机的测试记录', 'No test record for the revised build'], next: ['实物复核，尤其是整体刚度', 'Verify on a build, especially global stiffness'] },
+  { id: 'cad', stage: 'CURRENT CAD', name: ['当前设计版', 'Current CAD'], summary: ['四个系统完成设计修改', 'Four design areas revised'], request: 'R22', action: ['完成结构、按键、电池与遮光修改', 'Revise structure, button, battery and light blocking'], finding: ['开放底部保留，重新组织支撑', 'Retain the open base and reorganize the supports'], next: ['复核整机刚度与机构行程', 'Verify assembly stiffness and mechanism travel'] },
 ];
 
 export const media = {
@@ -31,9 +31,9 @@ export const media = {
   'evo-support': { source: 'P4235', title: ['后续裸壳作结构参照', 'Later shell as a structural reference'], version: ['红滚轮装配版裸壳', 'Bare shell from red-wheel build'], sizes: '(max-width: 800px) 45vw, 18vw' },
   'evo-built': { source: 'P4240', title: ['红滚轮样机居中', 'Red-wheel build at centre'], version: ['三件样机实物对照', 'Three physical prototypes'], sizes: '(max-width: 800px) 45vw, 18vw' },
   'stiffness-photo': { source: 'P4236', title: ['旧样机内侧：筋板、跨接杆、安装柱', 'Earlier shell interior: ribs, rods and posts'], version: ['红滚轮装配版裸壳 · 静态', 'Bare shell from red-wheel build · static'], marks: [['A', 69, 46], ['B', 73, 22], ['C', 35, 72]] },
-  'cad-p01': { source: 'P01', title: ['P01 · 筋板布局', 'P01 · Rib layout'], version: ['历史 STL · 打印轮次未核实', 'Historical STL · print round unconfirmed'], kind: 'cad' },
-  'cad-p04': { source: 'P04', title: ['P04 · 跨接构件', 'P04 · Spanning members'], version: ['历史 STL · 正式版本未核实', 'Historical STL · formal revision unconfirmed'], kind: 'cad' },
-  'button-cad': { source: 'M007', title: ['按键盖片体与后部连接几何', 'Cover panel and rear mounting geometry'], version: ['P04 / M007 · 历史 STL，版本对应未核实', 'P04 / M007 · Historical STL, revision unconfirmed'], kind: 'cad', file: 'm007-buttons.webp', width: 746, height: 475, provenance: '_archive/4.zip::新建文件夹/按键盖1.6.stl → _archive/ERSTE002/_derived/previews/M007-buttons.png', marks: [['A', 23, 61], ['B', 74, 69]], trace: 'M54 318Q59 271 163 173L392 236Q432 195 474 196M219 140Q328 82 386 69Q471 46 690 191M431 350L502 283Q517 322 550 305L611 254L668 291L486 399Z' },
+  'cad-p01': { source: 'P01', title: ['P01 · 筋板布局', 'P01 · Rib layout'], version: ['历史 STL · 内侧轴测', 'Historical STL · interior axonometric'], kind: 'cad' },
+  'cad-p04': { source: 'P04', title: ['P04 · 跨接构件', 'P04 · Spanning members'], version: ['历史 STL · 内侧轴测', 'Historical STL · interior axonometric'], kind: 'cad' },
+  'button-cad': { source: 'M007', title: ['按键盖片体与后部连接几何', 'Cover panel and rear mounting geometry'], version: ['P04 / M007 · 历史 STL', 'P04 / M007 · Historical STL'], kind: 'cad', file: 'm007-buttons.webp', width: 746, height: 475, provenance: '_archive/4.zip::新建文件夹/按键盖1.6.stl → _archive/ERSTE002/_derived/previews/M007-buttons.png', marks: [['A', 23, 61], ['B', 74, 69]], trace: 'M54 318Q59 271 163 173L392 236Q432 195 474 196M219 140Q328 82 386 69Q471 46 690 191M431 350L502 283Q517 322 550 305L611 254L668 291L486 399Z' },
 };
 
 // ID, image format, subject, required version, angle, and question it should answer.

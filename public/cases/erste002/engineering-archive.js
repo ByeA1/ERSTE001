@@ -40,7 +40,6 @@ let frame = 0;
 let scrollTimer = 0;
 let paused = false;
 let parentReduced = false;
-if (params.get('media') === '1') root.dataset.mediaMode = '';
 if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
 function fragmentId() {
@@ -84,8 +83,7 @@ function resolveTarget(id) {
   const name = Object.hasOwn(aliases, id) ? aliases[id] : id;
   const target = document.getElementById(name);
   if (!target || !scroller.contains(target)) return null;
-  if (!root.hasAttribute('data-media-mode') && target.closest('[data-production]')) return null;
-  return target;
+  return target.matches('figcaption') ? target.closest('figure') : target;
 }
 
 function go(id, { push = true, scroll, focus = true } = {}) {
@@ -94,7 +92,8 @@ function go(id, { push = true, scroll, focus = true } = {}) {
   clearTimeout(scrollTimer);
   if (push) {
     store();
-    history.pushState({ ...history.state, archiveRead: { document: documentKey, target: target.id } }, '', `#${target.id}`);
+    const fragment = id === target.dataset.mediaId ? id : target.id;
+    history.pushState({ ...history.state, archiveRead: { document: documentKey, target: fragment } }, '', `#${fragment}`);
   }
   for (let node = target; node && node !== scroller; node = node.parentElement) {
     if (node instanceof HTMLDetailsElement) node.open = true;
@@ -201,7 +200,7 @@ function setLanguage(value, notify = false) {
   for (const node of document.querySelectorAll('[data-alt-zh]')) node.alt = value === 'zh' ? node.dataset.altZh : node.dataset.altEn;
   for (const node of document.querySelectorAll('[data-aria-zh]')) node.setAttribute('aria-label', value === 'zh' ? node.dataset.ariaZh : node.dataset.ariaEn);
   for (const button of document.querySelectorAll('[data-archive-language]')) button.setAttribute('aria-pressed', String(button.dataset.archiveLanguage === value));
-  for (const button of media) button.dataset.loadError = value === 'zh' ? '图像暂不可用，点击重试' : 'Image unavailable. Select to retry.';
+  for (const button of media) button.dataset.loadError = value === 'zh' ? '重新载入图片 ↻' : 'Reload image ↻';
   if (anchor) scroller.scrollTop += anchor.getBoundingClientRect().top - before;
   if (dialog.open) describeImage();
   if (notify) {

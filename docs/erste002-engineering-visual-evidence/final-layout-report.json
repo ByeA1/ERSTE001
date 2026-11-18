@@ -1,0 +1,34 @@
+{
+  "preview": "http://127.0.0.1:5208/cases/erste002/engineering.html",
+  "browser": "157.0.4341.60",
+  "checks": [
+    "All 35 production widths match the 1920px layout within 5 CSS px.",
+    "1920 × 1080 zh: 9 views, single public layout, no horizontal overflow or product runtime.",
+    "1440 × 900 en: 9 views, single public layout, no horizontal overflow or product runtime.",
+    "35 figure labels and Markdown links match; 20 numbered frames contain only their IDs, and all direct links reveal their figures.",
+    "11 images decoded; zoom, keyboard, focus, progress, browser history, old topic anchor and locale switch passed.",
+    "390px layout smoke test: diagram and status table; full mobile review not in scope."
+  ],
+  "metrics": {
+    "zh": {
+      "paragraphs": 22,
+      "bodyCharacters": 428,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    },
+    "en": {
+      "paragraphs": 22,
+      "bodyCharacters": 992,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    }
+  },
+  "screenshots": [
+    "final-1440-zh-numbered-plates.jpg",
+    "final-1440-zh-button-cad.jpg",
+    "final-1440-en-evolution.jpg",
+    "final-1920-zh-current.jpg"
+  ],
+  "errors": [],
+  "status": "passed"
+}
