@@ -8,7 +8,7 @@ const previous = document.querySelector('[data-chapter-prev]');
 const next = document.querySelector('[data-chapter-next]');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const params = new URLSearchParams(location.search);
-const documentKey = 'erste002-engineering-history';
+const documentKey = 'erste002-engineering-route-review';
 const aliases = {
   'eng-prologue': 'eng-overview',
   'eng-form-study': 'media-form-fdm',
@@ -28,7 +28,11 @@ const aliases = {
   'eng-refinement-structure': 'eng-case-stiffness',
   'eng-refinement-button': 'eng-case-button',
   'eng-refinement-battery': 'eng-case-battery',
-  'eng-refinement-light-blocking': 'eng-case-light',
+  'eng-refinement-light-blocking': 'eng-final-scope',
+  'eng-case-light': 'eng-final-scope',
+  'IMG-L01': 'eng-final-scope',
+  'IMG-L02': 'eng-final-scope',
+  'media-battery-catch': 'media-battery-clearance',
   'eng-design-validation-status': 'eng-current',
   'eng-conclusion': 'eng-current',
 };

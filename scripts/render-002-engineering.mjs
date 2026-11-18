@@ -14,8 +14,8 @@ for(const module of [process.env.PLAYWRIGHT_MODULE_PATH, 'playwright', '../.audi
 }
 if(!playwright)throw Error('An existing Playwright installation is required. The read-only inventory scanner can run without it.');
 const repo=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-const derived=path.join(repo,'_archive/ERSTE002/_derived');
-const report=JSON.parse(await fs.readFile(path.join(derived,'inventory-latest.json'),'utf8'));
+const derived=path.resolve(process.env.ERSTE_RENDER_ROOT ?? path.join(repo,'_archive/ERSTE002/_derived'));
+const report=JSON.parse(await fs.readFile(process.env.ERSTE_STL_INVENTORY ?? path.join(derived,'inventory-latest.json'),'utf8'));
 const rows=[];
 for(const parent of report.records){
  if(parent.sha256 && createHash('sha256').update(await fs.readFile(parent.locator)).digest('hex')!==parent.sha256)

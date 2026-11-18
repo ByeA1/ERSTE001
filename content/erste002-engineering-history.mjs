@@ -1,16 +1,17 @@
 export const stages = [
-  { id: 'eng-form', letter: 'A', title: ['外形探索', 'Grip study'] },
-  { id: 'eng-evolution', letter: 'B', title: ['首轮机械结构', 'First mechanical build'] },
-  { id: 'eng-support', letter: 'C', title: ['支撑与装配', 'Supports and fit'] },
-  { id: 'eng-built', letter: 'D', title: ['整机装配观察', 'Assembled prototype'] },
-  { id: 'eng-decisions', letter: 'E', title: ['最新 CAD 修改', 'Current CAD revisions'] },
+  { id: 'eng-form', letter: 'A', title: ['初始假设', 'Initial hypothesis'] },
+  { id: 'eng-evolution', letter: 'B', title: ['初期验证', 'Early evidence'] },
+  { id: 'eng-support', letter: 'C', title: ['支撑取舍', 'Structural compromises'] },
+  { id: 'eng-built', letter: 'D', title: ['整机迭代', 'Iterative development'] },
+  { id: 'eng-decisions', letter: 'E', title: ['最终修订', 'Final revision'] },
 ];
 
 export const historicalChapters = [
   {
     id: 'eng-evolution',
-    headline: ['连续外形变成可装配零件。', 'The shell became a set of parts.'],
-    lead: ['首轮 MJF 样件把外形、运动件和安装基准放进同一结构。', 'The first MJF build put the shell, moving parts and mounting datums in one assembly.'],
+    headline: ['局部筋板的效果取决于位置。', 'Where the ribs sat mattered.'],
+    lead: ['首轮 MJF 样件把薄壁、按键运动和安装孔位放进同一结构，并暴露了整机刚度与配合问题。', 'The first MJF build brought thin walls, button travel and mounting holes into one structure, exposing problems with stiffness and fit.'],
+    archiveSlots: ['cad-p01','cad-p02'],
     studies: [
       {
         id: 'milestone-mjf', kicker: 'B1 / PART SPLIT', heading: ['分开上盖与按键盖', 'Separate the shell and button covers'],
@@ -23,9 +24,9 @@ export const historicalChapters = [
       {
         id: 'eng-early-fit', kicker: 'B2 / RIBS AND DATUMS', heading: ['筋板加强局部，孔位决定能否对合', 'Ribs stiffen locally. Holes govern fit.'],
         notes: [
-          [['机械原理', 'Mechanics'], ['增加筋高可提高局部抗弯能力。连接面和定位孔还需在同一装配基准上对合。', 'Rib depth can improve local bending resistance. Joints and holes still have to align to a common assembly datum.']],
-          [['实物观察', 'Observed'], ['首轮装配发现整体偏软、孔位不准。', 'The first assembly exposed overall flexibility and misaligned mounting holes.']],
-          [['下一轮', 'Next change'], ['加入跨接支撑，并检查支撑占用的装配空间。', 'Add spanning supports and check the space they occupy during assembly.']],
+          [['局部作用', 'Local effect'], ['设计者回顾样机时判断，后部筋板相对有效，后段刚度表现较好。', 'In the designer’s review of the prototypes, the rear ribs worked relatively well and the back felt stiffer.']],
+          [['整体受力', 'Load path'], ['前部功能开口与安装区多，承载路径数次中断。部分原有筋板未充分接入整机载荷路径。', 'Front openings and mounts interrupted the load path in several places. Some ribs contributed little to that path.']],
+          [['装配结果', 'Assembly result'], ['首轮 MJF 发现整机偏软、孔位不准。下一轮增加跨接支撑来连接分开的承载区。', 'The first MJF build flexed and its mounting holes misaligned. The next iteration added a bridge between separated regions.']],
         ],
         figures: ['early-ribs', 'early-fit'],
       },
@@ -34,13 +35,14 @@ export const historicalChapters = [
   {
     id: 'eng-support',
     headline: ['增加支撑，也改变了装配空间。', 'More support changed the assembly space.'],
-    lead: ['在开放壳体内加入支撑杆、修改连接，并再次以 MJF 打样。', 'Support rods and revised joints went into the open shell for a further MJF build.'],
+    lead: ['把分开的承载区域接起来，需要在开放壳体内增加杆件与接点。新的占位关系随再次 MJF 装配显现。', 'Linking separated shell regions required a rod and new joints. The next MJF assembly exposed the space they occupied.'],
+    archiveSlots: ['cad-p03','cad-p04'],
     studies: [
       {
         id: 'milestone-support', kicker: 'C1 / ROD AND PCB', heading: ['预期跨接支撑，实际与 PCB 干涉', 'A structural bridge met the PCB'],
         notes: [
           [['设计意图', 'Design intent'], ['让分离的壳体区域通过杆件相连，尝试减少相对变形。', 'Link separated areas of the shell with a rod to limit relative movement.']],
-          [['装配观察', 'Observed'], ['再次装配时，PCB 与杆件共用空间，出现干涉。', 'In the next assembly, the PCB and rod occupied conflicting space.']],
+          [['装配观察', 'Observed'], ['跨接支撑增加零件与连接关系。再次装配时，杆件与 PCB 占用同一空间，出现干涉。', 'The bridge added parts and joints. In the next assembly, its rod interfered with the PCB.']],
         ],
         figures: ['evo-support', 'interference'],
       },
@@ -81,7 +83,7 @@ export const historicalChapters = [
         notes: [
           [['支撑', 'Support'], ['检查杆端与上盖的连接范围，以及受力点如何把载荷传给壳体。', 'Check the rod’s footprint on the shell and how the load reaches it.']],
           [['装入路径', 'Insertion'], ['电池难装入。原有进入方向与受阻位置需要分别核对。', 'The battery was hard to insert. The entry path and blocking features need separate checks.']],
-          [['到位保持', 'Retention'], ['电池到位后仍松动。下一轮同时改变进入方向与定位紧固。', 'The battery was loose once seated. The next design changed both insertion and retention.']],
+          [['到位保持', 'Retention'], ['电池到位后仍松动。最终修订改变装入方向，保持状态仍需实物检查。', 'The battery was loose once seated. The final revision changed the insertion direction; retention still needs a physical check.']],
         ],
         figures: ['stiffness-load', 'battery-old', 'old-battery-fit'],
       },
@@ -114,7 +116,7 @@ export const threads = [
       ['B', 'IMG-H03', ['孔位误差', 'Hole misalignment']],
       ['C', 'IMG-H06', ['侧键小板 · PCB 空间', 'Side board · PCB space']],
       ['D', 'IMG-B03', ['电池难装且松动', 'Difficult insertion · loose fit']],
-      ['E', 'eng-case-battery', ['向上装入 · 卡口', 'Upward insertion · catch']],
+      ['E', 'eng-case-battery', ['自下向上装入', 'Insert upward from below']],
     ],
   },
 ];

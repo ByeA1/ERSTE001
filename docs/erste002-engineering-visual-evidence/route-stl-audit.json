@@ -1,0 +1,153 @@
+{
+  "renderSetId": "e0c92c5262b3d5a357fa",
+  "renderedAtUtc": "2026-11-18T15:37:28.596Z",
+  "view": "inside",
+  "camera": {
+    "label": "内侧视图",
+    "position": [
+      135,
+      -155,
+      -115
+    ],
+    "target": [
+      0,
+      0,
+      18
+    ],
+    "height": 145
+  },
+  "unit": null,
+  "display": "Original mesh coordinates, matched orthographic camera and common crop. No per-package scaling.",
+  "cropPixels": [
+    256,
+    296,
+    1024,
+    808
+  ],
+  "packages": [
+    {
+      "id": "P01",
+      "source": "D:/素材/stl/1.zip",
+      "sha256": "9fe5d61c3c6a58970f3c03de7814cf08f4b59366646a0fe49c1ee2ce67fb2b8b",
+      "matchesLocalArchive": true,
+      "formalRevision": null,
+      "members": [
+        {
+          "id": "M001",
+          "file": "新建文件夹/上盖1.3.试打印.1.stl",
+          "sha256": "682a701464c9ff59296762c9443316489c7e955515fefcdc7bb5e108848128a6",
+          "triangles": 45858
+        }
+      ],
+      "previewSourceSha256": "f6773eabe2eaf640113304ca49b94a768e2787b7d0e615d3d4f8cd8145d918af",
+      "file": "route-p01-inside.webp",
+      "width": 768,
+      "height": 512,
+      "previewSha256": "e2ddbd15e582e60dea1526001043fa9dbfbf8872a987d6c3c8f28933d30e0c05"
+    },
+    {
+      "id": "P02",
+      "source": "D:/素材/stl/2.zip",
+      "sha256": "29ff0600b36da6c364f8eba55ac1a776f079c4f0ee61c58f8017780c48b1a634",
+      "matchesLocalArchive": true,
+      "formalRevision": null,
+      "members": [
+        {
+          "id": "M002",
+          "file": "试样2/上盖1.4.试打印.2.stl",
+          "sha256": "985d5724a24f0a2ca5d761c3494ababbe8c4f4e8f32de346366f90932cbc3f57",
+          "triangles": 97130
+        },
+        {
+          "id": "M003",
+          "file": "试样2/按键盖1.4.试打印.stl",
+          "sha256": "0f90a216e347f0646543abec1ce1ddfaa9eae93f6692cf04ce491a57c15afe34",
+          "triangles": 15356
+        }
+      ],
+      "previewSourceSha256": "d406e345c61a7ae156b96b56761a814958b33ceddaf465dc5558fa21509d9dce",
+      "file": "route-p02-inside.webp",
+      "width": 768,
+      "height": 512,
+      "previewSha256": "29d9df1f0c2e2bf82f191929476d588a7c31cf7acab0c5da62512ee5ec8bf1ad"
+    },
+    {
+      "id": "P03",
+      "source": "D:/素材/stl/3.zip",
+      "sha256": "9127520a587924ecf0e34501df2c57cd9ce86b56c8b8cef9b83ddc988dd251b1",
+      "matchesLocalArchive": true,
+      "formalRevision": null,
+      "members": [
+        {
+          "id": "M004",
+          "file": "新建文件夹/上盖1.5_1.stl",
+          "sha256": "62fec0b1c8e337b842098a2a0209b2ff4f43508e42feffa16bbe2ca947f5d719",
+          "triangles": 119112
+        },
+        {
+          "id": "M005",
+          "file": "新建文件夹/按键盖1.5.stl",
+          "sha256": "957a92aa9f34cf5b0be73805fa9f2db1b87f7642194a5d00360177fb598c751d",
+          "triangles": 43370
+        }
+      ],
+      "previewSourceSha256": "6fffd0ecf6940213320eee713f1a20b66ea80504a53c4b7a3a13a97fb25fff16",
+      "file": "route-p03-inside.webp",
+      "width": 768,
+      "height": 512,
+      "previewSha256": "ed7bf4aa03762331398227376dda7d0471bb35f9863a2481ed6522f49b2a1fcf"
+    },
+    {
+      "id": "P04",
+      "source": "D:/素材/stl/4.zip",
+      "sha256": "bb4532e0a46adaac4bb837f6f4e106325dc13de5ee2d12c82503c8aee45fd82d",
+      "matchesLocalArchive": true,
+      "formalRevision": null,
+      "members": [
+        {
+          "id": "M006",
+          "file": "新建文件夹/上盖1.6.stl",
+          "sha256": "e021d685620d46c48b4d885b019b51d9f3f5e875002857dbfc88dd603d155898",
+          "triangles": 202144
+        },
+        {
+          "id": "M007",
+          "file": "新建文件夹/按键盖1.6.stl",
+          "sha256": "e1db3451d1aa7d3a2230ec9fd1ad8b0ae34eab1f3343c881670d9b47f618cfa2",
+          "triangles": 91200
+        }
+      ],
+      "previewSourceSha256": "32a0b88949b391fd2a6e7d89e107a23c100a48a3180efd282474ee258a01f103",
+      "file": "route-p04-inside.webp",
+      "width": 768,
+      "height": 512,
+      "previewSha256": "0722d15b249b1f9a148daeea3fac90ee469677bc40fac1ea051fed6090dc23be"
+    },
+    {
+      "id": "P05",
+      "source": "D:/素材/stl/5.zip",
+      "sha256": "db5eef2f62c6ff4c76c90b27b58010336a7d0598bafdc9e1370ac643f54859d6",
+      "matchesLocalArchive": false,
+      "formalRevision": null,
+      "members": [
+        {
+          "id": "M008",
+          "file": "5/新建文件夹 (2)/上盖1.7.1.stl",
+          "sha256": "0663a91e3ed900a6e896e8b9ba96ceb633152795bddd35a7f2ee25e4a58d6590",
+          "triangles": 713572
+        },
+        {
+          "id": "M009",
+          "file": "5/新建文件夹 (2)/按键盖1.7.2.stl",
+          "sha256": "ec8c10c966adb56666aa2e65b242499395c7b1c7ea447af6e746e86cd9e7f484",
+          "triangles": 592838
+        }
+      ],
+      "previewSourceSha256": "e4074424386dbccba96da75b4eabe38e117775f2e608203878d49476a7cfdb73",
+      "file": "route-p05-inside.webp",
+      "width": 768,
+      "height": 512,
+      "previewSha256": "60b5458a2617fe1231f0f6d230244676ef517255ed9fa9c7273cea29cddb521c"
+    }
+  ]
+}

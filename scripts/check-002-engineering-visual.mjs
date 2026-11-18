@@ -17,13 +17,13 @@ assert.deepEqual([...doc.matchAll(/^### (IMG-[A-Z]\d{2})｜/gm)].map(match => ma
 assert.deepEqual([...doc.matchAll(/\[查看页面图位 IMG-[A-Z]\d{2}\]\([^\n]+engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
 
 const trace = await readFile('docs/ERSTE002-engineering-traceability.md', 'utf8');
-const traceRows = trace.split('\n').filter(line=>/^\| [A-E]\d /.test(line));
-assert.equal(traceRows.length,24);
+const traceRows = trace.split('\n').filter(line=>/^\| [A-F]\d /.test(line));
+assert.equal(traceRows.length,26);
 for (const [event, figureIds] of traceRows.map(line=>[line.split('|')[1].trim(), [...line.matchAll(/IMG-[A-Z]\d{2}/g)].map(match=>match[0])])) {
   assert.ok(figureIds.length && figureIds.every(id=>specs.some(spec=>spec.id === id)),event);
 }
 
-const featuredCards = [mediaSpecs['support-diagram'], mediaSpecs['button-diagram'], mediaSpecs['battery-diagram'], mediaSpecs['light-diagram']];
+const featuredCards = [mediaSpecs['support-diagram'], mediaSpecs['button-diagram'], mediaSpecs['battery-diagram']];
 assert.ok(featuredCards.every(card=>card.production[0] === 'NX 截图' && card.composition));
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
@@ -66,7 +66,8 @@ async function visit(page, lang, id) {
     const scroller = document.querySelector('#scroller');
     const host = scroller.getBoundingClientRect();
     const rect = (node.matches('figcaption') ? node.closest('figure') : node).getBoundingClientRect();
-    return rect.top >= host.top - 1 && rect.top < host.top + host.height * .55;
+    const atEnd = scroller.scrollTop >= scroller.scrollHeight - scroller.clientHeight - 1;
+    return rect.top >= host.top - 1 && rect.top < (atEnd ? host.bottom : host.top + host.height * .55);
   }, [lang, id]);
 }
 
@@ -79,7 +80,7 @@ try {
     for (const id of targets) {
       await visit(page,lang,id);
       assert.equal(await page.locator('[data-chapter]').count(), chapters.length);
-      assert.equal(await page.locator('.engineering-case').count(), 4);
+      assert.equal(await page.locator('.engineering-case').count(), cases.length);
       assert.equal(await page.locator('figure[data-media-id]').count(), specs.length);
       assert.equal(await page.locator('.material-card,.author-mode,[data-production]').count(), 0);
       assert.ok(await page.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1 && window.scrollY === 0));
@@ -87,7 +88,15 @@ try {
     }
     assert.deepEqual(unexpected,[]);
     assert.equal(await page.locator('#engineering-archive figure svg').count(),0);
+    assert.equal(await page.locator('figure img[src*="route-p"]').count(),5);
+    assert.equal(await page.locator('.engineering-case .figure-plate:visible').count(),0);
+    const scope = await page.locator('#eng-final-scope').innerText();
+    assert.match(scope, lang === 'zh' ? /未新增电池卡扣，未实施缝隙遮光/ : /omits the proposed battery catch and gap light blocking/);
+    const conclusion = await page.locator('#eng-current').innerText();
+    assert.match(conclusion, lang === 'zh' ? /倾向传统上下壳/ : /favours a conventional upper and lower shell/);
+    assert.match(conclusion, lang === 'zh' ? /尚无同条件的重量或刚度对照/ : /under matched conditions/);
     for (const card of featuredCards) {
+      await visit(page,lang,card.id);
       const frame = page.locator(`[data-media-id="${card.id}"] .figure-plate`);
       assert.equal(await frame.innerText(),card.id);
       assert.equal(Number(await frame.getAttribute('data-columns')) || 1,card.composition.columns);
@@ -96,6 +105,7 @@ try {
       assert.ok(Math.abs(frameWidth / frameHeight - horizontal / vertical) < .01,card.id);
     }
     for (const ids of [['IMG-P04','IMG-S01'], ['IMG-S02','IMG-S05']]) {
+      await visit(page,lang,ids[0]);
       const frames = await Promise.all(ids.map(id=>page.locator(`[data-media-id="${id}"] :is(.image-open,.figure-plate)`).boundingBox()));
       assert.equal(frames[0].y,frames[1].y);
       for (const dimension of ['width','height']) assert.ok(Math.abs(frames[0][dimension] - frames[1][dimension]) < .05,ids.join('/'));
@@ -158,13 +168,13 @@ try {
     await visit(page,'zh',id);
     const body = page.locator(`#${id}`);
     assert.equal(await body.locator('.history-study:visible').count(),studies.length);
-    const mediaPlaced = await body.locator('.history-study figure:visible').evaluateAll(figures=>figures.map(figure=>figure.dataset.mediaSlot));
+    const mediaPlaced = await body.locator('.history-study figure').evaluateAll(figures=>figures.map(figure=>figure.dataset.mediaSlot));
     assert.deepEqual(mediaPlaced,studies.flatMap(study=>study.figures));
     assert.equal(await body.locator('.history-study img').count(),id === 'eng-built' ? 2 : 0);
   }
   assert.match(await page.locator('#eng-support-checks').innerText(),/拆杆后完成装配/);
   assert.match(await page.locator('#eng-built-button').innerText(),/后连接板减重过多/);
-  assert.match(await page.locator('#eng-current .chapter-lead').innerText(),/实体打样与性能验证尚待完成/);
+  assert.match(await page.locator('#eng-decisions .chapter-lead').innerText(),/对应实物尚未打样/);
   for (const thread of threads) {
     for (const [,target] of thread.links) {
       await visit(page,'zh','eng-tracks');
@@ -250,7 +260,7 @@ try {
   }
   await visit(mobile,'en','eng-current');
   assert.ok(await mobile.locator('.status-wrap').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  report.checks.push('390px layout smoke test: seven history studies, four numbered decision frames and status table.');
+  report.checks.push('390px layout smoke test: seven history studies, three numbered decision frames and status table.');
   assert.deepEqual(report.errors,[]);
   report.status = 'passed';
 } catch (error) {

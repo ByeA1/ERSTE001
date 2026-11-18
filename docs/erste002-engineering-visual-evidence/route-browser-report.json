@@ -1,0 +1,95 @@
+{
+  "preview": "http://127.0.0.1:5210/cases/erste002/engineering.html",
+  "browser": "157.0.4341.60",
+  "checks": [
+    "1920 × 1080 zh: the assembled/inside photo pair and current CAD/section pair have equal frames.",
+    "1920 × 1080 zh: 589 × 368.125 grip frames align; figure captions are secondary and production notes are absent.",
+    "All 46 production widths match the 1920px layout within 5 CSS px.",
+    "1920 × 1080 zh: 19 views, single public layout, no horizontal overflow or product runtime.",
+    "1440 × 900 en: the assembled/inside photo pair and current CAD/section pair have equal frames.",
+    "1440 × 900 en: 589.203125 × 368.25 grip frames align; figure captions are secondary and production notes are absent.",
+    "1440 × 900 en: 19 views, single public layout, no horizontal overflow or product runtime.",
+    "26 traceability rows and 12 cross-stage links resolved. Seven visible history studies separated named observations, geometry and CAD evidence.",
+    "46 figure labels and Markdown links match; 32 numbered frames contain only their IDs, and all direct links reveal their figures.",
+    "14 images decoded; zoom, keyboard, focus, progress, browser history, old topic anchor and locale switch passed.",
+    "390px layout smoke test: seven history studies, three numbered decision frames and status table."
+  ],
+  "metrics": {
+    "zh": {
+      "paragraphs": 50,
+      "bodyCharacters": 1397,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    },
+    "en": {
+      "paragraphs": 50,
+      "bodyCharacters": 3474,
+      "longParagraphs": 3,
+      "longCharacters": 494
+    }
+  },
+  "sectionHeights": {
+    "zh": {
+      "eng-overview": 968,
+      "eng-form": 1495,
+      "eng-evolution": 1243,
+      "eng-support": 1243,
+      "eng-built": 1492,
+      "eng-decisions": 1533,
+      "eng-current": 952
+    },
+    "en": {
+      "eng-overview": 788,
+      "eng-form": 1473,
+      "eng-evolution": 1185,
+      "eng-support": 1164,
+      "eng-built": 1497,
+      "eng-decisions": 1455,
+      "eng-current": 875
+    }
+  },
+  "screenshots": [
+    "1920-zh-overview.jpg",
+    "1920-zh-form.jpg",
+    "1920-zh-form-handling.jpg",
+    "1920-zh-evolution.jpg",
+    "1920-zh-support.jpg",
+    "1920-zh-built.jpg",
+    "1920-zh-decisions.jpg",
+    "1920-zh-current.jpg",
+    "1920-zh-milestone-mjf.jpg",
+    "1920-zh-early-fit.jpg",
+    "1920-zh-milestone-support.jpg",
+    "1920-zh-support-checks.jpg",
+    "1920-zh-milestone-built.jpg",
+    "1920-zh-built-button.jpg",
+    "1920-zh-built-fit.jpg",
+    "1920-zh-tracks.jpg",
+    "1920-zh-case-stiffness.jpg",
+    "1920-zh-case-button.jpg",
+    "1920-zh-case-battery.jpg",
+    "1440-en-overview.jpg",
+    "1440-en-form.jpg",
+    "1440-en-form-handling.jpg",
+    "1440-en-evolution.jpg",
+    "1440-en-support.jpg",
+    "1440-en-built.jpg",
+    "1440-en-decisions.jpg",
+    "1440-en-current.jpg",
+    "1440-en-milestone-mjf.jpg",
+    "1440-en-early-fit.jpg",
+    "1440-en-milestone-support.jpg",
+    "1440-en-support-checks.jpg",
+    "1440-en-milestone-built.jpg",
+    "1440-en-built-button.jpg",
+    "1440-en-built-fit.jpg",
+    "1440-en-tracks.jpg",
+    "1440-en-case-stiffness.jpg",
+    "1440-en-case-button.jpg",
+    "1440-en-case-battery.jpg",
+    "1440-zh-numbered-plates.jpg",
+    "1440-zh-button-cad.jpg"
+  ],
+  "errors": [],
+  "status": "passed"
+}
