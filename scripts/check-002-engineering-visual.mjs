@@ -6,7 +6,7 @@ import { chapters, cases, media } from '../content/erste002-engineering-visual.m
 import { mediaSpecs } from '../content/erste002-engineering-media-spec.mjs';
 
 const { chromium } = createRequire(import.meta.url)('../.audit/model-logo/tools/node_modules/playwright');
-const origin = process.env.ERSTE_ORIGIN || 'http://127.0.0.1:5209';
+const origin = process.env.ERSTE_ORIGIN || 'http://127.0.0.1:5210';
 const url = `${origin}/cases/erste002/engineering.html`;
 const out = process.env.ERSTE_EVIDENCE || '.audit/erste002-engineering-visual';
 await mkdir(out, { recursive: true });
@@ -17,7 +17,10 @@ assert.deepEqual([...doc.matchAll(/engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, screenshots: [], errors: [] };
-const targets = [...chapters.slice(0,4).map(([id]) => id), ...cases.map(item => `eng-case-${item.id}`), chapters[4][0]];
+const targets = [
+  ...chapters.slice(0,2).map(([id]) => id), 'eng-form-handling',
+  ...chapters.slice(2,4).map(([id]) => id), ...cases.map(item => `eng-case-${item.id}`), chapters[4][0],
+];
 const trackedPages = [];
 
 async function capture(page, name) {
@@ -71,6 +74,28 @@ try {
       await capture(page, `${width}-${lang}-${id.replace('eng-', '')}`);
     }
     assert.deepEqual(unexpected,[]);
+    const copy = await page.locator('#engineering-archive').textContent();
+    assert.doesNotMatch(copy,/尚未提供|未提供|待提供|未收录|缺图|待补图|建议补充|技术素材卡|现有素材评估|最终素材要求|临时占位|待制作|明确占位|_archive[\\/]|image unavailable|not yet supplied|final media spec|temporary media review|awaiting production|placeholder/i);
+    await visit(page,lang,'eng-form-handling');
+    const grip = await page.locator('#eng-form-handling').evaluate(section=>{
+      const box = selector => document.querySelector(selector).getBoundingClientRect().toJSON();
+      const heading = section.querySelector('h3');
+      const caption = section.querySelector('figcaption');
+      return {
+        heading: box('#handling-title'), headingFont: parseFloat(getComputedStyle(heading).fontSize),
+        captionFont: parseFloat(getComputedStyle(caption).fontSize),
+        profile: box('#media-form-profile .image-open'), grip: box('#media-grip .figure-plate'),
+        open: section.querySelector('details').open,
+      };
+    });
+    assert.ok(grip.heading.bottom < grip.profile.top && grip.headingFont >= grip.captionFont * 2);
+    assert.equal(grip.open,false);
+    assert.equal(grip.profile.top,grip.grip.top);
+    assert.equal(grip.profile.width,grip.grip.width);
+    assert.equal(grip.profile.height,grip.grip.height);
+    assert.ok(Math.abs(grip.profile.width / grip.profile.height - 1.6) < .01);
+    assert.equal(await page.locator('#media-grip .figure-plate').innerText(),'IMG-F04');
+    report.checks.push(`${width} × ${height} ${lang}: ${grip.profile.width} × ${grip.profile.height} grip frames align; figure captions are secondary and production notes are absent.`);
     if (width === 1920) {
       const measured = await page.locator('figure[data-media-id]').evaluateAll(figures=>{
         document.querySelectorAll('.study-tray').forEach(tray=>{ tray.open = true; });
@@ -122,10 +147,6 @@ try {
   assert.deepEqual(placements.map(item=>item.id),specs.map(spec=>spec.id));
   assert.ok(placements.every(item=>item.id===item.anchor && item.id===item.label && (!item.plate || item.id===item.plate)));
   assert.equal(placements.filter(item=>item.plate).length,20);
-  const pageText = await page.locator('#engineering-archive').textContent();
-  assert.doesNotMatch(pageText,/图像未收录|技术素材卡|现有素材评估|最终素材要求|临时占位|待制作|_archive[\\/]/);
-  await visit(page,'en','IMG-K02');
-  assert.doesNotMatch(await page.locator('#engineering-archive').textContent(),/image unavailable|final media spec|temporary media review|awaiting production/i);
   for (const spec of specs) {
     await visit(page,'zh',spec.id);
     assert.ok(await page.locator(`#${spec.id}`).evaluate(label=>label.getClientRects().length > 0));

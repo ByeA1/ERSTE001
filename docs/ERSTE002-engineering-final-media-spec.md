@@ -8,7 +8,7 @@
 
 ## 最简执行清单
 
-1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯、侧视、握持和三件同朝向合照（F01–F04、P01）。握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。
+1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯和三件同朝向合照（F01、F02、P01）。锁定侧向机位，依次拍同一件 FDM 的空手侧视和右手握持（F03、F04）；握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。
 2. 历史零件另成一组。核对首轮 MJF、加杆版、红滚轮版裸上盖的身份。以同一光线拍分件摊开、孔位近景、底部内视（P02、P03、S01）。能追溯时再补 PCB 干涉、按压、电池松动和整体偏软的过程证据（P06、K07、B03、S09）。
 3. NX 总装先完成 P05、C01。当前 CAD 保存三分之四总装视图和底部内视。同一组截图供两个图位使用，P05 裁成节点图，C01 保留全景及四处标注。统一背景、投影、缩放与坐标轴，保留文件版本。
 4. NX 结构一次截取 S02–S06。前后版锁同一正交相机。先截整壳底视及前杆，再截功能片体、开口边缘法向剖面、主杆与上盖接点。S07–S08 单独用经核实的历史文件复现，不用新版代替。
@@ -32,7 +32,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4238-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4238.jpeg`
 - 现有素材评估：可见已装配的红滚轮版与轮廓，开口底缘不清楚。正式图需降低机位并补足底缘。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-O01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-O01)
+- [查看页面图位 IMG-O01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-O01)
 
 ### IMG-F01｜初始未分件 FDM 和连续表面
 
@@ -48,7 +48,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4241-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4241.jpeg`
 - 现有素材评估：连续顶面可辨。正式图用擦侧光让 FDM 层纹清晰，并去除背景杂物。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-F01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-F01)
+- [查看页面图位 IMG-F01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-F01)
 
 ### IMG-F02｜FDM、第二版、红滚轮样机并列
 
@@ -64,7 +64,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4237-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4237.jpeg`
 - 现有素材评估：三件身份可辨，但朝向不同。统一朝向和机位后，外形与分件才可直接比较。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-F02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-F02)
+- [查看页面图位 IMG-F02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-F02)
 
 ### IMG-F03｜未分件 FDM 的侧向轮廓
 
@@ -73,29 +73,29 @@
 - 对应版本：已确认的 FDM 样件
 - 对象与视角：未分件 FDM 的侧向轮廓。侧面平视，光线扫过顶部。
 - 必须可见：无遮挡的低前缘、后部隆起和底缘。
-- 建议标注：标前缘和后部掌心隆起。
+- 建议标注：标前缘和后部掌心隆起。与 F04 统一背景、样件朝向及构图比例。
 - 布置：柔和侧光或顶侧光，哑灰背景；保留真实表面与装配状态。
-- 取景比例与展示宽度参考：4:3，1920 桌面视口约 470 CSS px 宽。像素原稿建议 ≥ 940 px 宽。
+- 取景比例与展示宽度参考：16:10，1920 桌面视口约 590 CSS px 宽。像素原稿建议 ≥ 1180 px 宽。
 - 用途：表现非对称造型演进中的前后轮廓。
 - 当前占位：`public/cases/erste002/assets/engineering/p4242-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4242.jpeg`
 - 现有素材评估：能看见掌心隆起，背景较杂。正式图统一水平基准与焦距，留出完整底缘。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-F03](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-F03)
+- [查看页面图位 IMG-F03](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-F03)
 
 ### IMG-F04｜右手握持
 
 - 章节及优先级：01 / 外形 / P1
 - 图片类型及制作：实物照片 / 实物拍摄
-- 对应版本：FDM 手感样件
-- 对象与视角：右手握持。三分之四及侧向。
+- 对应版本：与 IMG-F03 同一 FDM 手感样件
+- 对象与视角：右手握持。同 IMG-F03 的侧向机位为主，另拍三分之四视角。
 - 必须可见：自然右手姿态，食指、中指与掌心接触位置。
-- 建议标注：标示指尖落点和掌心接触；补拍须注明重现。
+- 建议标注：以匹配 F03 的侧向机位为主。标指尖落点和掌心接触；补拍须注明重现。
 - 布置：柔和侧光或顶侧光，哑灰背景；保留真实表面与装配状态。
-- 取景比例与展示宽度参考：4:3，1920 桌面视口约 470 CSS px 宽。像素原稿建议 ≥ 940 px 宽。
+- 取景比例与展示宽度参考：16:10，1920 桌面视口约 590 CSS px 宽。像素原稿建议 ≥ 1180 px 宽。
 - 用途：指尖落点、掌心接触。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-F04](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-F04)
+- [查看页面图位 IMG-F04](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-F04)
 
 ### IMG-F05｜改形前后轮廓
 
@@ -106,11 +106,11 @@
 - 必须可见：改形前后的顶面边线、侧面起伏与同一尺度参照。
 - 建议标注：标明哪件是改形前 / 后；保留相同方向与尺寸参照。
 - 布置：柔和侧光或顶侧光，哑灰背景；保留真实表面与装配状态。
-- 取景比例与展示宽度参考：4:3，1920 桌面视口约 470 CSS px 宽。像素原稿建议 ≥ 940 px 宽。
+- 取景比例与展示宽度参考：4:3，1920 桌面视口约 580 CSS px 宽。像素原稿建议 ≥ 1160 px 宽。
 - 用途：分辨轮廓修改。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-F05](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-F05)
+- [查看页面图位 IMG-F05](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-F05)
 
 ### IMG-P01｜独立 FDM 样件俯视
 
@@ -126,7 +126,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4244-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4244.jpeg`
 - 现有素材评估：现有俯视可辨样件，竖图在横向节点会裁掉端部。正式图保留完整轮廓。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-P01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-P01)
+- [查看页面图位 IMG-P01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-P01)
 
 ### IMG-P02｜首次 MJF 零件
 
@@ -141,7 +141,7 @@
 - 用途：对应分件、内筋与孔位检查。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-P02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-P02)
+- [查看页面图位 IMG-P02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-P02)
 
 ### IMG-P03｜带支撑杆的裸壳、杆件与安装区
 
@@ -157,7 +157,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4235-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4235.jpeg`
 - 现有素材评估：较晚裸壳可说明分件。加杆里程碑需要归属明确的历史样件和可见杆件。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-P03](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-P03)
+- [查看页面图位 IMG-P03](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-P03)
 
 ### IMG-P04｜红滚轮实体总装，包括侧键与按键盖
 
@@ -173,7 +173,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4240-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4240.jpeg`
 - 现有素材评估：红滚轮实体可辨，三件同框占用主体空间。单独拍完整总装，表现侧键及分缝。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-P04](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-P04)
+- [查看页面图位 IMG-P04](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-P04)
 
 ### IMG-P05｜当前总装
 
@@ -188,7 +188,7 @@
 - 用途：识别当前设计及装配关系。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-P05](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-P05)
+- [查看页面图位 IMG-P05](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-P05)
 
 ### IMG-P06｜支撑杆与 PCB 干涉
 
@@ -203,7 +203,7 @@
 - 用途：显示空间冲突、拆杆前后。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-P06](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-P06)
+- [查看页面图位 IMG-P06](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-P06)
 
 ### IMG-S01｜红滚轮版裸上盖内侧
 
@@ -219,7 +219,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p4236-1536.webp`，来源 `00_原始附件/批次B_IMG4235-4244/IMG_4236.jpeg`
 - 现有素材评估：可定位筋、杆和安装柱。以低反光布光补拍内侧，保留完整底缘。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-S01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S01)
+- [查看页面图位 IMG-S01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S01)
 
 ### IMG-S02｜侧壁、前杆、功能片体、底缘及主杆接点
 
@@ -235,7 +235,7 @@
 - 当前占位：页面内联功能图解，待以对应版本几何核对或制图。
 - 现有素材评估：可说明支撑概念。正式图以正确版本的底视和折边剖面重绘。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-S02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S02)
+- [查看页面图位 IMG-S02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S02)
 
 ### IMG-S03｜整体支撑与前杆对照
 
@@ -250,7 +250,7 @@
 - 用途：显示前杆位置、连接与支撑区变化。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-S03](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S03)
+- [查看页面图位 IMG-S03](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S03)
 
 ### IMG-S04｜功能片体折边筋
 
@@ -265,7 +265,7 @@
 - 用途：显示折边与片体、安装区的连接。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-S04](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S04)
+- [查看页面图位 IMG-S04](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S04)
 
 ### IMG-S05｜开口边缘折边
 
@@ -280,7 +280,7 @@
 - 用途：显示局部截面和抗弯意图。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-S05](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S05)
+- [查看页面图位 IMG-S05](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S05)
 
 ### IMG-S06｜主杆与上盖连接
 
@@ -295,7 +295,7 @@
 - 用途：对照连接面积与支撑范围。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-S06](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S06)
+- [查看页面图位 IMG-S06](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S06)
 
 ### IMG-S07｜P01 上盖、内筋和安装区
 
@@ -311,7 +311,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p01-inside.webp`，来源 `_archive/ERSTE002/_derived/previews/P01-inside.png`
 - 现有素材评估：能看出该收件包的内筋布局。正式对比需先确认文件归属，另按统一机位出图。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-S07](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S07)
+- [查看页面图位 IMG-S07](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S07)
 
 ### IMG-S08｜P04 上盖、内筋与跨接杆
 
@@ -327,7 +327,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/p04-inside.webp`，来源 `_archive/ERSTE002/_derived/previews/P04-inside.png`
 - 现有素材评估：可见历史跨接杆。正式图需与 S07 使用相同正交机位、缩放及显示范围。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-S08](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S08)
+- [查看页面图位 IMG-S08](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S08)
 
 ### IMG-S09｜前版受力现象
 
@@ -342,7 +342,7 @@
 - 用途：补足整体偏软的直接记录。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-S09](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S09)
+- [查看页面图位 IMG-S09](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S09)
 
 ### IMG-K01｜实际盖体、后连接板、微动与限位
 
@@ -358,7 +358,7 @@
 - 当前占位：页面内联功能图解，待以对应版本几何核对或制图。
 - 现有素材评估：可解释弯折前移与重新分区。接触和限位点须用对应 CAD 侧剖核对后再定。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-K01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K01)
+- [查看页面图位 IMG-K01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K01)
 
 ### IMG-K02｜历史按键盖内侧及后连接板
 
@@ -374,7 +374,7 @@
 - 当前占位：`public/cases/erste002/assets/engineering/m007-buttons.webp`，来源 `_archive/4.zip::新建文件夹/按键盖1.6.stl → _archive/ERSTE002/_derived/previews/M007-buttons.png`
 - 现有素材评估：M007 可见后部连接，版本尚未与异常运动对应。正式图使用经确认的失效样机对应 CAD。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-K02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K02)
+- [查看页面图位 IMG-K02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K02)
 
 ### IMG-K03｜按键盖连接与镂空
 
@@ -389,7 +389,7 @@
 - 用途：识别连接板、安装区及保留镂空。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-K03](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K03)
+- [查看页面图位 IMG-K03](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K03)
 
 ### IMG-K04｜按键盖边缘加强
 
@@ -404,7 +404,7 @@
 - 用途：显示折边如何并入保形区。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-K04](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K04)
+- [查看页面图位 IMG-K04](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K04)
 
 ### IMG-K05｜厚度与弯折分区
 
@@ -419,7 +419,7 @@
 - 用途：标出固定、预期弯折、保形与减重区。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-K05](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K05)
+- [查看页面图位 IMG-K05](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K05)
 
 ### IMG-K06｜施力、微动与限位
 
@@ -434,7 +434,7 @@
 - 用途：标注施力点、触点、间隙和实际限位；区分预期运动与实测。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-K06](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K06)
+- [查看页面图位 IMG-K06](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K06)
 
 ### IMG-K07｜按键倾斜与局部翘起
 
@@ -449,7 +449,7 @@
 - 用途：对应观察到的异常运动。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-K07](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-K07)
+- [查看页面图位 IMG-K07](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-K07)
 
 ### IMG-B01｜电池三步装配
 
@@ -465,7 +465,7 @@
 - 当前占位：页面内联功能图解，待以对应版本几何核对或制图。
 - 现有素材评估：可看懂向上进件。正式三步图需从同一 CAD 剖切平面取得电池、上盖支撑和卡口关系。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-B01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-B01)
+- [查看页面图位 IMG-B01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-B01)
 
 ### IMG-B02｜卡口、定位面及紧固
 
@@ -480,7 +480,7 @@
 - 用途：显示固定关系及防脱意图。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-B02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-B02)
+- [查看页面图位 IMG-B02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-B02)
 
 ### IMG-B03｜旧版电池装入与松动
 
@@ -495,7 +495,7 @@
 - 用途：定位安装障碍与固定问题。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-B03](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-B03)
+- [查看页面图位 IMG-B03](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-B03)
 
 ### IMG-L01｜遮光截面与运动包络
 
@@ -511,7 +511,7 @@
 - 当前占位：页面内联功能图解，待以对应版本几何核对或制图。
 - 现有素材评估：可区分光路与行程。正式图依据实际静止及按下剖面定位遮光特征和剩余间隙。
 - 素材状态：临时占位。
-- [查看页面图位 IMG-L01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-L01)
+- [查看页面图位 IMG-L01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-L01)
 
 ### IMG-L02｜遮光截面与运动包络
 
@@ -526,7 +526,7 @@
 - 用途：标出实体遮光结构、入射路径、保留间隙。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-L02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-L02)
+- [查看页面图位 IMG-L02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-L02)
 
 ### IMG-C01｜当前总装
 
@@ -541,7 +541,7 @@
 - 用途：识别当前设计及装配关系。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-C01](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-C01)
+- [查看页面图位 IMG-C01](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-C01)
 
 ### IMG-C02｜新版复测
 
@@ -556,4 +556,4 @@
 - 用途：核查刚度、按压、保持力和遮光。
 - 当前占位：无。
 - 素材状态：待制作。
-- [查看页面图位 IMG-C02](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-C02)
+- [查看页面图位 IMG-C02](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-C02)

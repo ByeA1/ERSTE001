@@ -26,7 +26,7 @@ function fileFor(slot) {
 const schematicSlots = new Set(['support-diagram', 'button-diagram', 'battery-diagram', 'light-diagram']);
 const materialStatus = (slot) => media[slot] || schematicSlots.has(slot)
   ? ['临时占位', 'Temporary'] : ['待制作', 'Awaiting production'];
-const pageUrl = 'http://127.0.0.1:5208/cases/erste002/engineering.html';
+const pageUrl = 'http://127.0.0.1:5210/cases/erste002/engineering.html';
 
 function materialChapter(code) {
   const [part, topic] = code.split('.');
@@ -34,13 +34,12 @@ function materialChapter(code) {
   return label.map((name, i) => `${code} / ${name}${topic ? ` · ${cases[Number(topic) - 1].short[i]}` : ''}`);
 }
 
-function figure(slot, visual, title, caption, kind, options = {}) {
+function figure(slot, visual, title, kind, options = {}) {
   const spec = mediaSpecs[slot];
   if (!spec) throw new Error(`Missing media spec: ${slot}`);
   usedSlots.push(slot);
-  const label = caption ? `<div class="caption-meta"><a href="#${spec.id}">${spec.id}</a>${localized(caption)}</div>` : '';
   return `<figure class="archive-media ${options.className || ''}" id="media-${slot}" data-media-slot="${slot}" data-media-id="${spec.id}" data-media-kind="${kind}">
-    ${visual}<figcaption id="${spec.id}">${label}<strong>${localized(title)}</strong></figcaption>
+    ${visual}<figcaption id="${spec.id}">${kind === 'plate' ? '' : `<a href="#${spec.id}">${spec.id}</a>`}${localized(title)}</figcaption>
   </figure>`;
 }
 
@@ -48,24 +47,23 @@ function photo(slot, options = {}) {
   const source = media[slot];
   const asset = fileFor(slot);
   const kind = source.kind || 'photo';
-  const versions = kind === 'cad' ? ['CAD / 历史网格', 'CAD / HISTORICAL MESH'] : ['实物', 'PHYSICAL'];
   const marks = source.marks?.map(([name,x,y])=>`<b class="photo-pin" style="--pin-x:${x}%;--pin-y:${y}%">${name}</b>`).join('') || '';
   const trace = source.trace ? `<svg class="geometry-trace" viewBox="0 0 ${asset.width} ${asset.height}" preserveAspectRatio="none" aria-hidden="true"><path d="${source.trace}"/></svg>` : '';
   const responsive = asset.small ? `srcset="${assetRoot}${asset.small.file} ${asset.small.width}w, ${assetRoot}${asset.file} ${asset.width}w" sizes="${source.sizes || '(max-width: 800px) 94vw, 50vw'}"` : '';
   const visual = `<button type="button" class="image-open${marks ? ' has-pins' : ''}" data-open-media data-full="${assetRoot}${asset.file}" ${aria('放大：'+source.title[0], 'Enlarge: '+source.title[1])}>
     <img width="${asset.width}" height="${asset.height}" src="${assetRoot}${asset.file}" ${responsive} ${slot === 'cover' ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async" alt="${escape(source.title[0])}" data-alt-zh="${escape(source.title[0])}" data-alt-en="${escape(source.title[1])}">
-    ${trace}<span class="kind-label">${localized(versions)}</span><span class="photo-pins" aria-hidden="true">${marks}</span><span class="zoom-mark" aria-hidden="true">↗</span></button>`;
-  return figure(slot, visual, source.title, source.version, kind, options);
+    ${trace}<span class="kind-label">${localized(source.version)}</span><span class="photo-pins" aria-hidden="true">${marks}</span><span class="zoom-mark" aria-hidden="true">↗</span></button>`;
+  return figure(slot, visual, source.title, kind, options);
 }
 
 function plate(slot, title) {
   const spec = mediaSpecs[slot];
   const visual = `<div class="figure-plate" style="--plate-ratio:${spec.ratio.replace(':',' / ')}"><a href="#${spec.id}">${spec.id}</a></div>`;
-  return figure(slot, visual, title || spec.object, null, 'plate');
+  return figure(slot, visual, title || spec.object, 'plate');
 }
 
 function diagram(slot, title, structure, detail) {
-  return figure(slot, `<div class="diagram-sheet" ${aria(...title)} role="group">${structure}</div>`, detail, ['功能图解 · 非实际几何', 'Functional diagram · illustrative geometry'], 'diagram');
+  return figure(slot, `<div class="diagram-sheet" ${aria(...title)} role="group">${structure}</div>`, detail.map((text, i) => `${i ? 'Functional diagram' : '功能图解'} · ${text}`), 'diagram');
 }
 
 function sectionTitle(index, headline, lead) {
@@ -74,7 +72,7 @@ function sectionTitle(index, headline, lead) {
 }
 
 const evidenceLabels = {
-  observed: ['实物观察', 'Observed'], analysis: ['设计者判断', 'Analysis'], designed: ['设计已完成', 'Designed'], waiting: ['尚无对应实测', 'Not validated'],
+  observed: ['实物观察', 'Observed'], analysis: ['设计者判断', 'Analysis'], designed: ['设计已完成', 'Designed'], waiting: ['实体验证边界', 'Physical validation limits'],
 };
 function evidenceLabel(kind) {
   const [zh,en] = evidenceLabels[kind];
@@ -90,8 +88,8 @@ function caseTitle(index) {
   const record = cases[index];
   return `<header class="case-title"><p class="section-kicker"><b>CASE 0${index+1}</b>${record.title}</p><h3>${localized(record.headline)}</h3><div class="case-lead">${evidenceLabel('designed')}<p>${localized(record.designed)}</p></div></header>`;
 }
-function tray(title, children, id) {
-  return `<details class="study-tray"${id ? ` id="${id}" data-topic` : ''}><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
+function tray(title, children) {
+  return `<details class="study-tray"><summary>${localized(title)} <span aria-hidden="true">＋</span></summary>${children}</details>`;
 }
 const plateGrid = (...slots) => `<div class="plate-grid">${slots.map(slot=>plate(slot)).join('')}</div>`;
 const drawings = diagrams({t, diagram});
@@ -112,10 +110,15 @@ const body = `
 
 <section class="chapter form-chapter" data-chapter id="eng-form">
   <div class="form-gallery" id="eng-form-comparison" data-topic>
-    <div class="form-intro">${sectionTitle(1,['先确定手里的曲面。','Find the shape in the hand.'],['一次试握后的改形定下右手非对称曲面。','A revision after trial handling set the direction of the asymmetric grip.'])}${photo('form-fdm')}</div>
+    <div class="form-intro">${sectionTitle(1,['从手感样件定形。','Develop the shape in hand.'],['从未分件的 FDM 样件发展为右手非对称曲面。','An unsplit FDM sample led to the asymmetric right-hand shell.'])}${photo('form-fdm')}</div>
     ${photo('form-generations')}
   </div>
-  ${tray(['指尖落点与掌心支撑','Fingertip landing and palm support'],`<div class="plate-grid form-detail-grid">${photo('form-profile')}${plate('grip')}${plate('matched-form')}</div>`,'eng-form-handling')}
+  <section class="handling-study" id="eng-form-handling" data-topic aria-labelledby="handling-title">
+    <header class="handling-title"><p class="section-kicker"><b>01</b>GRIP STUDY</p><h3 id="handling-title">${t('一次试握确定了改形方向。','A trial grip guided the form revision.')}</h3>
+      ${t('设计者在试握中关注指尖落点、掌心支撑和两侧曲面。','The designer checked where the fingertips landed, how the palm was supported and how each side fit.','p','class="chapter-lead"')}</header>
+    <div class="handling-pair">${photo('form-profile')}${plate('grip',['指尖落点与掌心接触','Fingertip landing and palm contact'])}</div>
+    ${tray(['改形前后轮廓','Before and after the form change'],plateGrid('matched-form'))}
+  </section>
 </section>
 
 <section class="chapter evolution-chapter" data-chapter id="eng-evolution">
@@ -138,7 +141,7 @@ const body = `
     <ol class="change-grid">${structuralChanges.map(([number,title,caption])=>`<li><b>${number}</b><div><strong>${localized(title)}</strong><span>${localized(caption)}</span></div></li>`).join('')}</ol>
     <div class="case-extras">${evidenceNotes(cases[0])}
     ${tray(['新版支撑与截面','Revised supports and sections'],plateGrid('stiffness-compare','functional-fold','base-section','main-joint'))}
-    ${tray(['历史 CAD 几何','Historical CAD geometry'],`<div class="case-split cad-pair">${photo('cad-p01')}${photo('cad-p04')}</div>${t('同机位对照内筋与跨接布局。P01、P04 为历史收件包编号。','Matched camera views of ribs and spanning members. P01 and P04 identify archive packages.','p','class="small-note"')}`)}
+    ${tray(['历史 CAD 几何','Historical CAD geometry'],`<div class="case-split cad-pair">${photo('cad-p01')}${photo('cad-p04')}</div>`)}
     ${tray(['壳体受力观察','Shell under load'],plateGrid('stiffness-load'))}</div>
   </article>
   <article class="engineering-case" id="eng-case-button" data-topic>${caseTitle(1)}
@@ -192,7 +195,7 @@ const specDoc = [
   '',
   '## 最简执行清单',
   '',
-  '1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯、侧视、握持和三件同朝向合照（F01–F04、P01）。握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。',
+  '1. 摄影一次台面布景。哑灰背景、柔和顶侧光、固定白平衡及焦距，拍红滚轮装配版三分之四低视角和正前偏侧（O01、P04）。同场拍 FDM 斜俯、正俯和三件同朝向合照（F01、F02、P01）。锁定侧向机位，依次拍同一件 FDM 的空手侧视和右手握持（F03、F04）；握持补拍标明重现。F05 仅在两件改形样件身份都能核实时拍。',
   '2. 历史零件另成一组。核对首轮 MJF、加杆版、红滚轮版裸上盖的身份。以同一光线拍分件摊开、孔位近景、底部内视（P02、P03、S01）。能追溯时再补 PCB 干涉、按压、电池松动和整体偏软的过程证据（P06、K07、B03、S09）。',
   '3. NX 总装先完成 P05、C01。当前 CAD 保存三分之四总装视图和底部内视。同一组截图供两个图位使用，P05 裁成节点图，C01 保留全景及四处标注。统一背景、投影、缩放与坐标轴，保留文件版本。',
   '4. NX 结构一次截取 S02–S06。前后版锁同一正交相机。先截整壳底视及前杆，再截功能片体、开口边缘法向剖面、主杆与上盖接点。S07–S08 单独用经核实的历史文件复现，不用新版代替。',

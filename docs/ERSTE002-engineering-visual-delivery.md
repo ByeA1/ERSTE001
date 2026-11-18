@@ -1,12 +1,15 @@
 # ERSTE002 ENGINEERING 视觉重构交付
 
-- [PC 访客预览](http://127.0.0.1:5208/cases/erste002/engineering.html)
+- [PC 访客预览](http://127.0.0.1:5210/cases/erste002/engineering.html)
+- [握持对照](http://127.0.0.1:5210/cases/erste002/engineering.html?lang=zh#eng-form-handling)
 - [35 张逐图制作卡与摄影、NX 最简执行清单](ERSTE002-engineering-final-media-spec.md)
-- [章节层级与篇幅复核](erste002-engineering-visual-evidence/hierarchy-report.json)
+- [桌面版式、图号与访客文案复核](erste002-engineering-visual-evidence/grip-layout-report.json)
 
 工程页统一使用正式编排。版面上保留图号、图题和工程图注，细节图按工程主题折叠。35 个图位中，11 处使用临时照片或几何预览，4 处使用临时功能图解，20 处以图号保留对应画幅。素材状态与制作要求集中在逐图规格文件。
 
-清单中的每个 `IMG-*` 链接直达正式页面中的同编号图位，并展开对应专题。15 处临时素材均有逐图评估，35 处展示宽度按 1920 桌面版面更新。[底部折边剖面图位示例](http://127.0.0.1:5208/cases/erste002/engineering.html#IMG-S05)
+清单中的每个 `IMG-*` 链接直达正式页面中的同编号图位，并展开对应专题。15 处临时素材均有逐图评估，35 处展示宽度按 1920 桌面版面更新。[底部折边剖面图位示例](http://127.0.0.1:5210/cases/erste002/engineering.html#IMG-S05)
+
+握持段先呈现试握结论，再并排展示 `IMG-F03` 侧轮廓与 `IMG-F04` 握持。两图同为 16∶10，1920 × 1080 与 1440 × 900 下每张约 589 × 368 CSS px。图下各保留一行短图题，样件信息标在实物图上。改形前后的补充对照 `IMG-F05` 可独立展开。[1920 中文](erste002-engineering-visual-evidence/grip-1920-zh.jpg) · [1440 English](erste002-engineering-visual-evidence/grip-1440-en.jpg)
 
 当前画面可查看[外形演进](erste002-engineering-visual-evidence/hierarchy-1440-en-form.jpg)、[迭代里程碑](erste002-engineering-visual-evidence/hierarchy-1440-en-evolution.jpg)、[结构专题](erste002-engineering-visual-evidence/hierarchy-1920-zh-case-stiffness.jpg)和[按键专题](erste002-engineering-visual-evidence/hierarchy-1440-en-case-button.jpg)。下表保留首轮视觉重构截图供对照。
 
@@ -15,7 +18,7 @@
 | 区段 | 主要视觉与阅读任务 | 截图 |
 | --- | --- | --- |
 | 00 Engineering Overview | 红滚轮实体首图、工程决策与当前设计入口、单行里程碑导航 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-overview.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-overview.jpg) |
-| 01 Form Development | FDM 起点与三件实物并列，轮廓和握持细节按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-form.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-form.jpg) |
+| 01 Form Development | FDM 起点与三件实物并列，试握结论及两张等尺寸对照图，改形前后按需展开 | [1920 中文](erste002-engineering-visual-evidence/grip-1920-zh.jpg) · [1440 English](erste002-engineering-visual-evidence/grip-1440-en.jpg) |
 | 02 Prototype Evolution | 五张里程碑卡默认展示关键发现，制作与后续按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-evolution.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-evolution.jpg) |
 | 03 Engineering Decisions | 结构、按键、电池和遮光优先展示各自的设计结论及主图，实物观察和取舍按需展开 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-decisions.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-decisions.jpg) |
 | 04 Current Design | 一张四行表并列 CAD 状态和实体验证边界 | [1920 中文](erste002-engineering-visual-evidence/1920-zh-current.jpg) · [1440 English](erste002-engineering-visual-evidence/1440-en-current.jpg) |
@@ -48,10 +51,10 @@ IMG-K02 依据 M007 在原归档投影中的可见边界描边，标示盖体和
 
 | 语种 | 段落数 前 → 后 | 正文字数 前 → 后 | 正文压缩 | 长段数 前 → 后 |
 | --- | ---: | ---: | ---: | ---: |
-| 中文 | 81 → 21 | 3446 → 412 | 88.0% | 9 → 0 |
-| English | 74 → 21 | 9777 → 868 | 91.1% | 35 → 0 |
+| 中文 | 81 → 23 | 3446 → 450 | 86.9% | 9 → 0 |
+| English | 74 → 23 | 9777 → 952 | 90.3% | 35 → 0 |
 
-同一口径结果见 [旧页面统计](erste002-engineering-visual-evidence/text-before.json) 和 [章节层级与篇幅复核](erste002-engineering-visual-evidence/hierarchy-report.json)。相对上轮正式编排，在 1440×900 且细节默认折叠的状态下，中文滚动高度从 7343 降到 5355 CSS px，英文从 7403 降到 5409 CSS px，均缩短约 27%。
+同一口径结果见 [旧页面统计](erste002-engineering-visual-evidence/text-before.json) 和 [本轮复核](erste002-engineering-visual-evidence/grip-layout-report.json)。
 
 ## 当前技术边界
 
@@ -67,4 +70,4 @@ IMG-K02 依据 M007 在原归档投影中的可见边界描边，标示盖体和
 
 站点构建、开场、目录、项目展示、Logo 使用和公共能力检查通过。全站旧 Logo 审计的原始基线仍因历史档案盒模型哈希不一致退出，使用本轮前已有基线的 Chrome 桌面快速复查通过。
 
-本轮在 `source` 本地提交。可用 `git log -1 -- public/cases/erste002/engineering.html` 查询重构记录。旧文案与第一阶段截图保留为历史证据。改素材配置后执行 `node scripts/build-002-engineering-archive.mjs` 重新生成页面与制作清单。重新预览使用 `npm run build`、`npm run preview -- --port 5208 --strictPort`。按需设置 `ERSTE_ORIGIN` 后运行 `node scripts/check-002-engineering-visual.mjs` 复查。
+本轮在 `source` 本地提交。可用 `git log -1 -- public/cases/erste002/engineering.html` 查询重构记录。旧文案与第一阶段截图保留为历史证据。改素材配置后执行 `node scripts/build-002-engineering-archive.mjs` 重新生成页面与制作清单。重新预览使用 `npm run build`、`npm run preview -- --port 5210 --strictPort`。按需设置 `ERSTE_ORIGIN` 后运行 `node scripts/check-002-engineering-visual.mjs` 复查。

@@ -1,0 +1,55 @@
+{
+  "preview": "http://127.0.0.1:5210/cases/erste002/engineering.html",
+  "browser": "157.0.4341.60",
+  "checks": [
+    "1920 × 1080 zh: 589 × 368.125 grip frames align; figure captions are secondary and production notes are absent.",
+    "All 35 production widths match the 1920px layout within 5 CSS px.",
+    "1920 × 1080 zh: 10 views, single public layout, no horizontal overflow or product runtime.",
+    "1440 × 900 en: 589.203125 × 368.25 grip frames align; figure captions are secondary and production notes are absent.",
+    "1440 × 900 en: 10 views, single public layout, no horizontal overflow or product runtime.",
+    "Five key findings and four design decisions lead their sections; build notes and observed rationale are available on expansion.",
+    "35 figure labels and Markdown links match; 20 numbered frames contain only their IDs, and all direct links reveal their figures.",
+    "11 images decoded; zoom, keyboard, focus, progress, browser history, old topic anchor and locale switch passed.",
+    "390px layout smoke test: diagram and status table; full mobile review not in scope."
+  ],
+  "metrics": {
+    "zh": {
+      "paragraphs": 23,
+      "bodyCharacters": 450,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    },
+    "en": {
+      "paragraphs": 23,
+      "bodyCharacters": 952,
+      "longParagraphs": 0,
+      "longCharacters": 0
+    }
+  },
+  "screenshots": [
+    "1920-zh-overview.jpg",
+    "1920-zh-form.jpg",
+    "1920-zh-form-handling.jpg",
+    "1920-zh-evolution.jpg",
+    "1920-zh-decisions.jpg",
+    "1920-zh-case-stiffness.jpg",
+    "1920-zh-case-button.jpg",
+    "1920-zh-case-battery.jpg",
+    "1920-zh-case-light.jpg",
+    "1920-zh-current.jpg",
+    "1440-en-overview.jpg",
+    "1440-en-form.jpg",
+    "1440-en-form-handling.jpg",
+    "1440-en-evolution.jpg",
+    "1440-en-decisions.jpg",
+    "1440-en-case-stiffness.jpg",
+    "1440-en-case-button.jpg",
+    "1440-en-case-battery.jpg",
+    "1440-en-case-light.jpg",
+    "1440-en-current.jpg",
+    "1440-zh-numbered-plates.jpg",
+    "1440-zh-button-cad.jpg"
+  ],
+  "errors": [],
+  "status": "passed"
+}
