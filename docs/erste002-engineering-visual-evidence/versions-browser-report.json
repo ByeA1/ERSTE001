@@ -1,0 +1,35 @@
+{
+  "preview": "http://127.0.0.1:5210/cases/erste002/engineering.html",
+  "browser": "157.0.4341.60",
+  "checks": [
+    "1920 × 1080 zh: all 25 figures decoded, five revisions and matched rows verified. No overflow, empty frames or product runtime.",
+    "1440 × 900 en: all 25 figures decoded, five revisions and matched rows verified. No overflow, empty frames or product runtime.",
+    "25 figure links, 12 cross-version engineering links, compare CTA, zoom, focus, browser history, locale switch and one legacy hash passed.",
+    "390 px comparison smoke test passed."
+  ],
+  "screenshots": [
+    "1920-zh-overview.jpg",
+    "1920-zh-comparison.jpg",
+    "1920-zh-form.jpg",
+    "1920-zh-evolution.jpg",
+    "1920-zh-support.jpg",
+    "1920-zh-built.jpg",
+    "1920-zh-case-stiffness.jpg",
+    "1920-zh-case-button.jpg",
+    "1920-zh-case-battery.jpg",
+    "1920-zh-current.jpg",
+    "1440-en-overview.jpg",
+    "1440-en-comparison.jpg",
+    "1440-en-form.jpg",
+    "1440-en-evolution.jpg",
+    "1440-en-support.jpg",
+    "1440-en-built.jpg",
+    "1440-en-case-stiffness.jpg",
+    "1440-en-case-button.jpg",
+    "1440-en-case-battery.jpg",
+    "1440-en-current.jpg",
+    "390-zh-comparison.jpg"
+  ],
+  "errors": [],
+  "status": "passed"
+}

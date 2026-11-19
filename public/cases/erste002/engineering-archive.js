@@ -8,22 +8,22 @@ const previous = document.querySelector('[data-chapter-prev]');
 const next = document.querySelector('[data-chapter-next]');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const params = new URLSearchParams(location.search);
-const documentKey = 'erste002-engineering-route-review';
+const documentKey = 'erste002-engineering-version-review';
 const aliases = {
   'eng-prologue': 'eng-overview',
   'eng-form-study': 'media-form-fdm',
   'milestones': 'eng-evolution',
   'eng-structure': 'eng-evolution',
   'eng-structure-parts': 'milestone-mjf',
-  'eng-structure-ribs': 'media-early-ribs',
+  'eng-structure-ribs': 'media-v2-ribs',
   'eng-structure-first-build': 'milestone-mjf',
   'eng-assembly': 'eng-support',
-  'eng-assembly-archive-geometry': 'media-cad-p01',
+  'eng-assembly-archive-geometry': 'eng-comparison',
   'eng-assembly-conflicts': 'milestone-support',
   'eng-challenges': 'eng-built',
-  'eng-challenge-stiffness': 'media-stiffness-load',
+  'eng-challenge-stiffness': 'milestone-built',
   'eng-challenge-button': 'eng-built-button',
-  'eng-challenge-battery': 'media-battery-old',
+  'eng-challenge-battery': 'eng-built-fit',
   'eng-refinement': 'eng-decisions',
   'eng-refinement-structure': 'eng-case-stiffness',
   'eng-refinement-button': 'eng-case-button',
@@ -32,9 +32,24 @@ const aliases = {
   'eng-case-light': 'eng-final-scope',
   'IMG-L01': 'eng-final-scope',
   'IMG-L02': 'eng-final-scope',
-  'media-battery-catch': 'media-battery-clearance',
+  'media-battery-catch': 'eng-case-battery',
   'eng-design-validation-status': 'eng-current',
   'eng-conclusion': 'eng-current',
+  'eng-geometry-reference': 'IMG-V4-KEY',
+  'media-cad-p01': 'IMG-V1-IN',
+  'media-cad-p02': 'IMG-V2-IN',
+  'media-cad-p03': 'IMG-V3-IN',
+  'media-cad-p04': 'IMG-V4-IN',
+  'media-cad-p05': 'IMG-V5-IN',
+  'media-button-cad': 'IMG-V4-KEY',
+  'IMG-S07': 'IMG-V1-IN',
+  'IMG-H10': 'IMG-V2-IN',
+  'IMG-H11': 'IMG-V3-IN',
+  'IMG-S08': 'IMG-V4-IN',
+  'IMG-H12': 'IMG-V5-IN',
+  'IMG-S03': 'IMG-V5-MT',
+  'IMG-K02': 'IMG-V4-KEY',
+  'IMG-K03': 'IMG-V5-KEY',
 };
 
 let language = 'zh';

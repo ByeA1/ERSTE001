@@ -1,5 +1,7 @@
 # ERSTE002 / ENGINEERING ARCHIVE · 阶段封存交接
 
+> 2026 年 11 月 19 日补记。设计者确认 `D:/素材/stl` 的 1–5 号 ZIP 分别为 V1–V5。以下保留当时的核验与交付记录。当前版本映射、实物证据与网页见[五版对比交付](ERSTE002-engineering-visual-delivery.md)。
+
 本轮交付完整 PRODUCT / ENGINEERING 双路线。PRODUCT 保留四章 11 镜；ENGINEERING 新增四章、15 个专题、8 张入选实物照片和四个历史 STL 收件包的统一视角对照。完成后暂时暂停进一步开发，保留 CAD 修改、制造和验证入口。原有顶部统一悬浮导航、终端交互及 ERSTE001 正式内容没有在本轮修改。
 
 ## 本地访问

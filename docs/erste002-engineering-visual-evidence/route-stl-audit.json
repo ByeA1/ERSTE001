@@ -1,36 +1,127 @@
 {
   "renderSetId": "e0c92c5262b3d5a357fa",
   "renderedAtUtc": "2026-11-18T15:37:28.596Z",
-  "view": "inside",
-  "camera": {
-    "label": "内侧视图",
-    "position": [
-      135,
-      -155,
-      -115
-    ],
-    "target": [
-      0,
-      0,
-      18
-    ],
-    "height": 145
-  },
+  "versionAuthority": "Designer confirmation, 2026-11-19. ZIP number 1–5 gives revision V1–V5.",
   "unit": null,
-  "display": "Original mesh coordinates, matched orthographic camera and common crop. No per-package scaling.",
-  "cropPixels": [
-    256,
-    296,
-    1024,
-    808
-  ],
+  "display": "Original mesh coordinates. Each view uses the same orthographic camera and crop across revisions, with no per-version scaling.",
+  "views": {
+    "upper": {
+      "camera": {
+        "label": "斜上视图",
+        "position": [
+          155,
+          -175,
+          145
+        ],
+        "target": [
+          0,
+          0,
+          18
+        ],
+        "height": 145
+      },
+      "cropPixels": [
+        256,
+        296,
+        1024,
+        808
+      ]
+    },
+    "inside": {
+      "camera": {
+        "label": "内侧视图",
+        "position": [
+          135,
+          -155,
+          -115
+        ],
+        "target": [
+          0,
+          0,
+          18
+        ],
+        "height": 145
+      },
+      "cropPixels": [
+        256,
+        296,
+        1024,
+        808
+      ]
+    },
+    "mounting": {
+      "camera": {
+        "label": "前部安装区域 / PCB 对应关系待核",
+        "position": [
+          90,
+          -145,
+          -90
+        ],
+        "target": [
+          0,
+          -35,
+          12
+        ],
+        "height": 85
+      },
+      "cropPixels": [
+        240,
+        248,
+        1056,
+        792
+      ]
+    },
+    "ribs": {
+      "camera": {
+        "label": "后部筋板局部",
+        "position": [
+          90,
+          140,
+          -100
+        ],
+        "target": [
+          0,
+          30,
+          17
+        ],
+        "height": 75
+      },
+      "cropPixels": [
+        224,
+        280,
+        1040,
+        824
+      ]
+    },
+    "buttons": {
+      "camera": {
+        "label": "按键盖内侧",
+        "position": [
+          80,
+          -120,
+          -105
+        ],
+        "target": [
+          0,
+          -25,
+          17
+        ],
+        "height": 85
+      },
+      "cropPixels": [
+        224,
+        216,
+        1056,
+        772
+      ]
+    }
+  },
   "packages": [
     {
-      "id": "P01",
+      "version": "V1",
       "source": "D:/素材/stl/1.zip",
       "sha256": "9fe5d61c3c6a58970f3c03de7814cf08f4b59366646a0fe49c1ee2ce67fb2b8b",
       "matchesLocalArchive": true,
-      "formalRevision": null,
       "members": [
         {
           "id": "M001",
@@ -39,18 +130,40 @@
           "triangles": 45858
         }
       ],
-      "previewSourceSha256": "f6773eabe2eaf640113304ca49b94a768e2787b7d0e615d3d4f8cd8145d918af",
-      "file": "route-p01-inside.webp",
-      "width": 768,
-      "height": 512,
-      "previewSha256": "e2ddbd15e582e60dea1526001043fa9dbfbf8872a987d6c3c8f28933d30e0c05"
+      "images": [
+        {
+          "view": "upper",
+          "version": "V1",
+          "members": [
+            "M001"
+          ],
+          "originalRender": "P01-upper.png",
+          "renderSha256": "8ae30fe9bba6c49ba4233a6f5b1427198065ab1e0d5ee30816366a8a0a928d58",
+          "file": "route-v1-upper.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "d2f3b15ca3cfa85413aaa03a6d2c2f73d6786678a18437efa46abf0bb8a55837"
+        },
+        {
+          "view": "inside",
+          "version": "V1",
+          "members": [
+            "M001"
+          ],
+          "originalRender": "P01-inside.png",
+          "renderSha256": "f6773eabe2eaf640113304ca49b94a768e2787b7d0e615d3d4f8cd8145d918af",
+          "file": "route-v1-inside.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "5c0e82b67abc9f66ae9646f12b2f77f5b29d943be91e2dd10afd02d0359ccfc2"
+        }
+      ]
     },
     {
-      "id": "P02",
+      "version": "V2",
       "source": "D:/素材/stl/2.zip",
       "sha256": "29ff0600b36da6c364f8eba55ac1a776f079c4f0ee61c58f8017780c48b1a634",
       "matchesLocalArchive": true,
-      "formalRevision": null,
       "members": [
         {
           "id": "M002",
@@ -65,18 +178,81 @@
           "triangles": 15356
         }
       ],
-      "previewSourceSha256": "d406e345c61a7ae156b96b56761a814958b33ceddaf465dc5558fa21509d9dce",
-      "file": "route-p02-inside.webp",
-      "width": 768,
-      "height": 512,
-      "previewSha256": "29d9df1f0c2e2bf82f191929476d588a7c31cf7acab0c5da62512ee5ec8bf1ad"
+      "images": [
+        {
+          "view": "upper",
+          "version": "V2",
+          "members": [
+            "M002",
+            "M003"
+          ],
+          "originalRender": "P02-upper.png",
+          "renderSha256": "f4ee4a1e3647b84f7cdc8a963115b48aa72dbe986408322b37f8ea7349c8b4fa",
+          "file": "route-v2-upper.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "f4721855ce567132da89b90088f1c6b222e624e5f0addbf53c3165f98eca0d61"
+        },
+        {
+          "view": "inside",
+          "version": "V2",
+          "members": [
+            "M002",
+            "M003"
+          ],
+          "originalRender": "P02-inside.png",
+          "renderSha256": "d406e345c61a7ae156b96b56761a814958b33ceddaf465dc5558fa21509d9dce",
+          "file": "route-v2-inside.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "99c2ced50f5a02eba8ae0d96307f5399ee8d8a5c5f200d0ceae384eaa0fd272c"
+        },
+        {
+          "view": "mounting",
+          "version": "V2",
+          "members": [
+            "M002"
+          ],
+          "originalRender": "P02-mounting.png",
+          "renderSha256": "1104eb7b204328eb59a928109af5177f19170cf06433d4c846229269a672eeaa",
+          "file": "route-v2-mounting.webp",
+          "width": 816,
+          "height": 544,
+          "sha256": "efa254c0895486e55bc29c598b4c055f62c8d970ad71e4854b3e404ba3ef721a"
+        },
+        {
+          "view": "ribs",
+          "version": "V2",
+          "members": [
+            "M002"
+          ],
+          "originalRender": "P02-ribs.png",
+          "renderSha256": "4a578dcb23ccff8add2efce140cb1815bd6c420ce5e12cc5f726bd3afd18bcc2",
+          "file": "route-v2-ribs.webp",
+          "width": 816,
+          "height": 544,
+          "sha256": "7aa13a7d64c333970a76b3c254983e1b3a65384d2e67f8c8ec233bfd7f27f600"
+        },
+        {
+          "view": "buttons",
+          "version": "V2",
+          "members": [
+            "M003"
+          ],
+          "originalRender": "M003-buttons.png",
+          "renderSha256": "7593d06e1c3987a4eaf98b2285829bb3cd08ac6b8e2f8d0aa31d660c7f7b98b2",
+          "file": "route-v2-buttons.webp",
+          "width": 832,
+          "height": 556,
+          "sha256": "6512347f5002f590ed395ff8af3b4fff7d3bf21c5c5f2eb75b1197f7b7f1b6a0"
+        }
+      ]
     },
     {
-      "id": "P03",
+      "version": "V3",
       "source": "D:/素材/stl/3.zip",
       "sha256": "9127520a587924ecf0e34501df2c57cd9ce86b56c8b8cef9b83ddc988dd251b1",
       "matchesLocalArchive": true,
-      "formalRevision": null,
       "members": [
         {
           "id": "M004",
@@ -91,18 +267,55 @@
           "triangles": 43370
         }
       ],
-      "previewSourceSha256": "6fffd0ecf6940213320eee713f1a20b66ea80504a53c4b7a3a13a97fb25fff16",
-      "file": "route-p03-inside.webp",
-      "width": 768,
-      "height": 512,
-      "previewSha256": "ed7bf4aa03762331398227376dda7d0471bb35f9863a2481ed6522f49b2a1fcf"
+      "images": [
+        {
+          "view": "upper",
+          "version": "V3",
+          "members": [
+            "M004",
+            "M005"
+          ],
+          "originalRender": "P03-upper.png",
+          "renderSha256": "3906855d5331c90e660f4d79ab0f8a88d45919d12876e5b5976e9c5f9177f2b1",
+          "file": "route-v3-upper.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "51d7903688bfe187eb066a932033941be5156105523e2b69927cec8ffc000f73"
+        },
+        {
+          "view": "inside",
+          "version": "V3",
+          "members": [
+            "M004",
+            "M005"
+          ],
+          "originalRender": "P03-inside.png",
+          "renderSha256": "6fffd0ecf6940213320eee713f1a20b66ea80504a53c4b7a3a13a97fb25fff16",
+          "file": "route-v3-inside.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "8fcad88e42260df63943b1dbf79b965efd6e12580e3850b0f53981e0e58e3e02"
+        },
+        {
+          "view": "buttons",
+          "version": "V3",
+          "members": [
+            "M005"
+          ],
+          "originalRender": "M005-buttons.png",
+          "renderSha256": "b80b10149abfaf3f7b366f2e245dfaa68b5962ccd0ac4d831bfabb1047e8e04a",
+          "file": "route-v3-buttons.webp",
+          "width": 832,
+          "height": 556,
+          "sha256": "c89beff9d2171baa05cf8fb195aad3ef50327b0da51110935b324fee0f14b82d"
+        }
+      ]
     },
     {
-      "id": "P04",
+      "version": "V4",
       "source": "D:/素材/stl/4.zip",
       "sha256": "bb4532e0a46adaac4bb837f6f4e106325dc13de5ee2d12c82503c8aee45fd82d",
       "matchesLocalArchive": true,
-      "formalRevision": null,
       "members": [
         {
           "id": "M006",
@@ -117,18 +330,68 @@
           "triangles": 91200
         }
       ],
-      "previewSourceSha256": "32a0b88949b391fd2a6e7d89e107a23c100a48a3180efd282474ee258a01f103",
-      "file": "route-p04-inside.webp",
-      "width": 768,
-      "height": 512,
-      "previewSha256": "0722d15b249b1f9a148daeea3fac90ee469677bc40fac1ea051fed6090dc23be"
+      "images": [
+        {
+          "view": "upper",
+          "version": "V4",
+          "members": [
+            "M006",
+            "M007"
+          ],
+          "originalRender": "P04-upper.png",
+          "renderSha256": "641d860cae02389adf8eb7333aed2172a3dc82fd0f1d342b1a9f155fbf63826a",
+          "file": "route-v4-upper.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "ffefd046e619a9694eb888bdad238af72465de609f7e9f77de942986aa1f46b3"
+        },
+        {
+          "view": "inside",
+          "version": "V4",
+          "members": [
+            "M006",
+            "M007"
+          ],
+          "originalRender": "P04-inside.png",
+          "renderSha256": "32a0b88949b391fd2a6e7d89e107a23c100a48a3180efd282474ee258a01f103",
+          "file": "route-v4-inside.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "8212ae0ee097586ce1b0a21d357abcf69cec642e4e38e503542e0f50633a9e8f"
+        },
+        {
+          "view": "mounting",
+          "version": "V4",
+          "members": [
+            "M006"
+          ],
+          "originalRender": "P04-mounting.png",
+          "renderSha256": "40c663c035d315d35c71408181ca2fd627f2bfbddae492e761c5cf706db06f02",
+          "file": "route-v4-mounting.webp",
+          "width": 816,
+          "height": 544,
+          "sha256": "8f239efd78778be3d3ce3bf5dae24dfa8726cd8758f98664f982f9f45a006ac6"
+        },
+        {
+          "view": "buttons",
+          "version": "V4",
+          "members": [
+            "M007"
+          ],
+          "originalRender": "M007-buttons.png",
+          "renderSha256": "8bbff23ecf17a93a53c381bdcc8d4f6cc864b76ab073bc1fd79eae9b8e78959b",
+          "file": "route-v4-buttons.webp",
+          "width": 832,
+          "height": 556,
+          "sha256": "3c52d89bfb8fa9b4f4d4da31cb1e2b27019ac020642574e4d22d0041c00b98a1"
+        }
+      ]
     },
     {
-      "id": "P05",
+      "version": "V5",
       "source": "D:/素材/stl/5.zip",
       "sha256": "db5eef2f62c6ff4c76c90b27b58010336a7d0598bafdc9e1370ac643f54859d6",
       "matchesLocalArchive": false,
-      "formalRevision": null,
       "members": [
         {
           "id": "M008",
@@ -143,11 +406,62 @@
           "triangles": 592838
         }
       ],
-      "previewSourceSha256": "e4074424386dbccba96da75b4eabe38e117775f2e608203878d49476a7cfdb73",
-      "file": "route-p05-inside.webp",
-      "width": 768,
-      "height": 512,
-      "previewSha256": "60b5458a2617fe1231f0f6d230244676ef517255ed9fa9c7273cea29cddb521c"
+      "images": [
+        {
+          "view": "upper",
+          "version": "V5",
+          "members": [
+            "M008",
+            "M009"
+          ],
+          "originalRender": "P05-upper.png",
+          "renderSha256": "e048e7b11b0b928ed891990568330f155ff6f285d6da4759137992560cb181c4",
+          "file": "route-v5-upper.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "2560e8570c73b9e16965f5cb83c784bc88999e538410e2f031ba4c4b58180ddd"
+        },
+        {
+          "view": "inside",
+          "version": "V5",
+          "members": [
+            "M008",
+            "M009"
+          ],
+          "originalRender": "P05-inside.png",
+          "renderSha256": "e4074424386dbccba96da75b4eabe38e117775f2e608203878d49476a7cfdb73",
+          "file": "route-v5-inside.webp",
+          "width": 768,
+          "height": 512,
+          "sha256": "8e789644f45de8a77c12b0a5b310de888a122fb482890540bd39437fafee19d7"
+        },
+        {
+          "view": "mounting",
+          "version": "V5",
+          "members": [
+            "M008"
+          ],
+          "originalRender": "P05-mounting.png",
+          "renderSha256": "436f96b5a6fade60b7a8f3e2bf8f34f841d3cc52b97ef83e4866875c913a63e0",
+          "file": "route-v5-mounting.webp",
+          "width": 816,
+          "height": 544,
+          "sha256": "d7ffa1ace10bea0e9c050f3af7f336fa29253f4a56f3ee8b5048855802933205"
+        },
+        {
+          "view": "buttons",
+          "version": "V5",
+          "members": [
+            "M009"
+          ],
+          "originalRender": "M009-buttons.png",
+          "renderSha256": "02185b1f913db2d79b84da4c524235a60a6342a789fc736e133577a5f74c7258",
+          "file": "route-v5-buttons.webp",
+          "width": 832,
+          "height": 556,
+          "sha256": "c0fc669e249254915306766b8b3b671677a38dc490ab97538022c68d1f246470"
+        }
+      ]
     }
   ]
 }

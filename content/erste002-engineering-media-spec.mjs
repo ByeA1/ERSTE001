@@ -1,171 +1,54 @@
-import { requests } from './erste002-engineering-visual.mjs';
+import { stages } from './erste002-engineering-history.mjs';
 
-// One record per placement, in page order. Widths are rounded from the 1920px layout.
-const photoStyle = ['柔和侧光或顶侧光，哑灰背景；保留真实表面与装配状态。', 'Use soft side or high-side light on a matte grey background. Retain the real finish and assembly state.'];
-const matchStyle = ['对照统一机位、正交投影或相同焦距、主体比例和裁切；使用一致中性底色。', 'Match camera, orthographic projection or focal length, subject scale and crop. Use the same neutral background.'];
-const nx = ['NX 截图', 'NX capture'];
-const photo = ['实物拍摄', 'Physical photography'];
-const historic = ['经归版的实拍或 NX 截图', 'Version-matched photo or NX capture'];
+export const meshViews = {
+  upper: { code: 'UP', label: ['整体斜俯', 'Upper oblique'] },
+  inside: { code: 'IN', label: ['底部内视', 'Underside'] },
+  mounting: { code: 'MT', label: ['前部安装区', 'Front mounting area'] },
+  ribs: { code: 'RB', label: ['后部筋板', 'Rear ribs'] },
+  buttons: { code: 'KEY', label: ['按键盖内侧', 'Button cover underside'] },
+};
 
-// Slot, figure number, chapter, priority, production, ratio, display width, request ID, annotation.
-const entries = [
-  ['cover', 'O01', '00', 'P1', photo, '16:10', 850, 'R01', ['标出开放底部轮廓和右手高低差。', 'Label the open lower edge and right-hand asymmetry.']],
-  ['form-fdm', 'F01', 'A', 'P1', photo, '3:2', 600, 'R23', ['圈出连续顶面与层纹。', 'Mark the unsplit top surface and visible layers.']],
-  ['form-generations', 'F02', 'A', 'P1', photo, '4:3', 845, 'R24', ['1 / 2 / 3 依次标 FDM、原称第二版、红滚轮实体。', 'Label 1 / 2 / 3 as FDM, the sample called second prototype and the red-wheel build.']],
-  ['form-profile', 'F03', 'A', 'P2', photo, '16:10', 590, 'R25', ['标前缘和后部掌心隆起。与 F04 统一背景、样件朝向及构图比例。', 'Mark the front edge and rear palm rise. Match F04 in background, orientation and scale.']],
-  ['grip', 'F04', 'A', 'P1', photo, '16:10', 590, 'R03', ['以匹配 F03 的侧向机位为主。标指尖落点和掌心接触；补拍须注明重现。', 'Use the side view matched to F03 as the main frame. Mark fingertips and palm contact; label a recreated pose if applicable.']],
-  ['matched-form', 'F05', 'A', 'P2', photo, '4:3', 580, 'R02', ['标明哪件是改形前 / 后；保留相同方向与尺寸参照。', 'Identify before and after, with matched orientation and a scale reference.']],
-  ['evo-fdm', 'P01', 'A', 'P1', photo, '16:9', 710, 'R26', ['圈出未分件前缘；标注样件身份。', 'Mark the unsplit leading edge and sample identity.']],
-  ['form-cad-compare', 'H09', 'A', 'P2', nx, '16:9', 710, 'R44', ['标同一掌心隆起、前缘及两侧轮廓基准，标明修改前后。', 'Mark the same palm rise, front edge and side contour datums. Label before and after.']],
-  ['first-mjf', 'P02', 'B', 'P0', historic, '16:10', 710, 'R04', ['标出上盖、按键盖、初始内筋与安装孔。仅在有对应装配记录时标示实际孔位偏差。', 'Label the upper shell, covers, initial ribs and holes. Mark observed hole offsets only with matching assembly evidence.']],
-  ['early-exploded', 'H01', 'B', 'P0', nx, '16:10', 710, 'R36', ['标上盖、左右按键盖、连接板和装配方向。用真实紧固点定位分件关系。', 'Label the upper shell, button covers, rear plate and assembly direction. Locate actual attachment points.']],
-  ['cad-p01', 'S07', 'B', 'P1', nx, '3:2', 725, 'R31', ['圈内筋，标明历史文件编号，与 H10、H11、S08、H12 同机位。', 'Mark ribs and source ID. Match H10, H11, S08 and H12.']],
-  ['cad-p02', 'H10', 'B', 'P1', nx, '3:2', 725, 'R45', ['标上盖、按键盖与分件边界，并遵守 S07 的视角。', 'Mark shell, cover and part boundaries and match S07.']],
-  ['early-ribs', 'H02', 'B', 'P0', nx, '16:9', 710, 'R37', ['标皮壳、筋高、筋与上盖接合。受力箭头只表达局部抗弯原理。', 'Label the shell, rib depth and rib joint. Load arrows illustrate local bending only.']],
-  ['early-fit', 'H03', 'B', 'P0', historic, '16:9', 710, 'R38', ['标固定基准、匹配孔及紧固轴线。实测偏差仅用对应装配记录。', 'Mark datums, matching holes and fastening axes. Use actual offsets only from matched evidence.']],
-  ['evo-support', 'P03', 'C', 'P0', historic, '16:10', 710, 'R27', ['标新增跨接杆、上盖连接和 PCB 安装位置；实际干涉记录放 P06。', 'Mark the added span, shell joint and PCB location. Put interference evidence in P06.']],
-  ['interference', 'P06', 'C', 'P0', ['历史记录 / NX 截图', 'Historical record / NX capture'], '16:10', 710, 'R06', ['用同色标示 PCB，红圈标干涉；若无当时记录则使用已核实的历史 CAD。', 'Use a consistent PCB colour and red interference circle. If no original record exists, use confirmed historical CAD.']],
-  ['cad-p03', 'H11', 'C', 'P1', nx, '3:2', 725, 'R46', ['标跨接位置、杆端和相邻内筋。使用 S07 的机位。', 'Mark spans, ends and adjacent ribs. Match the S07 view.']],
-  ['cad-p04', 'S08', 'C', 'P1', nx, '3:2', 725, 'R32', ['圈跨接路径和接点，与 S07 同机位、比例与投影。', 'Mark spans and joints. Match S07 in view, scale and projection.']],
-  ['rod-removal', 'H04', 'C', 'P0', historic, '16:9', 470, 'R39', ['分别标有杆及拆杆状态，保留同一 PCB 位置和固定基准。', 'Label with-rod and removed-rod states against the same PCB position and datum.']],
-  ['early-button-fit', 'H05', 'C', 'P0', nx, '16:9', 470, 'R40', ['标盖体、上盖、微动触点和抬起行程，见不到止挡时注明位置。', 'Mark the cover, shell, switch contact and upward travel. Identify where the stop was absent.']],
-  ['side-board-fit', 'H06', 'C', 'P0', historic, '16:9', 470, 'R41', ['圈出侧键小板与壳体接触位置，虚线标装入方向。', 'Circle the side-button PCB collision and dash the insertion direction.']],
-  ['evo-built', 'P04', 'D', 'P1', photo, '4:3', 725, 'R28', ['标出红滚轮与分件；以完成装配状态拍摄。', 'Identify the red wheel and part divisions in the assembled state.']],
-  ['stiffness-photo', 'S01', 'D', 'P1', photo, '4:3', 725, 'R29', ['A 筋板、B 跨接杆、C 安装柱；标记仅指静态可见区域。', 'A ribs, B spanning rod, C mounting posts. Label visible static features only.']],
-  ['button-observed', 'K07', 'D', 'P0', photo, '16:9', 710, 'R07', ['标按压位置及局部翘起位置；分清加载前后。', 'Mark the force and local lift; distinguish loaded and unloaded frames.']],
-  ['old-button-analysis', 'H07', 'D', 'P0', nx, '16:9', 710, 'R42', ['标过度减重的后连接、预期弯折区、较薄片体和施力点。用线标示设计者归因。', 'Mark rear cutback, intended flex region, thin cover and press point. Draw interpretation as annotation.']],
-  ['stiffness-load', 'S09', 'D', 'P2', photo, '16:9', 470, 'R14', ['标支撑与加载位置；没有位移记录时保留定性说明。', 'Mark supports and load. Report qualitatively if displacement is unavailable.']],
-  ['battery-old', 'B03', 'D', 'P0', photo, '16:9', 470, 'R08', ['标原进入方向、卡住处与松动的位置。', 'Label prior insertion direction, obstruction and loose location.']],
-  ['old-battery-fit', 'H08', 'D', 'P1', nx, '16:9', 470, 'R43', ['标旧装入路径、定位面和保持位置。松动现象由 B03 记录。', 'Mark the old insertion path, datums and retention. Use B03 for observed movement.']],
-  ['button-cad', 'K02', 'D', 'P0', nx, '3:2', 710, 'R34', ['A 盖体、B 后部连接；交付 K03 时用同机位。', 'A cover panel, B rear connection; match K03 camera.']],
-  ['cad-p05', 'H12', 'E', 'P1', nx, '3:2', 725, 'R47', ['按收件包 05 标识，匹配 S07 的机位。只有源文件归版确认后才标正式版号。', 'Identify package 05 and match S07. Add a revision only after verification.']],
-  ['evo-cad', 'P05', 'E', 'P0', nx, '16:10', 710, 'R22', ['短标注定位支撑、按键和电池装入方向。保留未标注原图及修订标识。', 'Mark support, button and insertion direction. Keep an unmarked original and revision identifier.']],
-  ['support-diagram', 'S02', 'E.01', 'P0', nx, '4:3', 710, 'R30', ['在原截图的实际位置标 01 前部支撑杆、02 片体折边筋、03 开口折边、04 主杆接点。结构遮挡时补一个局部同向截图。', 'Mark 01 front rod, 02 panel flange, 03 open-edge flange and 04 main joint on the actual geometry. Add a detail from the same direction if occluded.']],
-  ['base-section', 'S05', 'E.01', 'P0', nx, '4:3', 710, 'R16', ['用截面线标开口边缘，红色突出新增折边。', 'Mark the open edge on the section line and highlight the added flange red.']],
-  ['stiffness-compare', 'S03', 'E.01', 'P0', nx, '16:9', 710, 'R09', ['标出前杆、连接点和支撑区；前后同尺度同投影。', 'Mark front rods, joints and support zones at matched scale and projection.']],
-  ['functional-fold', 'S04', 'E.01', 'P0', nx, '16:9', 710, 'R15', ['圈出功能片体、折边筋与安装区。', 'Circle the functional panel, flanged rib and mounting area.']],
-  ['main-joint', 'S06', 'E.01', 'P0', nx, '16:9', 710, 'R17', ['圈出新旧连接区域，标主要支撑方向。', 'Circle each joint footprint and mark the main support direction.']],
-  ['button-diagram', 'K01', 'E.02', 'P0', nx, '5:2', 1430, 'R33', ['旧版圈出后连接板削减处和厚薄分布；新版标固定区、预期弯折区、保形区和镂空。微动及限位只标实际可见位置。', 'Circle the reduced mount and thickness distribution in the old version. Mark the fixed, intended flex, shape-retaining and cutout regions in the current version. Label switch and stops only where visible.']],
-  ['button-new', 'K03', 'E.02', 'P0', nx, '3:2', 710, 'R10', ['标折边、恢复的连接板、安装面和保留的镂空。', 'Mark the flange, restored plate, mount and retained cutouts.']],
-  ['button-edge', 'K04', 'E.02', 'P0', nx, '16:9', 710, 'R18', ['用红线标新增边缘折边，注出对应保形区。', 'Highlight the added edge flange and label the shape-retaining region.']],
-  ['button-thickness', 'K05', 'E.02', 'P0', nx, '16:9', 710, 'R19', ['前后同剖切线；只使用 NX 可查尺寸。', 'Use the same cut line and only dimensions traceable to NX.']],
-  ['button-motion', 'K06', 'E.02', 'P0', nx, '16:9', 710, 'R20', ['以虚线示意预期按压路径；标施力点、微动接触、抬起限位。', 'Dash the intended travel and label the press point, switch contact and lift stop.']],
-  ['battery-diagram', 'B01', 'E.03', 'P0', nx, '3:1', 1430, 'R11', ['第二帧用虚线标向上装配，第三帧标实际到位轮廓与内支撑。桌面仅作方位参考，间距以 CAD 为准。', 'Dash the upward insertion in frame two. Mark the seated outline and upper support in frame three. Use the desk for orientation and take clearance from CAD.']],
-  ['battery-clearance', 'B02', 'E.03', 'P0', nx, '16:9', 710, 'R21', ['标电池外形、上方实际相邻结构与可查的几何间距。', 'Mark the battery outline, actual upper neighbours and traceable clearances.']],
-  ['front-openings', 'Q01', '06', 'P0', photo, '4:3', 725, 'R48', ['标记前部功能开口与安装位。标线仅用于定位，传力解释以明确标注区分。', 'Mark front openings and mounts. Distinguish location markers from load-path interpretation.']],
-  ['current-overview', 'C01', '06', 'P0', nx, '16:9', 710, 'R22', ['01–03 分别标支撑、按键与电池，写明 CAD 文件名和版本。', 'Use 01–03 for support, buttons and battery. Identify the CAD file and revision.']],
-  ['validation', 'C02', '06', 'P1', photo, '16:9', 710, 'R13', ['测试图片保留样件 ID、工况、施力点或观察到的行程边界。', 'Retain sample ID, conditions, force point or observed travel limit.']],
+// Every mesh figure is matched by version and view to its record of geometry provenance.
+const overviewMeshes = stages.flatMap(({ version, upper, inside }) => [
+  [version, 'upper', upper],
+  [version, 'inside', inside],
+]);
+const detailMeshes = [
+  ['V2', 'mounting', ['滚轮附近开口打断上盖前部，安装柱分列两侧。', 'The wheel-area opening interrupts the front shell, with mounts on either side.']],
+  ['V2', 'ribs', ['后部弧筋沿曲面延伸，部分筋与沿壳方向的筋交汇。', 'Curved ribs run along the rear shell and intersect longitudinal ribs.']],
+  ['V4', 'mounting', ['开口下方可见安装柱和前部片体，保留底缘与跨杆接点作为对照。', 'Mounting posts and the front panel are visible below the opening, with the lower edge and span joints in view.']],
+  ['V5', 'mounting', ['前杆改为转折走向，邻近安装区与底缘轮廓随之调整。', 'The front span has an angled course, with changes to nearby mounts and the lower edge.']],
+  ['V2', 'buttons', ['两条后部安装舌带孔，盖面内侧较平整。', 'Two rear mounting tabs have holes. The covers are comparatively plain inside.']],
+  ['V3', 'buttons', ['盖面加入交叉筋和凸台，后连接改用短片与圆形座。', 'Crossing ribs and bosses appear on the covers. The rear connections use short tabs and round seats.']],
+  ['V4', 'buttons', ['延续交叉筋与短连接片布局。', 'The crossing ribs and short connections remain.']],
+  ['V5', 'buttons', ['后连接片向后延伸，保留镂空。盖面边缘可见折边。', 'The rear plates extend farther and retain cutouts. Flanged cover edges are visible.']],
 ];
 
-const extra = {
-  R01: [['实物摄影', 'Physical photography'], ['已装配红滚轮样机', 'Assembled red-wheel prototype'], ['最新实体，早于当前 CAD', 'Latest physical build, before current CAD'], ['前左三分之四低机位，镜头略高于底缘', 'Low front-left three-quarter view just above the lower edge'], ['从一张图识别开底、分件、非对称外壳及红滚轮', 'Show the open base, part split, asymmetry and red wheel in one view']],
-  R23: [['实物摄影', 'Physical photography'], ['初始未分件 FDM 和连续表面', 'Unsplit FDM shell and continuous surface'], ['可确认的 FDM 手感样件', 'Confirmed FDM form sample'], ['前左斜俯，光线擦过层纹', 'Front-left oblique overhead, grazing light on layers'], ['解释为何先用未分件外形试握', 'Show why handling preceded functional splits']],
-  R24: [['实物组照', 'Physical comparison'], ['FDM、第二版、红滚轮样机并列', 'FDM, second prototype and red-wheel build together'], ['三件已确认身份的实物', 'Three objects with confirmed identities'], ['同朝向、同距离，三分之四俯看', 'Same orientation and distance, three-quarter overhead'], ['同时说明轮廓、分件和实体装配演进', 'Compare form, part division and assembly in one frame']],
-  R25: [['实物摄影', 'Physical photography'], ['未分件 FDM 的侧向轮廓', 'Side profile of the unsplit FDM shell'], ['已确认的 FDM 样件', 'Confirmed FDM form sample'], ['侧面平视，光线扫过顶部', 'Level side view with grazing top light'], ['表现非对称造型演进中的前后轮廓', 'Read the profile in the evolution toward an asymmetric form']],
-  R26: [['实物摄影', 'Physical photography'], ['独立 FDM 样件俯视', 'Overhead FDM sample'], ['初始 FDM 手感样件，改形前后身份待核', 'Initial FDM grip sample, before/after identity unconfirmed'], ['正俯视，纵轴沿画面长边', 'True overhead, align long axis with frame'], ['说明实体握持和外形迭代的起点', 'Show where physical handling and form iteration began']],
-  R27: [['实物或 CAD 内部视图', 'Physical or CAD interior view'], ['加杆后的裸壳内侧、跨接杆与 PCB 安装区', 'Shell interior with rods and PCB mounting area'], ['加杆的后续 MJF 轮次，正式版次待核', 'Later MJF build with support rods, formal revision unconfirmed'], ['从底部正交斜视，杆端、安装面与 PCB 区域同时入镜', 'Orthographic underside oblique showing rod ends, mounts and PCB area'], ['说明引入支撑杆后装配空间如何变化', 'Show how adding rods changed the available assembly space']],
-  R28: [['实物摄影', 'Physical photography'], ['红滚轮实体总装，包括侧键与按键盖', 'Red-wheel assembly with side buttons and covers'], ['红滚轮实体装配样机，正式版次待核', 'Red-wheel physical assembly, formal revision unconfirmed'], ['前方略偏侧，暗色哑光背景', 'Slightly off-centre front view on dark matte background'], ['记录整机的完整装配状态', 'Document the completed physical assembly']],
-  R29: [['工程标注实拍', 'Annotated physical photo'], ['红滚轮版裸上盖内侧', 'Interior of the red-wheel shell'], ['最近实体装配版裸壳', 'Bare shell from latest physical build'], ['底部内视，与 S02 统一头尾朝向；斜俯光照亮内杆和筋板', 'Interior view oriented like S02; light the rods and ribs'], ['定位前版筋、杆和安装柱，与当前 CAD 支撑布局并读', 'Locate earlier ribs, rods and posts alongside the current CAD support layout']],
-  R30: [['CAD 总览截图', 'CAD overview capture'], ['当前上盖内侧与完整开口边缘', 'Current shell interior and complete open edge'], ['当前完成设计的 CAD', 'Completed current CAD'], ['底部内侧正交斜视，前杆与主杆接点同时入镜；朝向同 S01', 'Orthographic underside oblique showing front rod and main joint, oriented like S01'], ['从同一张总览定位四处支撑修改', 'Locate all four support revisions in one view']],
-  R31: [['历史几何对比', 'Historical geometry comparison'], ['P01 上盖、内筋和安装区', 'P01 shell, ribs and mounting area'], ['P01 / M001，正式 REV 待核', 'P01 / M001, formal REV unconfirmed'], ['统一正交内侧斜视，水平一致', 'Matched orthographic interior oblique, level horizon'], ['作为历史形态对照的一侧', 'Provide one side of the historical geometry comparison']],
-  R32: [['历史几何对比', 'Historical geometry comparison'], ['P04 上盖、内筋与跨接杆', 'P04 shell, ribs and spanning rods'], ['P04 / M006 与 M007，正式 REV 待核', 'P04 / M006 and M007, formal REV unconfirmed'], ['与 P01 相同正交内侧斜视', 'Same orthographic interior angle as P01'], ['观察跨接支撑几何差异', 'Show geometric differences in spanning supports']],
-  R33: [['CAD 剖视对比', 'CAD section comparison'], ['按键盖、后连接板和相邻机构', 'Button cover, rear plate and adjacent mechanism'], ['确认发生翘起的前一版 CAD / 当前 CAD', 'Confirmed previous CAD with observed button lift / current CAD'], ['两版沿按键纵向用同一位置剖切，锁定正交相机与缩放；另附各自内侧轴测原图', 'Section both versions at the same longitudinal position with matched orthographic camera and zoom. Include unmarked underside views separately.'], ['用实际厚薄和连接几何解释弯折区调整', 'Explain changes to the flex region using actual thickness and mounting geometry']],
-  R34: [['CAD 局部截图', 'Local CAD capture'], ['历史按键盖内侧及后连接板', 'Historical cover underside and rear plate'], ['确认发生异常运动的旧版按键盖', 'Confirmed previous cover with observed motion issue'], ['下侧轴测；与 K03 同视角、比例和投影', 'Underside axonometric, matching K03 angle, scale and projection'], ['看清原连接板削减与片体接点', 'Show the reduced connecting plate and panel joints']],
-  R36: [['CAD 分件对照', 'CAD part comparison'], ['连续外形与首轮分件结构', 'Unsplit form and first mechanical parts'], ['阶段 A 末期外形 / 阶段 B 首轮结构，文件待归版', 'Late A form / first B structure, files to identify'], ['同投影三分之四斜俯，补一张各盖体沿装配方向分离的视图', 'Matched three-quarter oblique and a view with each cover separated along assembly direction'], ['看清从连续面到独立运动件的分件与固定', 'Show the progression to separate moving parts and mounts']],
-  R37: [['CAD 内视与局部剖面', 'CAD interior and section'], ['首轮壳体内筋与相邻片体', 'Initial shell ribs and adjacent panel'], ['阶段 B 首轮 MJF 的对应 CAD，具体版次待核', 'CAD matched to the first MJF build, formal revision unconfirmed'], ['底部正交内视加垂直于一条代表性内筋的截面', 'Orthographic underside and section normal to a representative rib'], ['在真实截面上表达筋高与局部抗弯的关系', 'Explain the link between rib depth and local bending on the actual section']],
-  R38: [['孔位近景与装配记录', 'Hole close-up and fit evidence'], ['安装孔、相邻定位面和紧固件', 'Mounting hole, adjacent datum and fastener'], ['阶段 B 首轮 MJF 的同次检查，具体版次待核', 'Same first MJF fit check, formal revision unconfirmed'], ['沿紧固轴看两件如何对合，另附侧视孔位或对孔过程帧', 'View mating holes along the fastening axis, with a side view or an alignment frame'], ['呈现孔位定位如何影响能否顺利装配', 'Show how hole alignment affects assembly']],
-  R39: [['装配状态对照', 'Assembly state comparison'], ['带杆与拆杆时的裸壳及 PCB', 'Shell and PCB with and without the rod'], ['阶段 C 同一尝试的两种状态，来源待核', 'Both states of the same C-stage attempt, source to confirm'], ['同一底部斜视或局部剖切，锁定 PCB 位姿和取景', 'Matched underside view or section with the PCB and camera fixed'], ['说明拆杆让出装入空间及支撑变化', 'Show what space and support changed after rod removal']],
-  R40: [['局部机构 CAD 剖视', 'Local mechanism section'], ['按键盖、上盖、微动及抬起边界', 'Cover, shell, switch and upper travel boundary'], ['阶段 C 出现配合问题的按键装配，具体版次待核', 'C-stage button assembly with observed fit issues, revision unconfirmed'], ['沿按压方向纵切，保留末端触点、两件间隙及静止与按下状态', 'Lengthwise cut along actuation, retaining contact, mating clearances and rest/pressed positions'], ['定位触发、回程和抬起限位的关系', 'Locate actuation, release and the upper stop']],
-  R41: [['实拍或 CAD 局部剖视', 'Physical photograph or CAD section'], ['侧键小板、安装面和上盖内壁', 'Side-button board, mounting face and shell wall'], ['阶段 C 发生干涉的装配组合，具体版次待核', 'C-stage assembly with board interference, revision unconfirmed'], ['靠侧键正交内视，剖面同时穿过小板和上盖冲突处', 'Orthographic interior view at the side buttons, cut through board and shell at the conflict'], ['呈现装入路径上被占用的空间', 'Show the occupied space along the insertion path']],
-  R42: [['历史按键 CAD 与纵剖', 'Historic button CAD and longitudinal section'], ['发生翘起的盖体与后连接板', 'Cover that lifted and its rear connecting plate'], ['阶段 D 红滚轮样机的对应按键 CAD，文件待核', 'Button CAD matched to the stage D red-wheel build, file to confirm'], ['内侧正交斜视加穿过固定、弯折与片体的同侧纵剖', 'Orthographic underside plus a lengthwise section through mount, flex zone and panel'], ['对读局部翘起与设计者提出的结构归因', 'Read the observed lift alongside the designer’s explanation']],
-  R43: [['历史装配 CAD', 'Historic assembly CAD'], ['电池、周边阻挡件和固定点', 'Battery, surrounding obstructions and retention points'], ['阶段 D 红滚轮装配样机对应装配文件，具体版本待核', 'Assembly CAD matched to the stage D red-wheel build, revision unconfirmed'], ['沿原装入方向的侧剖，另附到位后的卡持或固定位置', 'Side section along the original insertion path, with retention feature shown at the seated position'], ['分辨进入路径和到位后保持两类问题', 'Distinguish access from retention']],
-  R44: [['外形 CAD 对照', 'Form CAD comparison'], ['改形前后右手外壳', 'Right-handed shape before and after the revision'], ['阶段 A 可确认的两份改形前后 CAD', 'Verified before-and-after CAD from stage A'], ['同一正交比例，正俯视加侧视，以前缘或中心轴对齐', 'Same orthographic scale, in top and side views aligned to the leading edge or centreline'], ['对读试握反馈与外形改动', 'Read grip feedback alongside the form change']],
-  R45: [['网格几何对照', 'Mesh geometry comparison'], ['02 号包的上盖与按键盖', 'Package 02 shell and button cover'], ['收件包 02 对应几何，正式版次待核', 'Geometry from package 02, formal revision unconfirmed'], ['底部正交斜视，匹配 S07', 'Orthographic underside oblique matched to S07'], ['观察独立按键盖与内部筋板的相对位置', 'Locate the separate cover relative to the interior ribs']],
-  R46: [['网格几何对照', 'Mesh geometry comparison'], ['03 号包的内部构件', 'Package 03 internal features'], ['收件包 03 对应几何，正式版次待核', 'Geometry from package 03, formal revision unconfirmed'], ['底部正交斜视，与 S08 使用相同裁切', 'Orthographic underside oblique with the same crop as S08'], ['比较跨接构件和连接位置', 'Compare spanning members and their junctions']],
-  R47: [['网格几何对照', 'Mesh geometry comparison'], ['05 号包的上盖和按键盖', 'Package 05 shell and button cover'], ['收件包 05 对应几何，正式版次待核', 'Geometry from package 05, formal revision unconfirmed'], ['底部正交斜视，保持与 S07–S08 相同取景', 'Orthographic underside oblique matched to S07 and S08'], ['把这组网格纳入统一的几何对读', 'Include this mesh in the matched geometry comparison']],
-  R48: [['工程标注实拍', 'Annotated physical photo'], ['红滚轮样机同阶段裸壳的前部', 'Front of the bare shell from the red-wheel build'], ['与 IMG-S01 同阶段的红滚轮样机裸壳', 'Red-wheel build shell from the same stage as IMG-S01'], ['从前端下方三分之四斜视，顶侧柔光照亮边缘和相邻安装面', 'Three-quarter view from below the nose. Soft high-side light reveals edges and mounts.'], ['可见的前部开口与安装位为承载路径讨论提供位置参照', 'Locate openings and mounts for the discussion of load paths']],
+const photographs = {
+  cover: { id: 'IMG-O01', section: '概览', ratio: '16 / 10', purpose: '以红滚轮实体呈现项目的装配形态。' },
+  'form-fdm': { id: 'IMG-F01', section: 'V1 外形', ratio: '3 / 2', purpose: '早期 FDM 的连续曲面与层纹。' },
+  'form-generations': { id: 'IMG-F02', section: 'V1 外形', ratio: '4 / 3', purpose: '对比 FDM 外形样件、V2 与 V4 实物外观。' },
+  'form-profile': { id: 'IMG-F03', section: 'V1 试握', ratio: '16 / 10', purpose: '显示低前缘及掌心隆起。' },
+  'evo-built': { id: 'IMG-P04', section: 'V4 装配', ratio: '4 / 3', purpose: '记录红滚轮样机的整机装配状态。' },
+  'stiffness-photo': { id: 'IMG-S01', section: 'V4 装配', ratio: '4 / 3', purpose: '在实物上定位裸壳筋板、跨接杆与安装柱。' },
+  'front-openings': { id: 'IMG-Q01', section: '路线复盘', ratio: '4 / 3', purpose: '用裸壳实物定位前部开口和安装区域。' },
 };
 
-const compositions = {
-  'form-cad-compare': { columns: 2, layout: '左放改形前，右放改形后。统一俯视机位、尺度与中心轴，侧视可另附。' },
-  'early-exploded': { columns: 2, layout: '左放已核对的连续外形，右放首轮机械结构的同角度分件图。' },
-  'early-ribs': { columns: 2, layout: '左放首轮 MJF 对应壳体内侧，右放代表性筋板的法向截面。' },
-  'rod-removal': { columns: 2, layout: '左放有杆状态，右放拆杆状态。使用相同机位和 PCB 安装基准。' },
-  'old-button-analysis': { columns: 2, layout: '左放旧按键盖内侧，右放同一零件的纵剖。对读连接、厚度与预期弯折的位置。' },
-  'support-diagram': { columns: 1, layout: '左侧一张当前 CAD 内侧总览，右侧并排 IMG-S05 的开口边缘真实截面。阶段 D 的 IMG-S01 提供同方向实拍。' },
-  'button-diagram': { columns: 2, layout: '横跨专题全宽。左放前版，右放当前，每版一张同位置纵剖。两张分开交付，网页横排。' },
-  'battery-diagram': { columns: 3, layout: '横跨专题全宽，三列依次为装入前、向上装入、到位。逐帧导出同机位侧剖，壳体基准固定。' },
+export const mediaSpecs = {
+  ...photographs,
+  ...Object.fromEntries([...overviewMeshes, ...detailMeshes].map(([version, view, caption]) => [
+    `${version.toLowerCase()}-${view}`,
+    { id: `IMG-${version}-${meshViews[view].code}`, version, view, caption, ratio: '3 / 2' },
+  ])),
 };
 
-const requiredDetails = {
-  cover: ['开放底部边缘、分件缝、红滚轮、左右曲面高差', 'Open lower edge, part seams, red wheel and asymmetry'],
-  'form-fdm': ['未分件顶面与真实 FDM 层纹', 'Unsplit top and visible FDM layers'],
-  'form-generations': ['三件完整外轮廓、第二版分缝、红滚轮及侧键', 'All three outlines, second prototype splits, red wheel and side buttons'],
-  'form-profile': ['无遮挡的低前缘、后部隆起和底缘', 'Unobstructed low nose, rear rise and lower edge'],
-  grip: ['自然右手姿态，食指、中指与掌心接触位置', 'Natural right-hand pose with finger and palm contact visible'],
-  'matched-form': ['改形前后的顶面边线、侧面起伏与同一尺度参照', 'Top outlines, side profiles and one shared scale reference'],
-  'form-cad-compare': ['右手非对称轮廓、前缘、掌心隆起和相同基准', 'Asymmetric outline, front edge, palm rise and a common datum'],
-  'early-exploded': ['分件边界、盖体、安装点和按键运动件', 'Part boundaries, covers, mounting points and moving buttons'],
-  'early-ribs': ['皮壳厚度方向、内筋截面和根部连接', 'Shell thickness direction, rib section and root joint'],
-  'early-fit': ['同一装配基准、匹配孔、紧固轴线', 'Common datum, mating holes and fastening axes'],
-  'rod-removal': ['相同 PCB 位置、有杆与拆杆状态、杆端接点', 'Same PCB position, both rod states and the rod joints'],
-  'early-button-fit': ['按键盖、微动接触关系、上盖间隙和抬起限位所在区域', 'Cover, switch contact, shell clearance and upper-stop region'],
-  'side-board-fit': ['小板受阻处、上盖内壁和安装方向', 'Board obstruction, shell inner wall and insertion direction'],
-  'old-button-analysis': ['后连接减重轮廓、片体厚薄、预期弯折段', 'Reduced rear connection, thickness distribution and intended flex zone'],
-  'old-battery-fit': ['原进入路径、阻挡零件和到位后的固定关系', 'Original entry path, obstructing part and seated retention'],
-  'evo-fdm': ['完整外轮廓与未分件顶面', 'Full profile and uninterrupted top surface'],
-  'first-mjf': ['分件边界、内筋、安装孔和相邻定位面', 'Part boundaries, ribs, mounting hole and mating datum'],
-  'evo-support': ['跨接杆、筋和真实安装空间的相对位置', 'Relative positions of spans, ribs and assembly space'],
-  'evo-built': ['红滚轮、盖体分缝与前版总装状态', 'Red wheel, cover seams and completed physical assembly'],
-  'evo-cad': ['开放底部、支撑、按键及电池装入空间', 'Open base, supports, buttons and battery insertion space'],
-  interference: ['PCB 与杆件的重叠点，干涉前后一致参照', 'PCB/rod overlap and a datum shared by both states'],
-  'stiffness-photo': ['内筋、跨接杆、安装柱和底缘完整轮廓', 'Ribs, spanning rod, mounting posts and complete lower edge'],
-  'support-diagram': ['四处改动、局部截面与同一开口边缘', 'Four revisions, a local section and the same open edge'],
-  'stiffness-compare': ['前杆端点、前后支撑区和上盖连接范围', 'Front rod ends, supported zones and shell-joint footprints'],
-  'functional-fold': ['原片体、翻起的筋及功能安装区', 'Original panel, raised flange and functional mount'],
-  'base-section': ['开口边缘的新旧截面、折边方向及相邻侧壁', 'Old and new edge sections, flange direction and adjacent wall'],
-  'main-joint': ['杆端、上盖连接面与边缘轮廓', 'Rod end, shell connection face and its perimeter'],
-  'cad-p01': ['上盖内侧、内筋及安装区域', 'Shell interior, ribs and mounts'],
-  'cad-p02': ['上盖内侧、独立按键盖与接合面', 'Shell interior, separate button cover and mating surfaces'],
-  'cad-p03': ['上盖内侧、跨接构件及相邻内筋', 'Shell interior, spans and adjacent ribs'],
-  'cad-p04': ['上盖内侧、跨接杆和端点位置', 'Shell interior, spans and their ends'],
-  'cad-p05': ['真实网格的上盖、按键盖和开放底缘', 'Shell, cover and open lower edge of the actual mesh'],
-  'stiffness-load': ['支撑点、施力位置、变形观察位置', 'Support, load and observed deflection locations'],
-  'button-diagram': ['旧版厚段、薄片、削减连接；新版四个功能区与机构检查点', 'Old thick segment, thin panel and reduced mount; four new zones and check points'],
-  'button-cad': ['旧片体内侧、后连接板及实际安装端', 'Earlier cover interior, rear plate and mounting end'],
-  'button-new': ['折边、恢复的后连接、固定点与镂空', 'Flange, restored rear connection, mounts and cutouts'],
-  'button-edge': ['边缘剖切线、折边和相邻保形片体', 'Cut line, flange and adjacent shape-retaining panel'],
-  'button-thickness': ['同位置厚薄变化、预期弯折区与连续连接板', 'Thickness changes at identical locations, intended flex region and plate continuity'],
-  'button-motion': ['盖体、完整接触链、静止及按下的限位间隙', 'Cover, contact chain and stop clearances at rest and pressed'],
-  'button-observed': ['加载前后相同参照线、翘起位置与施力点', 'Shared reference, lifted region and force point across both states'],
-  'battery-diagram': ['三个装配状态、电池、上盖内支撑与桌面方位', 'Three assembly states, battery, upper support and desk orientation'],
-  'battery-clearance': ['到位电池、底部开口、内支撑及真实几何间距', 'Seated battery, open bottom, internal supports and actual clearances'],
-  'battery-old': ['旧版进入方向、阻挡零件及装入后的固定部位', 'Prior insertion direction, obstructing part and retention point'],
-  'front-openings': ['前缘、功能开口、相邻安装面及其与底缘的连续关系', 'Front edge, openings and adjacent mounts in context of the lower edge'],
-  'current-overview': ['新版总装及相关开口，支撑、按键与电池区域可辨认', 'Current assembly and open base, with support, button and battery areas identifiable'],
-  validation: ['可追溯样件、测试条件及对应系统实际表现', 'Traceable specimen, conditions and observed subsystem behaviour'],
-};
-
-// What each available placement demonstrates, and what the final capture must add.
-const temporaryReview = {
-  cover: ['可见已装配的红滚轮版与轮廓，开口底缘不清楚。正式图需降低机位并补足底缘。', 'The red-wheel build and outline read clearly, but the lower opening needs a lower camera angle.'],
-  'form-fdm': ['连续顶面可辨。正式图用擦侧光让 FDM 层纹清晰，并去除背景杂物。', 'The unsplit top is visible. Use grazing light to reveal FDM layers and clear the backdrop.'],
-  'form-generations': ['三件身份可辨，但朝向不同。统一朝向和机位后，外形与分件才可直接比较。', 'All three identities are visible. Match their orientation and camera to compare shape and part boundaries.'],
-  'form-profile': ['能看见掌心隆起，背景较杂。正式图统一水平基准与焦距，留出完整底缘。', 'The palm rise reads clearly. Use a level datum and fixed focal length, with the entire lower edge in frame.'],
-  'evo-fdm': ['现有俯视可辨样件，竖图在横向节点会裁掉端部。正式图保留完整轮廓。', 'The overhead identifies the sample, but the portrait crops the ends in a landscape tile. Keep the entire outline.'],
-  'evo-built': ['组照中央是红滚轮样机。正式拍摄用已确认样件的单独总装照，保留侧键及分缝。', 'The red-wheel build is at the centre of the group. For the final figure, photograph the confirmed assembly alone, preserving its side buttons and seams.'],
-  'stiffness-photo': ['可定位筋、杆和安装柱。以低反光布光补拍内侧，保留完整底缘。', 'Ribs, rods and posts can be located. Use low-glare lighting and retain the entire lower edge.'],
-  'cad-p01': ['能看出该收件包的内筋布局。正式对比需先确认文件归属，另按统一机位出图。', 'The ribs are visible. Confirm file identity, then capture from the matched comparison camera.'],
-  'cad-p02': ['能识别独立按键盖。正式图需确认与首轮机械开发的关系，再加分件标注。', 'The separate cover is visible. Verify its history before labelling the part split.'],
-  'cad-p03': ['可见跨接特征。若能匹配装配文件，再导出 PCB 占位对照。', 'Spanning features are visible. Add the PCB space only with a matched assembly file.'],
-  'cad-p04': ['可见历史跨接杆。正式图需与 S07 使用相同正交机位、缩放及显示范围。', 'The historical spans are visible. Match S07 in orthographic camera, scale and crop.'],
-  'cad-p05': ['源网格只有上盖和按键盖。确认正式版次前，本图只作网格对照。正式总装另见 P05。', 'The source contains the shell and cover. Use it as a mesh comparison pending identification. Final assembly is specified under P05.'],
-  'front-openings': ['实拍能定位前部开口，尚宜补足相邻底缘及各安装面的同框关系。', 'The photo locates the front openings. Include the lower edge and adjacent mounts in the final frame.'],
-  'button-cad': ['M007 可见后部连接，版本尚未与异常运动对应。正式图使用经确认的失效样机对应 CAD。', 'M007 shows the rear connection. Use CAD matched to the physical build with the observed failure.'],
-};
-
-export const mediaSpecs = Object.fromEntries(entries.map(([slot, id, chapter, priority, production, ratio, width, request, marks]) => {
-  const [type, object, version, view, purpose] = requests[request] || extra[request];
-  return [slot, { id: `IMG-${id}`, chapter, priority, production, ratio, width, request, type, object, version, view, details: requiredDetails[slot], marks, purpose,
-    setup: production === photo ? photoStyle : matchStyle, composition: compositions[slot], review: temporaryReview[slot] }];
-}));
+// Evidence to source separately when it becomes available. No empty figures on the page.
+export const furtherEvidence = [
+  ['V1 / 早期外形', '试握与改形', '附样件身份的右手握持侧视，或可核实的改形前后照片。固定机位，保留指尖和掌心接触位置。', '区分实际握持记录与后续重现。'],
+  ['V2 / 初期验证', '对孔记录', '同次 MJF 装配的配合件与紧固孔近照，沿紧固轴取景。', '记录孔位偏差，仅在存在可靠量测时标尺寸。'],
+  ['V3 / 支撑取舍', '装配干涉与拆杆', '同次装配的 PCB、跨杆、侧键小板和微动记录。保留带杆与拆杆状态，并标出实际干涉位置。', '验证装配冲突及腾出的空间。壳体 STL 只显示支撑几何。'],
+  ['V4 / 整机检查', '按压与电池', '同机位连续拍按压前后，兼顾作用点与翘起区域。电池补装入方向、受阻处和到位状态帧。', '对应实物运动或保持观察。'],
+  ['V4 → V5 / 最终修订', '折边与厚度剖面', '底部开口、主杆与上盖连接和盖片弯折区的新旧同位置 CAD 剖面。统一比例和截面基准。', '说明真实截面与厚度分布。尺寸从 CAD 读取。'],
+  ['V5 / 电池', '安装顺序与间隙', '含电池和周边件的同尺度侧剖，按自下而上装入、到位的顺序导出。', '区分装入路径、实际间距和到位保持。'],
+  ['V5 / 验证', '对应实物与工况', '取得对应样机后记录载荷位置、边界条件、位移、按键行程与电池保持。', '为整机刚度、按压、装配和耐久提供实测依据。'],
+];

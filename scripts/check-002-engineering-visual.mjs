@@ -1,266 +1,156 @@
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { chapters, cases, media } from '../content/erste002-engineering-visual.mjs';
+import { chapters, cases } from '../content/erste002-engineering-visual.mjs';
 import { mediaSpecs } from '../content/erste002-engineering-media-spec.mjs';
 import { historicalChapters, stages, threads } from '../content/erste002-engineering-history.mjs';
 
 const { chromium } = createRequire(import.meta.url)('../.audit/model-logo/tools/node_modules/playwright');
-const origin = process.env.ERSTE_ORIGIN || 'http://127.0.0.1:5210';
-const url = `${origin}/cases/erste002/engineering.html`;
+const url = (process.env.ERSTE_ORIGIN || 'http://127.0.0.1:5210') + '/cases/erste002/engineering.html';
 const out = process.env.ERSTE_EVIDENCE || '.audit/erste002-engineering-visual';
 await mkdir(out, { recursive: true });
 const specs = Object.values(mediaSpecs);
-const doc = await readFile('docs/ERSTE002-engineering-final-media-spec.md', 'utf8');
-assert.deepEqual([...doc.matchAll(/^### (IMG-[A-Z]\d{2})｜/gm)].map(match => match[1]), specs.map(spec => spec.id));
-assert.deepEqual([...doc.matchAll(/\[查看页面图位 IMG-[A-Z]\d{2}\]\([^\n]+engineering\.html#(IMG-[A-Z]\d{2})\)/g)].map(match => match[1]), specs.map(spec => spec.id));
+const versions = stages.map(stage=>stage.version);
+const doc = await readFile('docs/ERSTE002-engineering-final-media-spec.md','utf8');
+const ids = [...doc.matchAll(/\[(IMG-[A-Z0-9-]+)\]\([^\n]+engineering\.html#\1\)/g)].map(match=>match[1]);
+assert.deepEqual([...ids].sort(),specs.map(spec=>spec.id).sort());
+const trace = await readFile('docs/ERSTE002-engineering-traceability.md','utf8');
+const traceIds = [...trace.matchAll(/\bIMG-[A-Z0-9-]+/g)].map(match=>match[0]);
+assert.ok(traceIds.every(id=>ids.includes(id)));
 
-const trace = await readFile('docs/ERSTE002-engineering-traceability.md', 'utf8');
-const traceRows = trace.split('\n').filter(line=>/^\| [A-F]\d /.test(line));
-assert.equal(traceRows.length,26);
-for (const [event, figureIds] of traceRows.map(line=>[line.split('|')[1].trim(), [...line.matchAll(/IMG-[A-Z]\d{2}/g)].map(match=>match[0])])) {
-  assert.ok(figureIds.length && figureIds.every(id=>specs.some(spec=>spec.id === id)),event);
+const audit = JSON.parse(await readFile('docs/erste002-engineering-visual-evidence/route-stl-audit.json','utf8'));
+assert.deepEqual(audit.packages.map(record=>record.version),versions);
+assert.equal(audit.packages.flatMap(record=>record.members).length,9);
+const stl = audit.packages.flatMap(record=>record.images);
+assert.equal(stl.length,18);
+for (const record of stl) {
+  const bytes = await readFile(join('public/cases/erste002/assets/engineering',record.file));
+  assert.equal(createHash('sha256').update(bytes).digest('hex'),record.sha256,record.file);
 }
-
-const featuredCards = [mediaSpecs['support-diagram'], mediaSpecs['button-diagram'], mediaSpecs['battery-diagram']];
-assert.ok(featuredCards.every(card=>card.production[0] === 'NX 截图' && card.composition));
 
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
-const report = { preview: url, browser: browser.version(), checks: [], metrics: {}, sectionHeights: {}, screenshots: [], errors: [] };
+const report = { preview: url, browser: browser.version(), checks: [], screenshots: [], errors: [] };
 const targets = [
-  ...chapters.slice(0,2).map(([id]) => id), 'eng-form-handling',
-  ...chapters.slice(2).map(([id]) => id), ...historicalChapters.flatMap(chapter=>chapter.studies.map(study=>study.id)),
-  'eng-tracks', ...cases.map(item => `eng-case-${item.id}`),
+  'eng-overview','eng-comparison','eng-form','eng-evolution','eng-support','eng-built',
+  'eng-case-stiffness','eng-case-button','eng-case-battery','eng-current',
 ];
-const trackedPages = [];
-
-async function capture(page, name) {
-  await page.evaluate(async () => {
-    const box = document.querySelector('#scroller').getBoundingClientRect();
-    await Promise.all([...document.images].filter(image => {
-      const rect = image.getBoundingClientRect();
-      return image.currentSrc && rect.height > 0 && rect.top < box.bottom && rect.bottom > box.top;
-    }).map(image => image.decode()));
-  });
-  await page.screenshot({ path: join(out, `${name}.jpg`), type: 'jpeg', quality: 88 });
-  report.screenshots.push(`${name}.jpg`);
-}
-
-function track(page) {
-  trackedPages.push(page);
-  page.on('pageerror', error => report.errors.push(error.message));
-  page.on('requestfailed', request => {
-    if (!request.failure()?.errorText.includes('ERR_ABORTED')) report.errors.push(request.url());
-  });
-}
+const centerTarget = async (page, id) => page.waitForFunction(id=>{
+  const scroller = document.getElementById('scroller');
+  const target = document.getElementById(id);
+  const viewport = scroller.getBoundingClientRect();
+  const y = (target.matches('figcaption') ? target.closest('figure') : target).getBoundingClientRect().top;
+  const atEnd = scroller.scrollTop >= scroller.scrollHeight - scroller.clientHeight - 1;
+  return y >= viewport.top - 1 && y < (atEnd ? viewport.bottom : viewport.top + viewport.height / 2);
+},id);
 
 async function visit(page, lang, id) {
-  const address = `${url}?lang=${lang}${id ? '#'+id : ''}`;
-  const response = await page.goto(address);
+  const response = await page.goto(`${url}?lang=${lang}#${id}`);
   assert.ok(!response || response.ok());
-  await page.waitForFunction(([language, target]) => {
-    if (!document.documentElement.lang.startsWith(language) || !document.body.dataset.archiveSection) return false;
-    if (!target) return true;
-    const node = document.getElementById(target);
-    const scroller = document.querySelector('#scroller');
-    const host = scroller.getBoundingClientRect();
-    const rect = (node.matches('figcaption') ? node.closest('figure') : node).getBoundingClientRect();
-    const atEnd = scroller.scrollTop >= scroller.scrollHeight - scroller.clientHeight - 1;
-    return rect.top >= host.top - 1 && rect.top < (atEnd ? host.bottom : host.top + host.height * .55);
-  }, [lang, id]);
+  await page.waitForFunction(language=>document.documentElement.lang.startsWith(language) && document.body.dataset.archiveSection,lang);
+  await centerTarget(page,id);
+}
+
+async function capture(page, label) {
+  await page.evaluate(async ()=>{
+    const scroller = document.getElementById('scroller').getBoundingClientRect();
+    const visible = [...document.querySelectorAll('main img')].filter(image=>{
+      const box = image.getBoundingClientRect();
+      return box.bottom > scroller.top && box.top < scroller.bottom;
+    });
+    await Promise.all(visible.map(image=>image.decode()));
+  });
+  await page.screenshot({path:join(out,label),type:'jpeg',quality:89});
+  report.screenshots.push(label);
+}
+
+async function openPage(viewport, mobile = false) {
+  const page = await browser.newPage({ viewport, reducedMotion:'reduce', serviceWorkers:'block', isMobile:mobile, hasTouch:mobile });
+  page.on('pageerror', error=>report.errors.push(error.message));
+  page.on('requestfailed', request=>{
+    if (!request.failure()?.errorText.includes('ERR_ABORTED')) report.errors.push(request.url());
+  });
+  return page;
 }
 
 try {
   for (const [width,height,lang] of [[1920,1080,'zh'],[1440,900,'en']]) {
-    const page = await browser.newPage({ viewport:{width,height}, reducedMotion:'reduce', serviceWorkers:'block' });
-    track(page);
-    const unexpected = [];
-    page.on('request', request => { if (/\.glb\b|three\.module|story-(app|engine)/i.test(request.url())) unexpected.push(request.url()); });
+    const page = await openPage({width,height});
+    const productRuntime = [];
+    page.on('request', request=>{
+      if (/\.glb\b|three\.module|story-(app|engine)/i.test(request.url())) productRuntime.push(request.url());
+    });
     for (const id of targets) {
       await visit(page,lang,id);
-      assert.equal(await page.locator('[data-chapter]').count(), chapters.length);
-      assert.equal(await page.locator('.engineering-case').count(), cases.length);
-      assert.equal(await page.locator('figure[data-media-id]').count(), specs.length);
-      assert.equal(await page.locator('.material-card,.author-mode,[data-production]').count(), 0);
-      assert.ok(await page.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1 && window.scrollY === 0));
-      await capture(page, `${width}-${lang}-${id.replace('eng-', '')}`);
+      assert.ok(await page.locator('#scroller').evaluate(el=>el.scrollWidth <= el.clientWidth + 1 && window.scrollY === 0));
+      await capture(page,`${width}-${lang}-${id.slice(4)}.jpg`);
     }
-    assert.deepEqual(unexpected,[]);
-    assert.equal(await page.locator('#engineering-archive figure svg').count(),0);
-    assert.equal(await page.locator('figure img[src*="route-p"]').count(),5);
-    assert.equal(await page.locator('.engineering-case .figure-plate:visible').count(),0);
-    const scope = await page.locator('#eng-final-scope').innerText();
-    assert.match(scope, lang === 'zh' ? /未新增电池卡扣，未实施缝隙遮光/ : /omits the proposed battery catch and gap light blocking/);
-    const conclusion = await page.locator('#eng-current').innerText();
-    assert.match(conclusion, lang === 'zh' ? /倾向传统上下壳/ : /favours a conventional upper and lower shell/);
-    assert.match(conclusion, lang === 'zh' ? /尚无同条件的重量或刚度对照/ : /under matched conditions/);
-    for (const card of featuredCards) {
-      await visit(page,lang,card.id);
-      const frame = page.locator(`[data-media-id="${card.id}"] .figure-plate`);
-      assert.equal(await frame.innerText(),card.id);
-      assert.equal(Number(await frame.getAttribute('data-columns')) || 1,card.composition.columns);
-      const { width:frameWidth, height:frameHeight } = await frame.boundingBox();
-      const [horizontal,vertical] = card.ratio.split(':').map(Number);
-      assert.ok(Math.abs(frameWidth / frameHeight - horizontal / vertical) < .01,card.id);
+    assert.deepEqual(await page.locator('.step-rail .step-index').allTextContents(),versions);
+    assert.deepEqual(await page.locator('[data-section-link] > span:first-child').allTextContents(),chapters.map(chapter=>chapter[1]));
+    assert.equal(await page.locator('.engineering-case').count(),cases.length);
+    assert.equal(await page.locator('.history-study').count(),historicalChapters.flatMap(chapter=>chapter.studies).length);
+    assert.equal(await page.locator('.figure-plate,[data-media-kind="plate"],.material-card').count(),0);
+    assert.equal(await page.locator('figure[data-media-kind="stl"]').count(),18);
+    assert.deepEqual(await page.locator('figure[data-media-id] figcaption').evaluateAll(nodes=>nodes.map(node=>node.id)),ids);
+    assert.doesNotMatch(await page.locator('main').innerText(),/收件包|package [0-9]|\b[A-E][1-3] \/|unassigned|临时占位/i);
+    assert.match(await page.locator('#eng-current').innerText(),lang === 'zh' ? /倾向传统上下壳/ : /favours a conventional upper and lower shell/);
+    assert.match(await page.locator('#eng-decisions').innerText(),lang === 'zh' ? /无同版实体或性能验证记录/ : /no documented V5 build or performance test/);
+    for (const gallery of ['.version-card figure:first-of-type','.version-card figure:last-of-type','#eng-case-button figure','#eng-case-stiffness figure']) {
+      const boxes = await page.locator(gallery+' img').evaluateAll(images=>images.map(image=>image.getBoundingClientRect().toJSON()));
+      assert.ok(boxes.length > 1 && boxes.every(box=>box.y === boxes[0].y && Math.abs(box.width - boxes[0].width) < 1),gallery);
     }
-    for (const ids of [['IMG-P04','IMG-S01'], ['IMG-S02','IMG-S05']]) {
-      await visit(page,lang,ids[0]);
-      const frames = await Promise.all(ids.map(id=>page.locator(`[data-media-id="${id}"] :is(.image-open,.figure-plate)`).boundingBox()));
-      assert.equal(frames[0].y,frames[1].y);
-      for (const dimension of ['width','height']) assert.ok(Math.abs(frames[0][dimension] - frames[1][dimension]) < .05,ids.join('/'));
+    for (const id of ids) {
+      const figure = page.locator(`figure[data-media-id="${id}"]`);
+      await figure.scrollIntoViewIfNeeded();
+      await figure.locator('img').evaluate(image=>image.decode());
     }
-    report.checks.push(`${width} × ${height} ${lang}: the assembled/inside photo pair and current CAD/section pair have equal frames.`);
-    const copy = await page.locator('#engineering-archive').textContent();
-    assert.doesNotMatch(copy,/\bV[1-5]\b/);
-    assert.deepEqual(await page.locator('.step-rail .step-index').allTextContents(), stages.map(stage=>stage.letter));
-    assert.doesNotMatch(copy,/尚未提供|未提供|待提供|未收录|缺图|待补图|建议补充|技术素材卡|现有素材评估|最终素材要求|临时占位|待制作|明确占位|_archive[\\/]|image unavailable|not yet supplied|final media spec|temporary media review|awaiting production|placeholder/i);
-    await visit(page,lang,'eng-form-handling');
-    const grip = await page.locator('#eng-form-handling').evaluate(section=>{
-      const box = selector => document.querySelector(selector).getBoundingClientRect().toJSON();
-      const heading = section.querySelector('h3');
-      const caption = section.querySelector('figcaption');
-      return {
-        heading: box('#handling-title'), headingFont: parseFloat(getComputedStyle(heading).fontSize),
-        captionFont: parseFloat(getComputedStyle(caption).fontSize),
-        profile: box('#media-form-profile .image-open'), grip: box('#media-grip .figure-plate'),
-        open: section.querySelector('details').open,
-      };
-    });
-    assert.ok(grip.heading.bottom < grip.profile.top && grip.headingFont >= grip.captionFont * 2);
-    assert.equal(grip.open,false);
-    assert.equal(grip.profile.top,grip.grip.top);
-    assert.equal(grip.profile.width,grip.grip.width);
-    assert.equal(grip.profile.height,grip.grip.height);
-    assert.ok(Math.abs(grip.profile.width / grip.profile.height - 1.6) < .01);
-    assert.equal(await page.locator('#media-grip .figure-plate').innerText(),'IMG-F04');
-    report.checks.push(`${width} × ${height} ${lang}: ${grip.profile.width} × ${grip.profile.height} grip frames align; figure captions are secondary and production notes are absent.`);
-    if (width === 1920) {
-      const measured = await page.locator('figure[data-media-id]').evaluateAll(figures=>{
-        document.querySelectorAll('.study-tray').forEach(tray=>{ tray.open = true; });
-        return figures.map(figure=>({id:figure.dataset.mediaId, width:figure.getBoundingClientRect().width}));
-      });
-      for (const [index, spec] of specs.entries()) {
-        assert.equal(measured[index].id,spec.id);
-        assert.ok(Math.abs(measured[index].width-spec.width)<=5,`${spec.id}: measured ${measured[index].width}, spec ${spec.width}`);
-      }
-      await page.locator('.study-tray').evaluateAll(trays=>trays.forEach(tray=>{ tray.open = false; }));
-      report.checks.push(`All ${specs.length} production widths match the 1920px layout within 5 CSS px.`);
-    }
-    await visit(page,lang);
-    const sectionHeights = await page.locator('[data-chapter]').evaluateAll(nodes=>Object.fromEntries(nodes.map(node=>[node.id,Math.round(node.getBoundingClientRect().height)])));
-    const historyHeight = ['eng-evolution','eng-support','eng-built'].reduce((total,id)=>total+sectionHeights[id],0);
-    assert.ok(historyHeight > sectionHeights['eng-decisions']);
-    report.sectionHeights[lang] = sectionHeights;
-    report.metrics[lang] = await page.evaluate((language) => {
-      const len = (value) => [...value.replace(/\s/g, '')].length;
-      const texts = [...document.querySelectorAll('main p, .history-notes dd')].filter(p => !p.closest('aside,figure,details') && getComputedStyle(p).display !== 'none').map(p => p.textContent.trim()).filter(Boolean);
-      const long = texts.filter(value => len(value) >= (language === 'zh' ? 75 : 135));
-      return { paragraphs:texts.length, bodyCharacters:texts.reduce((total,value)=>total+len(value),0), longParagraphs:long.length, longCharacters:long.reduce((total,value)=>total+len(value),0) };
-    },lang);
-    report.checks.push(`${width} × ${height} ${lang}: ${targets.length} views, single public layout, no horizontal overflow or product runtime.`);
+    assert.deepEqual(productRuntime,[]);
+    report.checks.push(`${width} × ${height} ${lang}: all ${ids.length} figures decoded, five revisions and matched rows verified. No overflow, empty frames or product runtime.`);
     await page.close();
   }
 
-  const page = await browser.newPage({ viewport: {width:1440,height:900}, reducedMotion:'reduce', serviceWorkers:'block' });
-  track(page);
-  for (const { id, studies } of historicalChapters) {
-    await visit(page,'zh',id);
-    const body = page.locator(`#${id}`);
-    assert.equal(await body.locator('.history-study:visible').count(),studies.length);
-    const mediaPlaced = await body.locator('.history-study figure').evaluateAll(figures=>figures.map(figure=>figure.dataset.mediaSlot));
-    assert.deepEqual(mediaPlaced,studies.flatMap(study=>study.figures));
-    assert.equal(await body.locator('.history-study img').count(),id === 'eng-built' ? 2 : 0);
-  }
-  assert.match(await page.locator('#eng-support-checks').innerText(),/拆杆后完成装配/);
-  assert.match(await page.locator('#eng-built-button').innerText(),/后连接板减重过多/);
-  assert.match(await page.locator('#eng-decisions .chapter-lead').innerText(),/对应实物尚未打样/);
+  const page = await openPage({width:1440,height:900});
+  for (const id of ids) await visit(page,'zh',id);
   for (const thread of threads) {
-    for (const [,target] of thread.links) {
+    for (const [,target,[label]] of thread.links) {
       await visit(page,'zh','eng-tracks');
-      await page.locator(`#eng-tracks a[href="#${target}"]`).click();
-      await page.waitForFunction(id=>{
-        const anchor = document.getElementById(id);
-        const target = anchor.matches('figcaption') ? anchor.closest('figure') : anchor;
-        const distance = target.getBoundingClientRect().top - document.querySelector('#scroller').getBoundingClientRect().top;
-        return location.hash === '#'+id && Math.abs(distance - 16) < 2;
-      },target);
+      await page.locator(`#eng-tracks a[href="#${target}"]`).filter({hasText:label}).click();
+      await centerTarget(page,target);
     }
   }
-  await visit(page,'en','eng-case-button');
-  assert.ok(await page.locator('#eng-case-button .case-lead').isVisible());
-  const rationale = page.locator('#eng-case-button .evidence-notes');
-  assert.equal(await rationale.isVisible(),false);
-  await page.locator('#eng-case-button .case-extras summary').first().click();
-  assert.ok(await rationale.isVisible());
-  report.checks.push(`${traceRows.length} traceability rows and 12 cross-stage links resolved. Seven visible history studies separated named observations, geometry and CAD evidence.`);
-  await visit(page,'zh','IMG-S03');
-  const placement = page.locator('#media-stiffness-compare');
-  assert.ok(await placement.evaluate(figure=>figure.closest('details').open));
-  assert.equal(await placement.locator('.figure-plate').innerText(),'IMG-S03');
-  await capture(page,'1440-zh-numbered-plates');
-  const placements = await page.locator('figure[data-media-id]').evaluateAll(figures => figures.map(figure => ({
-    id:figure.dataset.mediaId,
-    anchor:figure.querySelector('figcaption').id,
-    label:figure.querySelector(`a[href="#${figure.dataset.mediaId}"]`)?.textContent,
-    plate:figure.querySelector('.figure-plate')?.textContent,
-  })));
-  assert.deepEqual(placements.map(item=>item.id),specs.map(spec=>spec.id));
-  assert.ok(placements.every(item=>item.id===item.anchor && item.id===item.label && (!item.plate || item.id===item.plate)));
-  const numberOfPlates = specs.length - Object.keys(media).length;
-  assert.equal(placements.filter(item=>item.plate).length,numberOfPlates);
-  for (const spec of specs) {
-    await visit(page,'zh',spec.id);
-    assert.ok(await page.locator(`#${spec.id}`).evaluate(label=>label.getClientRects().length > 0));
-  }
-  await page.goto(`${url}?lang=zh#IMG-S03`);
-  await placement.locator('.figure-plate a').click();
-  assert.equal(new URL(page.url()).hash,'#IMG-S03');
-  report.checks.push(`${placements.length} figure labels and Markdown links match; ${numberOfPlates} numbered frames contain only their IDs, and all direct links reveal their figures.`);
   await visit(page,'zh','eng-overview');
-  await page.locator('#media-cover button').click();
-  assert.ok(await page.locator('.media-dialog').isVisible());
+  await page.locator('.hero-action').click();
+  await centerTarget(page,'eng-comparison');
+  const opener = page.locator('#media-v1-upper button');
+  await opener.click();
+  assert.equal(await page.locator('.media-dialog').getAttribute('data-media-slot'),'v1-upper');
   await page.keyboard.press('ArrowRight');
-  assert.equal(await page.locator('.media-dialog').getAttribute('data-media-slot'),'form-fdm');
+  assert.equal(await page.locator('.media-dialog').getAttribute('data-media-slot'),'v1-inside');
   await page.keyboard.press('Escape');
-  assert.ok(await page.locator('#media-cover button').evaluate(button=>document.activeElement === button));
-  await page.locator('[data-chapter-next]').click();
-  await page.waitForFunction(()=>document.body.dataset.archiveSection === 'eng-form');
+  assert.ok(await opener.evaluate(button=>document.activeElement === button));
+  await page.locator('.version-card[data-version="V3"] h3 a').click();
+  await page.waitForFunction(()=>document.body.dataset.archiveSection === 'eng-support');
   await page.goBack();
-  await page.waitForFunction(()=>document.body.dataset.archiveSection === 'eng-overview');
+  await centerTarget(page,'eng-comparison');
   await page.goForward();
-  await page.waitForFunction(()=>document.body.dataset.archiveSection === 'eng-form');
+  await centerTarget(page,'eng-support');
   await page.locator('[data-archive-language=en]').click();
   await page.waitForFunction(()=>document.documentElement.lang === 'en');
   await page.reload();
-  await page.waitForFunction(()=>document.body.dataset.archiveSection === 'eng-form');
-  await visit(page,'zh','media-button-cad');
-  assert.equal(await page.locator('#media-button-cad svg').count(),0);
-  await capture(page,'1440-zh-button-cad');
-  for (const slot of Object.keys(media)) {
-    const image = page.locator(`#media-${slot} img`);
-    await image.evaluate(node=> { const tray = node.closest('details'); if (tray) tray.open=true; });
-    await image.scrollIntoViewIfNeeded();
-    await image.evaluate(node=>node.decode());
-  }
-  const response = await page.goto(`${url}#eng-refinement-button`);
-  assert.ok(!response || response.ok());
-  await page.waitForFunction(()=>Math.abs(document.querySelector('#eng-case-button').getBoundingClientRect().top - document.querySelector('#scroller').getBoundingClientRect().top - 16) <= 2);
-  report.checks.push(`${Object.keys(media).length} images decoded; zoom, keyboard, focus, progress, browser history, old topic anchor and locale switch passed.`);
+  await centerTarget(page,'eng-support');
+  await page.goto(`${url}?lang=en#IMG-H12`);
+  await centerTarget(page,'IMG-V5-IN');
   await page.close();
+  report.checks.push(`${ids.length} figure links, 12 cross-version engineering links, compare CTA, zoom, focus, browser history, locale switch and one legacy hash passed.`);
 
-  const mobile = await browser.newPage({ viewport:{width:390,height:844}, isMobile:true, hasTouch:true, reducedMotion:'reduce', serviceWorkers:'block' });
-  track(mobile);
-  await visit(mobile,'zh','eng-evolution');
-  assert.equal(await mobile.locator('.history-study').count(),7);
-  assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  for (const card of featuredCards) {
-    await visit(mobile,'zh',card.id);
-    assert.ok(await mobile.locator('#scroller').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  }
-  await visit(mobile,'en','eng-current');
-  assert.ok(await mobile.locator('.status-wrap').evaluate(el => el.scrollWidth <= el.clientWidth + 1));
-  report.checks.push('390px layout smoke test: seven history studies, three numbered decision frames and status table.');
+  const phone = await openPage({width:390,height:844},true);
+  await visit(phone,'zh','eng-comparison');
+  assert.equal(await phone.locator('.version-card').count(),5);
+  assert.ok(await phone.locator('#scroller').evaluate(el=>el.scrollWidth <= el.clientWidth + 1));
+  await capture(phone,'390-zh-comparison.jpg');
+  await phone.close();
+  report.checks.push('390 px comparison smoke test passed.');
   assert.deepEqual(report.errors,[]);
   report.status = 'passed';
 } catch (error) {
@@ -269,7 +159,6 @@ try {
   throw error;
 } finally {
   await writeFile(join(out,'browser-report.json'),JSON.stringify(report,null,2)+'\n');
-  await Promise.all(trackedPages.filter(page=>!page.isClosed()).map(page=>page.close()));
   await browser.close();
 }
-console.log(JSON.stringify({ checks:report.checks, metrics:report.metrics, screenshots:report.screenshots.length },null,2));
+console.log(JSON.stringify(report,null,2));
