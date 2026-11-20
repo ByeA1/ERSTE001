@@ -193,6 +193,15 @@ body[data-mode="free"] #scene-root {
 .identity span {
   color: var(--muted);
 }
+.identity .identity-return,
+.identity .identity-return span {
+  color: #f4ded9;
+  font-size: 11px;
+  letter-spacing: .025em;
+  white-space: nowrap;
+}
+.identity-return i { color: var(--red); font-style: normal; }
+.identity:hover .identity-return span { color: #ff9b91; }
 .identity b {
   font-size: 18px;
   line-height: 1;
