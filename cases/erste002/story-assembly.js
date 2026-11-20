@@ -15,7 +15,7 @@ export class StoryAssembly {
     this.actors = new Map();
     for (const [part, [name, travel]] of Object.entries(ASSEMBLY_GROUPS)) {
       const group = model.getObjectByName(name);
-      if (!group) throw new Error("Missing Rev 3 assembly group " + name);
+      if (!group) throw new Error("Missing story assembly group " + name);
       const inverse = group.parent.matrixWorld.clone().invert();
       const center = new THREE.Box3()
         .setFromObject(group)

@@ -2288,8 +2288,8 @@
             "Five groups in assembly"
           ],
           "body": [
-            "滚轮与键盖位于上盖上方，主板与电池布置在下方。电子件为装配示意，用于交代它们与外壳的相对位置。",
-            "The wheel and button covers sit above the upper shell, with the board and battery below. The electronics are assembly references showing their positions relative to the shell."
+            "滚轮与键盖在上盖上方。主板与电池为装配参考；V5 电池从底部装入，位于后部支撑下方。",
+            "The wheel and covers sit above the shell. The board and battery are reference parts; the battery installs from below, beneath the rear support."
           ]
         }
       ],
@@ -3085,8 +3085,8 @@
             "Ribs beneath the buttons"
           ],
           "body": [
-            "两片薄壁键盖各有交叉筋。筋条沿键面内侧延伸并接入边缘，在薄壁下方形成局部支撑。",
-            "Each thin-walled button cover has crossing ribs. The ribs run along the underside and meet the edges, providing local support beneath the button surface."
+            "交叉筋留在盖片内侧。V5 调整了盖片各段厚度，并延长后连接片，保留镂空。",
+            "Crossing ribs remain on the underside. V5 revises the panel thickness and extends the rear mounting tab while keeping the cutouts."
           ],
           "layout": "bottom"
         },

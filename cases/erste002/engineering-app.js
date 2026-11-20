@@ -3,6 +3,16 @@ import {bi,renderArchive} from './engineering-view.js';
 
 const key='erste002:routes:v1';
 const defaults={product:{shot:1},engineering:{topic:'overview',scroll:0}};
+const archiveAnchors = {
+  overview:'eng-overview', grip:'eng-comparison', form:'eng-comparison', hold:'eng-comparison',
+  open:'eng-current', reinforcement:'eng-evolution', ribs:'eng-evolution',
+  assembly:'eng-built', stiffness:'eng-case-stiffness', buttons:'eng-case-button', status:'eng-v5-current',
+};
+
+function archiveHref(topic, { language, shot }) {
+  const query = new URLSearchParams({ lang:language, from:String(shot) });
+  return './engineering.html?'+query+'#'+(archiveAnchors[topic] || 'eng-overview');
+}
 function readPositions(){
   try {
     const value=JSON.parse(sessionStorage.getItem(key));
@@ -20,7 +30,14 @@ export function createEngineeringArchive(bridge) {
   band.innerHTML=`<span class="route-current"></span><span class="route-context"></span><button type="button" class="route-saved"></button><a class="route-related" href="#engineering/overview"></a>`;
   const entrance=document.createElement('div');
   entrance.className='route-entrance';entrance.hidden=true;
-  entrance.innerHTML=`<a href="#product/02" data-explore-product>EXPLORE PRODUCT ↗${bi('进入产品路线','Continue the product story')}</a><a href="#engineering/overview" data-engineering-topic="overview">ENGINEERING ARCHIVE ↗${bi('进入工程档案','Enter the engineering archive')}</a>`;
+  entrance.innerHTML=`<a href="#product/02" data-explore-product>EXPLORE PRODUCT ↗${bi('进入产品路线','Continue the product story')}</a><a href="./engineering.html#eng-overview" data-open-current-archive>ENGINEERING ARCHIVE ↗${bi('进入工程档案','Enter the engineering archive')}</a>`;
+  const archiveEntrance = entrance.querySelector('[data-open-current-archive]');
+  const related = band.querySelector('.route-related');
+  // Keep the product scene and its shared host alive when the case is embedded.
+  if (parent !== window) {
+    related.rel = archiveEntrance.rel = 'noopener';
+    archiveEntrance.target = '_blank';
+  }
   const archive=document.createElement('section');archive.id='engineering';archive.hidden=state.route!=='engineering';
   archive.setAttribute('aria-label','ERSTE002 / ENGINEERING ARCHIVE');
   archive.innerHTML=`<nav class="archive-index" aria-label="Engineering chapters">${chapters.map((c,i)=>`<a href="#engineering/${topics.find(t=>t.chapter===c.id).id}" data-engineering-topic="${topics.find(t=>t.chapter===c.id).id}"><b>${c.number}</b><span>${c.name}</span></a>`).join('')}</nav><div id="scroller" tabindex="0" aria-label="Engineering archive"><div class="archive-body"><p class="e-load-error" role="status">${bi('正在读取工程档案…','Loading engineering archive…')}</p></div></div><footer class="archive-footer"><output aria-live="polite"></output><span class="e-track" aria-hidden="true"><span></span></span><button type="button" data-engineering-prev>${bi('上一章','Previous chapter')} ←</button><button type="button" data-engineering-next>${bi('下一章','Next chapter')} →</button></footer>`;
@@ -54,11 +71,16 @@ export function createEngineeringArchive(bridge) {
     const topic=topicById(engineering?state.topic:productToTopic[product.shot-1])||topics[0];
     band.querySelector('.route-current').textContent=engineering?'ENGINEERING':'PRODUCT';
     band.querySelector('.route-context').textContent=engineering?`${chapters.find(c=>c.id===topic.chapter).number} / ${text(topic.label)}`:`${String(product.shot).padStart(2,'0')} / 11`;
-    const related=band.querySelector('.route-related');
-    related.href=engineering?`#product/${String(topic.shot).padStart(2,'0')}`:`#engineering/${topic.id}`;
+    const href=engineering?`#product/${String(topic.shot).padStart(2,'0')}`:archiveHref(topic.id, product);
+    if (related.getAttribute('href')!==href) related.href=href;
+    const target=!engineering && parent !== window ? '_blank' : '_self';
+    if (related.target!==target) related.target=target;
+    const openingHref=archiveHref('overview', product);
+    if (archiveEntrance.getAttribute('href')!==openingHref) archiveEntrance.href=openingHref;
     related.textContent=engineering?`PRODUCT ${String(topic.shot).padStart(2,'0')} ↗`:'ENGINEERING ARCHIVE ↗';
     related.setAttribute('aria-label',engineering?text([`查看对应产品镜头 ${topic.shot}`,`View related product shot ${topic.shot}`]):text([`工程档案：${topic.label[0]}`,`Engineering archive: ${topic.label[1]}`]));
     const saved=band.querySelector('.route-saved');
+    saved.hidden=!engineering;
     saved.textContent=text(['续看','Resume'])+' '+(engineering?'PRODUCT':'ARCHIVE');
     saved.title=text(['恢复另一条路线的保存位置；关联跳转使用右侧入口。','Restore the other route’s saved position. Use the right link for related content.']);
     const opening= !engineering && product.shot===1 && !product.busy && !product.free && product.loaded;
@@ -112,9 +134,9 @@ export function createEngineeringArchive(bridge) {
     writeHistory();return false;
   }
   band.querySelector('.route-related').onclick=event=>{
+    if(state.route!=='engineering' || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
     event.preventDefault();
-    if(state.route==='product')navigate({route:'engineering',topic:productToTopic[bridge.state().shot-1]});
-    else navigate({route:'product',shot:topicById(state.topic).shot});
+    navigate({route:'product',shot:topicById(state.topic).shot});
   };
   band.querySelector('.route-saved').onclick=()=>{
     if(state.route==='engineering')navigate({route:'product',shot:positions.product.shot});

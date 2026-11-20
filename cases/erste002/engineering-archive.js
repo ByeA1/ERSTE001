@@ -1,5 +1,7 @@
 const root = document.documentElement;
 const scroller = document.querySelector('#scroller');
+const toolbar = document.querySelector('.archive-local-header');
+const productLink = toolbar.querySelector('[data-product-return]');
 const chapters = [...scroller.querySelectorAll('[data-chapter]')];
 const chapterLinks = [...document.querySelectorAll('[data-section-link]')];
 const media = [...scroller.querySelectorAll('[data-open-media]')];
@@ -8,49 +10,82 @@ const previous = document.querySelector('[data-chapter-prev]');
 const next = document.querySelector('[data-chapter-next]');
 const motion = matchMedia('(prefers-reduced-motion: reduce)');
 const params = new URLSearchParams(location.search);
-const documentKey = 'erste002-engineering-version-review';
+const returnShot = /^(?:[1-9]|1[01])$/.test(params.get('from') ?? '') ? params.get('from') : '1';
+const documentKey = 'erste002-engineering-v5';
 const aliases = {
   'eng-prologue': 'eng-overview',
-  'eng-form-study': 'media-form-fdm',
+  'eng-form': 'eng-comparison',
+  'eng-form-study': 'eng-comparison',
+  'eng-form-comparison': 'eng-comparison',
+  'eng-form-handling': 'eng-comparison',
+  'milestone-fdm': 'eng-comparison',
+  'media-form-fdm': 'eng-comparison',
+  'media-form-generations': 'eng-comparison',
+  'media-form-profile': 'eng-comparison',
+  'IMG-F01': 'eng-comparison',
+  'IMG-F02': 'eng-comparison',
+  'IMG-F03': 'eng-comparison',
+  'eng-tracks': 'eng-comparison',
   'milestones': 'eng-evolution',
   'eng-structure': 'eng-evolution',
-  'eng-structure-parts': 'milestone-mjf',
+  'eng-structure-parts': 'eng-evolution',
+  'milestone-mjf': 'eng-evolution',
   'eng-structure-ribs': 'media-v2-ribs',
-  'eng-structure-first-build': 'milestone-mjf',
+  'eng-structure-first-build': 'eng-early-fit',
   'eng-assembly': 'eng-support',
   'eng-assembly-archive-geometry': 'eng-comparison',
-  'eng-assembly-conflicts': 'milestone-support',
+  'eng-assembly-conflicts': 'eng-support-checks',
+  'milestone-support': 'eng-support-checks',
   'eng-challenges': 'eng-built',
-  'eng-challenge-stiffness': 'milestone-built',
-  'eng-challenge-button': 'eng-built-button',
-  'eng-challenge-battery': 'eng-built-fit',
+  'eng-challenge-stiffness': 'eng-built',
+  'milestone-built': 'eng-built',
+  'media-evo-built': 'eng-built',
+  'IMG-P04': 'eng-built',
+  'eng-challenge-button': 'eng-case-button',
+  'eng-built-button': 'eng-case-button',
+  'eng-challenge-battery': 'eng-built',
+  'eng-built-fit': 'eng-built',
   'eng-refinement': 'eng-decisions',
   'eng-refinement-structure': 'eng-case-stiffness',
   'eng-refinement-button': 'eng-case-button',
-  'eng-refinement-battery': 'eng-case-battery',
-  'eng-refinement-light-blocking': 'eng-final-scope',
-  'eng-case-light': 'eng-final-scope',
-  'IMG-L01': 'eng-final-scope',
-  'IMG-L02': 'eng-final-scope',
-  'media-battery-catch': 'eng-case-battery',
+  'milestone-cad': 'eng-decisions',
+  'eng-refinement-battery': 'eng-decisions',
+  'eng-case-battery': 'eng-decisions',
+  'eng-refinement-light-blocking': 'eng-decisions',
+  'eng-case-light': 'eng-decisions',
+  'eng-final-scope': 'eng-decisions',
+  'IMG-L01': 'eng-decisions',
+  'IMG-L02': 'eng-decisions',
+  'media-battery-catch': 'eng-decisions',
   'eng-design-validation-status': 'eng-current',
   'eng-conclusion': 'eng-current',
-  'eng-geometry-reference': 'IMG-V4-KEY',
+  'media-front-openings': 'eng-current',
+  'IMG-Q01': 'eng-current',
+  'eng-geometry-reference': 'IMG-V4-SIDE',
   'media-cad-p01': 'IMG-V1-IN',
   'media-cad-p02': 'IMG-V2-IN',
   'media-cad-p03': 'IMG-V3-IN',
   'media-cad-p04': 'IMG-V4-IN',
   'media-cad-p05': 'IMG-V5-IN',
-  'media-button-cad': 'IMG-V4-KEY',
+  'media-button-cad': 'IMG-V4-SIDE',
   'IMG-S07': 'IMG-V1-IN',
   'IMG-H10': 'IMG-V2-IN',
   'IMG-H11': 'IMG-V3-IN',
   'IMG-S08': 'IMG-V4-IN',
   'IMG-H12': 'IMG-V5-IN',
   'IMG-S03': 'IMG-V5-MT',
-  'IMG-K02': 'IMG-V4-KEY',
-  'IMG-K03': 'IMG-V5-KEY',
+  'IMG-K02': 'IMG-V4-SIDE',
+  'IMG-K03': 'IMG-V5-SIDE',
 };
+for (const version of ['V1','V2','V3','V4','V5']) {
+  aliases[`IMG-${version}-UP`] = `IMG-${version}-IN`;
+  aliases[`media-${version.toLowerCase()}-upper`] = `IMG-${version}-IN`;
+}
+for (const version of ['V2','V3','V4','V5']) {
+  const target = ['V2','V3'].includes(version) ? 'eng-case-button' : `IMG-${version}-SIDE`;
+  aliases[`IMG-${version}-KEY`] = target;
+  aliases[`media-${version.toLowerCase()}-buttons`] = target;
+}
 
 let language = 'zh';
 let current = 0;
@@ -73,11 +108,15 @@ function store() {
   } }, '', location.href);
 }
 
+function readingTop() {
+  return Math.max(scroller.getBoundingClientRect().top, toolbar.getBoundingClientRect().bottom);
+}
+
 function update() {
   frame = 0;
   if (paused) return;
   const maxScroll = scroller.scrollHeight - scroller.clientHeight;
-  const threshold = scroller.getBoundingClientRect().top + Math.min(155, scroller.clientHeight * .2);
+  const threshold = readingTop() + Math.min(155, scroller.clientHeight * .2);
   const isEnd = maxScroll > 0 && maxScroll - scroller.scrollTop < 3;
   current = isEnd ? chapters.length - 1 : Math.max(0, chapters.findLastIndex(chapter => chapter.getBoundingClientRect().top <= threshold));
   chapterLinks.forEach((link, index) => {
@@ -100,8 +139,7 @@ function schedule() {
 }
 
 function resolveTarget(id) {
-  const name = Object.hasOwn(aliases, id) ? aliases[id] : id;
-  const target = document.getElementById(name);
+  const target = document.getElementById(id) ?? (Object.hasOwn(aliases, id) ? document.getElementById(aliases[id]) : null);
   if (!target || !scroller.contains(target)) return null;
   return target.matches('figcaption') ? target.closest('figure') : target;
 }
@@ -115,10 +153,7 @@ function go(id, { push = true, scroll, focus = true } = {}) {
     const fragment = id === target.dataset.mediaId ? id : target.id;
     history.pushState({ ...history.state, archiveRead: { document: documentKey, target: fragment } }, '', `#${fragment}`);
   }
-  for (let node = target; node && node !== scroller; node = node.parentElement) {
-    if (node instanceof HTMLDetailsElement) node.open = true;
-  }
-  const top = Number.isFinite(scroll) ? scroll : scroller.scrollTop + target.getBoundingClientRect().top - scroller.getBoundingClientRect().top - 16;
+  const top = Number.isFinite(scroll) ? scroll : scroller.scrollTop + target.getBoundingClientRect().top - readingTop() - 16;
   scroller.scrollTo({ top: Math.max(0, top), behavior: push && !motion.matches && !parentReduced ? 'smooth' : 'instant' });
   if (focus) {
     if (!target.hasAttribute('tabindex')) target.tabIndex = -1;
@@ -134,7 +169,6 @@ scroller.addEventListener('scroll', () => {
   clearTimeout(scrollTimer);
   scrollTimer = setTimeout(store, 200);
 }, { passive: true });
-scroller.addEventListener('toggle', schedule, true);
 document.addEventListener('click', (event) => {
   if (event.button || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
   const link = event.target.closest('a[href^="#"]');
@@ -211,11 +245,12 @@ document.addEventListener('error', (event) => {
 
 function setLanguage(value, notify = false) {
   if (!['zh', 'en'].includes(value)) return;
-  const viewportTop = scroller.getBoundingClientRect().top;
+  const viewportTop = readingTop();
   const anchor = [...scroller.querySelectorAll('[data-chapter],[data-topic]')].findLast(node => node.getBoundingClientRect().top <= viewportTop + 50);
   const before = anchor?.getBoundingClientRect().top;
   language = value;
   root.lang = value === 'zh' ? 'zh-CN' : 'en';
+  productLink.href = `./index.html?lang=${value}#product/${returnShot.padStart(2, '0')}`;
   for (const node of document.querySelectorAll('[data-zh][data-en]')) node.textContent = node.dataset[value];
   for (const node of document.querySelectorAll('[data-alt-zh]')) node.alt = value === 'zh' ? node.dataset.altZh : node.dataset.altEn;
   for (const node of document.querySelectorAll('[data-aria-zh]')) node.setAttribute('aria-label', value === 'zh' ? node.dataset.ariaZh : node.dataset.ariaEn);
