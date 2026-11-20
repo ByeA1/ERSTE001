@@ -109,7 +109,11 @@ function store() {
 }
 
 function readingTop() {
-  return Math.max(scroller.getBoundingClientRect().top, toolbar.getBoundingClientRect().bottom);
+  const top = scroller.getBoundingClientRect().top;
+  if (root.hasAttribute('data-project-toolbar-docked')) {
+    return Math.max(top, parseFloat(root.style.getPropertyValue('--project-toolbar-inset')) || 0);
+  }
+  return Math.max(top, toolbar.getBoundingClientRect().bottom);
 }
 
 function update() {
