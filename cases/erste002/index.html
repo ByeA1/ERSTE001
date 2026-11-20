@@ -24,6 +24,8 @@
     <link rel="stylesheet" href="./story.css" />
     <link rel="stylesheet" href="./story-action-buttons.css" />
     <link rel="stylesheet" href="./engineering.css" />
+    <link rel="stylesheet" href="./route-transition.css" />
+    <script defer src="./route-transition.js"></script>
     <link rel="preload" as="fetch" crossorigin data-story-model href="./assets/shell-full.9f40ed37e36c370f.glb.bin" />
   </head>
   <body data-project-ready="loading" data-look="hero">
@@ -54,7 +56,6 @@
             自由查看
           </button>
           <button id="initial-assembly" type="button" disabled>初始总装</button>
-          <button id="editor-toggle" type="button" hidden>演出编辑器</button>
         </div>
       </header>
       <section class="caption" id="caption" aria-labelledby="cap-title">
@@ -139,7 +140,6 @@
         </nav>
       </footer>
       <span id="shot-announcement" class="shot-announcement" role="status"></span>
-      <aside id="editor" hidden aria-label="演出编辑器"></aside>
     </main>
     <script type="module" src="./story-app.js"></script>
   </body>

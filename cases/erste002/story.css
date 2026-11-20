@@ -209,7 +209,6 @@ html[data-project-hosted] .topbar {
   padding-bottom: 0;
 }
 html[data-project-hosted] #scene-root { inset-block-start: 53px; }
-html[data-project-hosted] #editor-toggle { display: none; }
 .caption {
   position: absolute;
   z-index: 2;
@@ -571,75 +570,6 @@ textarea {
 select {
   min-height: 38px;
 }
-#editor {
-  position: absolute;
-  z-index: 5;
-  top: calc(var(--top) + 66px);
-  bottom: calc(var(--bottom) + 54px);
-  right: var(--gutter);
-  width: min(370px, calc(100% - 2 * var(--gutter)));
-  overflow: auto;
-  background: #161618fa;
-  border: 1px solid #484448;
-  padding: 15px;
-  overscroll-behavior: contain;
-  font-size: 12px;
-}
-#editor h2 {
-  font-size: 17px;
-  margin: 0 0 8px;
-}
-#editor p {
-  color: var(--muted);
-  line-height: 1.55;
-}
-#editor details {
-  border-top: 1px solid var(--edge);
-  padding: 10px 0;
-}
-#editor summary {
-  cursor: pointer;
-  font-weight: bold;
-  padding: 4px 0;
-}
-#editor label {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 32px;
-}
-#editor input[type="number"],
-#editor input[type="color"] {
-  width: 82px;
-}
-#editor input[type="range"],
-#editor select {
-  max-width: 55%;
-}
-#editor .actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin: 9px 0;
-}
-#editor button {
-  padding: 5px 8px;
-  min-height: 34px;
-  font-size: 11px;
-}
-#editor textarea {
-  width: 100%;
-  min-height: 64px;
-  resize: vertical;
-}
-#editor .readout {
-  padding: 8px;
-  background: #252427;
-  font: 11px/1.5 var(--mono);
-  white-space: pre-line;
-}
-
 @media (max-width: 740px), (orientation: portrait) {
   :root {
     --gutter: max(16px, env(safe-area-inset-left), env(safe-area-inset-right));
@@ -737,9 +667,6 @@ select {
   #loading img {
     width: min(360px, 88%);
     max-height: 25dvh;
-  }
-  body[data-editor="true"] #scene-root {
-    right: 0;
   }
 }
 @media (max-width: 480px) and (max-height: 660px) {

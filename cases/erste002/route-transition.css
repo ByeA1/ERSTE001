@@ -1,0 +1,78 @@
+.route-curtain {
+  --sweep: 103%;
+  --sweep-x: var(--sweep);
+  --sweep-y: 0%;
+  --cover-time: 190ms;
+  --reveal-time: 280ms;
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  contain: paint;
+  font: 11px/1.4 Consolas, monospace;
+  letter-spacing: .17em;
+  color: #eee7e3;
+  background: radial-gradient(ellipse at 50% 58%, #281719 0%, #141416 48%, #0c0c0e 100%);
+}
+.route-curtain[data-route="product"] { --sweep: -103%; }
+.route-curtain::before,
+.route-curtain::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  width: 2px;
+  background: #ff665e;
+  box-shadow: 0 0 18px #d43f35a0;
+}
+.route-curtain::before { inset-inline-start: 0; }
+.route-curtain::after { inset-inline-end: 0; }
+.route-curtain-label {
+  display: grid;
+  justify-items: center;
+  gap: 9px;
+  min-width: min(240px, 76vw);
+  padding-block: 17px;
+  border-block: 1px solid #86453e65;
+}
+.route-curtain-label b {
+  color: #ff7a70;
+  font: 600 clamp(18px, 3vw, 29px)/1.1 Consolas, monospace;
+  letter-spacing: .065em;
+}
+.route-curtain[data-phase="cover"] {
+  pointer-events: auto;
+  animation: route-cover var(--cover-time) cubic-bezier(.3,.7,.22,1) both;
+}
+.route-curtain[data-phase="reveal"] {
+  animation: route-reveal var(--reveal-time) cubic-bezier(.55,0,.27,1) both;
+}
+@keyframes route-cover {
+  from { transform: translate3d(var(--sweep-x), var(--sweep-y), 0); }
+  to { transform: translate3d(0, 0, 0); }
+}
+@keyframes route-reveal {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(calc(-1 * var(--sweep-x)), calc(-1 * var(--sweep-y)), 0); }
+}
+@media (max-width: 740px), (pointer: coarse) and (orientation: portrait) {
+  a[data-route-transition] { -webkit-tap-highlight-color: #e74f4433; }
+  .route-curtain {
+    --sweep-x: 0%;
+    --sweep-y: var(--sweep);
+    --cover-time: 250ms;
+    --reveal-time: 340ms;
+  }
+  .route-curtain::before,
+  .route-curtain::after {
+    inset-inline: 0;
+    inset-block: auto;
+    width: auto;
+    height: 2px;
+  }
+  .route-curtain::before { inset-block-start: 0; }
+  .route-curtain::after { inset-block-end: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .route-curtain { display: none; } }
+html[data-terminal-motion="reduced"] .route-curtain { display: none; }

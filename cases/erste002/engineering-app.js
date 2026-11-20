@@ -33,11 +33,7 @@ export function createEngineeringArchive(bridge) {
   entrance.innerHTML=`<a href="#product/02" data-explore-product>EXPLORE PRODUCT ↗${bi('进入产品路线','Continue the product story')}</a><a href="./engineering.html#eng-overview" data-open-current-archive>ENGINEERING ARCHIVE ↗${bi('进入工程档案','Enter the engineering archive')}</a>`;
   const archiveEntrance = entrance.querySelector('[data-open-current-archive]');
   const related = band.querySelector('.route-related');
-  // Keep the product scene and its shared host alive when the case is embedded.
-  if (parent !== window) {
-    related.rel = archiveEntrance.rel = 'noopener';
-    archiveEntrance.target = '_blank';
-  }
+  archiveEntrance.setAttribute('data-route-transition', 'engineering');
   const archive=document.createElement('section');archive.id='engineering';archive.hidden=state.route!=='engineering';
   archive.setAttribute('aria-label','ERSTE002 / ENGINEERING ARCHIVE');
   archive.innerHTML=`<nav class="archive-index" aria-label="Engineering chapters">${chapters.map((c,i)=>`<a href="#engineering/${topics.find(t=>t.chapter===c.id).id}" data-engineering-topic="${topics.find(t=>t.chapter===c.id).id}"><b>${c.number}</b><span>${c.name}</span></a>`).join('')}</nav><div id="scroller" tabindex="0" aria-label="Engineering archive"><div class="archive-body"><p class="e-load-error" role="status">${bi('正在读取工程档案…','Loading engineering archive…')}</p></div></div><footer class="archive-footer"><output aria-live="polite"></output><span class="e-track" aria-hidden="true"><span></span></span><button type="button" data-engineering-prev>${bi('上一章','Previous chapter')} ←</button><button type="button" data-engineering-next>${bi('下一章','Next chapter')} →</button></footer>`;
@@ -73,8 +69,8 @@ export function createEngineeringArchive(bridge) {
     band.querySelector('.route-context').textContent=engineering?`${chapters.find(c=>c.id===topic.chapter).number} / ${text(topic.label)}`:`${String(product.shot).padStart(2,'0')} / 11`;
     const href=engineering?`#product/${String(topic.shot).padStart(2,'0')}`:archiveHref(topic.id, product);
     if (related.getAttribute('href')!==href) related.href=href;
-    const target=!engineering && parent !== window ? '_blank' : '_self';
-    if (related.target!==target) related.target=target;
+    if (engineering) related.removeAttribute('data-route-transition');
+    else if (!related.hasAttribute('data-route-transition')) related.setAttribute('data-route-transition', 'engineering');
     const openingHref=archiveHref('overview', product);
     if (archiveEntrance.getAttribute('href')!==openingHref) archiveEntrance.href=openingHref;
     related.textContent=engineering?`PRODUCT ${String(topic.shot).padStart(2,'0')} ↗`:'ENGINEERING ARCHIVE ↗';

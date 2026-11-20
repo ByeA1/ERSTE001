@@ -14,7 +14,7 @@ html[data-project-hosted] .route-band { top:55px; }
 .route-entrance a span { display:block; color:#b2a4a7; font:12px/1.5 'Segoe UI','Microsoft YaHei',sans-serif; margin-top:7px; }
 .route-entrance a:hover { border-color:var(--red); color:var(--red); }
 body[data-route="engineering"] #story { background:#101012; }
-body[data-route="engineering"] :is(#scene-root,#caption,#chapter-nav,.story-footer,#free-controls,#loading,#editor,.route-entrance) { visibility:hidden; pointer-events:none; }
+body[data-route="engineering"] :is(#scene-root,#caption,#chapter-nav,.story-footer,#free-controls,#loading,.route-entrance) { visibility:hidden; pointer-events:none; }
 body[data-route="engineering"] .topbar .tools > :not(#lang) { display:none; }
 #engineering { position:absolute; inset:var(--archive-top) 0 0; color:#f0eded; }
 #engineering #scroller { position:absolute; inset:0 0 68px; overflow-y:auto; overflow-x:clip; overscroll-behavior:contain; scroll-behavior:auto; scrollbar-color:#655054 #151416; }

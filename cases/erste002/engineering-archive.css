@@ -83,10 +83,8 @@ img { display: block; width: 100%; height: auto; }
 }
 html[data-project-hosted] #scroller {
   inset-block-start: var(--project-toolbar-inset,0px);
-  padding-block-start: 0;
-  scroll-padding-block-start: 0;
 }
-html[data-project-hosted] .archive-local-header { display: none; }
+html[data-project-hosted] .archive-local-header { inset-block-start: var(--project-toolbar-inset,0px); }
 .skip-archive { position: fixed; inset: 8px auto auto 8px; z-index: 30; padding: 10px 16px; background: var(--bg); transform: translateY(-160%); }
 .skip-archive:focus { transform: none; }
 #engineering-archive { margin-inline: auto; width: min(1460px, calc(100% - 2 * var(--edge))); }
