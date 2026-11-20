@@ -27715,18 +27715,16 @@ function Ks() {
   }
 }
 function Na(i, e = !1) {
-  Ne = i === "en" ? 1 : 0, document.documentElement.lang = Ne ? "en" : "zh-CN", Ae("#lang").textContent = Ne ? "中" : "EN";
-  const t = Ne ? "Back to Terminal" : "返回终端";
-  Ae("#return-terminal-label").textContent = t, Ae(".identity").setAttribute("aria-label", t), Ae(".chapter-controls").setAttribute(
+  Ne = i === "en" ? 1 : 0, document.documentElement.lang = Ne ? "en" : "zh-CN", Ae("#lang").textContent = Ne ? "中" : "EN", Ae("#return-terminal-label").textContent = Ne ? "Back to Terminal" : "返回终端", Ae(".chapter-controls").setAttribute(
     "aria-label",
     Ne ? "Story shots" : "演出镜头"
   ), io.setAttribute("aria-label", Ne ? "Chapters" : "章节导航"), Gr.lastElementChild.textContent = Ne ? "Previous" : "上一镜", Ki.firstElementChild.textContent = Ne ? "Next" : "下一镜", Vr.lastElementChild.textContent = Ne ? "Back to start" : "回到开头", Bl.textContent = Ne ? "Initial assembly" : "初始总装", Ae("#part-label").textContent = Ne ? "Part" : "部件", Ae("#assembly-label").textContent = Ne ? "Assembly" : "装配", Ae("#free-tools-label").textContent = Ne ? "More tools" : "更多操作", Ae("#explode").textContent = Ne ? "Explode" : "展开", Ae("#reset").textContent = Ne ? "Reset" : "复位", Ae("#assembly-link").textContent = Ne ? "Assembly ↗" : "装配图 ↗", kl.textContent = Ne ? "Reload model" : "重新载入", [...qn.options].forEach(
-    (n, s) => n.textContent = vy[s][Ne]
+    (t, n) => t.textContent = vy[n][Ne]
   ), no.textContent = Ze ? Ne ? "Return to story" : "返回演出" : Ne ? "Free view" : "自由查看", ly.textContent = xt.dataset.projectReady === "failed" ? Ne ? "The 3D model could not be displayed." : "暂时无法显示三维模型。" : Ne ? "Loading 3D model…" : "正在载入三维模型…";
-  for (const n of Object.values(Vl))
-    for (const { node: s, text: a } of n) {
-      const r = s.querySelector(".marker-text");
-      !zl.hidden && !s.hidden ? yn.readout(r, a[Ne]) : r.textContent = a[Ne];
+  for (const t of Object.values(Vl))
+    for (const { node: n, text: s } of t) {
+      const a = n.querySelector(".marker-text");
+      !zl.hidden && !n.hidden ? yn.readout(a, s[Ne]) : a.textContent = s[Ne];
     }
   Wl(), jr = null, Ks(), jl(), Mt(), Xs?.language(), e && parent !== window && parent.postMessage(
     { type: "design-terminal:case-language", language: i },

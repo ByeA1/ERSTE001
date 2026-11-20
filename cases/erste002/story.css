@@ -193,15 +193,6 @@ body[data-mode="free"] #scene-root {
 .identity span {
   color: var(--muted);
 }
-.identity .identity-return,
-.identity .identity-return span {
-  color: #f4ded9;
-  font-size: 11px;
-  letter-spacing: .025em;
-  white-space: nowrap;
-}
-.identity-return i { color: var(--red); font-style: normal; }
-.identity:hover .identity-return span { color: #ff9b91; }
 .identity b {
   font-size: 18px;
   line-height: 1;
@@ -211,6 +202,8 @@ body[data-mode="free"] #scene-root {
   display: flex;
   gap: 7px;
 }
+.tools > .terminal-return { gap: 7px; line-height: 1.25; text-align: center; }
+.tools > .terminal-return [aria-hidden] { color: var(--red); font: 15px/1 var(--mono); }
 html[data-project-hosted] .topbar {
   top: 4px;
   justify-content: flex-start;
@@ -604,7 +597,7 @@ select {
   .tools {
     gap: 4px;
   }
-  .tools button {
+  .tools :is(button, .terminal-return) {
     padding: 0 8px;
     font-size: 11px;
   }
@@ -908,7 +901,7 @@ select {
   transition: translate 180ms ease;
 }
 #story :is(#prev-chapter, .free-controls button, .free-controls select, .free-controls .tool, #retry,
-  .tools > :is(#auto, #mode, #initial-assembly)) {
+  .tools > :is(#auto, #mode, #initial-assembly, .terminal-return)) {
   min-height: 44px;
   border: 1px solid #726165;
   border-radius: 0;
@@ -971,11 +964,11 @@ select {
   #story .chapter-controls :is(#next-chapter, #restart-story):not(:disabled):hover::before { transform: scaleX(1); }
   #story #next-chapter:not(:disabled):hover > [aria-hidden] { translate: 3px 0; }
   #story :is(#prev-chapter, .free-controls button, .free-controls select, .free-controls .tool,
-    .tools > :is(#auto, #mode, #initial-assembly), #retry):not(:disabled):hover { background: #30222729; border-color: var(--cue-rule); }
+    .tools > :is(#auto, #mode, #initial-assembly, .terminal-return), #retry):not(:disabled):hover { background: #30222729; border-color: var(--cue-rule); }
   #story #part:not(:disabled):hover { background: #35252a; }
 }
 #story .chapter-controls :is(#prev-chapter, #next-chapter, #restart-story):not(:disabled):active,
-#story :is(.free-controls button, .tools > :is(#auto, #mode, #initial-assembly), #retry):not(:disabled):active { translate: 0 1px; background: #41282e36; }
+#story :is(.free-controls button, .tools > :is(#auto, #mode, #initial-assembly, .terminal-return), #retry):not(:disabled):active { translate: 0 1px; background: #41282e36; }
 #story :is(#prev-chapter, #next-chapter, .free-controls button, .tools > :is(#auto, #mode, #initial-assembly)):disabled {
   opacity: 1;
   color: var(--cue-mute);
@@ -1006,7 +999,7 @@ select {
 }
 /* Keep the blur local to the controls, so the model and its lighting stay crisp. */
 #story :is(.chapter-controls button, .chapter-nav,
-  .tools > :is(#auto, #mode, #initial-assembly), .free-controls, #retry) {
+  .tools > :is(#auto, #mode, #initial-assembly, .terminal-return), .free-controls, #retry) {
   -webkit-backdrop-filter: blur(5px) saturate(108%);
   backdrop-filter: blur(5px) saturate(108%);
 }
@@ -1016,6 +1009,19 @@ select {
 @media (max-width: 480px) {
   html:not([data-project-hosted]) .topbar { flex-wrap: wrap; gap: 8px; }
   html:not([data-project-hosted]) .identity { display: flex; align-items: center; flex-wrap: wrap; }
+  html:not([data-project-hosted]) body:not([data-route=engineering]) .tools {
+    display: grid;
+    width: 100%;
+    grid-template-columns: minmax(0,1.25fr) 30px repeat(2,minmax(0,1fr)) minmax(0,1.2fr);
+  }
+  html:not([data-project-hosted]) #story .tools > :is(button, .terminal-return) {
+    min-width: 0;
+    padding-inline: 4px;
+    font-size: 10.5px;
+    line-height: 1.2;
+  }
+  html:not([data-project-hosted]) #story .tools > .terminal-return { gap: 4px; }
+  html:not([data-project-hosted]) #story .tools > #initial-assembly:not(:disabled) { white-space: normal; }
   html:not([data-project-hosted]) #scene-root { inset-block-start: calc(var(--top) + 86px); }
 }
 
