@@ -1,6 +1,6 @@
 {
-  "version": "edb32716d8c2ab6f",
-  "bytes": 23538459,
+  "version": "511f9a6931b51d77",
+  "bytes": 23538814,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -239,7 +239,7 @@
     "licenses/rolling-number.txt",
     "manifest.webmanifest"
   ],
-  "precacheBytes": 4450059,
+  "precacheBytes": 4450414,
   "deferred": [
     "assets/archive-assembly.d411170676f55a32.glb",
     "audio/atmosphere.ogg",
