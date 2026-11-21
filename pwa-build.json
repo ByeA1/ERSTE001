@@ -1,6 +1,6 @@
 {
-  "version": "511f9a6931b51d77",
-  "bytes": 23538814,
+  "version": "c8496574e815b071",
+  "bytes": 23540632,
   "files": [
     "archives/RHINE-LAB-X-001.txt",
     "archives/RHINE-LAB-X-002.txt",
@@ -15,8 +15,8 @@
     "assets/archive-assembly.d411170676f55a32.glb",
     "assets/archive-cassette.94fc471418156825.glb",
     "assets/boot-lettering-notice.txt",
-    "assets/index-CIHlSphL.css",
-    "assets/index-_mqa182Q.js",
+    "assets/index-DRsbRKS_.js",
+    "assets/index-DY38MFl1.css",
     "audio/atmosphere.ogg",
     "audio/motif.ogg",
     "audio/pulse.ogg",
@@ -197,8 +197,8 @@
     "archives/RHINE-LAB-X-010.txt",
     "assets/archive-cassette.94fc471418156825.glb",
     "assets/boot-lettering-notice.txt",
-    "assets/index-CIHlSphL.css",
-    "assets/index-_mqa182Q.js",
+    "assets/index-DRsbRKS_.js",
+    "assets/index-DY38MFl1.css",
     "cases/erste001/assets/erste001-hero-front-right-v01.webp",
     "cases/erste001/assets/opt/assets/mouse/hero-1-1440.avif",
     "cases/erste001/assets/opt/assets/mouse/hero-1-1920.avif",
@@ -239,7 +239,7 @@
     "licenses/rolling-number.txt",
     "manifest.webmanifest"
   ],
-  "precacheBytes": 4450414,
+  "precacheBytes": 4452232,
   "deferred": [
     "assets/archive-assembly.d411170676f55a32.glb",
     "audio/atmosphere.ogg",
